@@ -4,7 +4,7 @@ import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
 import net.minecraft.util.registry.Registry;
 
-public class InkwellBlockEntity extends AbstractColorableBlockEntity {
+public class InkwellBlockEntity extends AbstractInkableBlockEntity {
     public static final String id = InkwellBlock.id;
 
     public InkwellBlockEntity() {

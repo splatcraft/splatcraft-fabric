@@ -35,10 +35,6 @@ public class InkColor {
         return InkColor.getFromId(Identifier.tryParse(identifier));
     }
 
-    public String getHexCode() {
-        return Integer.toHexString(this.color);
-    }
-
     public int getColor() {
         return this.color;
     }

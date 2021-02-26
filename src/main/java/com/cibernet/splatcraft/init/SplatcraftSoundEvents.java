@@ -5,6 +5,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+@SuppressWarnings("unused")
 public class SplatcraftSoundEvents {
     public static SoundEvent SQUID_TRANSFORM = register("squid_transform");
     public static SoundEvent SQUID_REVERT = register("squid_revert");

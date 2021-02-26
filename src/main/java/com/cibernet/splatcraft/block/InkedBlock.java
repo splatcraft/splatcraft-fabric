@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.block;
 
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
@@ -24,7 +24,7 @@ import net.minecraft.world.WorldAccess;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class InkedBlock extends AbstractColorableBlock {
+public class InkedBlock extends AbstractInkableBlock {
     public static final String id = "inked_block";
 
     public static final AbstractBlock.Settings DEFAULT_PROPERTIES = FabricBlockSettings.of(Material.ORGANIC_PRODUCT, MaterialColor.BLACK_TERRACOTTA)
@@ -122,7 +122,7 @@ public class InkedBlock extends AbstractColorableBlock {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (world.getGameRules().getBoolean(SplatcraftGameRules.INK_DECAY) && world.getBlockEntity(pos) instanceof InkedBlockEntity) {
+        if (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && world.getBlockEntity(pos) instanceof InkedBlockEntity) {
             InkedBlock.clearInk(world, pos);
         }
     }
@@ -161,12 +161,12 @@ public class InkedBlock extends AbstractColorableBlock {
         if (inkedBlockEntity != null && inkedBlockEntity.hasSavedState()) {
             world.setBlockState(pos, inkedBlockEntity.getSavedState(), 3);
 
-            if (inkedBlockEntity.isColored() && inkedBlockEntity.getSavedState().getBlock() instanceof AbstractColorableBlock) {
+            if (inkedBlockEntity.isColored() && inkedBlockEntity.getSavedState().getBlock() instanceof AbstractInkableBlock) {
                 ((World)world).setBlockEntity(pos, new InkedBlockEntity());
-                if (world.getBlockEntity(pos) instanceof AbstractColorableBlockEntity) {
-                    AbstractColorableBlockEntity colorableBlockEntity = (AbstractColorableBlockEntity) world.getBlockEntity(pos);
-                    if (colorableBlockEntity != null) {
-                        colorableBlockEntity.setInkColor(inkedBlockEntity.getInkColor());
+                if (world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) {
+                    AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) world.getBlockEntity(pos);
+                    if (inkableBlockEntity != null) {
+                        inkableBlockEntity.setInkColor(inkedBlockEntity.getInkColor());
                     }
                 }
             }

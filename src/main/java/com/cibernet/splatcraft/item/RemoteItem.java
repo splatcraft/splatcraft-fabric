@@ -74,7 +74,7 @@ public abstract class RemoteItem extends Item {
             String statusMsg = getTranslationKey() + ".mode." + mode;
             playerEntity.sendMessage(new TranslatableText("status.remote_mode", new TranslatableText(statusMsg)), true);
         } else if (hasCoordSet(stack)) {
-            RemoteResult remoteResult = this.onRemoteUse(world, stack, ColorUtils.getPlayerColor(playerEntity), mode);
+            RemoteResult remoteResult = this.onRemoteUse(world, stack, ColorUtils.getInkColor(playerEntity), mode);
 
             if (remoteResult.getOutput() != null) {
                 playerEntity.sendMessage(remoteResult.getOutput(), true);
@@ -177,13 +177,6 @@ public abstract class RemoteItem extends Item {
             this.comparatorResult = comparatorResult;
 
             return this;
-        }
-
-        public int getCommandResult() {
-            return this.commandResult;
-        }
-        public int getComparatorResult() {
-            return this.comparatorResult;
         }
 
         public boolean wasSuccessful() {

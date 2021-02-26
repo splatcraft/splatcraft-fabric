@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.registry.Registry;
 
-public class InkedBlockEntity extends AbstractColorableBlockEntity {
+public class InkedBlockEntity extends AbstractInkableBlockEntity {
     public static final String id = InkedBlock.id;
 
     private BlockState savedState = Blocks.AIR.getDefaultState();

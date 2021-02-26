@@ -2,9 +2,7 @@ package com.cibernet.splatcraft.item;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkwellBlock;
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
@@ -48,9 +46,9 @@ public class InkClothArmorItem extends DyeableArmorItem implements MatchItem, En
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity) {
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(entity);
-            if (!ColorUtils.isColorLocked(stack) && data.getInkColor() != ColorUtils.getInkColor(stack)) {
-                ColorUtils.setInkColor(stack, data.getInkColor());
+            InkColor inkColor = ColorUtils.getInkColor((PlayerEntity) entity);
+            if (!ColorUtils.isColorLocked(stack) && inkColor != ColorUtils.getInkColor(stack)) {
+                ColorUtils.setInkColor(stack, inkColor);
             }
         }
 
@@ -63,11 +61,11 @@ public class InkClothArmorItem extends DyeableArmorItem implements MatchItem, En
 
         if (entity.world.getBlockState(pos).getBlock() instanceof InkwellBlock) {
             BlockEntity blockEntity = entity.world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractColorableBlockEntity) {
-                AbstractColorableBlockEntity colorableBlockEntity = (AbstractColorableBlockEntity) blockEntity;
+            if (blockEntity instanceof AbstractInkableBlockEntity) {
+                AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
 
-                if (ColorUtils.getInkColor(stack) != colorableBlockEntity.getInkColor() || !ColorUtils.isColorLocked(stack)) {
-                    ColorUtils.setInkColor(stack, colorableBlockEntity.getInkColor());
+                if (ColorUtils.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtils.isColorLocked(stack)) {
+                    ColorUtils.setInkColor(stack, inkableBlockEntity.getInkColor());
                     ColorUtils.setColorLocked(stack, true);
                 }
             }
@@ -85,9 +83,5 @@ public class InkClothArmorItem extends DyeableArmorItem implements MatchItem, En
     @Override
     public int getColor(ItemStack stack) {
         return ColorUtils.getInkColor(stack).getColor();
-    }
-
-    public void setColor(ItemStack stack, InkColor color) {
-        stack.getOrCreateSubTag(Splatcraft.MOD_ID).putString("InkColor", color.toString());
     }
 }

@@ -17,7 +17,7 @@ import net.minecraft.util.registry.Registry;
 @SuppressWarnings("unused")
 public class SplatcraftBlocks {
     //
-    // COLORABLE BLOCKS
+    // INKABLE BLOCKS
     //
 
     public static final Block INKWELL = register(InkwellBlock.id, new InkwellBlock(

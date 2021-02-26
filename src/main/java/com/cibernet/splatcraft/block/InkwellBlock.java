@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.block;
 
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 @SuppressWarnings("deprecation")
-public class InkwellBlock extends AbstractColorableBlock implements Waterloggable {
+public class InkwellBlock extends AbstractInkableBlock implements Waterloggable {
     public static final String id = "inkwell";
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -54,12 +54,12 @@ public class InkwellBlock extends AbstractColorableBlock implements Waterloggabl
         super.onEntityLand(world, entity);
 
         if (entity instanceof ItemEntity) {
-            AbstractColorableBlockEntity blockEntity = (AbstractColorableBlockEntity) world.getBlockEntity(entity.getBlockPos().down());
+            AbstractInkableBlockEntity blockEntity = (AbstractInkableBlockEntity) world.getBlockEntity(entity.getBlockPos().down());
             if (blockEntity != null) {
                 ItemStack stack = ((ItemEntity) entity).getStack();
                 Item stackItem = stack.getItem();
                 if (stackItem instanceof BlockItem && ColorUtils.getInkColor(stack) != blockEntity.getInkColor() && !ColorUtils.isColorLocked(stack)) {
-                    if (!(((BlockItem) stackItem).getBlock() instanceof AbstractColorableBlock)) {
+                    if (!(((BlockItem) stackItem).getBlock() instanceof AbstractInkableBlock)) {
                         CompoundTag item = new CompoundTag();
                         item.putString("id", Registry.ITEM.getId(SplatcraftBlocks.INKED_BLOCK.asItem()).toString());
                         item.putByte("Count", (byte) stack.getCount());

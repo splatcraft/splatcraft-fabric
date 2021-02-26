@@ -1,8 +1,8 @@
 package com.cibernet.splatcraft.item;
 
-import com.cibernet.splatcraft.block.AbstractColorableBlock;
+import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
@@ -26,7 +26,6 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
         super(settings);
     }
 
-
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> texts, TooltipContext ctx) {
         super.appendTooltip(stack, world, texts, ctx);
@@ -40,8 +39,8 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (entity instanceof PlayerEntity && !ColorUtils.isColorLocked(stack) && ColorUtils.getInkColor(stack) != ColorUtils.getPlayerColor((PlayerEntity) entity)) {
-            ColorUtils.setInkColor(stack, ColorUtils.getPlayerColor((PlayerEntity) entity));
+        if (entity instanceof PlayerEntity && !ColorUtils.isColorLocked(stack) && ColorUtils.getInkColor(stack) != ColorUtils.getInkColor((PlayerEntity) entity)) {
+            ColorUtils.setInkColor(stack, ColorUtils.getInkColor((PlayerEntity) entity));
         }
     }
 
@@ -88,10 +87,10 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
                 for (int z = blockpos2.getZ(); z <= blockpos3.getZ(); z++) {
                     BlockPos pos = new BlockPos(x,y,z);
                     Block block = world.getBlockState(pos).getBlock();
-                    if (block instanceof AbstractColorableBlock && world.getBlockEntity(pos) instanceof AbstractColorableBlockEntity) {
-                        InkColor blockEntityColor = ((AbstractColorableBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).getInkColor();
+                    if (block instanceof AbstractInkableBlock && world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) {
+                        InkColor blockEntityColor = ((AbstractInkableBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).getInkColor();
 
-                        if (blockEntityColor != affectedColor && (mode == 0 || mode == 1 && blockEntityColor == color || mode == 2 && blockEntityColor != color) && ((AbstractColorableBlock) block).remoteColorChange(world, pos, affectedColor)) {
+                        if (blockEntityColor != affectedColor && (mode == 0 || mode == 1 && blockEntityColor == color || mode == 2 && blockEntityColor != color) && ((AbstractInkableBlock) block).remoteColorChange(world, pos, affectedColor)) {
                             count++;
                         }
                     }

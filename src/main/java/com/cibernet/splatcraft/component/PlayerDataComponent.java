@@ -20,6 +20,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private boolean initialized = false;
     private boolean isSquid = false;
     private InkColor inkColor = InkColors.NONE;
+    private int squidSubmergeMode = -2;
 
     public PlayerDataComponent(Object provider) {
         this.provider = provider;
@@ -38,6 +39,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         tag.putBoolean("Initialized", this.initialized);
         tag.putBoolean("IsSquid", this.isSquid);
         tag.putString("InkColor", this.inkColor.toString());
+        tag.putByte("SquidSubmergeMode", (byte) this.squidSubmergeMode);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.initialized = tag.getBoolean("Initialized");
         this.isSquid = tag.getBoolean("IsSquid");
         this.inkColor = InkColor.getFromId(tag.getString("InkColor"));
+        this.squidSubmergeMode = tag.getByte("SquidSubmergeMode");
 
         this.checkForInitialization();
     }
@@ -73,5 +76,12 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
     public InkColor getInkColor() {
         return this.inkColor;
+    }
+
+    public void setSquidSubmergeMode(int squidSubmergeMode) {
+        this.squidSubmergeMode = squidSubmergeMode;
+    }
+    public int getSquidSubmergeMode() {
+        return this.squidSubmergeMode;
     }
 }

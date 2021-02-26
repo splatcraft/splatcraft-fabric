@@ -1,35 +1,50 @@
 package com.cibernet.splatcraft.block;
 
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
+import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public abstract class AbstractColorableBlock extends BlockWithEntity {
-    public static final String id = "colorable";
+@SuppressWarnings("unused")
+public abstract class AbstractInkableBlock extends BlockWithEntity {
+    public static final String id = "inkable";
 
-    protected AbstractColorableBlock(Settings settings) {
+    protected AbstractInkableBlock(Settings settings) {
         super(settings);
     }
 
-    public abstract boolean canClimb();
-    public abstract boolean canSwim();
-    public abstract boolean canDamage();
+    public boolean canClimb() {
+        return true;
+    }
+    public boolean canSwim() {
+        return true;
+    }
+    public boolean canDamage() {
+        return true;
+    }
     public abstract boolean remoteInkClear(World world, BlockPos pos);
     public abstract boolean countsTowardsTurf(World world, BlockPos pos);
 
@@ -37,26 +52,48 @@ public abstract class AbstractColorableBlock extends BlockWithEntity {
         return false;
     }
 
-    public void setColor(World world, BlockPos pos, InkColor color) {}
     public InkColor getColor(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        return blockEntity instanceof AbstractColorableBlockEntity ? ((AbstractColorableBlockEntity) blockEntity).getInkColor() : InkColors.NONE;
+        return blockEntity instanceof AbstractInkableBlockEntity ? ((AbstractInkableBlockEntity) blockEntity).getInkColor() : InkColors.NONE;
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
+        world.updateListeners(pos, state, state, 2);
         if (world.isClient) {
             ((ClientWorld)world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
+        } else {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof AbstractInkableBlockEntity) {
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(pos);
+                buf.writeString(((AbstractInkableBlockEntity) blockEntity).getInkColor().toString());
+
+                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking(blockEntity)) {
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
+                }
+            }
         }
 
         return super.onSyncedBlockEvent(state, world, pos, type, data);
     }
 
     @Override
+    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
+        super.onLandedUpon(world, pos, entity, distance);
+
+        if (entity instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entity;
+            if (InkBlockUtils.onEnemyInk(player) && player.getHealth() > 4.0F && player.world.getDifficulty() != Difficulty.PEACEFUL) {
+                player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
+            }
+        }
+    }
+
+    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (stack.getTag() != null && blockEntity instanceof AbstractColorableBlockEntity) {
+        if (stack.getTag() != null && blockEntity instanceof AbstractInkableBlockEntity) {
             ColorUtils.setInkColor(blockEntity, ColorUtils.getInkColor(stack));
         }
 
@@ -68,7 +105,7 @@ public abstract class AbstractColorableBlock extends BlockWithEntity {
         ItemStack stack = super.getPickStack(world, pos, state);
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractColorableBlockEntity) {
+        if (blockEntity instanceof AbstractInkableBlockEntity) {
             ColorUtils.setInkColor(stack, ColorUtils.getInkColor(blockEntity));
         }
 
@@ -78,9 +115,8 @@ public abstract class AbstractColorableBlock extends BlockWithEntity {
     public boolean remoteColorChange(World world, BlockPos pos, InkColor newColor) {
         BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractColorableBlockEntity && ((AbstractColorableBlockEntity) blockEntity).getInkColor() != newColor) {
-            ((AbstractColorableBlockEntity) blockEntity).setInkColor(newColor);
-            world.updateListeners(pos, state, state, 2);
+        if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() != newColor) {
+            ColorUtils.setInkColor(blockEntity, newColor);
             return true;
         }
 
@@ -92,8 +128,8 @@ public abstract class AbstractColorableBlock extends BlockWithEntity {
     public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState newState, WorldAccess world, BlockPos blockPos, BlockPos posFrom) {
         if (InkedBlock.isTouchingLiquid(world, blockPos)) {
             BlockEntity blockEntity = world.getBlockEntity(blockPos);
-            if (blockEntity instanceof AbstractColorableBlockEntity) {
-                ((AbstractColorableBlockEntity) blockEntity).setInkColor(InkColors.NONE);
+            if (blockEntity instanceof AbstractInkableBlockEntity) {
+                ColorUtils.setInkColor(blockEntity, InkColors.NONE);
             }
         }
 

@@ -4,7 +4,7 @@ import com.cibernet.splatcraft.block.CanvasBlock;
 import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
 import net.minecraft.util.registry.Registry;
 
-public class CanvasBlockEntity extends AbstractColorableBlockEntity {
+public class CanvasBlockEntity extends AbstractInkableBlockEntity {
     public static final String id = CanvasBlock.id;
 
     public CanvasBlockEntity() {

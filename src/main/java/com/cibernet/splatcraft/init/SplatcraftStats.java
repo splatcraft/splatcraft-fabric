@@ -8,6 +8,7 @@ import net.minecraft.util.registry.Registry;
 
 public class SplatcraftStats {
     public static final Identifier BLOCKS_INKED = register("blocks_inked", StatFormatter.DEFAULT);
+    public static final Identifier SQUID_TIME = register("squid_time", StatFormatter.TIME);
 
     public SplatcraftStats() {}
 

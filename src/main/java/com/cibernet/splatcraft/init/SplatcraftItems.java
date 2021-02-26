@@ -5,8 +5,8 @@ import com.cibernet.splatcraft.block.CanvasBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.item.ColorChangerItem;
-import com.cibernet.splatcraft.item.ColorableBlockItem;
 import com.cibernet.splatcraft.item.InkClothArmorItem;
+import com.cibernet.splatcraft.item.InkableBlockItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
@@ -21,8 +21,8 @@ public class SplatcraftItems {
     // BLOCK ITEMS
     //
 
-    public static final Item INKWELL = register(InkwellBlock.id, new ColorableBlockItem(SplatcraftBlocks.INKWELL, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
-    public static final Item CANVAS = register(CanvasBlock.id, new ColorableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
+    public static final Item INKWELL = register(InkwellBlock.id, new InkableBlockItem(SplatcraftBlocks.INKWELL, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
+    public static final Item CANVAS = register(CanvasBlock.id, new InkableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
     public static final Item INKED_BLOCK = register(InkedBlock.id, new BlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
 
     /*public static final Item POWER_EGG = new Item().setUnlocalizedName("powerEgg").setRegistryName("power_egg").setCreativeTab(TabSplatcraft.main);

@@ -11,8 +11,8 @@ import net.minecraft.util.collection.DefaultedList;
 
 import java.util.Optional;
 
-public class ColorableBlockItem extends BlockItem {
-    public ColorableBlockItem(Block block, Settings settings) {
+public class InkableBlockItem extends BlockItem {
+    public InkableBlockItem(Block block, Settings settings) {
         super(block, settings);
     }
 

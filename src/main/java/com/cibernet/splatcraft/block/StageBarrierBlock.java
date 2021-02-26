@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
-import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
+import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -114,7 +114,7 @@ public class StageBarrierBlock extends BlockWithEntity {
     }
     public void touch(BlockView world, Entity entity, BlockPos pos, TouchStatus touchStatus) {
         if (entity instanceof LivingEntity && touchStatus.dealDamage && this.damagesEntity) {
-            entity.damage(InkDamageUtils.VOID_DAMAGE, Float.MAX_VALUE);
+            entity.damage(SplatcraftDamageSources.VOID_DAMAGE, Float.MAX_VALUE);
         }
 
         BlockEntity blockEntity = world.getBlockEntity(pos);

@@ -1,13 +1,15 @@
 package com.cibernet.splatcraft.inkcolor;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.block.AbstractColorableBlock;
-import com.cibernet.splatcraft.block.entity.AbstractColorableBlockEntity;
+import com.cibernet.splatcraft.block.AbstractInkableBlock;
+import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.entity.ColorableEntity;
+import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
-import com.cibernet.splatcraft.init.SplatcraftGameRules;
-import com.cibernet.splatcraft.tag.SplatcraftInkColorTags;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -15,34 +17,33 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 import java.util.Objects;
 import java.util.Random;
 
 public class ColorUtils {
     public static final int DEFAULT = 0x00FFFFFF;
-
     public static final InkColor[] STARTER_COLORS = { InkColors.ORANGE, InkColors.BLUE, InkColors.GREEN, InkColors.PINK };
 
-    public static InkColor getEntityColor(LivingEntity entity) {
+    public static InkColor getLivingEntityColor(LivingEntity entity) {
         if (entity instanceof PlayerEntity) {
-            return getPlayerColor((PlayerEntity) entity);
-        } else if (entity instanceof ColorableEntity) {
-            return ((ColorableEntity) entity).getColor();
+            return getInkColor((PlayerEntity) entity);
+        } else if (entity instanceof InkableEntity) {
+            return ((InkableEntity) entity).getInkColor();
         } else {
             return InkColors.NONE;
         }
     }
 
-    public static InkColor getPlayerColor(PlayerEntity player) {
+    public static InkColor getInkColor(PlayerEntity player) {
         try {
             PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
             return data.getInkColor();
@@ -50,10 +51,19 @@ public class ColorUtils {
             return InkColors.NONE;
         }
     }
-    public static boolean setPlayerColor(PlayerEntity player, InkColor color) {
+    public static boolean setInkColor(PlayerEntity player, InkColor color) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         if (data.getInkColor() != color) {
+            if (player instanceof ServerPlayerEntity) {
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeUuid(player.getUuid())
+                   .writeString(color.toString());
+
+                ServerPlayNetworking.send((ServerPlayerEntity) player, SplatcraftNetworkingConstants.SET_PLAYER_INK_COLOR_PACKET_ID, buf);
+            }
+
             data.setInkColor(color);
+
             return true;
         } else {
             return false;
@@ -74,7 +84,6 @@ public class ColorUtils {
             }
         }
     }
-
     public static ItemStack setInkColor(ItemStack stack, InkColor color) {
         CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getOrCreateSubTag("BlockEntityTag") : stack.getOrCreateTag();
         CompoundTag splatcraft = new CompoundTag();
@@ -88,30 +97,29 @@ public class ColorUtils {
     public static InkColor getInkColor(BlockEntity blockEntity) {
         if (blockEntity == null) {
             return InkColors.NONE;
-        } else if (blockEntity instanceof AbstractColorableBlockEntity) {
-            return ((AbstractColorableBlockEntity) blockEntity).getInkColor();
+        } else if (blockEntity instanceof AbstractInkableBlockEntity) {
+            return ((AbstractInkableBlockEntity) blockEntity).getInkColor();
         }
 
         Block block = blockEntity.getCachedState().getBlock();
-        if (block instanceof AbstractColorableBlock) {
-            return ((AbstractColorableBlock) block).getColor(Objects.requireNonNull(blockEntity.getWorld()), blockEntity.getPos());
+        if (block instanceof AbstractInkableBlock) {
+            return ((AbstractInkableBlock) block).getColor(Objects.requireNonNull(blockEntity.getWorld()), blockEntity.getPos());
         }
 
         return InkColors.NONE;
     }
-
     public static void setInkColor(BlockEntity blockEntity, InkColor color) {
-        BlockPos pos = blockEntity.getPos();
-        World world = blockEntity.getWorld();
+        if (blockEntity instanceof AbstractInkableBlockEntity) {
+            ((AbstractInkableBlockEntity) blockEntity).setInkColor(color);
 
-        if (blockEntity instanceof AbstractColorableBlockEntity) {
-            ((AbstractColorableBlockEntity) blockEntity).setInkColor(color);
-            return;
-        }
+            World world = blockEntity.getWorld();
+            if (world != null) {
+                if (!world.isClient) {
+                    ((BlockEntityClientSerializable) blockEntity).sync();
+                }
 
-        Block block = blockEntity.getCachedState().getBlock();
-        if (block instanceof AbstractColorableBlock) {
-            ((AbstractColorableBlock) block).setColor(world, pos, color);
+                blockEntity.getWorld().addSyncedBlockEvent(blockEntity.getPos(), blockEntity.getCachedState().getBlock(), 0, 0);
+            }
         }
     }
 
@@ -121,30 +129,9 @@ public class ColorUtils {
             : new TranslatableText(color.getTranslationKey()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color.getColor())));
     }
 
-    public static boolean colorEquals(LivingEntity entity, BlockEntity blockEntity) {
-        InkColor entityColor = ColorUtils.getEntityColor(entity);
-        InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-
-        if (entityColor == InkColors.NONE || inkColor == InkColors.NONE) {
-            return false;
-        }
-        return SplatcraftGameRules.getBoolean(entity.world, SplatcraftGameRules.UNIVERSAL_INK) || entityColor == inkColor;
-    }
-
-    public static boolean colorEquals(LivingEntity entity, ItemStack itemStack) {
-        InkColor entityColor = getEntityColor(entity);
-        InkColor inkColor = getInkColor(itemStack);
-
-        if (entityColor == InkColors.NONE || inkColor == InkColors.NONE) {
-            return false;
-        }
-        return SplatcraftGameRules.getBoolean(entity.world, SplatcraftGameRules.UNIVERSAL_INK) || entityColor == inkColor;
-    }
-
     public static void setColorLocked(ItemStack stack, boolean isLocked) {
         stack.getOrCreateSubTag(Splatcraft.MOD_ID).putBoolean("ColorLocked", isLocked);
     }
-
     public static boolean isColorLocked(ItemStack stack) {
         CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getSubTag("BlockEntityTag") : stack.getTag();
         if (tag == null) {
@@ -160,13 +147,6 @@ public class ColorUtils {
     }
 
     public static InkColor getRandomStarterColor(Random random) {
-        try {
-            return SplatcraftInkColorTags.STARTER_COLORS.values().isEmpty()
-                ? InkColors.NONE
-                : SplatcraftInkColorTags.STARTER_COLORS.getRandom(random);
-        } catch (ExceptionInInitializerError e) {
-            Splatcraft.log(Level.ERROR, "Caught " + e.toString() + ", defaulting to hardcoded list!");
-            return STARTER_COLORS[random.nextInt(STARTER_COLORS.length)];
-        }
+        return STARTER_COLORS[random.nextInt(STARTER_COLORS.length)];
     }
 }

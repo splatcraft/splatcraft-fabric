@@ -17,6 +17,14 @@ public class SplatcraftConfig {
         public RangedOption barrierRenderDistance = new RangedOption("barrier_render_distance", 16, 4, 80);
     }
 
+    public static ColorsGroup COLORS = new ColorsGroup();
+    public static class ColorsGroup {
+        /**
+         * Enable or disable color lock.
+         */
+        public Option colorLock = new Option("color_lock", false);
+    }
+
     /**
      * A configuration option.
      */
@@ -58,9 +66,9 @@ public class SplatcraftConfig {
             if (value instanceof Integer) return (Integer)this.defaultValue;
             else throw new RuntimeException();
         }
-        public float getDefaultFloat() {
-            if (value instanceof Float) return (Float)this.defaultValue;
-            else throw new RuntimeException();
+
+        public Object getDefault() {
+            return this.defaultValue;
         }
 
         public String getId() {
@@ -83,15 +91,6 @@ public class SplatcraftConfig {
             super(id, defaultVal);
             this.min = min;
             this.max = max;
-        }
-
-        public float getMinFloat() {
-            if (value instanceof Float) return (Float)this.min;
-            else throw new RuntimeException();
-        }
-        public float getMaxFloat() {
-            if (value instanceof Float) return (Float)this.max;
-            else throw new RuntimeException();
         }
 
         public int getMinInt() {

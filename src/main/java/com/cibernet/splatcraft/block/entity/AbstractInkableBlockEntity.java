@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.block.entity;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.block.AbstractColorableBlock;
+import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -11,12 +11,12 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 
-public abstract class AbstractColorableBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-    public static final String id = AbstractColorableBlock.id;
+public abstract class AbstractInkableBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+    public static final String id = AbstractInkableBlock.id;
 
     private InkColor inkColor = InkColors.NONE;
 
-    public AbstractColorableBlockEntity(BlockEntityType<?> blockEntityType) {
+    public AbstractInkableBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
 
@@ -43,17 +43,6 @@ public abstract class AbstractColorableBlockEntity extends BlockEntity implement
     }
     public void setInkColor(InkColor inkColor) {
         this.inkColor = inkColor;
-
-        if (this.world != null) {
-            if (!this.world.isClient) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof BlockEntityClientSerializable) {
-                    ((BlockEntityClientSerializable) blockEntity).sync();
-                }
-            }
-
-            this.world.addSyncedBlockEvent(this.getPos(), this.getCachedState().getBlock(), 0, 0);
-        }
     }
     public boolean isColored() {
         return this.inkColor != InkColors.NONE;

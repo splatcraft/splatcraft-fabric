@@ -33,7 +33,6 @@ public class SplatcraftModMenu implements ModMenuApi {
             //
 
             ConfigCategory RENDER = builder.getOrCreateCategory(createRenderText());
-
             TranslatableText holdStageBarrierToRender = createRenderText(SplatcraftConfig.RENDER.holdStageBarrierToRender.getId());
             TranslatableText barrierRenderDistance = createRenderText(SplatcraftConfig.RENDER.barrierRenderDistance.getId());
             SplatcraftConfig.Option holdStageBarrierToRenderOption = SplatcraftConfig.RENDER.holdStageBarrierToRender;
@@ -52,6 +51,21 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .build()
             );
 
+            //
+            // COLORS CATEGORY
+            //
+
+            ConfigCategory COLORS = builder.getOrCreateCategory(createColorsText());
+            TranslatableText colorLock = createColorsText(SplatcraftConfig.COLORS.colorLock.getId());
+            SplatcraftConfig.Option colorLockOption = SplatcraftConfig.COLORS.colorLock;
+            COLORS.addEntry(
+                entryBuilder.startBooleanToggle(colorLock, colorLockOption.getBoolean())
+                    .setDefaultValue(colorLockOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> colorLockOption.value = value)
+                    .setTooltip(createTooltip(colorLock))
+                    .build()
+            );
+
             return builder.build();
         };
     }
@@ -64,6 +78,12 @@ public class SplatcraftModMenu implements ModMenuApi {
     }
     private TranslatableText createRenderText() {
         return createRenderText("");
+    }
+    private TranslatableText createColorsText(String label) {
+        return createCatText("colors" + (label.isEmpty() ? "" : "." + label));
+    }
+    private TranslatableText createColorsText() {
+        return createColorsText("");
     }
     private TranslatableText createCatText(String group) {
         return createConfigText("category." + group);

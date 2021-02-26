@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class CanvasBlock extends AbstractColorableBlock {
+public class CanvasBlock extends AbstractInkableBlock {
     public static final String id = "canvas";
 
     public CanvasBlock(AbstractBlock.Settings settings) {
@@ -28,8 +28,8 @@ public class CanvasBlock extends AbstractColorableBlock {
         }
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractColorableBlockEntity) {
-            ((AbstractColorableBlockEntity) blockEntity).setInkColor(color);
+        if (blockEntity instanceof AbstractInkableBlockEntity) {
+            ((AbstractInkableBlockEntity) blockEntity).setInkColor(color);
             return true;
         }
 
@@ -48,7 +48,7 @@ public class CanvasBlock extends AbstractColorableBlock {
 
     @Override
     public boolean canDamage() {
-        return false;
+        return true;
     }
 
     @Override
