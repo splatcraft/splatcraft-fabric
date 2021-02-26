@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "license": "MIT",
+  "id": "splatcraft",
+  "version": "${version}",
+
+  "name": "Splatcraft",
+  "description": "Description",
+  "icon": "pack.png",
+
+  "authors": [
+    "Cibernet",
+    "Andante"
+  ],
+  "contributors": [],
+  "contact": {
+    "sources": "https://github.com/splatcraft/splatcraft",
+    "issues": "https://github.com/splatcraft/splatcraft/issues"
+  },
+
+  "custom": {
+    "cardinal-components": [
+      "splatcraft:player_data"
+    ]
+  },
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.cibernet.splatcraft.Splatcraft"
+    ],
+    "client": [
+      "com.cibernet.splatcraft.SplatcraftClient"
+    ],
+    "server": [],
+
+    "modmenu": [
+      "com.cibernet.splatcraft.SplatcraftModMenu"
+    ],
+    "cardinal-components-entity": [
+      "com.cibernet.splatcraft.SplatcraftCardinalComponents"
+    ]
+  },
+  "mixins": [
+    "splatcraft.mixins.json"
+  ],
+  "accessWidener": "splatcraft.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.11.0",
+    "fabric": ">=0.31.0",
+    "minecraft": ">=1.16.2"
+  },
+  "breaks": {
+    "lithium": "*"
+  }
+}

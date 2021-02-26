@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.cibernet.splatcraft.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "EntityShapeContextMixin",
+    "ItemEntityMixin"
+  ],
+  "client": [
+    "client.ArmorFeatureRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "splatcraft:item/turf_scanner"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "splatcraft:active": 1
+            },
+            "model": "splatcraft:item/turf_scanner_active"
+        },
+        {
+            "predicate": {
+                "splatcraft:active": 1,
+                "splatcraft:mode": 1
+            },
+            "model": "splatcraft:item/turf_scanner_active_1"
+        }
+    ]
+}

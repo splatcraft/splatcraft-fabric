@@ -1,0 +1,12 @@
+{
+    "parent": "minecraft:block/cube",
+    "textures": {
+        "particle": "splatcraft:block/sardinium_block_side",
+        "down": "splatcraft:block/sardinium_block_bottom",
+        "up": "splatcraft:block/sardinium_block_top",
+        "north": "splatcraft:block/sardinium_block_side",
+        "east": "splatcraft:block/sardinium_block_side",
+        "south": "splatcraft:block/sardinium_block_side",
+        "west": "splatcraft:block/sardinium_block_side"
+    }
+}
