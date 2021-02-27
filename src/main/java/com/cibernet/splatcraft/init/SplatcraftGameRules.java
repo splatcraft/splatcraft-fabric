@@ -20,6 +20,8 @@ public class SplatcraftGameRules {
     public static GameRules.Key<GameRules.BooleanRule> INK_FRIENDLY_FIRE = register("inkFriendlyFire", GameRuleFactory.createBooleanRule(false));
     public static GameRules.Key<GameRules.BooleanRule> REQUIRE_INK_TANK = register("requireInkTank", GameRuleFactory.createBooleanRule(true));
     public static GameRules.Key<GameRules.BooleanRule> INK_DECAY = register("inkDecay", GameRuleFactory.createBooleanRule(true));
+    public static GameRules.Key<GameRules.BooleanRule> FLYING_DISABLES_SQUID_FORM = register("flyingDisablesSquidForm", GameRuleFactory.createBooleanRule(false));
+    public static GameRules.Key<GameRules.BooleanRule> INKWELL_CHANGES_PLAYER_INK_COLOR = register("inkwellChangesPlayerInkColor", GameRuleFactory.createBooleanRule(false));
 
     public static GameRules.Key<GameRules.BooleanRule> COLORED_PLAYER_NAMES = register("coloredPlayerNames", GameRuleFactory.createBooleanRule(false));
     public static GameRules.Key<GameRules.BooleanRule> KEEP_MATCH_ITEMS = register("keepMatchItems", GameRuleFactory.createBooleanRule(false));

@@ -110,7 +110,7 @@ public class InkBlockUtils {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            return ColorUtils.getInkColor(blockEntity) != InkColors.NONE;
+            return ColorUtils.getInkColor(blockEntity) != InkColors.NONE && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
         }
 
         return false;

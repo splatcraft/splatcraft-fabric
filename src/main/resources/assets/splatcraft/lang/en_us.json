@@ -385,6 +385,7 @@
     "gamerule.splatcraft.inkFriendlyFire.description": "Allows ink to damage players with their same color",
     "gamerule.splatcraft.inkMobDamage": "Ink Mob Damage",
     "gamerule.splatcraft.inkMobDamage.description": "Allows every Splatcraft weapon to damage players to damage mobs",
+    "gamerule.splatcraft.flyingDisablesSquidForm": "Flying Disables Squid Form",
 
     "status.coord_set.a": "Set first position to X: %s Y: %s Z: %s",
     "status.coord_set.b": "Set second position to X: %s Y: %s Z: %s",

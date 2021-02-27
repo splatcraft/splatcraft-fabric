@@ -2,7 +2,6 @@ package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
-import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,13 +14,11 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -58,17 +55,7 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
             if (blockEntity != null) {
                 ItemStack stack = ((ItemEntity) entity).getStack();
                 Item stackItem = stack.getItem();
-                if (stackItem instanceof BlockItem && ColorUtils.getInkColor(stack) != blockEntity.getInkColor() && !ColorUtils.isColorLocked(stack)) {
-                    if (!(((BlockItem) stackItem).getBlock() instanceof AbstractInkableBlock)) {
-                        CompoundTag item = new CompoundTag();
-                        item.putString("id", Registry.ITEM.getId(SplatcraftBlocks.INKED_BLOCK.asItem()).toString());
-                        item.putByte("Count", (byte) stack.getCount());
-
-                        // CompoundTag itemTag = new CompoundTag();
-                        // item.put("tag", itemTag);
-                        // stack = ItemStack.fromTag(itemTag);
-                    }
-
+                if (stackItem instanceof BlockItem && ((BlockItem) stackItem).getBlock() instanceof InkedBlock && ColorUtils.getInkColor(stack) != blockEntity.getInkColor() && !ColorUtils.isColorLocked(stack)) {
                     ((ItemEntity) entity).setStack(ColorUtils.setInkColor(stack, blockEntity.getInkColor()));
                 }
             }
@@ -121,11 +108,11 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
     }
     @Override
     public boolean canSwim() {
-        return true;
+        return false;
     }
     @Override
     public boolean canDamage() {
-        return false;
+        return true;
     }
 
     @Override

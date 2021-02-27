@@ -8,10 +8,11 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 public class InkSquidEntityRenderer extends LivingEntityRenderer<LivingEntity, InkSquidEntityModel> {
     @SuppressWarnings("unused")
-    public InkSquidEntityRenderer(EntityRenderDispatcher dispatcher, EntityRendererRegistry.Context ctx) {
+    public InkSquidEntityRenderer(EntityRenderDispatcher dispatcher, @Nullable EntityRendererRegistry.Context ctx) {
         super(dispatcher, new InkSquidEntityModel(), 0.5f);
         this.addFeature(new InkSquidEntityColorFeatureRenderer(this));
     }

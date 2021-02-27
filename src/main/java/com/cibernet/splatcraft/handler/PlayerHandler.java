@@ -49,13 +49,9 @@ public class PlayerHandler {
     public static void onPlayerTick(PlayerEntity player) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
 
-        if (data.isSquid() && player.abilities.flying) {
+        if (data.isSquid() && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && player.abilities.flying) {
             data.setIsSquid(false);
             return;
-        }
-
-        if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.getHealth() > 4.0F && player.world.getDifficulty() != Difficulty.PEACEFUL) {
-            player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
         }
 
         if (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.WATER_DAMAGE) && player.isTouchingWater() && player.age % 10 == 0) {
@@ -85,14 +81,16 @@ public class PlayerHandler {
             player.setPose(EntityPose.FALL_FLYING);
             player.incrementStat(SplatcraftStats.SQUID_TIME);
 
-            if (InkBlockUtils.canSwim(player)) {
+            if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.getHealth() > 4.0F && player.world.getDifficulty() != Difficulty.PEACEFUL) {
+                player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
+            } else if (InkBlockUtils.canSwim(player)) {
                 player.fallDistance = 0;
                 if (player.age % 5 == 0 && !player.hasStatusEffect(StatusEffects.POISON) && !player.hasStatusEffect(StatusEffects.WITHER)) {
                     player.heal(0.5f);
                 }
             }
 
-            if (player.world.getBlockState(player.getBlockPos().down()).getBlock() instanceof InkwellBlock) {
+            if (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.INKWELL_CHANGES_PLAYER_INK_COLOR) && player.world.getBlockState(player.getBlockPos().down()).getBlock() instanceof InkwellBlock) {
                 AbstractInkableBlockEntity blockEntity = (AbstractInkableBlockEntity) player.world.getBlockEntity(player.getBlockPos().down());
                 if (blockEntity != null) {
                     ColorUtils.setInkColor(player, blockEntity.getInkColor());
