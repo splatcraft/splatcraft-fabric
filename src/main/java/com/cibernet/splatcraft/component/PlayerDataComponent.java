@@ -17,7 +17,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private boolean initialized = false;
     private boolean isSquid = false;
     private InkColor inkColor = InkColors.NONE;
-    private int squidSubmergeMode = -2;
+    private boolean isSubmerged = false;
 
     public PlayerDataComponent(Object provider) {
         this.provider = provider;
@@ -30,7 +30,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         tag.putBoolean("Initialized", this.initialized);
         tag.putBoolean("IsSquid", this.isSquid);
         tag.putString("InkColor", this.inkColor.toString());
-        tag.putByte("SquidSubmergeMode", (byte) this.squidSubmergeMode);
+        tag.putBoolean("IsSubmerged", this.isSubmerged);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.initialized = tag.getBoolean("Initialized");
         this.isSquid = tag.getBoolean("IsSquid");
         this.inkColor = InkColor.getFromId(tag.getString("InkColor"));
-        this.squidSubmergeMode = tag.getByte("SquidSubmergeMode");
+        this.isSubmerged = tag.getBoolean("IsSubmerged");
 
         this.checkForInitialization();
     }
@@ -72,11 +72,8 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return this.inkColor;
     }
 
-    public void setSquidSubmergeMode(int squidSubmergeMode) {
-        this.squidSubmergeMode = squidSubmergeMode;
+    public void setSubmerged(boolean isSubmerged) {
+        this.isSubmerged = isSubmerged;
         SplatcraftComponents.PLAYER_DATA.sync(this.provider);
-    }
-    public int getSquidSubmergeMode() {
-        return this.squidSubmergeMode;
     }
 }

@@ -53,7 +53,7 @@ public class PlayerHandler {
     public static void onPlayerTick(PlayerEntity player) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
 
-        if (data.isSquid() && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && player.abilities.flying) {
+        if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && data.isSquid()) {
             data.setIsSquid(false);
             return;
         }
@@ -62,19 +62,13 @@ public class PlayerHandler {
             player.damage(SplatcraftDamageSources.WATER, 8.0f);
         }
 
-        player.setInvisible(PlayerHandler.shouldBeInvisible(player));
+        boolean wasInvisible = player.isInvisible();
+        boolean shouldBeInvisible = data.isSquid() ? InkBlockUtils.shouldBeInvisible(player) : PlayerHandler.shouldBeInvisible(player);
+        if (shouldBeInvisible != wasInvisible) {
+            player.world.playSound(null, player.getX(), player.getY(), player.getZ(), shouldBeInvisible ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.5F, ((player.world.random.nextFloat() - player.world.random.nextFloat()) * 0.2F + 1.0F) * 0.95F);
 
-        if (InkBlockUtils.shouldBeInvisible(player) && data.isSquid()) {
-            data.setSquidSubmergeMode(Math.min(2,Math.max(data.getSquidSubmergeMode() + 1, 1)));
-            player.setInvisible(true);
-        } else {
-            data.setSquidSubmergeMode(Math.max(-2, Math.min(data.getSquidSubmergeMode() - 1, -1)));
-        }
-
-        if (data.getSquidSubmergeMode() == 1) {
-            player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SplatcraftSoundEvents.INK_SUBMERGE, SoundCategory.PLAYERS, 0.5F, ((player.world.random.nextFloat() - player.world.random.nextFloat()) * 0.2F + 1.0F) * 0.95F);
-        } else if (data.getSquidSubmergeMode() == -1) {
-            player.world.playSound(null, player.getX(), player.getY(), player.getZ(), SplatcraftSoundEvents.INK_SUBMERGE, SoundCategory.PLAYERS, 0.5F, ((player.world.random.nextFloat() - player.world.random.nextFloat()) * 0.2F + 1.0F) * 0.95F);
+            data.setSubmerged(shouldBeInvisible);
+            player.setInvisible(shouldBeInvisible);
         }
 
         if (data.isSquid()) {
