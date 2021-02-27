@@ -9,6 +9,7 @@ import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,9 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.Difficulty;
 
 public class PlayerHandler {
+    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.fixed(0.5F, 0.5F);
+    public static final EntityDimensions SQUID_FORM_AIRBORNE_DIMENSIONS = EntityDimensions.fixed(0.5F, 1.0F);
+
     public static void registerEvents() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
@@ -74,14 +78,15 @@ public class PlayerHandler {
         }
 
         if (data.isSquid()) {
-            player.setSprinting(false);
+            if (player.isOnGround()) {
+                player.setSprinting(false);
+                player.setPose(EntityPose.FALL_FLYING);
+            }
             player.setSneaking(false);
             player.setSwimming(false);
-
-            player.setPose(EntityPose.FALL_FLYING);
             player.incrementStat(SplatcraftStats.SQUID_TIME);
 
-            if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.getHealth() > 4.0F && player.world.getDifficulty() != Difficulty.PEACEFUL) {
+            if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.world.getDifficulty() != Difficulty.PEACEFUL) {
                 player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
             } else if (InkBlockUtils.canSwim(player)) {
                 player.fallDistance = 0;

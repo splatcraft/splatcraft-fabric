@@ -2,4 +2,5 @@ accessWidener v1        named
 
 accessible    field     net/minecraft/util/DyeColor    color                      I
 accessible    method    net/minecraft/entity/Entity    getVelocityAffectingPos    ()Lnet/minecraft/util/math/BlockPos;
+accessible    method    net/minecraft/entity/Entity    wouldPoseNotCollide        (Lnet/minecraft/entity/EntityPose;)Z
 accessible    method    net/minecraft/item/ItemStack   <init>                     (Lnet/minecraft/item/ItemConvertible;ILjava/util/Optional;)V

@@ -61,6 +61,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     public static void toggleSquidForm(PlayerEntity player) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         data.setIsSquid(!data.isSquid());
+        player.calculateDimensions();
     }
 
     public void setInkColor(InkColor inkColor) {

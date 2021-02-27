@@ -1,7 +1,9 @@
 package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
+import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
+import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
@@ -80,11 +82,10 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
 
     @Override
     public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
-        super.onLandedUpon(world, pos, entity, distance);
-
         if (entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
-            if (InkBlockUtils.onEnemyInk(player) && player.getHealth() > 4.0F && player.world.getDifficulty() != Difficulty.PEACEFUL) {
+            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
+            if (data.isSquid() && InkBlockUtils.onEnemyInk(player) && player.world.getDifficulty() != Difficulty.PEACEFUL) {
                 player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
             }
         }

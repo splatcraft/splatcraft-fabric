@@ -9,7 +9,7 @@ import com.cibernet.splatcraft.init.SplatcraftComponents;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -28,7 +28,7 @@ public class ColorUtils {
     public static final int DEFAULT = 0x00FFFFFF;
     public static final InkColor[] STARTER_COLORS = { InkColors.ORANGE, InkColors.BLUE, InkColors.GREEN, InkColors.PINK };
 
-    public static InkColor getLivingEntityColor(LivingEntity entity) {
+    public static InkColor getEntityColor(Entity entity) {
         if (entity instanceof PlayerEntity) {
             return getInkColor((PlayerEntity) entity);
         } else if (entity instanceof InkableEntity) {
@@ -54,6 +54,15 @@ public class ColorUtils {
         } else {
             return false;
         }
+    }
+    public static boolean setInkColor(Entity entity, InkColor color) {
+        if (entity instanceof InkableEntity) {
+            return ((InkableEntity) entity).setInkColor(color);
+        } else if (entity instanceof PlayerEntity) {
+            return ColorUtils.setInkColor((PlayerEntity) entity, color);
+        }
+
+        return false;
     }
 
     public static InkColor getInkColor(ItemStack stack) {

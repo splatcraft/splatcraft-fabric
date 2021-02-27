@@ -5,13 +5,16 @@ import com.cibernet.splatcraft.block.AbstractPassableBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftStats;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
+import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -86,7 +89,7 @@ public class InkBlockUtils {
     }
 
     public static boolean canSwim(PlayerEntity player) {
-        return player.isOnGround() && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) && InkBlockUtils.isOnInk(player) || InkBlockUtils.isOnInk(player) && !InkBlockUtils.onEnemyInk(player));
+        return player.isOnGround() && InkBlockUtils.isOnInk(player) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || !InkBlockUtils.onEnemyInk(player));
     }
     public static boolean takeDamage(PlayerEntity player) {
         return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) && InkBlockUtils.onEnemyInk(player);
@@ -119,6 +122,10 @@ public class InkBlockUtils {
         return InkBlockUtils.isOnInk(player.world, player.getVelocityAffectingPos());
     }
 
+    public static boolean entityPassesThroughGaps(Entity entity) {
+        return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && SplatcraftComponents.PLAYER_DATA.get(entity).isSquid();
+    }
+
     public static boolean canClimb(PlayerEntity player) {
         if (InkBlockUtils.onEnemyInk(player)) {
             return false;
@@ -130,7 +137,7 @@ public class InkBlockUtils {
 
                 if (!(block instanceof AbstractInkableBlock) || ((AbstractInkableBlock) block).canClimb()) {
                     BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                    if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() == ColorUtils.getLivingEntityColor(player) && !player.hasVehicle()) {
+                    if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() == ColorUtils.getEntityColor(player) && !player.hasVehicle()) {
                         return true;
                     }
                 }

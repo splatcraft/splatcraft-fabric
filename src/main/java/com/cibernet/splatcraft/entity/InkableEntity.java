@@ -49,8 +49,13 @@ public interface InkableEntity {
         this.setInkColor(InkColor.getFromId(splatcraft.getString("InkColor")));
     }
 
-    default void setInkColor(InkColor inkColor) {
-        this.getDataTracker().set(INK_COLOR, inkColor.toString());
+    default boolean setInkColor(InkColor inkColor) {
+        if (this.getInkColor() != inkColor) {
+            this.getDataTracker().set(INK_COLOR, inkColor.toString());
+            return true;
+        }
+
+        return false;
     }
     default InkColor getInkColor() {
         return SplatcraftRegistries.INK_COLORS.get(new Identifier(this.getDataTracker().get(INK_COLOR)));

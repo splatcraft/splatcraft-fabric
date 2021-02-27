@@ -24,7 +24,7 @@ public class InkDamageUtils {
 
     public static boolean damage(World world, LivingEntity target, float damage, InkColor color, Entity source, ItemStack sourceItem, boolean damageMobs, String id) {
         InkDamageSource damageSource = new InkDamageSource(id, source, source, sourceItem);
-        InkColor targetColor = ColorUtils.getLivingEntityColor(target);
+        InkColor targetColor = ColorUtils.getEntityColor(target);
 
         if ( damage != 0 && (
             damageMobs || SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_MOB_DAMAGE)

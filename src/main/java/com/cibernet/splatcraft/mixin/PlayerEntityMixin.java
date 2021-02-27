@@ -5,6 +5,8 @@ import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,6 +48,26 @@ public class PlayerEntityMixin {
             if (movementSpeed != -1.0F) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
             }
+        }
+    }
+
+    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+    private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(PlayerEntity.class.cast(this));
+        if (data.isSquid()) {
+            cir.setReturnValue(pose == EntityPose.FALL_FLYING ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
+        }
+    }
+    @Inject(method = "getActiveEyeHeight", at = @At("RETURN"), cancellable = true)
+    private void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+        if (pose != EntityPose.FALL_FLYING) {
+            try {
+                PlayerEntity $this = PlayerEntity.class.cast(this);
+                PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+                if (data.isSquid()) {
+                    cir.setReturnValue(cir.getReturnValueF() / 2);
+                }
+            } catch (NullPointerException ignored) {}
         }
     }
 

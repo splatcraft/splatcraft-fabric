@@ -12,24 +12,25 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
     private final ModelPart rightTentacle;
 
     public InkSquidEntityModel() {
-        textureWidth = 32;
+        textureWidth = 48;
         textureHeight = 32;
 
         body = new ModelPart(this);
         body.setPivot(0.0F, 22.5F, 3.0F);
-        body.setTextureOffset(4, 2).addCuboid(-3.5F, -1.5F, -12.0F, 7.0F, 3.0F, 3.0F, 0.0F, false);
-        body.setTextureOffset(0, 0).addCuboid(-4.5F, -2.0F, -9.0F, 9.0F, 4.0F, 5.0F, 0.0F, false);
+        body.setTextureOffset(0, 16).addCuboid(-4.0F, -1.5F, -12.0F, 8.0F, 3.0F, 3.0F, 0.0F, false);
+        body.setTextureOffset(0, 0).addCuboid(-5.5F, -2.0F, -9.0F, 11.0F, 4.0F, 5.0F, 0.0F, false);
         body.setTextureOffset(0, 9).addCuboid(-3.5F, -1.5F, -4.0F, 7.0F, 3.0F, 4.0F, 0.0F, false);
+        body.setTextureOffset(20, 20).addCuboid(-3.0F, -1.5F, 0.0F, 6.0F, 3.0F, 2.0F, 0.0F, false);
 
         leftTentacle = new ModelPart(this);
         leftTentacle.setPivot(2.5F, 22.5F, 2.0F);
-        leftTentacle.setTextureOffset(14, 23).addCuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 3.0F, 0.0F, true);
-        leftTentacle.setTextureOffset(14, 17).addCuboid(-2.0F, -1.0F, 4.0F, 3.0F, 2.0F, 4.0F, 0.0F, true);
+        leftTentacle.setTextureOffset(10, 24).addCuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 4.0F, 0.0F, true);
+        leftTentacle.setTextureOffset(0, 22).addCuboid(-2.0F, -1.0F, 5.0F, 3.0F, 2.0F, 4.0F, 0.0F, true);
 
         rightTentacle = new ModelPart(this);
         rightTentacle.setPivot(-2.5F, 22.5F, 2.0F);
-        rightTentacle.setTextureOffset(14, 23).addCuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 3.0F, 0.0F, false);
-        rightTentacle.setTextureOffset(14, 17).addCuboid(-1.0F, -1.0F, 4.0F, 3.0F, 2.0F, 4.0F, 0.0F, false);
+        rightTentacle.setTextureOffset(10, 24).addCuboid(-1.0F, -1.0F, 1.0F, 2.0F, 2.0F, 4.0F, 0.0F, false);
+        rightTentacle.setTextureOffset(0, 22).addCuboid(-1.0F, -1.0F, 5.0F, 3.0F, 2.0F, 4.0F, 0.0F, false);
     }
 
     @Override
