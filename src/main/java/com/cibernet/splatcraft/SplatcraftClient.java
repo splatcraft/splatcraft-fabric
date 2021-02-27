@@ -25,8 +25,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.UUID;
-
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
     @Override
@@ -61,13 +59,6 @@ public class SplatcraftClient implements ClientModInitializer {
         brlmInstance.putBlocks(RenderLayer.getTranslucent(), SplatcraftBlocks.GLOWING_INKED_BLOCK);
         brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP/*, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
 
-        // networking
-        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_PLAYER_INK_COLOR_PACKET_ID, (client, handler, buf, responseSender) -> {
-            UUID uuid = buf.readUuid();
-            String inkColorId = buf.readString();
-
-            client.execute(() -> ColorUtils.setInkColor(MinecraftClient.getInstance().world.getPlayerByUuid(uuid), SplatcraftRegistries.INK_COLORS.get(new Identifier(inkColorId))));
-        });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, (client, handler, buf, responseSender) -> {
             BlockPos pos = buf.readBlockPos();
             String inkColorId = buf.readString();

@@ -6,10 +6,7 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -17,8 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -54,16 +49,7 @@ public class ColorUtils {
     public static boolean setInkColor(PlayerEntity player, InkColor color) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         if (data.getInkColor() != color) {
-            if (player instanceof ServerPlayerEntity) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeUuid(player.getUuid())
-                   .writeString(color.toString());
-
-                ServerPlayNetworking.send((ServerPlayerEntity) player, SplatcraftNetworkingConstants.SET_PLAYER_INK_COLOR_PACKET_ID, buf);
-            }
-
             data.setInkColor(color);
-
             return true;
         } else {
             return false;

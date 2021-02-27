@@ -6,11 +6,8 @@ import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Random;
 
@@ -24,12 +21,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
     public PlayerDataComponent(Object provider) {
         this.provider = provider;
-    }
-
-    @Environment(EnvType.SERVER)
-    @Override
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
-        return player == this.provider;
     }
 
     @Override
@@ -65,6 +56,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
     public void setIsSquid(boolean isSquid) {
         this.isSquid = isSquid;
+        SplatcraftComponents.PLAYER_DATA.sync(this.provider);
     }
     public static void toggleSquidForm(PlayerEntity player) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
@@ -73,6 +65,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
     public void setInkColor(InkColor inkColor) {
         this.inkColor = inkColor;
+        SplatcraftComponents.PLAYER_DATA.sync(this.provider);
     }
     public InkColor getInkColor() {
         return this.inkColor;
@@ -80,6 +73,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
     public void setSquidSubmergeMode(int squidSubmergeMode) {
         this.squidSubmergeMode = squidSubmergeMode;
+        SplatcraftComponents.PLAYER_DATA.sync(this.provider);
     }
     public int getSquidSubmergeMode() {
         return this.squidSubmergeMode;
