@@ -44,17 +44,8 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
             this.body.pitch = (float) -Math.min(Math.PI / 2, Math.max(-Math.PI / 2, angle));
         }
 
-        if (entity.isOnGround() || isSwimming) {
-            this.leftTentacle.yaw = MathHelper.cos(limbAngle * 0.6662F + (float) Math.PI) * 1.4F * limbDistance / (isSwimming ? 2.2f : 1.5f);
-            this.rightTentacle.yaw = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance / (isSwimming ? 2.2f : 1.5f);
-        } else {
-            if (Math.abs(Math.round(rightTentacle.yaw * 100)) != 0) {
-                this.rightTentacle.yaw -= rightTentacle.yaw / 8.0F;
-            }
-            if (Math.abs(Math.round(leftTentacle.yaw * 100)) != 0) {
-                this.leftTentacle.yaw -= leftTentacle.yaw / 8.0F;
-            }
-        }
+        this.leftTentacle.yaw = MathHelper.cos(limbAngle * 0.6662F + (float) Math.PI) * 1.4F * limbDistance / (isSwimming ? 2.2f : 1.5f);
+        this.rightTentacle.yaw = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance / (isSwimming ? 2.2f : 1.5f);
     }
 
     @Override

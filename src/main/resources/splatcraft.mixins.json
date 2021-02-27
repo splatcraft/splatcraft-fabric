@@ -4,6 +4,7 @@
   "package": "com.cibernet.splatcraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EntityMixin",
     "EntityShapeContextMixin",
     "ItemEntityMixin",
     "PlayerEntityMixin"

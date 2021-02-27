@@ -1,6 +1,5 @@
-package com.cibernet.splatcraft.entity.ink_squid;
+package com.cibernet.splatcraft.entity;
 
-import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;

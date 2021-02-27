@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.init;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.entity.ink_squid.InkSquidEntity;
+import com.cibernet.splatcraft.entity.InkSquidEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;

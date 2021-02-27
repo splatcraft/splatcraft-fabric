@@ -8,6 +8,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
@@ -34,20 +36,6 @@ public class PlayerEntityMixin {
         PlayerHandler.onPlayerTick(PlayerEntity.class.cast(this));
     }
 
-    @Inject(method = "isBlockBreakingRestricted", at = @At("HEAD"), cancellable = true)
-    private void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
-            cir.setReturnValue(true);
-        }
-    }
-
-    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
-    private void attack(Entity target, CallbackInfo ci) {
-        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
-            ci.cancel();
-        }
-    }
-
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
@@ -58,6 +46,36 @@ public class PlayerEntityMixin {
             if (movementSpeed != -1.0F) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
             }
+        }
+    }
+
+    @Inject(method = "isBlockBreakingRestricted", at = @At("HEAD"), cancellable = true)
+    private void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
+        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
+            cir.setReturnValue(true);
+        }
+    }
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    private void attack(Entity target, CallbackInfo ci) {
+        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "getDeathSound", at = @At("HEAD"), cancellable = true)
+    private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
+        PlayerEntity $this = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+        if (data.isSquid()) {
+            cir.setReturnValue(SoundEvents.ENTITY_COD_DEATH);
+        }
+    }
+    @Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
+    private void getHurtSound(CallbackInfoReturnable<SoundEvent> cir) {
+        PlayerEntity $this = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+        if (data.isSquid()) {
+            cir.setReturnValue(SoundEvents.ENTITY_COD_HURT);
         }
     }
 }

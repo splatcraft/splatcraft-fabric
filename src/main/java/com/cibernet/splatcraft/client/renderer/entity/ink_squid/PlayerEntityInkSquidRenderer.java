@@ -3,7 +3,6 @@ package com.cibernet.splatcraft.client.renderer.entity.ink_squid;
 import com.cibernet.splatcraft.client.model.InkSquidEntityModel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -28,7 +27,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevHeadYaw, entity.headYaw);
         float headBodyYawDelta = headYaw - bodyYaw;
         if (entity.getVehicle() instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity)entity.getVehicle();
+            LivingEntity livingEntity = (LivingEntity) entity.getVehicle();
             bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevBodyYaw, livingEntity.bodyYaw);
             headBodyYawDelta = headYaw - bodyYaw;
             float rotationWrapped = MathHelper.wrapDegrees(headBodyYawDelta);
@@ -78,20 +77,15 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
 
         this.model.animateModel(entity, limbDistanceDelta, limbDistance, tickDelta);
         this.model.setAngles(entity, limbDistanceDelta, limbDistance, animationProgress, headBodyYawDelta, pitch);
-        MinecraftClient minecraft = MinecraftClient.getInstance();
-        boolean isVisible = this.isVisible(entity);
-        boolean isNotInvisible = !isVisible && !entity.isInvisibleTo(minecraft.player);
-        boolean hasOutline = minecraft.hasOutline(entity);
-        RenderLayer rendertype = this.getRenderLayer(entity, isVisible, isNotInvisible, hasOutline);
-        if (rendertype != null) {
-            VertexConsumer vertices = consumers.getBuffer(rendertype);
-            int overlay = PlayerEntityInkSquidRenderer.getOverlay(entity, this.getAnimationProgress(entity, tickDelta));
-            this.model.render(matrices, vertices, light, overlay, 1.0F, 1.0F, 1.0F, isNotInvisible ? 0.15F : 1.0F);
+        boolean isTranslucent = entity.isSpectator() || entity.isInvisibleTo(MinecraftClient.getInstance().player);
+        RenderLayer renderLayer = isTranslucent ? RenderLayer.getItemEntityTranslucentCull(this.getTexture(entity)) : this.model.getLayer(this.getTexture(entity));
+        if (renderLayer != null) {
+            this.model.render(matrices, consumers.getBuffer(renderLayer), light, 900000, 1.0F, 1.0F, 1.0F, isTranslucent ? 0.25F : 1.0F);
         }
 
-        if (!entity.isSpectator()) {
-            for(FeatureRenderer<LivingEntity, InkSquidEntityModel> layerrenderer : this.features) {
-                layerrenderer.render(matrices, consumers, light, entity, limbDistanceDelta, limbDistance, tickDelta, animationProgress, headBodyYawDelta, pitch);
+        if (!isTranslucent) {
+            for (FeatureRenderer<LivingEntity, InkSquidEntityModel> featureRenderer : this.features) {
+                featureRenderer.render(matrices, consumers, light, entity, limbDistanceDelta, limbDistance, tickDelta, animationProgress, headBodyYawDelta, pitch);
             }
         }
 

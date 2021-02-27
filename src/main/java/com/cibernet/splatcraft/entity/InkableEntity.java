@@ -2,7 +2,6 @@ package com.cibernet.splatcraft.entity;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
-import com.cibernet.splatcraft.entity.ink_squid.InkSquidEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
