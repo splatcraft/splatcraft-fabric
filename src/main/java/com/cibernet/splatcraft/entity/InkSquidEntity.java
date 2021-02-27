@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvent;
@@ -66,5 +67,10 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         this.inkColorFromTag(tag);
+    }
+
+    @Override
+    public DataTracker getDataTracker() {
+        return this.dataTracker;
     }
 }
