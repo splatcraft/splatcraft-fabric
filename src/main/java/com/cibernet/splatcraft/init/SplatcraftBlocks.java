@@ -36,7 +36,7 @@ public class SplatcraftBlocks {
     public static final Block GLOWING_INKED_BLOCK = register("glowing_" + InkedBlock.id, new InkedBlock(true), false);
 
     //
-    // GRATE
+    // STAGE BLOCKS
     //
 
     public static final Block GRATE = register(GrateBlock.id, new GrateBlock(
@@ -46,10 +46,13 @@ public class SplatcraftBlocks {
             .strength(4.0F)
         )
     );
+    public static final Block GRATE_RAMP = register(GrateRampBlock.id, new GrateRampBlock(FabricBlockSettings.copy(GRATE)));
 
-    //
-    // STAGE BARRIERS
-    //
+    public static final Block BARRIER_BAR = register(BarrierBarBlock.id, new BarrierBarBlock(
+        FabricBlockSettings.of(Material.METAL, MaterialColor.CLEAR)
+            .strength(3.0f).breakByTool(FabricToolTags.PICKAXES)
+            .requiresTool().nonOpaque()
+    ));
 
     public static final Block STAGE_BARRIER = register(StageBarrierBlock.id, new StageBarrierBlock(
             FabricBlockSettings.of(Material.BARRIER, MaterialColor.CLEAR)

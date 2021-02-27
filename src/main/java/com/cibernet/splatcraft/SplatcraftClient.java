@@ -59,7 +59,7 @@ public class SplatcraftClient implements ClientModInitializer {
         // block render layers
         BlockRenderLayerMap brlmInstance = BlockRenderLayerMap.INSTANCE;
         brlmInstance.putBlocks(RenderLayer.getTranslucent(), SplatcraftBlocks.GLOWING_INKED_BLOCK);
-        brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE/*, SplatcraftBlocks.GRATE_RAMP, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
+        brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP/*, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
 
         // networking
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_PLAYER_INK_COLOR_PACKET_ID, (client, handler, buf, responseSender) -> {

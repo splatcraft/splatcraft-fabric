@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class InkSquidEntityRenderer extends LivingEntityRenderer<LivingEntity, InkSquidEntityModel> {
     @SuppressWarnings("unused")
     public InkSquidEntityRenderer(EntityRenderDispatcher dispatcher, @Nullable EntityRendererRegistry.Context ctx) {
-        super(dispatcher, new InkSquidEntityModel(), 0.5f);
+        super(dispatcher, new InkSquidEntityModel(), 0.2f);
         this.addFeature(new InkSquidEntityColorFeatureRenderer(this));
     }
 
