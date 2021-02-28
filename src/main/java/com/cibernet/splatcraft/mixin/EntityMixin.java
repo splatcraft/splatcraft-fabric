@@ -22,11 +22,11 @@ public abstract class EntityMixin {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "playStepSound", at = @At("HEAD"), cancellable = true)
     private void playStepSound(BlockPos pos, BlockState state, CallbackInfo ci) {
-        PlayerEntity $this = PlayerEntity.class.cast(this);
-        if ($this != null) {
+        Entity $this = Entity.class.cast(this);
+        if ($this instanceof PlayerEntity) {
             PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
             if (data.isSquid()) {
-                if ($this.getRandom().nextFloat() <= 0.685F) {
+                if (((PlayerEntity) $this).getRandom().nextFloat() <= 0.685F) {
                     this.playSound(SoundEvents.BLOCK_HONEY_BLOCK_FALL, 0.15F, 1.0F);
                 }
                 ci.cancel();
