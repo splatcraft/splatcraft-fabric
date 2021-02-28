@@ -21,6 +21,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -143,7 +144,7 @@ public class ColorUtils {
         }
     }
 
-    public static void addInkSplashParticle(World world, BlockPos sourcePos, BlockPos spawnPos) {
+    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
         int colorInt = ColorUtils.getInkColor(world.getBlockEntity(sourcePos)).getColor();
         float r = ((colorInt & 16711680) >> 16) / 255.0f;
         float g = ((colorInt & '\uff00') >> 8) / 255.0f;

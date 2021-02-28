@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
 public class PlayerHandler {
@@ -68,10 +68,8 @@ public class PlayerHandler {
         if (shouldBeInvisible != wasInvisible) {
             player.world.playSound(null, player.getX(), player.getY(), player.getZ(), shouldBeInvisible ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.5F, ((player.world.random.nextFloat() - player.world.random.nextFloat()) * 0.2F + 1.0F) * 0.95F);
 
-            if (player.world.isClient) {
-                for(int i = 0; i < 10; ++i) {
-                    ColorUtils.addInkSplashParticle(player.world, player.getVelocityAffectingPos(), new BlockPos(player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D)));
-                }
+            for (int i = 0; i < 10; ++i) {
+                ColorUtils.addInkSplashParticle(player.world, player.getVelocityAffectingPos(), new Vec3d(player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D)));
             }
 
             data.setSubmerged(shouldBeInvisible);

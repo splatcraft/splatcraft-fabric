@@ -57,8 +57,8 @@ public class PlayerEntityMixin {
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-        if (data.isSquid() && $this.world.isClient && $this.isOnGround() && !movementInput.equals(Vec3d.ZERO) && InkBlockUtils.shouldBeSubmerged($this)) {
-            ColorUtils.addInkSplashParticle($this.world, $this.getVelocityAffectingPos(), new BlockPos($this.getParticleX(0.5D), $this.getRandomBodyY() - 0.25D, $this.getParticleZ(0.5D)));
+        if (data.isSquid() && $this.isOnGround() && !movementInput.equals(Vec3d.ZERO) && InkBlockUtils.shouldBeSubmerged($this)) {
+            ColorUtils.addInkSplashParticle($this.world, $this.getVelocityAffectingPos(), new Vec3d($this.getParticleX(0.5D), $this.getRandomBodyY() - 0.25D, $this.getParticleZ(0.5D)));
         }
     }
 

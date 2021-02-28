@@ -33,7 +33,7 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
         super.travel(movementInput);
         if (this.world.isClient && this.isOnGround() && this.getRandom().nextFloat() <= 0.7F && (this.getVelocity().getX() != 0 || this.getVelocity().getZ() != 0) && InkBlockUtils.isOnInk(this.world, this.getVelocityAffectingPos())) {
             for(int i = 0; i < 2; ++i) {
-                ColorUtils.addInkSplashParticle(this.world, this.getVelocityAffectingPos(), new BlockPos(this.getParticleX(0.5D), this.getRandomBodyY() - 0.25D, this.getParticleZ(0.5D)));
+                ColorUtils.addInkSplashParticle(this.world, this.getVelocityAffectingPos(), new Vec3d(this.getParticleX(0.5D), this.getRandomBodyY() - 0.25D, this.getParticleZ(0.5D)));
             }
         }
     }
