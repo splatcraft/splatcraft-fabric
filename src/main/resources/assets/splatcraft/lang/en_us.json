@@ -358,8 +358,11 @@
     "splatcraft.ink_color.minecraft:black": "Organic Black",
 
     "death.attack.splatcraft.outOfBounds": "%s tried to escape the stage",
+    "death.attack.splatcraft.outOfBounds.player": "%s was knocked out of the stage by %s",
     "death.attack.splatcraft.enemyInk": "%s was intoxicated by enemy ink",
+    "death.attack.splatcraft.enemyInk.player": "%s was intoxicated by enemy ink whilst trying to escape %s",
     "death.attack.splatcraft.dissolve": "%s dissolved in water",
+    "death.attack.splatcraft.dissolve.player": "%s dissolved in water whilst trying to escape %s",
     "death.attack.splatcraft.splat": "%s was splatted by %s",
     "death.attack.splatcraft.splat.item": "%s was splatted by %s using %s",
     "death.attack.splatcraft.roll": "%s was crushed by %s",
