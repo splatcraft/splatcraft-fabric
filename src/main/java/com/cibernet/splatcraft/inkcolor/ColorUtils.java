@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -139,6 +141,15 @@ public class ColorUtils {
                 return splatcraft.getBoolean("ColorLocked");
             }
         }
+    }
+
+    public static void addInkSplashParticle(World world, BlockPos sourcePos, BlockPos spawnPos) {
+        int colorInt = ColorUtils.getInkColor(world.getBlockEntity(sourcePos)).getColor();
+        float r = ((colorInt & 16711680) >> 16) / 255.0f;
+        float g = ((colorInt & '\uff00') >> 8) / 255.0f;
+        float b = (colorInt & 255) / 255.0f;
+
+        world.addParticle(new InkSplashParticleEffect(r, g, b), spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.0D, 0.0D, 0.0D);
     }
 
     public static InkColor getRandomStarterColor(Random random) {

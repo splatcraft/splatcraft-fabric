@@ -1,5 +1,7 @@
 package com.cibernet.splatcraft.entity;
 
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -10,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
@@ -23,6 +26,16 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.BLOCK_HONEY_BLOCK_FALL, 0.15F, 1.0F);
+    }
+
+    @Override
+    public void travel(Vec3d movementInput) {
+        super.travel(movementInput);
+        if (this.world.isClient && this.isOnGround() && this.getRandom().nextFloat() <= 0.7F && (this.getVelocity().getX() != 0 || this.getVelocity().getZ() != 0) && InkBlockUtils.isOnInk(this.world, this.getVelocityAffectingPos())) {
+            for(int i = 0; i < 2; ++i) {
+                ColorUtils.addInkSplashParticle(this.world, this.getVelocityAffectingPos(), new BlockPos(this.getParticleX(0.5D), this.getRandomBodyY() - 0.25D, this.getParticleZ(0.5D)));
+            }
+        }
     }
 
     @Override

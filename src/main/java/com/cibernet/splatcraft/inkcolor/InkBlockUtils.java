@@ -84,7 +84,7 @@ public class InkBlockUtils {
         return state.getCollisionShape(world, pos).isEmpty();
     }
 
-    public static boolean shouldBeInvisible(PlayerEntity entity) {
+    public static boolean shouldBeSubmerged(PlayerEntity entity) {
         return InkBlockUtils.canSwim(entity) || InkBlockUtils.canClimb(entity);
     }
 

@@ -4,6 +4,8 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -13,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
@@ -48,6 +51,14 @@ public class PlayerEntityMixin {
             if (movementSpeed != -1.0F) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
             }
+        }
+    }
+    @Inject(method = "travel", at = @At("TAIL"))
+    private void travel(Vec3d movementInput, CallbackInfo ci) {
+        PlayerEntity $this = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+        if (data.isSquid() && $this.world.isClient && $this.isOnGround() && !movementInput.equals(Vec3d.ZERO) && InkBlockUtils.shouldBeSubmerged($this)) {
+            ColorUtils.addInkSplashParticle($this.world, $this.getVelocityAffectingPos(), new BlockPos($this.getParticleX(0.5D), $this.getRandomBodyY() - 0.25D, $this.getParticleZ(0.5D)));
         }
     }
 

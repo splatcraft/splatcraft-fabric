@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft;
 
 import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
+import com.cibernet.splatcraft.client.particle.InkSplashParticle;
 import com.cibernet.splatcraft.client.renderer.StageBarrierBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
 import com.cibernet.splatcraft.config.SplatcraftConfigManager;
@@ -14,6 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -53,6 +55,10 @@ public class SplatcraftClient implements ClientModInitializer {
             registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0F : 0.0F);
             registerModelPredicate(item, "mode", (stack, world, entity) -> RemoteItem.getRemoteMode(stack));
         }
+
+        // particles
+        ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
+        pfrInstance.register(SplatcraftParticles.INK_SPLASH, InkSplashParticle.Factory::new);
 
         // block render layers
         BlockRenderLayerMap brlmInstance = BlockRenderLayerMap.INSTANCE;
