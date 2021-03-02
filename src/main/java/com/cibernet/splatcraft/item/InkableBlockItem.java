@@ -1,30 +1,23 @@
 package com.cibernet.splatcraft.item;
 
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.collection.DefaultedList;
 
-import java.util.Optional;
-
-public class InkableBlockItem extends BlockItem {
+public class InkableBlockItem extends BlockItem implements InkableItem {
     public InkableBlockItem(Block block, Settings settings) {
         super(block, settings);
     }
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
-            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> stacks.add(ColorUtils.setInkColor(new ItemStack(this.getBlock(), 1, Optional.of(new CompoundTag())), inkColor)));
-        }
+        this.appendStacks(this.asItem(), group, stacks);
     }
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        return super.getTranslationKey(stack) + "." + ColorUtils.getInkColor(stack);
+        return this.getTranslationKey(super.getTranslationKey(stack), stack);
     }
 }

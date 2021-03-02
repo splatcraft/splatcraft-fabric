@@ -1,7 +1,9 @@
 package com.cibernet.splatcraft.init;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.entity.InkSquidEntity;
+import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -18,6 +20,14 @@ public class SplatcraftEntities {
         .spawnGroup(SpawnGroup.AMBIENT)
         , new int[]{ 0xe87422, 0xf5d7a6 }
     );
+    public static final EntityType<SquidBumperEntity> SQUID_BUMPER = register(SquidBumperEntity.id, FabricEntityTypeBuilder.createLiving()
+        .entityFactory(SquidBumperEntity::new)
+        .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0D))
+        .dimensions(EntityDimensions.fixed(0.6F, 1.8F))
+        .spawnGroup(SpawnGroup.MISC)
+        , null
+    );
+    public static final EntityType<InkProjectileEntity> INK_PROJECTILE = register(InkProjectileEntity.id, FabricEntityTypeBuilder.create(SpawnGroup.MISC, InkProjectileEntity::new), null);
 
     public SplatcraftEntities() {}
 

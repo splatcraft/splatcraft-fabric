@@ -35,6 +35,10 @@ public class Splatcraft implements ModInitializer {
             new Identifier(MOD_ID, "colored_blocks"),
             () -> new ItemStack(SplatcraftBlocks.INKWELL)
         );
+        public static final ItemGroup WEAPONS = FabricItemGroupBuilder.build(
+            new Identifier(MOD_ID, "weapons"),
+            () -> new ItemStack(SplatcraftItems.SPLAT_ROLLER)
+        );
     }
 
     @Override

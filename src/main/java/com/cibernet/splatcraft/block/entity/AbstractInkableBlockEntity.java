@@ -42,6 +42,9 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         return this.inkColor;
     }
     public void setInkColor(InkColor inkColor) {
+        if (this.world != null && !this.world.isClient) {
+            this.sync();
+        }
         this.inkColor = inkColor;
     }
     public boolean isColored() {
@@ -56,7 +59,6 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-
         this.fromTag(this.getCachedState(), tag);
     }
 

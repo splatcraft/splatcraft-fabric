@@ -1,9 +1,9 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/clash_blaster",
-    "1": "splatcraft:weapons/neo_sticker",
-    "particle": "splatcraft:weapons/clash_blaster"
+    "0": "splatcraft:item/clash_blaster",
+    "1": "splatcraft:item/neo_sticker",
+    "particle": "splatcraft:item/clash_blaster"
   },
   "elements": [
     {

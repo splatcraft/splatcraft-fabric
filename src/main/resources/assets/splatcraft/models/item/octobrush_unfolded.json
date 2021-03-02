@@ -1,8 +1,8 @@
 {
   "textures": {
-    "0": "splatcraft:weapons/octobrush",
-    "1": "splatcraft:weapons/octobrush_head",
-    "particle": "splatcraft:weapons/octobrush"
+    "0": "splatcraft:item/octobrush",
+    "1": "splatcraft:item/octobrush_head",
+    "particle": "splatcraft:item/octobrush"
   },
   "elements": [
     {

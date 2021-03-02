@@ -4,6 +4,8 @@ import com.cibernet.splatcraft.client.renderer.entity.ink_squid.PlayerEntityInkS
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin {
     private static PlayerEntityInkSquidRenderer renderer;

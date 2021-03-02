@@ -1,10 +1,10 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/corocoro_splat_roller",
-    "2": "splatcraft:weapons/splat_roller_2",
-    "3": "splatcraft:weapons/corocoro_sticker",
-    "particle": "splatcraft:weapons/corocoro_sticker"
+    "0": "splatcraft:item/corocoro_splat_roller",
+    "2": "splatcraft:item/splat_roller_2",
+    "3": "splatcraft:item/corocoro_sticker",
+    "particle": "splatcraft:item/corocoro_sticker"
   },
   "elements": [
     {

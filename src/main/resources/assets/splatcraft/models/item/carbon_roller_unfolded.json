@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/carbon_roller",
-    "particle": "splatcraft:weapons/carbon_roller"
+    "0": "splatcraft:item/carbon_roller",
+    "particle": "splatcraft:item/carbon_roller"
   },
   "elements": [
     {

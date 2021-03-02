@@ -4,9 +4,8 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.CanvasBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
-import com.cibernet.splatcraft.item.ColorChangerItem;
-import com.cibernet.splatcraft.item.InkClothArmorItem;
-import com.cibernet.splatcraft.item.InkableBlockItem;
+import com.cibernet.splatcraft.item.*;
+import com.cibernet.splatcraft.util.ClientUtils;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
@@ -31,9 +30,9 @@ public class SplatcraftItems {
 
     public static final Item SPLATTERSHOT = new ShooterBaseItem("splattershot", "splattershot", 1.05f, 0.65f, 12f, 4, 8f, 0.9f);
     public static final Item TENTATEK_SPLATTERSHOT = new ShooterBaseItem("tentatekSplattershot", "tentatek_splattershot", SPLATTERSHOT);
-    public static final Item WASABI_SPLATTERSHOT = new ShooterBaseItem("wasabiSplattershot", "wasabi_splattershot", SPLATTERSHOT);
-    public static final Item SPLAT_ROLLER = new RollerBaseItem("splatRoller", "splat_roller", -2.5d, 0.4f, 12f, 0.8f, 9f,1.15d, 3, 20, 0.15f, false);
-    public static final Item KRAK_ON_SPLAT_ROLLER = new RollerBaseItem("krakOnSplatRoller", "krak_on_splat_roller", SPLAT_ROLLER);
+    public static final Item WASABI_SPLATTERSHOT = new ShooterBaseItem("wasabiSplattershot", "wasabi_splattershot", SPLATTERSHOT);*/
+    public static final Item SPLAT_ROLLER = register(SplatRollerItem.id, new SplatRollerItem(new FabricItemSettings().customDamage((stack, amount, entity, breakCallback) -> ClientUtils.getDurabilityForDisplay(stack)).maxCount(1).group(Splatcraft.ItemGroups.WEAPONS), -2.5d, 0.4F, 12.0F, 0.8F, 9.0F,3, 20, 0.15F, false));
+    /*public static final Item KRAK_ON_SPLAT_ROLLER = new RollerBaseItem("krakOnSplatRoller", "krak_on_splat_roller", SPLAT_ROLLER);
     public static final Item CORO_CORO_SPLAT_ROLLER = new RollerBaseItem("coroCoroSplatRoller", "corocoro_splat_roller", SPLAT_ROLLER);
     public static final Item SPLAT_CHARGER = new ChargerBaseItem("splatCharger", "splat_charger", 0.85f, 1.8f, 13, 20, 40, 32f, 2.25f, 18f, 0.4);
     public static final Item BENTO_SPLAT_CHARGER = new ChargerBaseItem("bentoSplatCharger", "bento_splat_charger", SPLAT_CHARGER);
@@ -59,19 +58,19 @@ public class SplatcraftItems {
     public static final Item SLOSHER = new SlosherBaseItem("slosher", "slosher", 1.6f, 0.4f, 2, 8,14, 4, 7f);
     public static final Item CLASSIC_SLOSHER = new SlosherBaseItem("classicSlosher", "classic_slosher", SLOSHER);
     public static final Item SODA_SLOSHER = new SlosherBaseItem("sodaSlosher", "soda_slosher", SLOSHER);
-    public static final Item TRI_SLOSHER = new SlosherBaseItem("triSlosher", "tri_slosher", 1.65f, 0.37f, 3, 20,12.4f, 3, 6f);
+    public static final Item TRI_SLOSHER = new SlosherBaseItem("triSlosher", "tri_slosher", 1.65f, 0.37f, 3, 20,12.4f, 3, 6f);*/
 
-    public static final InkTankItem INK_TANK = new InkTankItem("inkTank", "ink_tank", 100);
-    public static final InkTankItem CLASSIC_INK_TANK = new InkTankItem("classicInkTank", "ink_tank_classic", INK_TANK);
-    public static final InkTankItem INK_TANK_JR = new InkTankItem("inkTankJr", "ink_tank_jr", 110).addAllowedWeapons(SPLATTERSHOT_JR);
-    public static final InkTankItem ARMORED_INK_TANK = new InkTankItem("armoredInkTank", "ink_tank_armored", 85, 3);
+    public static final Item INK_TANK = register(InkTankArmorItem.id, new InkTankArmorItem(100));
+    public static final Item CLASSIC_INK_TANK = register("classic_" + InkTankArmorItem.id, new InkTankArmorItem((InkTankArmorItem) INK_TANK));
+    public static final Item INK_TANK_JR = register(InkTankArmorItem.id + "_jr", new InkTankArmorItem(110)/*.addAllowedWeapons(SPLATTERSHOT_JR) TODO */);
+    public static final Item ARMORED_INK_TANK = register("armored_" + InkTankArmorItem.id, new InkTankArmorItem(85,  SplatcraftArmorMaterials.ARMORED_INK_TANK));
 
-    public static final Item SQUID_BUMPER = new SquidBumperItem("squidBumper", "squid_bumper");*/
+    public static final Item SQUID_BUMPER = register("squid_bumper", new SquidBumperItem(new FabricItemSettings().maxCount(16).group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
 
-    public static final Item INK_CLOTH_HELMET = register("ink_cloth_helmet", new InkClothArmorItem(EquipmentSlot.HEAD, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
-    public static final Item INK_CLOTH_CHESTPLATE = register("ink_cloth_chestplate", new InkClothArmorItem(EquipmentSlot.CHEST, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
-    public static final Item INK_CLOTH_LEGGINGS = register("ink_cloth_leggings", new InkClothArmorItem(EquipmentSlot.LEGS, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
-    public static final Item INK_CLOTH_BOOTS = register("ink_cloth_boots", new InkClothArmorItem(EquipmentSlot.FEET, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+    public static final Item INK_CLOTH_HELMET = register("ink_cloth_helmet", new InkableArmorItem(SplatcraftArmorMaterials.INK_CLOTH, EquipmentSlot.HEAD, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+    public static final Item INK_CLOTH_CHESTPLATE = register("ink_cloth_chestplate", new InkableArmorItem(SplatcraftArmorMaterials.INK_CLOTH, EquipmentSlot.CHEST, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+    public static final Item INK_CLOTH_LEGGINGS = register("ink_cloth_leggings", new InkableArmorItem(SplatcraftArmorMaterials.INK_CLOTH, EquipmentSlot.LEGS, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+    public static final Item INK_CLOTH_BOOTS = register("ink_cloth_boots", new InkableArmorItem(SplatcraftArmorMaterials.INK_CLOTH, EquipmentSlot.FEET, new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
 
     /*public static final FilterItem FILTER_EMPTY = new FilterItem("filterEmpty", "filter_empty", false);
     public static final FilterItem FILTER_NEON = new FilterItem("filterNeon", "filter_neon", false);
@@ -93,6 +92,6 @@ public class SplatcraftItems {
     }
 
     public static Item[] getInkableItems() {
-        return new Item[]{ INK_CLOTH_HELMET, INK_CLOTH_CHESTPLATE, INK_CLOTH_LEGGINGS, INK_CLOTH_BOOTS, COLOR_CHANGER };
+        return new Item[]{ SPLAT_ROLLER, INK_TANK, CLASSIC_INK_TANK, INK_TANK_JR, ARMORED_INK_TANK, SQUID_BUMPER, INK_CLOTH_HELMET, INK_CLOTH_CHESTPLATE, INK_CLOTH_LEGGINGS, INK_CLOTH_BOOTS, COLOR_CHANGER };
     }
 }

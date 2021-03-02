@@ -3,6 +3,8 @@ package com.cibernet.splatcraft.block;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.inkcolor.InkColor;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -45,6 +47,11 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
     public float[] getBeaconColorMultiplier(BlockState state, WorldView world, BlockPos pos, BlockPos beaconPos) {
         return ColorUtils.hexToRGB(getColor((World) world, pos));
     } TODO */
+
+    @Override
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
+        return false;
+    }
 
     @Override
     public void onEntityLand(BlockView world, Entity entity) {

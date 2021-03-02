@@ -50,8 +50,9 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     public abstract boolean remoteInkClear(World world, BlockPos pos);
     public abstract boolean countsTowardsTurf(World world, BlockPos pos);
 
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType) {
-        return false;
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
+        ColorUtils.setInkColor(world.getBlockEntity(pos), color);
+        return true;
     }
 
     public InkColor getColor(World world, BlockPos pos) {

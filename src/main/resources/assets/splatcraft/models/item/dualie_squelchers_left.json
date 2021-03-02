@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/dualie_squelchers",
-    "particle": "splatcraft:weapons/dualie_squelchers"
+    "0": "splatcraft:item/dualie_squelchers",
+    "particle": "splatcraft:item/dualie_squelchers"
   },
   "elements": [
     {

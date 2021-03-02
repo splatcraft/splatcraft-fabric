@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/splat_dualies",
-    "particle": "splatcraft:weapons/splat_dualies"
+    "0": "splatcraft:item/splat_dualies",
+    "particle": "splatcraft:item/splat_dualies"
   },
   "elements": [
     {

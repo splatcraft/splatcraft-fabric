@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/bamboozler_14",
-    "particle": "splatcraft:weapons/bamboozler_14"
+    "0": "splatcraft:item/bamboozler_14",
+    "particle": "splatcraft:item/bamboozler_14"
   },
   "elements": [
     {

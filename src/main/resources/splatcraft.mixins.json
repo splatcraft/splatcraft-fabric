@@ -7,11 +7,16 @@
     "EntityMixin",
     "EntityShapeContextMixin",
     "ItemEntityMixin",
-    "PlayerEntityMixin"
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "client": [
     "client.ArmorFeatureRendererMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.HeldItemRendererMixin",
+    "client.PlayerEntityModelMixin",
     "client.PlayerEntityRendererMixin"
   ],
   "injectors": {

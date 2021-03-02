@@ -61,7 +61,7 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
     private static VoxelShape[] getVoxelShapes(VoxelShape start, VoxelShape end, VoxelShape segment) {
         VoxelShape[] shapes = new VoxelShape[8];
 
-        for(int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++)
             shapes[i] = segment.offset(0.125D * i, 0.125D * i, 0.0D);
 
         shapes[6] = start;
@@ -73,8 +73,7 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
     protected static VoxelShape modifyShapeForDirection(Direction facing, VoxelShape shape) {
         Box bb = shape.getBoundingBox();
 
-        switch(facing)
-        {
+        switch(facing) {
             case SOUTH:
                 return VoxelShapes.cuboid(new Box(1 - bb.maxZ, bb.minY, bb.minX, 1 - bb.minZ, bb.maxY, bb.maxX));
             case EAST:
@@ -88,7 +87,7 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
     protected static VoxelShape[] createVoxelShapes(VoxelShape... shapes) {
         VoxelShape[] result = new VoxelShape[4];
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             result[i] = VoxelShapes.empty();
             for (VoxelShape shape : shapes) {
                 result[i] = VoxelShapes.union(result[i], modifyShapeForDirection(Direction.fromHorizontal(i), shape));

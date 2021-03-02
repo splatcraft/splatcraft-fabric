@@ -2,8 +2,8 @@
   "gui_light": "front",
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/wasabi_splattershot",
-    "particle": "splatcraft:weapons/wasabi_splattershot"
+    "0": "splatcraft:item/wasabi_splattershot",
+    "particle": "splatcraft:item/wasabi_splattershot"
   },
   "elements": [
     {

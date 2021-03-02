@@ -43,8 +43,7 @@ public class ColorUtils {
 
     public static InkColor getInkColor(PlayerEntity player) {
         try {
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-            return data.getInkColor();
+            return PlayerDataComponent.getInkColor(player);
         } catch (NullPointerException e) {
             return InkColors.NONE;
         }
@@ -56,6 +55,14 @@ public class ColorUtils {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static InkColor getInkColor(Entity entity) {
+        if (entity instanceof InkableEntity) {
+            return ((InkableEntity) entity).getInkColor();
+        } else {
+            return InkColors.NONE;
         }
     }
     public static boolean setInkColor(Entity entity, InkColor color) {
@@ -144,13 +151,23 @@ public class ColorUtils {
         }
     }
 
-    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
-        int colorInt = ColorUtils.getInkColor(world.getBlockEntity(sourcePos)).getColor();
+    public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
+        return ColorUtils.getInkColor(player) == ColorUtils.getInkColor(stack);
+    }
+
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d spawnPos) {
+        int colorInt = inkColor.getColor();
         float r = ((colorInt & 16711680) >> 16) / 255.0f;
         float g = ((colorInt & '\uff00') >> 8) / 255.0f;
         float b = (colorInt & 255) / 255.0f;
 
         world.addParticle(new InkSplashParticleEffect(r, g, b), spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.0D, 0.0D, 0.0D);
+    }
+    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
+        BlockEntity blockEntity = world.getBlockEntity(sourcePos);
+        if (blockEntity instanceof AbstractInkableBlockEntity) {
+            ColorUtils.addInkSplashParticle(world, ((AbstractInkableBlockEntity) blockEntity).getInkColor(), spawnPos);
+        }
     }
 
     public static InkColor getRandomStarterColor(Random random) {

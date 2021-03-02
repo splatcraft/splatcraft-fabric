@@ -2,8 +2,8 @@
   "gui_light": "front",
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/splattershot_jr",
-    "particle": "splatcraft:weapons/splattershot_jr"
+    "0": "splatcraft:item/splattershot_jr",
+    "particle": "splatcraft:item/splattershot_jr"
   },
   "elements": [
     {

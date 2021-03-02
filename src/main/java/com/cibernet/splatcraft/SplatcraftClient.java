@@ -1,13 +1,17 @@
 package com.cibernet.splatcraft;
 
 import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
+import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
+import com.cibernet.splatcraft.client.renderer.InkProjectileEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.StageBarrierBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
+import com.cibernet.splatcraft.client.renderer.entity.squid_bumper.SquidBumperEntityRenderer;
 import com.cibernet.splatcraft.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.RemoteItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.api.ClientModInitializer;
@@ -18,6 +22,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -44,6 +49,11 @@ public class SplatcraftClient implements ClientModInitializer {
         // entity renderers
         EntityRendererRegistry errInstance = EntityRendererRegistry.INSTANCE;
         errInstance.register(SplatcraftEntities.INK_SQUID, InkSquidEntityRenderer::new);
+        errInstance.register(SplatcraftEntities.SQUID_BUMPER, SquidBumperEntityRenderer::new);
+        errInstance.register(SplatcraftEntities.INK_PROJECTILE, InkProjectileEntityRenderer::new);
+
+        // custom armor models
+        ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
 
         // color providers
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null ? InkColors.NONE.getColor() : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColor(), SplatcraftBlocks.getInkableBlocks());
@@ -55,6 +65,7 @@ public class SplatcraftClient implements ClientModInitializer {
             registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0F : 0.0F);
             registerModelPredicate(item, "mode", (stack, world, entity) -> RemoteItem.getRemoteMode(stack));
         }
+        registerModelPredicate(SplatcraftItems.SPLAT_ROLLER, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
 
         // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();

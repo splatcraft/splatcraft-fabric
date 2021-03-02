@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/bento_splat_charger",
-    "particle": "splatcraft:weapons/bento_splat_charger"
+    "0": "splatcraft:item/bento_splat_charger",
+    "particle": "splatcraft:item/bento_splat_charger"
   },
   "elements": [
     {

@@ -4,7 +4,6 @@ import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.AbstractPassableBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
-import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftItems;
@@ -27,30 +26,17 @@ public class InkBlockUtils {
         if (InkedBlock.isTouchingLiquid(world, pos)) {
             return false;
         } else if (state.getBlock() instanceof AbstractInkableBlock) {
-            return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType);
-        } else if (canInk(world, pos)) {
-            return true;
+            return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
         } else {
-            world.setBlockEntity(pos, new InkedBlockEntity());
-
-            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) world.getBlockEntity(pos);
-            if (inkedBlockEntity == null) {
-                return false;
-            }
-            inkedBlockEntity.setInkColor(color);
-            inkedBlockEntity.setSavedState(state);
-
-            return true;
+            /*return canInk(world, pos);*/
+            return false;
         }
     }
     @SuppressWarnings("unused")
-    public static boolean inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
+    public static void inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
         if (InkBlockUtils.inkBlock(world, pos, color, damage, inkType)) {
             player.incrementStat(SplatcraftStats.BLOCKS_INKED);
-            return true;
         }
-
-        return false;
     }
 
     public static boolean canInk(World world, BlockPos pos) {
@@ -147,13 +133,8 @@ public class InkBlockUtils {
         return false;
     }
 
-    @SuppressWarnings("unused")
     public static InkBlockUtils.InkType getInkType(PlayerEntity entity) {
-        if (entity != null && entity.inventory.contains(new ItemStack(SplatcraftItems.SPLATFEST_BAND))) {
-            return InkType.GLOWING;
-        }
-
-        return InkType.NORMAL;
+        return entity != null && entity.inventory.contains(new ItemStack(SplatcraftItems.SPLATFEST_BAND)) ? InkType.GLOWING : InkType.NORMAL;
     }
 
     public enum InkType {

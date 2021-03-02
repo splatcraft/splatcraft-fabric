@@ -1,8 +1,8 @@
 {
   "textures": {
-    "0": "splatcraft:weapons/splat_charger",
-    "1": "splatcraft:weapons/ink_color",
-    "particle": "splatcraft:weapons/splat_charger"
+    "0": "splatcraft:item/splat_charger",
+    "1": "splatcraft:item/ink_color",
+    "particle": "splatcraft:item/splat_charger"
   },
   "elements": [
     {

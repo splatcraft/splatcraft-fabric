@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/grim_blaster",
-    "particle": "splatcraft:weapons/grim_blaster"
+    "0": "splatcraft:item/grim_blaster",
+    "particle": "splatcraft:item/grim_blaster"
   },
   "elements": [
     {

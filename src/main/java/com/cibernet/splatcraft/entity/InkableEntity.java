@@ -6,24 +6,16 @@ import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
-import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public interface InkableEntity {
-    TrackedData<String> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, TrackedDataHandlerRegistry.STRING);
-
-    default void initInkcolorDataTracker() {
-        this.getDataTracker().startTracking(INK_COLOR, InkColors.NONE.toString());
-    }
-
     default void setInkColorFromInkwell(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (world.getBlockState(pos).getBlock() == SplatcraftBlocks.INKWELL) {
@@ -51,16 +43,16 @@ public interface InkableEntity {
 
     default boolean setInkColor(InkColor inkColor) {
         if (this.getInkColor() != inkColor) {
-            this.getDataTracker().set(INK_COLOR, inkColor.toString());
+            this.getDataTracker().set(getInkColorTrackedData(), inkColor.toString());
             return true;
         }
 
         return false;
     }
     default InkColor getInkColor() {
-        return SplatcraftRegistries.INK_COLORS.get(new Identifier(this.getDataTracker().get(INK_COLOR)));
+        return SplatcraftRegistries.INK_COLORS.get(new Identifier(this.getDataTracker().get(getInkColorTrackedData())));
     }
-
+    TrackedData<String> getInkColorTrackedData();
     DataTracker getDataTracker();
 
     @SuppressWarnings("unused")

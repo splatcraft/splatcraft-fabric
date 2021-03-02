@@ -55,42 +55,10 @@ public class InkedBlock extends AbstractInkableBlock {
         }
     }
 
-	/* TODO modular ink
-
+	/* TODO
 	@Override
-	public BlockRenderType getRenderType(BlockState state)
-	{
+	public BlockRenderType getRenderType(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
-	}
-
-	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
-	{
-		//return VoxelShapes.empty();
-
-		if (!(worldIn.getTileEntity(pos) instanceof InkedBlockEntity))
-			//return super.getShape(state, worldIn, pos, context);
-			return VoxelShapes.empty();
-		BlockState savedState = ((InkedBlockEntity) worldIn.getTileEntity(pos)).getSavedState();
-
-		if (savedState == null || savedState.getBlock().equals(this))
-			return super.getShape(state, worldIn, pos, context);
-		return savedState.getBlock().getShape(savedState, worldIn, pos, context);
-
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
-	{
-		if (!(worldIn.getTileEntity(pos) instanceof InkedBlockEntity))
-			return super.getCollisionShape(state, worldIn, pos, context);
-		BlockState savedState = ((InkedBlockEntity) worldIn.getTileEntity(pos)).getSavedState();
-
-		if (savedState == null || savedState.getBlock().equals(this))
-			return super.getCollisionShape(state, worldIn, pos, context);
-		return savedState.getBlock().getCollisionShape(savedState, worldIn, pos, context);
-
-
 	}
 
 	@Override
@@ -233,7 +201,7 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType) {
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof InkedBlockEntity)) {
             return false;

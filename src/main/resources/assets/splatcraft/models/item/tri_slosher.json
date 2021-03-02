@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/tri_slosher",
-    "particle": "splatcraft:weapons/tri_slosher"
+    "0": "splatcraft:item/tri_slosher",
+    "particle": "splatcraft:item/tri_slosher"
   },
   "elements": [
     {

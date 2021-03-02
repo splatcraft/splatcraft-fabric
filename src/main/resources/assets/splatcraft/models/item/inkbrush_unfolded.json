@@ -1,9 +1,9 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/inkbrush",
-    "1": "splatcraft:weapons/inkbrush_head_inked",
-    "particle": "splatcraft:weapons/inkbrush"
+    "0": "splatcraft:item/inkbrush",
+    "1": "splatcraft:item/inkbrush_head_inked",
+    "particle": "splatcraft:item/inkbrush"
   },
   "elements": [
     {

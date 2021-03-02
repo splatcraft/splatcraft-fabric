@@ -7,6 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvent;
@@ -17,6 +19,8 @@ import net.minecraft.world.World;
 
 public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     public static final String id = "ink_squid";
+
+    public static final TrackedData<String> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, TrackedDataHandlerRegistry.STRING);
 
     public InkSquidEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
@@ -32,7 +36,7 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     public void travel(Vec3d movementInput) {
         super.travel(movementInput);
         if (this.world.isClient && this.isOnGround() && this.getRandom().nextFloat() <= 0.7F && (this.getVelocity().getX() != 0 || this.getVelocity().getZ() != 0) && InkBlockUtils.isOnInk(this.world, this.getVelocityAffectingPos())) {
-            for(int i = 0; i < 2; ++i) {
+            for (int i = 0; i < 2; ++i) {
                 ColorUtils.addInkSplashParticle(this.world, this.getVelocityAffectingPos(), new Vec3d(this.getParticleX(0.5D), this.getRandomBodyY() - 0.25D, this.getParticleZ(0.5D)));
             }
         }
@@ -61,7 +65,12 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.initInkcolorDataTracker();
+        this.dataTracker.startTracking(INK_COLOR, InkColors.NONE.toString());
+    }
+
+    @Override
+    public TrackedData<String> getInkColorTrackedData() {
+        return INK_COLOR;
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,9 +27,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class InkClothArmorItem extends DyeableArmorItem implements MatchItem, EntityTickable {
-    public InkClothArmorItem(EquipmentSlot slot, Item.Settings settings) {
-        super(SplatcraftArmorMaterials.INK_CLOTH, slot, settings);
+public class InkableArmorItem extends DyeableArmorItem implements MatchItem, EntityTickable, InkableItem {
+    public InkableArmorItem(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings) {
+        super(material, slot, settings);
     }
 
     @Override

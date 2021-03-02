@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/aerospray_rg",
-    "particle": "splatcraft:weapons/aerospray_rg"
+    "0": "splatcraft:item/aerospray_rg",
+    "particle": "splatcraft:item/aerospray_rg"
   },
   "elements": [
     {

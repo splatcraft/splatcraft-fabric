@@ -1,8 +1,8 @@
 {
   "texture_size": [32, 32],
   "textures": {
-    "0": "splatcraft:weapons/blaster",
-    "particle": "splatcraft:weapons/blaster"
+    "0": "splatcraft:item/blaster",
+    "particle": "splatcraft:item/blaster"
   },
   "elements": [
     {

@@ -2,16 +2,20 @@ package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
+import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.item.AbstractWeaponItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +42,9 @@ public class PlayerEntityMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
-        PlayerHandler.onPlayerTick(PlayerEntity.class.cast(this));
+        PlayerEntity player = PlayerEntity.class.cast(this);
+        PlayerHandler.onPlayerTick(player);
+        WeaponHandler.onPlayerTick(player);
     }
 
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
@@ -50,6 +56,12 @@ public class PlayerEntityMixin {
             float movementSpeed = PlayerHandler.getMovementSpeed($this, cir.getReturnValueF());
             if (movementSpeed != -1.0F) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
+            }
+        } else if ($this.isUsingItem()) {
+            ItemStack stack = $this.getActiveItem();
+            Item item = stack.getItem();
+            if (item instanceof AbstractWeaponItem && ((AbstractWeaponItem) item).doesNotAffectMovementWhenUsed() && AbstractWeaponItem.hasInk($this, stack)) {
+                cir.setReturnValue(cir.getReturnValueF() / 0.2F);
             }
         }
     }

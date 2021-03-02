@@ -23,6 +23,10 @@ public class SplatcraftConfig {
          * Enable or disable color lock.
          */
         public Option colorLock = new Option("color_lock", false);
+        /**
+         * Enable or disable a weapon's durability bar's colour to match the player's ink colour.
+         */
+        public Option dynamicInkDurabilityColor = new Option("dynamic_ink_durability_color", true);
     }
 
     /**
