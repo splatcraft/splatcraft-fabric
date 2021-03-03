@@ -127,31 +127,13 @@ public class InkTankArmorItem extends InkableArmorItem {
         return null;
     }
 
-
-
-    /*@Override
-    public double getDurabilityForDisplay(ItemStack stack) {
-        return 1 - getInkAmount(stack) / capacity;
-    }
-
-    @Override
-    public int getRGBDurabilityForDisplay(ItemStack stack) {
-        return SplatcraftConfig.COLORS.dynamicInkDurabilityColor.getBoolean() ? ColorUtils.getInkColor(stack) : super.getRGBDurabilityForDisplay(stack);
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && !tag.isEmpty() && stack.getTag().contains("Ink") && getInkAmount(stack) < capacity;
-    }*/
-
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
         return false;
     }
 
     public static float getInkAmount(ItemStack stack) {
-        return stack.getOrCreateTag().getFloat("Ink");
+        return stack.getOrCreateSubTag(Splatcraft.MOD_ID).getFloat("ContainedInk");
     }
 
     public static float getInkAmount(ItemStack tank, ItemStack weapon) {
@@ -159,9 +141,9 @@ public class InkTankArmorItem extends InkableArmorItem {
     }
 
     public static void setInkAmount(ItemStack stack, float value) {
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         if (tag != null) {
-            tag.putFloat("Ink", value);
+            tag.putFloat("ContainedInk", value);
         }
     }
 
