@@ -33,9 +33,12 @@ public class InkBlockUtils {
         }
     }
     @SuppressWarnings("unused")
-    public static void inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
+    public static boolean inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
         if (InkBlockUtils.inkBlock(world, pos, color, damage, inkType)) {
             player.incrementStat(SplatcraftStats.BLOCKS_INKED);
+            return true;
+        } else {
+            return false;
         }
     }
 

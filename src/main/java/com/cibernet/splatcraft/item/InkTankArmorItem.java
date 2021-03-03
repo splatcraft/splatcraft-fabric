@@ -143,7 +143,7 @@ public class InkTankArmorItem extends InkableArmorItem {
     public static void setInkAmount(ItemStack stack, float value) {
         CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         if (tag != null) {
-            tag.putFloat("ContainedInk", value);
+            tag.putFloat("ContainedInk", Math.max(0, value));
         }
     }
 

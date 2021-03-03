@@ -65,7 +65,7 @@ public class SplatcraftClient implements ClientModInitializer {
             registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0F : 0.0F);
             registerModelPredicate(item, "mode", (stack, world, entity) -> RemoteItem.getRemoteMode(stack));
         }
-        registerModelPredicate(SplatcraftItems.SPLAT_ROLLER, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+        registerUnfoldedModelPredicate(SplatcraftItems.SPLAT_ROLLER, SplatcraftItems.KRAK_ON_SPLAT_ROLLER, SplatcraftItems.COROCORO_SPLAT_ROLLER, SplatcraftItems.OCTOBRUSH, SplatcraftItems.CARBON_ROLLER, SplatcraftItems.INKBRUSH);
 
         // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
@@ -88,5 +88,10 @@ public class SplatcraftClient implements ClientModInitializer {
 
     private static void registerModelPredicate(Item item, String id, ModelPredicateProvider provider) {
         FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
+    }
+    private static void registerUnfoldedModelPredicate(Item... items) {
+        for (Item item : items) {
+            registerModelPredicate(item, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+        }
     }
 }

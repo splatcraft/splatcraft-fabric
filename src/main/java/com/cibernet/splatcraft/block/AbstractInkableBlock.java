@@ -51,8 +51,13 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     public abstract boolean countsTowardsTurf(World world, BlockPos pos);
 
     public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
-        ColorUtils.setInkColor(world.getBlockEntity(pos), color);
-        return true;
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (ColorUtils.getInkColor(blockEntity) != color) {
+            ColorUtils.setInkColor(world.getBlockEntity(pos), color);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public InkColor getColor(World world, BlockPos pos) {

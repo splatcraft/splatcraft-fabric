@@ -60,8 +60,9 @@ public class SquidBumperEntityModel extends EntityModel<SquidBumperEntity> {
 
         bumper.pivotY = 24;
 
-        if(entity.getInkHealth() <= 0f)
+        if (entity.getInkHealth() <= 0f) {
             bumper.pivotY *= 1 / scale;
+        }
     }
 
     @Override

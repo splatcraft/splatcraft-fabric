@@ -18,6 +18,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
@@ -30,7 +31,8 @@ import java.util.List;
 public class SplatRollerItem extends AbstractWeaponItem {
     public static final String id = "splat_roller";
 
-    protected double weaponSpeed;
+    protected final Item.Settings settings;
+
     protected float flingSpeed;
     protected boolean isBrush;
     protected int rollRadius;
@@ -41,10 +43,11 @@ public class SplatRollerItem extends AbstractWeaponItem {
 
     /*private final double rollSpeed;*/
 
-    public SplatRollerItem(Settings settings, double weaponSpeed, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
+    public SplatRollerItem(Settings settings, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
         super(inkConsumption, settings);
 
-        this.weaponSpeed = weaponSpeed;
+        this.settings = settings;
+
         this.flingSpeed = flingSpeed;
         this.rollRadius = rollRadius;
         this.flingSize = flingSize;
@@ -52,6 +55,12 @@ public class SplatRollerItem extends AbstractWeaponItem {
         this.flingDamage = flingDamage;
         this.flingConsumption = flingConsumption;
         this.isBrush = isBrush;
+    }
+    public SplatRollerItem(SplatRollerItem item) {
+        this(item.settings, item.flingSpeed, item.flingDamage, item.flingSize, item.flingConsumption, item.rollRadius, item.rollDamage, item.inkConsumption, item.isBrush);
+    }
+    public SplatRollerItem(SplatRollerItem item, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
+        this(item.settings, flingSpeed, flingDamage, flingSize, flingConsumption, rollRadius, rollDamage, inkConsumption, isBrush);
     }
 
     @Override
@@ -78,7 +87,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
     }
 
     public double getWeaponSpeed() {
-        return this.weaponSpeed;
+        return 50.0D;
     }
 
     @Override
@@ -124,9 +133,8 @@ public class SplatRollerItem extends AbstractWeaponItem {
                             h++;
                         }
 
-                        if (InkBlockUtils.canInk(world, inkPos)) {
+                        if (InkBlockUtils.canInk(world, inkPos) && InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing)) {
                             ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
-                            InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing);
                             reduceInk(player);
                         }
 
