@@ -4,10 +4,8 @@ import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.AbstractPassableBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
-import com.cibernet.splatcraft.init.SplatcraftGameRules;
-import com.cibernet.splatcraft.init.SplatcraftItems;
-import com.cibernet.splatcraft.init.SplatcraftStats;
+import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.minecraft.block.Block;
@@ -28,7 +26,16 @@ public class InkBlockUtils {
         } else if (state.getBlock() instanceof AbstractInkableBlock) {
             return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
         } else {
-            /*return canInk(world, pos);*/
+            if (canInk(world, pos)) {
+                if (world.getBlockEntity(pos) == null) {
+                    InkedBlockEntity blockEntity = new InkedBlockEntity();
+                    blockEntity.setSavedState(world.getBlockState(pos));
+                    blockEntity.setInkColor(color);
+                    world.setBlockState(pos, SplatcraftBlocks.INKED_BLOCK.getDefaultState());
+                    world.setBlockEntity(pos, blockEntity);
+                    return true;
+                }
+            }
             return false;
         }
     }

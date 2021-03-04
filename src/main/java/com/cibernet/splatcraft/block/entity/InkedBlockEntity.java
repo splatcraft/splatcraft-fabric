@@ -46,6 +46,9 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
     }
     public void setSavedState(BlockState savedState) {
         this.savedState = savedState;
+        if (this.world != null && !this.world.isClient) {
+            this.sync();
+        }
     }
     public boolean hasSavedState() {
         return this.savedState.getBlock() != Blocks.AIR;

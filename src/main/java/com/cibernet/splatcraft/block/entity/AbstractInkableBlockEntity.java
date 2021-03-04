@@ -22,7 +22,8 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = new CompoundTag();
+        CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
+        if (splatcraft == null) splatcraft = new CompoundTag();
 
         splatcraft.putString("InkColor", this.inkColor.toString());
 

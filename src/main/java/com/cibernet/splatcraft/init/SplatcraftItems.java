@@ -77,10 +77,10 @@ public class SplatcraftItems {
     public static final FilterItem FILTER_DYE = new FilterItem("filterDye", "filter_dye", false);
     public static final FilterItem FILTER_PASTEL = new FilterItem("filterPastel", "filter_pastel", false);
     public static final FilterItem FILTER_ENCHANTED = new FilterItem("filterEnchanted", "filter_enchanted", true);
-    public static final FilterItem FILTER_CREATIVE = new FilterItem("filterCreative", "filter_creative", true);
+    public static final FilterItem FILTER_CREATIVE = new FilterItem("filterCreative", "filter_creative", true);*/
 
-    public static final Item INK_DISRUPTOR = new InkDisruptorItem();
-    public static final Item TURF_SCANNER = new TurfScannerItem();*/
+    public static final Item INK_DISRUPTOR = register("ink_disruptor", new InkDisruptorItem(new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+    public static final Item TURF_SCANNER = register("turf_scanner", new TurfScannerItem(new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
     public static final Item COLOR_CHANGER = register("color_changer", new ColorChangerItem(new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));
 
     public static final Item SPLATFEST_BAND = register("splatfest_band", new Item(new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP)));

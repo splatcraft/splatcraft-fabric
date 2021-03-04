@@ -82,10 +82,20 @@ public class InkedBlock extends AbstractInkableBlock {
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
-            return ((InkedBlockEntity) blockEntity).getSavedState().getCollisionShape(world, pos, ShapeContext.absent());
+            return ((InkedBlockEntity) blockEntity).getSavedState().getCollisionShape(world, pos, ctx);
         }
 
         return super.getCollisionShape(state, world, pos, ctx);
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            return ((InkedBlockEntity) blockEntity).getSavedState().getOutlineShape(world, pos, ctx);
+        }
+
+        return super.getOutlineShape(state, world, pos, ctx);
     }
 
     @Override

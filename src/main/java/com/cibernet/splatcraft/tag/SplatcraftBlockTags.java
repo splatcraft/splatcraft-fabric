@@ -10,6 +10,7 @@ public class SplatcraftBlockTags {
     public static final Tag<Block> INKABLE_BLOCKS = register("inkable_blocks");
     public static final Tag<Block> UNINKABLE_BLOCKS = register("uninkable_blocks");
     public static final Tag<Block> STAGE_BARRIERS = register("stage_barriers");
+    public static final Tag<Block> BLOCKS_TURF = register("blocks_turf");
 
     public SplatcraftBlockTags() {}
 
