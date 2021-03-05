@@ -3,6 +3,7 @@
   "values": [
     "minecraft:soul_sand",
     "minecraft:grass_path",
-    "minecraft:wet_sponge"
+    "minecraft:wet_sponge",
+    "splatcraft:barrier_bar"
   ]
 }

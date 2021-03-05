@@ -51,6 +51,6 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
         }
     }
     public boolean hasSavedState() {
-        return this.savedState.getBlock() != Blocks.AIR;
+        return this.savedState.getBlock() != null;
     }
 }

@@ -21,7 +21,9 @@ public class InkBlockUtils {
     public static boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
         BlockState state = world.getBlockState(pos);
 
-        if (InkedBlock.isTouchingLiquid(world, pos)) {
+        if (color == InkColors.NONE) {
+            return false;
+        } else if (InkedBlock.isTouchingLiquid(world, pos)) {
             return false;
         } else if (state.getBlock() instanceof AbstractInkableBlock) {
             return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
@@ -29,11 +31,16 @@ public class InkBlockUtils {
             if (canInk(world, pos)) {
                 if (world.getBlockEntity(pos) == null) {
                     InkedBlockEntity blockEntity = new InkedBlockEntity();
-                    blockEntity.setSavedState(world.getBlockState(pos));
-                    blockEntity.setInkColor(color);
-                    world.setBlockState(pos, SplatcraftBlocks.INKED_BLOCK.getDefaultState());
-                    world.setBlockEntity(pos, blockEntity);
-                    return true;
+                    BlockState oldState = world.getBlockState(pos);
+
+                    if (oldState != null && !oldState.isAir()) {
+                        blockEntity.setSavedState(oldState);
+                        blockEntity.setInkColor(color);
+                        world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                        world.setBlockEntity(pos, blockEntity);
+
+                        return true;
+                    }
                 }
             }
             return false;
@@ -56,9 +63,9 @@ public class InkBlockUtils {
 
         Block block = world.getBlockState(pos).getBlock();
 
-        if (SplatcraftBlockTags.UNINKABLE_BLOCKS.contains(block)) {
+        if (!(world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) && world.getBlockEntity(pos) != null) {
             return false;
-        } else if (!(world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) && world.getBlockEntity(pos) != null) {
+        } else if (SplatcraftBlockTags.UNINKABLE_BLOCKS.contains(block)) {
             return false;
         } else if (SplatcraftBlockTags.INKABLE_BLOCKS.contains(block)) {
             return true;
@@ -149,6 +156,16 @@ public class InkBlockUtils {
 
     public enum InkType {
         NORMAL,
-        GLOWING
+        GLOWING;
+
+        public Block asBlock() {
+            switch (this) {
+                default:
+                case NORMAL:
+                    return SplatcraftBlocks.INKED_BLOCK;
+                case GLOWING:
+                    return SplatcraftBlocks.GLOWING_INKED_BLOCK;
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
 import com.cibernet.splatcraft.client.renderer.InkProjectileEntityRenderer;
+import com.cibernet.splatcraft.client.renderer.InkedBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.StageBarrierBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.squid_bumper.SquidBumperEntityRenderer;
@@ -45,6 +46,7 @@ public class SplatcraftClient implements ClientModInitializer {
         BlockEntityRendererRegistry berrIntance = BlockEntityRendererRegistry.INSTANCE;
         // berrIntance.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
         berrIntance.register(SplatcraftBlockEntities.STAGE_BARRIER, StageBarrierBlockEntityRenderer::new);
+        berrIntance.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
 
         // entity renderers
         EntityRendererRegistry errInstance = EntityRendererRegistry.INSTANCE;
