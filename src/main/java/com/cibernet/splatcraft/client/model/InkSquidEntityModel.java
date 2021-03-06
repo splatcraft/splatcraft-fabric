@@ -43,6 +43,9 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
         if (!entity.hasVehicle()) {
             float angle = isSwimming ? (float) -((entity.pitch * Math.PI) / 180F) : (float) (entity.getY() - entity.prevY) * 1.1f;
             this.body.pitch = (float) -Math.min(Math.PI / 2, Math.max(-Math.PI / 2, angle));
+
+            this.leftTentacle.pitch = this.body.pitch / 2;
+            this.rightTentacle.pitch = this.body.pitch / 2;
         }
 
         this.leftTentacle.yaw = MathHelper.cos(limbAngle * 0.6662F + (float) Math.PI) * 1.4F * limbDistance / (isSwimming ? 2.2f : 1.5f);
@@ -53,10 +56,4 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
     public Iterable<ModelPart> getParts() {
         return ImmutableList.of(body, leftTentacle, rightTentacle);
     }
-
-    /*public void setRotationAngle(ModelPart bone, float x, float y, float z) {
-        bone.pitch = x;
-        bone.yaw = y;
-        bone.roll = z;
-    }*/
 }
