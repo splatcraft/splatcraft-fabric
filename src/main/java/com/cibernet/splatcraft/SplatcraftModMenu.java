@@ -70,6 +70,8 @@ public class SplatcraftModMenu implements ModMenuApi {
             //
 
             ConfigCategory UI = builder.getOrCreateCategory(createUIText());
+            TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
+            SplatcraftConfig.EnumOption<SplatcraftConfig.UIGroup.PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
             TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
             SplatcraftConfig.Option invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
             TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
@@ -81,6 +83,12 @@ public class SplatcraftModMenu implements ModMenuApi {
             TranslatableText inkAmountIndicator = createUIText(SplatcraftConfig.UI.inkAmountIndicator.getId());
             SplatcraftConfig.EnumOption<SplatcraftConfig.UIGroup.InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
             UI.addEntry(
+                entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.getEnum())
+                    .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())
+                    .setSaveConsumer(value -> preventBobViewWhenSquidOption.value = value)
+                    .setTooltip(createTooltip(preventBobViewWhenSquid))
+                    .build()
+            ).addEntry(
                 entryBuilder.startBooleanToggle(invisibleHotbarWhenSquid, invisibleHotbarWhenSquidOption.getBoolean())
                     .setDefaultValue(invisibleHotbarWhenSquidOption.getDefaultBoolean())
                     .setSaveConsumer(value -> invisibleHotbarWhenSquidOption.value = value)

@@ -24,6 +24,10 @@ public class SplatcraftConfig {
     public static UIGroup UI = new UIGroup();
     public static class UIGroup {
         /**
+         * Choose when view bobbing should occur when in squid form, if at all.
+         */
+        public EnumOption<PreventBobView> preventBobViewWhenSquid = new EnumOption<>("prevent_bob_view_when_squid", PreventBobView.class, PreventBobView.ALWAYS);
+        /**
          * Enable or disable disabling the hotbar when in squid form.
          */
         public Option invisibleHotbarWhenSquid = new Option("invisible_hotbar_when_squid", true);
@@ -48,6 +52,11 @@ public class SplatcraftConfig {
             OFF,
             CROSSHAIR,
             HOTBAR
+        }
+        public enum PreventBobView {
+            OFF,
+            SUBMERGED,
+            ALWAYS
         }
     }
 

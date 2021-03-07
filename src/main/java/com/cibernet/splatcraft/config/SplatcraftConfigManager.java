@@ -27,6 +27,7 @@ public class SplatcraftConfigManager {
         jsonObject.addProperty(RENDER.barrierRenderDistance.getId(), RENDER.barrierRenderDistance.getInt());
         jsonObject.addProperty(RENDER.inkedBlocksColorLayerIsTransparent.getId(), RENDER.inkedBlocksColorLayerIsTransparent.getBoolean());
         SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
+        jsonObject.addProperty(UI.preventBobViewWhenSquid.getId(), UI.preventBobViewWhenSquid.getString());
         jsonObject.addProperty(UI.invisibleHotbarWhenSquid.getId(), UI.invisibleHotbarWhenSquid.getBoolean());
         jsonObject.addProperty(UI.invisibleHotbarStatusBarsShift.getId(), UI.invisibleHotbarStatusBarsShift.getInt());
         jsonObject.addProperty(UI.invisibleCrosshairWhenSquid.getId(), UI.invisibleCrosshairWhenSquid.getBoolean());
@@ -54,6 +55,7 @@ public class SplatcraftConfigManager {
                 RENDER.barrierRenderDistance.value = SplatcraftConfigManager.load(jsonObject, RENDER.barrierRenderDistance).getAsInt();
                 RENDER.inkedBlocksColorLayerIsTransparent.value = SplatcraftConfigManager.load(jsonObject, RENDER.inkedBlocksColorLayerIsTransparent).getAsBoolean();
                 SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
+                UI.preventBobViewWhenSquid.value = SplatcraftConfig.UIGroup.InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.preventBobViewWhenSquid).getAsString());
                 UI.invisibleHotbarWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarWhenSquid).getAsBoolean();
                 UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
@@ -66,6 +68,8 @@ public class SplatcraftConfigManager {
             Splatcraft.log(Level.ERROR, "Configuration failed to load as the configuration file is not present. Go into the configuration and change a setting!");
         } catch (NullPointerException e) {
             Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e.toString() + ". This is probably just a configuration update.");
+        } catch (IllegalArgumentException e) {
+            Splatcraft.log(Level.ERROR, "Configuration option failed to load: " + e.toString());
         }
     }
     private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option option) {
