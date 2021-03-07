@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
-import com.cibernet.splatcraft.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;

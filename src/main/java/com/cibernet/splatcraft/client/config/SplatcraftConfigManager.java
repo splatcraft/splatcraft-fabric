@@ -1,6 +1,8 @@
-package com.cibernet.splatcraft.config;
+package com.cibernet.splatcraft.client.config;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
+import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -55,17 +57,18 @@ public class SplatcraftConfigManager {
                 RENDER.barrierRenderDistance.value = SplatcraftConfigManager.load(jsonObject, RENDER.barrierRenderDistance).getAsInt();
                 RENDER.inkedBlocksColorLayerIsTransparent.value = SplatcraftConfigManager.load(jsonObject, RENDER.inkedBlocksColorLayerIsTransparent).getAsBoolean();
                 SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
-                UI.preventBobViewWhenSquid.value = SplatcraftConfig.UIGroup.InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.preventBobViewWhenSquid).getAsString());
+                UI.preventBobViewWhenSquid.value = PreventBobView.valueOf(SplatcraftConfigManager.load(jsonObject, UI.preventBobViewWhenSquid).getAsString());
                 UI.invisibleHotbarWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarWhenSquid).getAsBoolean();
                 UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
                 UI.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.inkColoredCrosshairWhenSquid).getAsBoolean();
-                UI.inkAmountIndicator.value = SplatcraftConfig.UIGroup.InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.inkAmountIndicator).getAsString());
+                UI.inkAmountIndicator.value = InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.inkAmountIndicator).getAsString());
                 SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
                 COLORS.colorLock.value = SplatcraftConfigManager.load(jsonObject, COLORS.colorLock).getAsBoolean();
             }
         } catch (IOException ignored) {
-            Splatcraft.log(Level.ERROR, "Configuration failed to load as the configuration file is not present. Go into the configuration and change a setting!");
+            Splatcraft.log(Level.WARN, "Could not load configuration file! Saving and loading default values.");
+            SplatcraftConfigManager.save();
         } catch (NullPointerException e) {
             Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e.toString() + ". This is probably just a configuration update.");
         } catch (IllegalArgumentException e) {

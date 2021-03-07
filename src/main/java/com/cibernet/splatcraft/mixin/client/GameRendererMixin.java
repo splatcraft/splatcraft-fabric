@@ -1,7 +1,8 @@
 package com.cibernet.splatcraft.mixin.client;
 
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.config.SplatcraftConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -23,9 +24,9 @@ public class GameRendererMixin {
     private void bobView(MatrixStack matrixStack, float f, CallbackInfo ci) {
         if (this.client.player != null) {
             PlayerDataComponent data = PlayerDataComponent.getComponent(this.client.player);
-            SplatcraftConfig.UIGroup.PreventBobView preventBobView = SplatcraftConfig.UI.preventBobViewWhenSquid.getEnum();
-            if (preventBobView != SplatcraftConfig.UIGroup.PreventBobView.OFF && data.isSquid()) {
-                if (preventBobView != SplatcraftConfig.UIGroup.PreventBobView.SUBMERGED || data.isSubmerged()) {
+            PreventBobView preventBobView = SplatcraftConfig.UI.preventBobViewWhenSquid.getEnum();
+            if (preventBobView != PreventBobView.OFF && data.isSquid()) {
+                if (preventBobView != PreventBobView.SUBMERGED || data.isSubmerged()) {
                     ci.cancel();
                 }
             }

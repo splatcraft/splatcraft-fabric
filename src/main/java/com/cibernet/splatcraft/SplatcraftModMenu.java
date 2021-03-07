@@ -1,7 +1,9 @@
 package com.cibernet.splatcraft;
 
-import com.cibernet.splatcraft.config.SplatcraftConfig;
-import com.cibernet.splatcraft.config.SplatcraftConfigManager;
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
+import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
+import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -71,7 +73,7 @@ public class SplatcraftModMenu implements ModMenuApi {
 
             ConfigCategory UI = builder.getOrCreateCategory(createUIText());
             TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
-            SplatcraftConfig.EnumOption<SplatcraftConfig.UIGroup.PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
+            SplatcraftConfig.EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
             TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
             SplatcraftConfig.Option invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
             TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
@@ -81,7 +83,7 @@ public class SplatcraftModMenu implements ModMenuApi {
             TranslatableText inkColoredCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.inkColoredCrosshairWhenSquid.getId());
             SplatcraftConfig.Option inkColoredCrosshairWhenSquidOption = SplatcraftConfig.UI.inkColoredCrosshairWhenSquid;
             TranslatableText inkAmountIndicator = createUIText(SplatcraftConfig.UI.inkAmountIndicator.getId());
-            SplatcraftConfig.EnumOption<SplatcraftConfig.UIGroup.InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
+            SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
             UI.addEntry(
                 entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.getEnum())
                     .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())

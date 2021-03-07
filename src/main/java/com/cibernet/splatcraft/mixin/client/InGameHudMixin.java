@@ -1,8 +1,9 @@
 package com.cibernet.splatcraft.mixin.client;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.config.SplatcraftConfig;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.item.AbstractWeaponItem;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
@@ -89,7 +90,7 @@ public abstract class InGameHudMixin {
             if (chestStack.getItem() instanceof InkTankArmorItem) {
                 float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
                 if (inkAmount < 1.0F) {
-                    if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() != SplatcraftConfig.UIGroup.InkAmountIndicator.OFF) {
+                    if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() != InkAmountIndicator.OFF) {
                         this.client.getTextureManager().bindTexture(SQUID_GUI_ICONS_TEXTURE);
                         int color = ColorUtils.getInkColor(client.player).getColor();
                         float r = (float) (color >> 16 & 255) / 255.0F;
@@ -97,7 +98,7 @@ public abstract class InGameHudMixin {
                         float b = (float) (color & 255) / 255.0F;
                         RenderSystem.color4f(r, g, b, 1.0F);
 
-                        if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == SplatcraftConfig.UIGroup.InkAmountIndicator.CROSSHAIR) {
+                        if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == InkAmountIndicator.CROSSHAIR) {
                             float attackCooldownProgress = PlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0F : this.client.player.getAttackCooldownProgress(0.0F);
                             boolean targetingEntity = false;
                             if (this.client.options.attackIndicator == AttackIndicator.CROSSHAIR && this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && attackCooldownProgress >= 1.0F) {
@@ -114,7 +115,7 @@ public abstract class InGameHudMixin {
                             // draw background (uncolored)
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             $this.drawTexture(matrices, x, y, 36, 94, 16, 4);
-                        } else if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == SplatcraftConfig.UIGroup.InkAmountIndicator.HOTBAR) {
+                        } else if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == InkAmountIndicator.HOTBAR) {
                             int halfScaledWidth = this.scaledWidth / 2;
                             int y = this.scaledHeight - 20;
                             int x = halfScaledWidth + 91 + 32 + (this.getCameraPlayer().getMainArm().getOpposite() == Arm.RIGHT ? -91 - 22 : 0);

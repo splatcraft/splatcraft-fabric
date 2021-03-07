@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.client.renderer.entity.ink_squid;
 
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.model.InkSquidEntityModel;
-import com.cibernet.splatcraft.config.SplatcraftConfig;
 import com.cibernet.splatcraft.entity.InkSquidEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;

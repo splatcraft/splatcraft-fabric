@@ -1,11 +1,14 @@
-package com.cibernet.splatcraft.config;
+package com.cibernet.splatcraft.client.config;
 
+import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
+import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfig {
     public static RenderGroup RENDER = new RenderGroup();
+
     public static class RenderGroup {
         /**
          * Enable or disable having to hold stage barriers or voids to render.
@@ -48,16 +51,6 @@ public class SplatcraftConfig {
          */
         public EnumOption<InkAmountIndicator> inkAmountIndicator = new EnumOption<>("ink_amount_indicator", InkAmountIndicator.class, InkAmountIndicator.HOTBAR);
 
-        public enum InkAmountIndicator {
-            OFF,
-            CROSSHAIR,
-            HOTBAR
-        }
-        public enum PreventBobView {
-            OFF,
-            SUBMERGED,
-            ALWAYS
-        }
     }
 
     public static ColorsGroup COLORS = new ColorsGroup();

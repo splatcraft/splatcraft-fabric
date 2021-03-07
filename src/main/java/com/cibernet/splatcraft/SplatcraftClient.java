@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft;
 
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
@@ -10,7 +11,6 @@ import com.cibernet.splatcraft.client.renderer.StageBarrierBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.squid_bumper.SquidBumperEntityRenderer;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
@@ -57,7 +57,6 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // block entity renderers
         BlockEntityRendererRegistry berrIntance = BlockEntityRendererRegistry.INSTANCE;
-        // berrIntance.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
         berrIntance.register(SplatcraftBlockEntities.STAGE_BARRIER, StageBarrierBlockEntityRenderer::new);
         berrIntance.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
 

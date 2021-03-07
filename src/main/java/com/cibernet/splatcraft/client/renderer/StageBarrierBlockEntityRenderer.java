@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.client.renderer;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.StageBarrierBlock;
 import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
-import com.cibernet.splatcraft.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.handler.RendererHandler;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import net.minecraft.block.Block;
