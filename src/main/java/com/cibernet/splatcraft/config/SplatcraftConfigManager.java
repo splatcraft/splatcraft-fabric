@@ -35,6 +35,7 @@ public class SplatcraftConfigManager {
             e.printStackTrace();
         }
     }
+
     @SuppressWarnings("ConstantConditions")
     public static void load() {
         try {
@@ -49,9 +50,11 @@ public class SplatcraftConfigManager {
                 SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
                 COLORS.colorLock.value = SplatcraftConfigManager.load(jsonObject, COLORS.colorLock).getAsBoolean();
             }
-        } catch (IOException | NullPointerException e) {
-            Splatcraft.log(Level.WARN, "Configuration failed to load from file due to " + e.toString());
+        } catch (IOException e) {
+            Splatcraft.log(Level.ERROR, "Configuration failed to load due to " + e.toString());
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e.toString() + ". This is probably just a configuration update.");
         }
     }
 
