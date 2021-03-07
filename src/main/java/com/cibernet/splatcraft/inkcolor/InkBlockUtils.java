@@ -92,7 +92,7 @@ public class InkBlockUtils {
             return true;
         }
 
-        return !world.getBlockState(pos).hasSidedTransparency();
+        return true;
     }
 
     public static boolean canInkPassthrough(World world, BlockPos pos) {
