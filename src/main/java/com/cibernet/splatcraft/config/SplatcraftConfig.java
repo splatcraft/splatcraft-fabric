@@ -18,7 +18,7 @@ public class SplatcraftConfig {
         /**
          * Enable or disable inked blocks' color layer being transparent.
          */
-        public Option inkedBlocksColorLayerIsTransparent = new Option("inked_blocks_color_layer_is_transparent", false);
+        public Option inkedBlocksColorLayerIsTransparent = new Option("inked_blocks_color_layer_is_transparent", true);
     }
 
     public static ColorsGroup COLORS = new ColorsGroup();
