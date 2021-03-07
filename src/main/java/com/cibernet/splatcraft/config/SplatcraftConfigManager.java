@@ -26,6 +26,12 @@ public class SplatcraftConfigManager {
         jsonObject.addProperty(RENDER.holdStageBarrierToRender.getId(), RENDER.holdStageBarrierToRender.getBoolean());
         jsonObject.addProperty(RENDER.barrierRenderDistance.getId(), RENDER.barrierRenderDistance.getInt());
         jsonObject.addProperty(RENDER.inkedBlocksColorLayerIsTransparent.getId(), RENDER.inkedBlocksColorLayerIsTransparent.getBoolean());
+        SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
+        jsonObject.addProperty(UI.invisibleHotbarWhenSquid.getId(), UI.invisibleHotbarWhenSquid.getBoolean());
+        jsonObject.addProperty(UI.invisibleHotbarStatusBarsShift.getId(), UI.invisibleHotbarStatusBarsShift.getInt());
+        jsonObject.addProperty(UI.invisibleCrosshairWhenSquid.getId(), UI.invisibleCrosshairWhenSquid.getBoolean());
+        jsonObject.addProperty(UI.inkColoredCrosshairWhenSquid.getId(), UI.inkColoredCrosshairWhenSquid.getBoolean());
+        jsonObject.addProperty(UI.inkAmountIndicator.getId(), UI.inkAmountIndicator.getString());
         SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
         jsonObject.addProperty(COLORS.colorLock.getId(), COLORS.colorLock.getBoolean());
 
@@ -47,26 +53,33 @@ public class SplatcraftConfigManager {
                 RENDER.holdStageBarrierToRender.value = SplatcraftConfigManager.load(jsonObject, RENDER.holdStageBarrierToRender).getAsBoolean();
                 RENDER.barrierRenderDistance.value = SplatcraftConfigManager.load(jsonObject, RENDER.barrierRenderDistance).getAsInt();
                 RENDER.inkedBlocksColorLayerIsTransparent.value = SplatcraftConfigManager.load(jsonObject, RENDER.inkedBlocksColorLayerIsTransparent).getAsBoolean();
+                SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
+                UI.invisibleHotbarWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarWhenSquid).getAsBoolean();
+                UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();
+                UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
+                UI.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.inkColoredCrosshairWhenSquid).getAsBoolean();
+                UI.inkAmountIndicator.value = SplatcraftConfig.UIGroup.InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.inkAmountIndicator).getAsString());
                 SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
                 COLORS.colorLock.value = SplatcraftConfigManager.load(jsonObject, COLORS.colorLock).getAsBoolean();
             }
-        } catch (IOException e) {
-            Splatcraft.log(Level.ERROR, "Configuration failed to load due to " + e.toString());
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            Splatcraft.log(Level.ERROR, "Configuration failed to load as the configuration file is not present. Go into the configuration and change a setting!");
         } catch (NullPointerException e) {
             Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e.toString() + ". This is probably just a configuration update.");
         }
     }
-
-    private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option id) {
+    private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option option) {
         try {
-            return jsonObject.getAsJsonPrimitive(id.getId());
+            return jsonObject.getAsJsonPrimitive(option.getId());
         } catch (RuntimeException e) {
-            Object optionDefault = id.getDefault();
+            Object optionDefault = option.getDefault();
+            System.out.println(option.getId() + " is not present! Defaulting to " + optionDefault);
             if (optionDefault instanceof Boolean) {
                 return new JsonPrimitive((Boolean) optionDefault);
             } else if (optionDefault instanceof Integer) {
                 return new JsonPrimitive((Integer) optionDefault);
+            } else if (optionDefault instanceof Enum<?>) {
+                return new JsonPrimitive(String.valueOf(optionDefault));
             }
 
             return null;

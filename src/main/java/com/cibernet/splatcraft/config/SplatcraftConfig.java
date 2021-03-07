@@ -21,6 +21,36 @@ public class SplatcraftConfig {
         public Option inkedBlocksColorLayerIsTransparent = new Option("inked_blocks_color_layer_is_transparent", true);
     }
 
+    public static UIGroup UI = new UIGroup();
+    public static class UIGroup {
+        /**
+         * Enable or disable disabling the hotbar when in squid form.
+         */
+        public Option invisibleHotbarWhenSquid = new Option("invisible_hotbar_when_squid", true);
+        /**
+         * How far the status bars should shift when the hotbar is invisible.
+         */
+        public Option invisibleHotbarStatusBarsShift = new Option("invisible_hotbar_status_bars_shift", -22);
+        /**
+         * Enable or disable disabling the crosshair when in squid form.
+         */
+        public Option invisibleCrosshairWhenSquid = new Option("invisible_crosshair_when_squid", true);
+        /**
+         * Enable or disable an ink-colored crosshair when in squid form.
+         */
+        public Option inkColoredCrosshairWhenSquid = new Option("ink_colored_crosshair_when_squid", true);
+        /**
+         * Choose where the ink amount indicator is displayed, if at all.
+         */
+        public EnumOption<InkAmountIndicator> inkAmountIndicator = new EnumOption<>("ink_amount_indicator", InkAmountIndicator.class, InkAmountIndicator.HOTBAR);
+
+        public enum InkAmountIndicator {
+            OFF,
+            CROSSHAIR,
+            HOTBAR
+        }
+    }
+
     public static ColorsGroup COLORS = new ColorsGroup();
     public static class ColorsGroup {
         /**
@@ -39,7 +69,7 @@ public class SplatcraftConfig {
     public static class Option {
         private final String id;
         public Object value;
-        private final Object defaultValue;
+        protected final Object defaultValue;
 
         /**
          * Instantiates a new configuration option.
@@ -84,8 +114,8 @@ public class SplatcraftConfig {
         }
     }
     public static class RangedOption extends Option {
-        private final Object min;
-        private final Object max;
+        private final Integer min;
+        private final Integer max;
 
         /**
          * Instantiates a new ranged configuration option.
@@ -95,18 +125,52 @@ public class SplatcraftConfig {
          * @param min        The option's minimum value.
          * @param max        The option's maximum value.
          */
-        private RangedOption(String id, Object defaultVal, Object min, Object max) {
+        private RangedOption(String id, Object defaultVal, Integer min, Integer max) {
             super(id, defaultVal);
             this.min = min;
             this.max = max;
         }
 
         public int getMinInt() {
-            if (value instanceof Integer) return (Integer)this.min;
+            if (value instanceof Integer) return this.min;
             else throw new RuntimeException();
         }
         public int getMaxInt() {
-            if (value instanceof Integer) return (Integer)this.max;
+            if (value instanceof Integer) return this.max;
+            else throw new RuntimeException();
+        }
+    }
+    public static class EnumOption <T extends Enum<?>> extends Option {
+        private final Class<T> clazz;
+
+        /**
+         * Instantiates a new ranged configuration option.
+         *
+         * @param id         The option's identifier.
+         * @param defaultVal The option's default value.
+         */
+        private EnumOption(String id, Class<T> clazz, T defaultVal) {
+            super(id, defaultVal);
+            this.clazz = clazz;
+        }
+
+        public Class<T> getClazz() {
+            return this.clazz;
+        }
+
+        @SuppressWarnings("unchecked")
+        public T getEnum() {
+            if (value instanceof Enum<?>) return (T) this.value;
+            else throw new RuntimeException();
+        }
+        @SuppressWarnings("unchecked")
+        public T getDefaultEnum() {
+            if (value instanceof Enum<?>) return (T) this.defaultValue;
+            else throw new RuntimeException();
+        }
+
+        public String getString() {
+            if (value instanceof Enum<?>) return this.value.toString();
             else throw new RuntimeException();
         }
     }

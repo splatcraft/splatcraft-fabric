@@ -20,6 +20,7 @@
     "client.ClientPlayNetworkHandlerMixin",
     "client.EntityRenderDispatcherMixin",
     "client.HeldItemRendererMixin",
+    "client.InGameHudMixin",
     "client.PlayerEntityModelMixin",
     "client.PlayerEntityRendererMixin"
   ],

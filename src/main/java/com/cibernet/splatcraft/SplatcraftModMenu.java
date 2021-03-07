@@ -11,10 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftModMenu implements ModMenuApi {
@@ -69,6 +66,53 @@ public class SplatcraftModMenu implements ModMenuApi {
             );
 
             //
+            // UI CATEGORY
+            //
+
+            ConfigCategory UI = builder.getOrCreateCategory(createUIText());
+            TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
+            SplatcraftConfig.Option invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
+            TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
+            SplatcraftConfig.Option invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
+            TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
+            SplatcraftConfig.Option invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
+            TranslatableText inkColoredCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.inkColoredCrosshairWhenSquid.getId());
+            SplatcraftConfig.Option inkColoredCrosshairWhenSquidOption = SplatcraftConfig.UI.inkColoredCrosshairWhenSquid;
+            TranslatableText inkAmountIndicator = createUIText(SplatcraftConfig.UI.inkAmountIndicator.getId());
+            SplatcraftConfig.EnumOption<SplatcraftConfig.UIGroup.InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
+            UI.addEntry(
+                entryBuilder.startBooleanToggle(invisibleHotbarWhenSquid, invisibleHotbarWhenSquidOption.getBoolean())
+                    .setDefaultValue(invisibleHotbarWhenSquidOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> invisibleHotbarWhenSquidOption.value = value)
+                    .setTooltip(createTooltip(invisibleHotbarWhenSquid))
+                    .build()
+            ).addEntry(
+                entryBuilder.startIntField(invisibleHotbarStatusBarsShift, invisibleHotbarStatusBarsShiftOption.getInt())
+                    .setDefaultValue(invisibleHotbarStatusBarsShiftOption.getDefaultInt())
+                    .setSaveConsumer(value -> invisibleHotbarStatusBarsShiftOption.value = value)
+                    .setTooltip(createTooltip(invisibleHotbarStatusBarsShift))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(invisibleCrosshairWhenSquid, invisibleCrosshairWhenSquidOption.getBoolean())
+                    .setDefaultValue(invisibleCrosshairWhenSquidOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> invisibleCrosshairWhenSquidOption.value = value)
+                    .setTooltip(createTooltip(invisibleCrosshairWhenSquid))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(inkColoredCrosshairWhenSquid, inkColoredCrosshairWhenSquidOption.getBoolean())
+                    .setDefaultValue(inkColoredCrosshairWhenSquidOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> inkColoredCrosshairWhenSquidOption.value = value)
+                    .setTooltip(createTooltip(inkColoredCrosshairWhenSquid))
+                    .build()
+            ).addEntry(
+                entryBuilder.startEnumSelector(inkAmountIndicator, inkAmountIndicatorOption.getClazz(), inkAmountIndicatorOption.getEnum())
+                    .setDefaultValue(inkAmountIndicatorOption.getDefaultEnum())
+                    .setSaveConsumer(value -> inkAmountIndicatorOption.value = value)
+                    .setTooltip(createTooltip(inkAmountIndicator))
+                    .build()
+            );
+
+            //
             // COLORS CATEGORY
             //
 
@@ -95,6 +139,12 @@ public class SplatcraftModMenu implements ModMenuApi {
     }
     private TranslatableText createRenderText() {
         return createRenderText("");
+    }
+    private TranslatableText createUIText(String label) {
+        return createCatText("ui" + (label.isEmpty() ? "" : "." + label));
+    }
+    private TranslatableText createUIText() {
+        return createUIText("");
     }
     private TranslatableText createColorsText(String label) {
         return createCatText("colors" + (label.isEmpty() ? "" : "." + label));
