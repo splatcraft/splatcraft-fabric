@@ -86,8 +86,8 @@ public class InkBlockUtils {
             return false;
         } else if (SplatcraftBlockTags.INKABLE_BLOCKS.contains(block)) {
             return true;
-        } else if (!canInkPassthrough(world, pos)) {
-            return true;
+        } else if (canInkPassthrough(world, pos)) {
+            return false;
         } else if (world.getBlockState(pos).isFullCube(world, pos)) {
             return true;
         }
@@ -97,11 +97,7 @@ public class InkBlockUtils {
 
     public static boolean canInkPassthrough(World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
-
-        if (state.getBlock() instanceof AbstractPassableBlock) {
-            return true;
-        }
-        return state.getCollisionShape(world, pos).isEmpty();
+        return state.getBlock() instanceof AbstractPassableBlock || state.getCollisionShape(world, pos).isEmpty();
     }
 
     public static boolean shouldBeSubmerged(PlayerEntity player) {
