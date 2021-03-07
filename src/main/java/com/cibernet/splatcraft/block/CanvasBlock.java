@@ -19,23 +19,6 @@ public class CanvasBlock extends AbstractInkableBlock {
         return new CanvasBlockEntity();
     }
 
-    /*@Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType) {
-        if (InkedBlock.isTouchingLiquid(world, pos)) {
-            return false;
-        } else if (color == this.getColor(world, pos)) {
-            return false;
-        }
-
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractInkableBlockEntity) {
-            ((AbstractInkableBlockEntity) blockEntity).setInkColor(color);
-            return true;
-        }
-
-        return false;
-    }*/
-
     @Override
     public boolean canClimb() {
         return true;

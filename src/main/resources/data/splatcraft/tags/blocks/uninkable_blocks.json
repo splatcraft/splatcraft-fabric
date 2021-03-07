@@ -4,6 +4,8 @@
     "minecraft:soul_sand",
     "minecraft:grass_path",
     "minecraft:wet_sponge",
-    "splatcraft:barrier_bar"
+    "splatcraft:barrier_bar",
+    "splatcraft:grate",
+    "splatcraft:grate_ramp"
   ]
 }

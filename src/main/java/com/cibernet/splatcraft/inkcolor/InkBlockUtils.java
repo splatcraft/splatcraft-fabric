@@ -7,30 +7,53 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.*;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class InkBlockUtils {
-    public static boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
+    public static boolean inkBlock(World world, BlockPos pos, InkColor inkColor, float damage, InkType inkType) {
         BlockState state = world.getBlockState(pos);
 
-        if (color != InkColors.NONE && !InkedBlock.isTouchingLiquid(world, pos)) {
+        if (inkColor != InkColors.NONE && !InkedBlock.isTouchingLiquid(world, pos)) {
             if (state.getBlock() instanceof AbstractInkableBlock) {
-                return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
+                return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, inkColor, damage, inkType, true);
             } else if (canInk(world, pos) && world.getBlockEntity(pos) == null) {
-                InkedBlockEntity blockEntity = new InkedBlockEntity();
-                blockEntity.setSavedState(state);
-                blockEntity.setInkColor(color);
-                world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                world.setBlockEntity(pos, blockEntity);
+                if (!world.isClient) {
+                    InkedBlockEntity blockEntity = new InkedBlockEntity();
+                    blockEntity.setSavedState(state);
+                    blockEntity.setInkColor(inkColor);
+                    world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                    world.setBlockEntity(pos, blockEntity);
+                    ColorUtils.addInkSplashParticle(world, inkColor, Vec3d.ofBottomCenter(pos));
+
+                    // sync
+                    blockEntity.sync();
+
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeInt(Block.getRawIdFromState(state));
+                    buf.writeString(inkColor.toString());
+                    buf.writeBlockPos(pos);
+                    buf.writeEnumConstant(inkType);
+
+                    for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking(blockEntity)) {
+                        ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID, buf);
+                    }
+                }
 
                 return true;
             }

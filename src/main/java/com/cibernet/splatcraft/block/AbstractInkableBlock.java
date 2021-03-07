@@ -8,10 +8,6 @@ import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -21,8 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -63,17 +57,6 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
         world.updateListeners(pos, state, state, 2);
         if (world.isClient) {
             ((ClientWorld)world).scheduleBlockRenders(pos.getX(), pos.getY(), pos.getZ());
-        } else {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractInkableBlockEntity) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeBlockPos(pos);
-                buf.writeString(((AbstractInkableBlockEntity) blockEntity).getInkColor().toString());
-
-                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking(blockEntity)) {
-                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
-                }
-            }
         }
 
         return super.onSyncedBlockEvent(state, world, pos, type, data);
@@ -94,7 +77,7 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (stack.getTag() != null && blockEntity instanceof AbstractInkableBlockEntity) {
-            ColorUtils.setInkColor(blockEntity, ColorUtils.getInkColor(stack));
+            ((AbstractInkableBlockEntity) blockEntity).setInkColor(ColorUtils.getInkColor(stack));
         }
 
         super.onPlaced(world, pos, state, entity, stack);

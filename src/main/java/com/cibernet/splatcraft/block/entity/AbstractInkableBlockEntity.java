@@ -4,12 +4,20 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 
 public abstract class AbstractInkableBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final String id = AbstractInkableBlock.id;
@@ -42,11 +50,30 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
     public InkColor getInkColor() {
         return this.inkColor;
     }
-    public void setInkColor(InkColor inkColor) {
-        if (this.world != null && !this.world.isClient) {
-            this.sync();
+    public boolean setInkColor(InkColor inkColor) {
+        if (this.inkColor != inkColor) {
+            this.inkColor = inkColor;
+            return true;
         }
-        this.inkColor = inkColor;
+
+        if (this.world != null) {
+            if (this.world instanceof ServerWorld) {
+                this.sync();
+
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(this.pos);
+                buf.writeString(this.getInkColor().toString());
+                buf.writeInt(Block.getRawIdFromState(this.world.getBlockState(pos)));
+
+                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
+                }
+            }
+
+            this.world.addSyncedBlockEvent(pos, this.getCachedState().getBlock(), 0, 0);
+        }
+
+        return false;
     }
     public boolean isColored() {
         return this.inkColor != InkColors.NONE;

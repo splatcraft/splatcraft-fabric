@@ -82,7 +82,7 @@ public class PlayerEntityMixin {
                 buf.writeString(ColorUtils.getInkColor($this).toString());
 
                 for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) $this.world, $this.getBlockPos())) {
-                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SPAWN_PLAYER_TRAVEL_PARTICLE_PACKET_ID, buf);
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_PLAYER_TRAVEL_EFFECTS_PACKET_ID, buf);
                 }
             }
 

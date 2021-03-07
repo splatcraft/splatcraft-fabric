@@ -4,21 +4,28 @@ import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
-import com.cibernet.splatcraft.init.*;
+import com.cibernet.splatcraft.init.SplatcraftAttributes;
+import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.init.SplatcraftStats;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
 public class PlayerHandler {
@@ -63,17 +70,19 @@ public class PlayerHandler {
         boolean shouldBeSubmerged = data.isSquid() ? InkBlockUtils.shouldBeSubmerged(player) : PlayerHandler.shouldBeInvisible(player);
         if (shouldBeSubmerged != wasSubmerged) {
             if (!player.world.isClient) {
-                player.playSound(shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.15F, 0.86F);
-            }
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeUuid(player.getUuid());
+                buf.writeBoolean(shouldBeSubmerged);
+                buf.writeString(ColorUtils.getInkColor(player.world.getBlockEntity(InkBlockUtils.getVelocityAffectingPos(player))).toString());
+                buf.writeBlockPos(InkBlockUtils.getVelocityAffectingPos(player));
 
-            BlockPos velocityAffectingPos = InkBlockUtils.getVelocityAffectingPos(player);
-            if (ColorUtils.getInkColor(player.world.getBlockEntity(velocityAffectingPos)) == ColorUtils.getInkColor(player)) {
-                for (int i = 0; i < 10; ++i) {
-                    ColorUtils.addInkSplashParticle(player.world, velocityAffectingPos, new Vec3d(player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D)));
+                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) player.world, player.getBlockPos())) {
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_TOGGLE_SQUID_FORM_EFFECTS_PACKET_ID, buf);
                 }
             }
 
             data.setSubmerged(shouldBeSubmerged);
+            player.setInvisible(shouldBeSubmerged);
         }
 
         if (data.isSquid()) {
