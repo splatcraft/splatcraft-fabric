@@ -59,7 +59,9 @@ public class SplatcraftModMenu implements ModMenuApi {
                 entryBuilder.startBooleanToggle(inkedBlocksColorLayerIsTransparent, inkedBlocksColorLayerIsTransparentOption.getBoolean())
                     .setDefaultValue(inkedBlocksColorLayerIsTransparentOption.getDefaultBoolean())
                     .setSaveConsumer(value -> {
-                        Objects.requireNonNull(MinecraftClient.getInstance().player).sendMessage(createRenderText(inkedBlocksColorLayerIsTransparentOption.getId() + ".tooltip.toggled").formatted(Formatting.RED), true);
+                        if (inkedBlocksColorLayerIsTransparentOption.value != value) {
+                            MinecraftClient.getInstance().worldRenderer.reload();
+                        }
                         inkedBlocksColorLayerIsTransparentOption.value = value;
                     })
                     .setTooltip(createTooltip(inkedBlocksColorLayerIsTransparent))
