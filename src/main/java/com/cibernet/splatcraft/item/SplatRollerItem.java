@@ -1,8 +1,6 @@
 package com.cibernet.splatcraft.item;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
-import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
@@ -25,8 +23,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class SplatRollerItem extends AbstractWeaponItem {
     public static final String id = "splat_roller";
@@ -133,52 +129,27 @@ public class SplatRollerItem extends AbstractWeaponItem {
                             h++;
                         }
 
-                        if (InkBlockUtils.canInk(world, inkPos) && InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing)) {
+                        if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing)) {
                             ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
                             reduceInk(player);
-                        }
 
-                        Entity knockbackEntity = null;
-                        List<LivingEntity> inkedPlayers = world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()));
-                        int j = 0;
-
-                        if (player.getAttackCooldownProgress(0.0F) >= 1.0F) {
-                            for (LivingEntity target : inkedPlayers) {
-                                if (target.equals(player)) {
-                                    continue;
-                                }
-
-                                boolean isTargetSameColor = false;
-                                if (target instanceof PlayerEntity) {
-                                    isTargetSameColor = PlayerDataComponent.getInkColor((PlayerEntity) target) == color;
-                                }
-
-                                float rollDamage = this.rollDamage;
-                                boolean damaged = InkDamageUtils.rollDamage(world, target, rollDamage, color, player, stack, false);
-
-                                if (target instanceof SquidBumperEntity && (((SquidBumperEntity) target).getInkColor() == color) || !damaged) {
-                                    rollDamage = 0;
-                                }
-
-                                if (!isTargetSameColor && ((!(target.getHealth() - rollDamage > 0) && !(target instanceof SquidBumperEntity)) || (target instanceof SquidBumperEntity && ((SquidBumperEntity) target).getInkHealth() - rollDamage > 0))) {
-                                    knockbackEntity = target;
-                                }
-
-                                if (j++ >= 5) {
-                                    knockbackEntity = target;
-                                    break;
-                                }
+                            if (player.getVelocity().getX() != 0 && player.getVelocity().getZ() != 0) {
+                                player.setSprinting(true);
                             }
                         }
-                        if (knockbackEntity != null && world.isClient) {
-                            applyEntityCollision(knockbackEntity, player, 10);
+
+                        if (player.getAttackCooldownProgress(0.0F) >= 1.0F) {
+                            for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
+                                if (!target.equals(player)) {
+                                    InkDamageUtils.rollDamage(world, target, this.rollDamage, color, player, stack, false);
+                                }
+                            }
                         }
 
                         if (h > downReach) {
                             break;
                         }
                     }
-
             } else {
                 sendNoInkMessage(player);
             }
@@ -223,7 +194,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
     @Override
     public void onAttack(ServerPlayerEntity player, ItemStack stack) {
         if (hasInk(player, stack)) {
-            reduceInk(player, this.flingConsumption);
+            reduceInk(player);
 
             InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.flingSize, this.flingDamage);
             proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);

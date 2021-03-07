@@ -30,7 +30,6 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-@SuppressWarnings("unused")
 public abstract class AbstractInkableBlock extends BlockWithEntity {
     public static final String id = "inkable";
 
@@ -51,13 +50,7 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     public abstract boolean countsTowardsTurf(World world, BlockPos pos);
 
     public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (ColorUtils.getInkColor(blockEntity) != color) {
-            ColorUtils.setInkColor(world.getBlockEntity(pos), color);
-            return true;
-        } else {
-            return false;
-        }
+        return ColorUtils.setInkColor(world.getBlockEntity(pos), color);
     }
 
     public InkColor getColor(World world, BlockPos pos) {
@@ -120,7 +113,6 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     }
 
     public boolean remoteColorChange(World world, BlockPos pos, InkColor newColor) {
-        BlockState state = world.getBlockState(pos);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() != newColor) {
             ColorUtils.setInkColor(blockEntity, newColor);

@@ -15,6 +15,10 @@ public class SplatcraftConfig {
          * How far away stage barriers or voids will render away from you.
          */
         public RangedOption barrierRenderDistance = new RangedOption("barrier_render_distance", 16, 4, 80);
+        /**
+         * Enable or disable inked blocks' color layer being transparent.
+         */
+        public Option inkedBlocksColorLayerIsTransparent = new Option("inked_blocks_color_layer_is_transparent", false);
     }
 
     public static ColorsGroup COLORS = new ColorsGroup();

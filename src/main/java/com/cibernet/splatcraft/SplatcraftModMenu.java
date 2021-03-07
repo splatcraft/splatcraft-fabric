@@ -9,8 +9,12 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftModMenu implements ModMenuApi {
@@ -35,8 +39,10 @@ public class SplatcraftModMenu implements ModMenuApi {
             ConfigCategory RENDER = builder.getOrCreateCategory(createRenderText());
             TranslatableText holdStageBarrierToRender = createRenderText(SplatcraftConfig.RENDER.holdStageBarrierToRender.getId());
             TranslatableText barrierRenderDistance = createRenderText(SplatcraftConfig.RENDER.barrierRenderDistance.getId());
+            TranslatableText inkedBlocksColorLayerIsTransparent = createRenderText(SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.getId());
             SplatcraftConfig.Option holdStageBarrierToRenderOption = SplatcraftConfig.RENDER.holdStageBarrierToRender;
             SplatcraftConfig.RangedOption barrierRenderDistanceOption = SplatcraftConfig.RENDER.barrierRenderDistance;
+            SplatcraftConfig.Option inkedBlocksColorLayerIsTransparentOption = SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent;
             RENDER.addEntry(
                 entryBuilder.startBooleanToggle(holdStageBarrierToRender, holdStageBarrierToRenderOption.getBoolean())
                     .setDefaultValue(holdStageBarrierToRenderOption.getDefaultBoolean())
@@ -48,6 +54,15 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setDefaultValue(barrierRenderDistanceOption.getDefaultInt())
                     .setSaveConsumer(value -> barrierRenderDistanceOption.value = value)
                     .setTooltip(createTooltip(barrierRenderDistance))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(inkedBlocksColorLayerIsTransparent, inkedBlocksColorLayerIsTransparentOption.getBoolean())
+                    .setDefaultValue(inkedBlocksColorLayerIsTransparentOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> {
+                        Objects.requireNonNull(MinecraftClient.getInstance().player).sendMessage(createRenderText(inkedBlocksColorLayerIsTransparentOption.getId() + ".tooltip.toggled").formatted(Formatting.RED), true);
+                        inkedBlocksColorLayerIsTransparentOption.value = value;
+                    })
+                    .setTooltip(createTooltip(inkedBlocksColorLayerIsTransparent))
                     .build()
             );
 

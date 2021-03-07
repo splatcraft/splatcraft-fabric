@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.particle;
 
 import com.cibernet.splatcraft.init.SplatcraftParticles;
+import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
@@ -47,6 +48,13 @@ public class InkSplashParticleEffect implements ParticleEffect {
         this.red = red;
         this.green = green;
         this.blue = blue;
+    }
+    public InkSplashParticleEffect(InkColor inkColor) {
+        int colorInt = inkColor.getColor();
+
+        this.red = ((colorInt & 16711680) >> 16) / 255.0f;
+        this.green = ((colorInt & '\uff00') >> 8) / 255.0f;
+        this.blue = (colorInt & 255) / 255.0f;
     }
 
     @Override

@@ -16,7 +16,7 @@ public class ServerPlayerEntityMixin {
     @Inject(method = "swingHand", at = @At("TAIL"))
     private void swingHand(Hand hand, CallbackInfo ci) {
         ServerPlayerEntity player = ServerPlayerEntity.class.cast(this);
-        if (!PlayerDataComponent.isSquid(player)) {
+        if (!player.isSpectator() && !PlayerDataComponent.isSquid(player)) {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (item instanceof AttackInputDetectable) {

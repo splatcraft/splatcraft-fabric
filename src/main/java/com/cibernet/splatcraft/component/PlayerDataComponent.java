@@ -100,6 +100,12 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.sync();
     }
 
+    public boolean isSubmerged() {
+        return this.isSubmerged;
+    }
+    public static boolean isSubmerged(PlayerEntity player) {
+        return getComponent(player).isSubmerged();
+    }
     public void setSubmerged(boolean isSubmerged) {
         this.isSubmerged = isSubmerged;
         this.sync();
@@ -121,6 +127,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.sync();
     }
 
+    @SuppressWarnings("unused")
     public static class Cooldown {
         private int time;
         private final int maxTime;
@@ -218,6 +225,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class Charge {
         public ItemStack chargedWeapon;
         public float charge;

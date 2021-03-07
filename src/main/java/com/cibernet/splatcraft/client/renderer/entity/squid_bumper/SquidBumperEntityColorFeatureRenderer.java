@@ -40,7 +40,6 @@ public class SquidBumperEntityColorFeatureRenderer extends FeatureRenderer<Squid
             model.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
             renderCutoutModel(model, texture, matrices, consumers, light, entity, r, g, b);
         }
-
     }
 
     protected static void renderCutoutModel(SquidBumperEntityModel model, Identifier texture, MatrixStack matrices, VertexConsumerProvider consumers, int light, SquidBumperEntity entity, float r, float g, float b) {

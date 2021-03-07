@@ -16,7 +16,9 @@
   "client": [
     "client.ArmorFeatureRendererMixin",
     "client.ClientItemStackMixin",
+    "client.ClientPlayerEntityMixin",
     "client.ClientPlayNetworkHandlerMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.HeldItemRendererMixin",
     "client.PlayerEntityModelMixin",
     "client.PlayerEntityRendererMixin"

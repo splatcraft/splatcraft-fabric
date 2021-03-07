@@ -31,9 +31,9 @@ public class SplatcraftItems {
     public static final Item SPLATTERSHOT = new ShooterBaseItem("splattershot", "splattershot", 1.05f, 0.65f, 12f, 4, 8f, 0.9f);
     public static final Item TENTATEK_SPLATTERSHOT = new ShooterBaseItem("tentatekSplattershot", "tentatek_splattershot", SPLATTERSHOT);
     public static final Item WASABI_SPLATTERSHOT = new ShooterBaseItem("wasabiSplattershot", "wasabi_splattershot", SPLATTERSHOT);*/
-    public static final Item SPLAT_ROLLER = register(SplatRollerItem.id, new SplatRollerItem(new FabricItemSettings().customDamage((stack, amount, entity, breakCallback) -> ClientUtils.getDurabilityForDisplay(stack)).maxCount(1).group(Splatcraft.ItemGroups.WEAPONS), 0.4F, 12.0F, 0.8F, 6.0F,3, 20, 2, false));
+    public static final Item SPLAT_ROLLER = register(SplatRollerItem.id, new SplatRollerItem(new FabricItemSettings().customDamage((stack, amount, entity, breakCallback) -> ClientUtils.getDurabilityForDisplay(stack)).maxCount(1).group(Splatcraft.ItemGroups.WEAPONS), 0.4F, 12.0F, 0.8F, 6.0F,3, 20, 0.1F, false));
     public static final Item KRAK_ON_SPLAT_ROLLER = register("krak_on_" + SplatRollerItem.id, new SplatRollerItem((SplatRollerItem) SPLAT_ROLLER));
-    public static final Item COROCORO_SPLAT_ROLLER = register("corocoro_"+ SplatRollerItem.id, new SplatRollerItem((SplatRollerItem) SPLAT_ROLLER, 0.4F, 12.0F, 0.8F, 6.0F,2, 20, 2, false));
+    public static final Item COROCORO_SPLAT_ROLLER = register("corocoro_"+ SplatRollerItem.id, new SplatRollerItem((SplatRollerItem) SPLAT_ROLLER, 0.4F, 12.0F, 0.8F, 6.0F,2, 20, 0.1F, false));
     /*public static final Item SPLAT_CHARGER = new ChargerBaseItem("splatCharger", "splat_charger", 0.85f, 1.8f, 13, 20, 40, 32f, 2.25f, 18f, 0.4);
     public static final Item BENTO_SPLAT_CHARGER = new ChargerBaseItem("bentoSplatCharger", "bento_splat_charger", SPLAT_CHARGER);
     public static final Item SPLATTERSHOT_JR = new ShooterBaseItem("splattershotJr", "splattershot_jr", 1f, 0.35f, 13.5f, 4, 6.5f, 0.5f);*/
@@ -49,7 +49,7 @@ public class SplatcraftItems {
     public static final Item GRIM_BLASTER = new BlasterBaseItem("grimBlaster", "grim_blaster", BLASTER);
     public static final Item SPLAT_DUALIE = new DualieBaseItem("splatDualies", "splat_dualies", 1f, 0.55f, 10, 8, 6, 0.75f, 1, 0.7f, 9, 8, 30);
     public static final Item ENPERRY_SPLAT_DUALIE = new DualieBaseItem("enperrySplatDualies", "enperry_splat_dualies", SPLAT_DUALIE);*/
-    public static final Item CARBON_ROLLER = register("carbon_roller", new SplatRollerItem((SplatRollerItem) SPLAT_ROLLER, 0.38f, 8f, 0.7f, 3.5f, 2, 14, 0.12f, false));
+    public static final Item CARBON_ROLLER = register("carbon_roller", new SplatRollerItem((SplatRollerItem) SPLAT_ROLLER, 0.38f, 8f, 0.7f, 3.5f, 2, 14, 0.1f, false));
     /*public static final Item GAL_52 = new ShooterBaseItem("52Gal", "52_gal", 1.2f, 0.68f, 16f, 9, 10.4f, 1.3f);
     public static final Item GAL_52_DECO = new ShooterBaseItem("52GalDeco", "52_gal_deco", GAL_52);
     public static final Item GAL_96 = new ShooterBaseItem("96Gal", "96_gal", 1.3f, 0.75f, 12.5f, 11, 12.4f, 2.5f);

@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.config.SplatcraftConfig;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
@@ -140,21 +141,20 @@ public class InkedBlock extends AbstractInkableBlock {
     @Override
     public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof InkedBlockEntity)) {
-            return false;
+        if (blockEntity instanceof InkedBlockEntity) {
+            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+            BlockState oldState = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
+            if (inkedBlockEntity.getInkColor() != color) {
+                inkedBlockEntity.setInkColor(color);
+                return true;
+            } else {
+                world.updateListeners(pos, oldState, state, 2);
+            }
         }
 
-        InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
-        BlockState oldState = world.getBlockState(pos);
-        BlockState state = world.getBlockState(pos);
-
-        if (inkedBlockEntity.getInkColor() != color) {
-            inkedBlockEntity.setInkColor(color);
-        } else {
-            world.updateListeners(pos, oldState, state, 2);
-        }
-
-        return inkedBlockEntity.getInkColor() != color;
+        return false;
     }
 
     //
@@ -202,6 +202,16 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
+    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            return ((InkedBlockEntity) blockEntity).getSavedState().getBlock().isTranslucent(state, world, pos);
+        }
+
+        return super.isTranslucent(state, world, pos);
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState newState, WorldAccess world, BlockPos blockPos, BlockPos posFrom) {
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         if (InkedBlock.isTouchingLiquid(world, blockPos)) {
@@ -220,6 +230,10 @@ public class InkedBlock extends AbstractInkableBlock {
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        try {
+            return SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.getBoolean() ? BlockRenderType.INVISIBLE : BlockRenderType.MODEL;
+        } catch (RuntimeException ignored) {
+            return BlockRenderType.MODEL;
+        }
     }
 }

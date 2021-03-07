@@ -351,6 +351,7 @@
     "subtitle.splatcraft.squid_transform": "Kid turns into Squid",
     "subtitle.splatcraft.squid_revert": "Squid turns into Kid",
     "subtitle.splatcraft.ink_submerge": "Squid Submerges",
+    "subtitle.splatcraft.ink_unsubmerge": "Squid Unsubmerges",
     "subtitle.splatcraft.ink_surface": "Squid Surfaces",
 
     "container.ink_vat": "Inkwell Crafting",
@@ -486,6 +487,9 @@
     "config.splatcraft.category.render.hold_stage_barrier_to_render.tooltip": "Enable or disable having to hold stage barriers or voids to render.",
     "config.splatcraft.category.render.barrier_render_distance": "Barrier Render Distance",
     "config.splatcraft.category.render.barrier_render_distance.tooltip": "How far away stage barriers or voids will render away from you.",
+    "config.splatcraft.category.render.inked_blocks_color_layer_is_transparent": "Inked Blocks' Color Layer Is Transparent",
+    "config.splatcraft.category.render.inked_blocks_color_layer_is_transparent.tooltip": "Enable or disable inked blocks' color layer being transparent.",
+    "config.splatcraft.category.render.inked_blocks_color_layer_is_transparent.tooltip.toggled": "A config change requires you to reload chunks! (F3 + A)",
     "config.splatcraft.category.colors": "Colors",
     "config.splatcraft.category.colors.color_lock": "Color Lock",
     "config.splatcraft.category.colors.color_lock.tooltip": "Enable or disable color lock."

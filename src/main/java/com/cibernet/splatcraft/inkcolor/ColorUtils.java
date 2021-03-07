@@ -113,19 +113,25 @@ public class ColorUtils {
 
         return InkColors.NONE;
     }
-    public static void setInkColor(BlockEntity blockEntity, InkColor color) {
+    public static boolean setInkColor(BlockEntity blockEntity, InkColor color) {
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            ((AbstractInkableBlockEntity) blockEntity).setInkColor(color);
+            if (((AbstractInkableBlockEntity) blockEntity).getInkColor() != color) {
+                ((AbstractInkableBlockEntity) blockEntity).setInkColor(color);
 
-            World world = blockEntity.getWorld();
-            if (world != null) {
-                if (!world.isClient) {
-                    ((BlockEntityClientSerializable) blockEntity).sync();
+                World world = blockEntity.getWorld();
+                if (world != null) {
+                    if (!world.isClient) {
+                        ((BlockEntityClientSerializable) blockEntity).sync();
+                    }
+
+                    blockEntity.getWorld().addSyncedBlockEvent(blockEntity.getPos(), blockEntity.getCachedState().getBlock(), 0, 0);
                 }
 
-                blockEntity.getWorld().addSyncedBlockEvent(blockEntity.getPos(), blockEntity.getCachedState().getBlock(), 0, 0);
+                return true;
             }
         }
+
+        return false;
     }
 
     public static Text getFormattedColorName(InkColor color, boolean colorless) {

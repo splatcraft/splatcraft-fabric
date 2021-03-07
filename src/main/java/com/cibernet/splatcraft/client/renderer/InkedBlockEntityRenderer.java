@@ -32,23 +32,16 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
 
     private static void renderBlock(InkedBlockEntity blockEntity, BlockRenderManager blockRendererDispatcher, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
         BlockState state = blockEntity.getSavedState();
-        BlockRenderType renderType = blockEntity.getSavedState().getRenderType();
-        if (renderType.equals(BlockRenderType.MODEL)) {
-            state = blockEntity.getSavedState();
+        if (blockEntity.getCachedState().getRenderType().equals(BlockRenderType.INVISIBLE)) {
+            BakedModel model = blockRendererDispatcher.getModel(state);
+
+            int i = ColorUtils.getInkColor(blockEntity).getColor();
+            float r = (float) (i >> 16 & 255) / 255.0F;
+            float g = (float) (i >> 8 & 255) / 255.0F;
+            float b = (float) (i & 255) / 255.0F;
+
+            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, false)), state, model, r, g, b, light, overlay);
         }
-
-        BakedModel model = blockRendererDispatcher.getModel(state);
-        int i = ColorUtils.getInkColor(blockEntity).getColor();
-        float f = (float)(i >> 16 & 255) / 255.0F;
-        float f1 = (float)(i >> 8 & 255) / 255.0F;
-        float f2 = (float)(i & 255) / 255.0F;
-
-        //f = 0;
-        //f1 = 1;
-        //f2 = 1;
-
-        renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, false)), state, model, f, f1, f2, light, overlay);
-
     }
 
     private static void renderModel(MatrixStack.Entry matrices, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
@@ -65,12 +58,11 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
 
     private static void renderModelBrightnessColorQuads(MatrixStack.Entry matrixEntry, VertexConsumer buffer, float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedquad : quads) {
-            float f = MathHelper.clamp(red, 0.0F, 1.0F);
-            float f1 = MathHelper.clamp(green, 0.0F, 1.0F);
-            float f2 = MathHelper.clamp(blue, 0.0F, 1.0F);
+            float r = MathHelper.clamp(red, 0.0F, 1.0F);
+            float g = MathHelper.clamp(green, 0.0F, 1.0F);
+            float b = MathHelper.clamp(blue, 0.0F, 1.0F);
 
-            buffer.quad(matrixEntry, bakedquad, f, f1, f2, light, overlay);
+            buffer.quad(matrixEntry, bakedquad, r, g, b, light, overlay);
         }
-
     }
 }

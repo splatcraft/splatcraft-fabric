@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.block.AbstractPassableBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
@@ -21,39 +22,29 @@ public class InkBlockUtils {
     public static boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
         BlockState state = world.getBlockState(pos);
 
-        if (color == InkColors.NONE) {
-            return false;
-        } else if (InkedBlock.isTouchingLiquid(world, pos)) {
-            return false;
-        } else if (state.getBlock() instanceof AbstractInkableBlock) {
-            return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
-        } else {
-            if (canInk(world, pos)) {
-                if (world.getBlockEntity(pos) == null) {
-                    InkedBlockEntity blockEntity = new InkedBlockEntity();
-                    BlockState oldState = world.getBlockState(pos);
+        if (color != InkColors.NONE && !InkedBlock.isTouchingLiquid(world, pos)) {
+            if (state.getBlock() instanceof AbstractInkableBlock) {
+                return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, color, damage, inkType, true);
+            } else if (canInk(world, pos) && world.getBlockEntity(pos) == null) {
+                InkedBlockEntity blockEntity = new InkedBlockEntity();
+                blockEntity.setSavedState(state);
+                blockEntity.setInkColor(color);
+                world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                world.setBlockEntity(pos, blockEntity);
 
-                    if (oldState != null && !oldState.isAir()) {
-                        blockEntity.setSavedState(oldState);
-                        blockEntity.setInkColor(color);
-                        world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                        world.setBlockEntity(pos, blockEntity);
-
-                        return true;
-                    }
-                }
+                return true;
             }
-            return false;
         }
+
+        return false;
     }
-    @SuppressWarnings("unused")
     public static boolean inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
         if (InkBlockUtils.inkBlock(world, pos, color, damage, inkType)) {
             player.incrementStat(SplatcraftStats.BLOCKS_INKED);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public static boolean canInk(World world, BlockPos pos) {
@@ -61,9 +52,12 @@ public class InkBlockUtils {
             return false;
         }
 
-        Block block = world.getBlockState(pos).getBlock();
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
 
-        if (!(world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) && world.getBlockEntity(pos) != null) {
+        if (state.isAir()) {
+            return false;
+        } else if (!(world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) && world.getBlockEntity(pos) != null) {
             return false;
         } else if (SplatcraftBlockTags.UNINKABLE_BLOCKS.contains(block)) {
             return false;
@@ -87,8 +81,8 @@ public class InkBlockUtils {
         return state.getCollisionShape(world, pos).isEmpty();
     }
 
-    public static boolean shouldBeSubmerged(PlayerEntity entity) {
-        return InkBlockUtils.canSwim(entity) || InkBlockUtils.canClimb(entity);
+    public static boolean shouldBeSubmerged(PlayerEntity player) {
+        return PlayerDataComponent.isSquid(player) && (InkBlockUtils.canSwim(player) || InkBlockUtils.canClimb(player));
     }
 
     public static boolean canSwim(PlayerEntity player) {
@@ -100,10 +94,12 @@ public class InkBlockUtils {
 
     public static boolean onEnemyInk(World world, BlockPos pos, InkColor comparisonColor) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-            return comparisonColor != InkColors.NONE && inkColor != InkColors.NONE && comparisonColor != inkColor;
+            Block block = blockEntity.getCachedState().getBlock();
+            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
+                InkColor inkColor = ColorUtils.getInkColor(blockEntity);
+                return comparisonColor != InkColors.NONE && inkColor != InkColors.NONE && comparisonColor != inkColor;
+            }
         }
 
         return false;
@@ -129,20 +125,42 @@ public class InkBlockUtils {
         return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && SplatcraftComponents.PLAYER_DATA.get(entity).isSquid();
     }
 
+    public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
+        if (!player.hasVehicle()) {
+            BlockPos pos = InkBlockUtils.getClimbingPos(player);
+            if (pos != null) {
+                return pos;
+            }
+        }
+
+        return player.getVelocityAffectingPos();
+    }
+    public static BlockPos getClimbingPos(PlayerEntity player) {
+        for (int i = 0; i < 4; i++) {
+            float xOff = (i < 2 ? 0.32F : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : 0.32F) * (i % 2 == 0 ? 1 : -1);
+            BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
+            Block block = player.world.getBlockState(pos).getBlock();
+
+            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb()) {
+                BlockEntity blockEntity = player.world.getBlockEntity(pos);
+                if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() == ColorUtils.getInkColor(player)) {
+                    return pos;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static boolean canClimb(PlayerEntity player) {
         if (InkBlockUtils.onEnemyInk(player)) {
             return false;
         } else {
-            for (int i = 0; i < 4; i++) {
-                float xOff = (i < 2 ? .32f : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : .32f) * (i % 2 == 0 ? 1 : -1);
-                BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
-                Block block = player.world.getBlockState(pos).getBlock();
-
-                if (!(block instanceof AbstractInkableBlock) || ((AbstractInkableBlock) block).canClimb()) {
-                    BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                    if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() == ColorUtils.getEntityColor(player) && !player.hasVehicle()) {
-                        return true;
-                    }
+            BlockPos pos = InkBlockUtils.getClimbingPos(player);
+            if (pos != null) {
+                BlockEntity blockEntity = player.world.getBlockEntity(pos);
+                if (blockEntity instanceof AbstractInkableBlockEntity) {
+                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor() == ColorUtils.getInkColor(player);
                 }
             }
         }

@@ -25,6 +25,7 @@ public class SplatcraftConfigManager {
         SplatcraftConfig.RenderGroup RENDER = SplatcraftConfig.RENDER;
         jsonObject.addProperty(RENDER.holdStageBarrierToRender.getId(), RENDER.holdStageBarrierToRender.getBoolean());
         jsonObject.addProperty(RENDER.barrierRenderDistance.getId(), RENDER.barrierRenderDistance.getInt());
+        jsonObject.addProperty(RENDER.inkedBlocksColorLayerIsTransparent.getId(), RENDER.inkedBlocksColorLayerIsTransparent.getBoolean());
         SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
         jsonObject.addProperty(COLORS.colorLock.getId(), COLORS.colorLock.getBoolean());
 
@@ -44,6 +45,7 @@ public class SplatcraftConfigManager {
                 SplatcraftConfig.RenderGroup RENDER = SplatcraftConfig.RENDER;
                 RENDER.holdStageBarrierToRender.value = SplatcraftConfigManager.load(jsonObject, RENDER.holdStageBarrierToRender).getAsBoolean();
                 RENDER.barrierRenderDistance.value = SplatcraftConfigManager.load(jsonObject, RENDER.barrierRenderDistance).getAsInt();
+                RENDER.inkedBlocksColorLayerIsTransparent.value = SplatcraftConfigManager.load(jsonObject, RENDER.inkedBlocksColorLayerIsTransparent).getAsBoolean();
                 SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
                 COLORS.colorLock.value = SplatcraftConfigManager.load(jsonObject, COLORS.colorLock).getAsBoolean();
             }

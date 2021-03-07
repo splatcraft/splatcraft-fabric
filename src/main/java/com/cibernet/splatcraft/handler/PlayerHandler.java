@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -30,10 +29,7 @@ public class PlayerHandler {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
             if (data.isSquid()) {
-                Item item = player.getStackInHand(hand).getItem();
-                if (!item.isFood()) {
-                    return ActionResult.FAIL;
-                }
+                return ActionResult.FAIL;
             }
 
             return ActionResult.PASS;
@@ -43,9 +39,7 @@ public class PlayerHandler {
 
             PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
             if (data.isSquid()) {
-                if (!stack.getItem().isFood()) {
-                    return TypedActionResult.fail(stack);
-                }
+                return TypedActionResult.fail(stack);
             }
 
             return TypedActionResult.pass(stack);
@@ -57,6 +51,7 @@ public class PlayerHandler {
 
         if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && data.isSquid()) {
             data.setIsSquid(false);
+            player.calculateDimensions();
             return;
         }
 
@@ -64,29 +59,32 @@ public class PlayerHandler {
             player.damage(SplatcraftDamageSources.WATER, 8.0f);
         }
 
-        boolean wasInvisible = player.isInvisible();
-        boolean shouldBeInvisible = data.isSquid() ? InkBlockUtils.shouldBeSubmerged(player) : PlayerHandler.shouldBeInvisible(player);
-        if (shouldBeInvisible != wasInvisible) {
-            player.world.playSound(null, player.getX(), player.getY(), player.getZ(), shouldBeInvisible ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.5F, ((player.world.random.nextFloat() - player.world.random.nextFloat()) * 0.2F + 1.0F) * 0.95F);
+        boolean wasSubmerged = data.isSubmerged();
+        boolean shouldBeSubmerged = data.isSquid() ? InkBlockUtils.shouldBeSubmerged(player) : PlayerHandler.shouldBeInvisible(player);
+        if (shouldBeSubmerged != wasSubmerged) {
+            if (!player.world.isClient) {
+                player.playSound(shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.15F, 0.86F);
+            }
 
-            BlockPos velocityAffectingPos = player.getVelocityAffectingPos();
+            BlockPos velocityAffectingPos = InkBlockUtils.getVelocityAffectingPos(player);
             if (ColorUtils.getInkColor(player.world.getBlockEntity(velocityAffectingPos)) == ColorUtils.getInkColor(player)) {
                 for (int i = 0; i < 10; ++i) {
                     ColorUtils.addInkSplashParticle(player.world, velocityAffectingPos, new Vec3d(player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D)));
                 }
             }
 
-            data.setSubmerged(shouldBeInvisible);
-            player.setInvisible(shouldBeInvisible);
+            data.setSubmerged(shouldBeSubmerged);
         }
 
         if (data.isSquid()) {
             if (player.isOnGround()) {
-                player.setSprinting(false);
                 player.setPose(EntityPose.FALL_FLYING);
             }
+
+            player.stopUsingItem();
             player.setSneaking(false);
             player.setSwimming(false);
+            player.setSprinting(!player.isOnGround());
             player.incrementStat(SplatcraftStats.SQUID_TIME);
 
             if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.world.getDifficulty() != Difficulty.PEACEFUL) {

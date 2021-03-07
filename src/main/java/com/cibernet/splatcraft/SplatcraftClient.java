@@ -29,9 +29,11 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
@@ -83,6 +85,13 @@ public class SplatcraftClient implements ClientModInitializer {
             String inkColorId = buf.readString();
 
             client.execute(() -> ColorUtils.setInkColor(MinecraftClient.getInstance().world.getBlockEntity(pos), SplatcraftRegistries.INK_COLORS.get(new Identifier(inkColorId))));
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SPAWN_PLAYER_TRAVEL_PARTICLE_PACKET_ID, (client, handler, buf, responseSender) -> {
+            PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(buf.readUuid());
+            Vec3d vec3d = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            String inkColorId = buf.readString();
+
+            client.execute(() -> ColorUtils.addInkSplashParticle(player.world, SplatcraftRegistries.INK_COLORS.get(new Identifier(inkColorId)), vec3d));
         });
 
         Splatcraft.log("Initialized client");

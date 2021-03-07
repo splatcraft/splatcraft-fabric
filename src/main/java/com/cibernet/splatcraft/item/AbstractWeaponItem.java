@@ -120,19 +120,17 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
     }
 
     public static boolean hasInk(LivingEntity player, ItemStack weapon) {
-        return getInkAmount(player, weapon) > ((AbstractWeaponItem) weapon.getItem()).inkConsumption;
+        return getInkAmount(player, weapon) > (player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * (((AbstractWeaponItem) weapon.getItem()).inkConsumption / 25));
     }
 
     public static void reduceInk(LivingEntity player, float amount) {
         ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
-        if (!SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || !(tank.getItem() instanceof InkTankArmorItem)) {
-            return;
+        if (!(!SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || !(tank.getItem() instanceof InkTankArmorItem))) {
+            InkTankArmorItem.setInkAmount(tank, InkTankArmorItem.getInkAmount(tank) - (tank.getMaxDamage() * (amount / 25)));
         }
-
-        InkTankArmorItem.setInkAmount(tank, InkTankArmorItem.getInkAmount(tank) - amount);
     }
     public void reduceInk(PlayerEntity player) {
-        reduceInk(player, inkConsumption);
+        reduceInk(player, this.inkConsumption);
     }
 
     public static void sendNoInkMessage(LivingEntity entity) {

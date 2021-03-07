@@ -22,12 +22,13 @@ public class PlayerEntityRendererMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumers, int light, CallbackInfo ci) {
+        if (renderer == null) {
+            renderer = new PlayerEntityInkSquidRenderer(PlayerEntityRenderer.class.cast(this).getRenderManager());
+        }
+
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         if (data.isSquid()) {
-            if (renderer == null) {
-                renderer = new PlayerEntityInkSquidRenderer(PlayerEntityRenderer.class.cast(this).getRenderManager());
-            }
-            if (!InkBlockUtils.canSwim(player)) {
+            if (!InkBlockUtils.shouldBeSubmerged(player)) {
                 renderer.render(player, yaw, tickDelta, matrices, consumers, light);
             }
 

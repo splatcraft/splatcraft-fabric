@@ -7,15 +7,19 @@ import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
-import com.cibernet.splatcraft.item.AbstractWeaponItem;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +38,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerEntityMixin {
     @Shadow @Final
     public PlayerAbilities abilities;
+
+    private Vec3d posLastTick = Vec3d.ZERO;
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
@@ -57,20 +63,30 @@ public class PlayerEntityMixin {
             if (movementSpeed != -1.0F) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
             }
-        } else if ($this.isUsingItem()) {
-            ItemStack stack = $this.getActiveItem();
-            Item item = stack.getItem();
-            if (item instanceof AbstractWeaponItem && ((AbstractWeaponItem) item).doesNotAffectMovementWhenUsed() && AbstractWeaponItem.hasInk($this, stack)) {
-                cir.setReturnValue(cir.getReturnValueF() / 0.2F);
-            }
         }
     }
     @Inject(method = "travel", at = @At("TAIL"))
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-        if (data.isSquid() && $this.isOnGround() && !movementInput.equals(Vec3d.ZERO) && InkBlockUtils.shouldBeSubmerged($this)) {
-            ColorUtils.addInkSplashParticle($this.world, $this.getVelocityAffectingPos(), new Vec3d($this.getParticleX(0.5D), $this.getRandomBodyY() - 0.25D, $this.getParticleZ(0.5D)));
+
+        if ($this.world instanceof ServerWorld) {
+            double threshold = 0.13D;
+            if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(posLastTick.getX() - $this.getX()) >= threshold || Math.abs(posLastTick.getY() - $this.getY()) >= threshold || Math.abs(posLastTick.getZ() - $this.getZ()) >= threshold)) {
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeUuid($this.getUuid());
+
+                buf.writeDouble($this.getX());
+                buf.writeDouble($this.getY());
+                buf.writeDouble($this.getZ());
+
+                buf.writeString(ColorUtils.getInkColor($this).toString());
+
+                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) $this.world, $this.getBlockPos())) {
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SPAWN_PLAYER_TRAVEL_PARTICLE_PACKET_ID, buf);
+                }
+            }
+
+            posLastTick = $this.getPos();
         }
     }
 
