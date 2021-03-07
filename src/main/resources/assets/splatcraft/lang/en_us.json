@@ -502,6 +502,8 @@
     "config.splatcraft.category.ui.ink_colored_crosshair_when_squid.tooltip": "Enable or disable an ink-colored crosshair when in squid form.",
     "config.splatcraft.category.ui.ink_amount_indicator": "Ink Amount Indicator",
     "config.splatcraft.category.ui.ink_amount_indicator.tooltip": "Choose where the ink amount indicator is displayed, if at all.",
+    "config.splatcraft.category.ui.ink_amount_indicator_always_visible": "Ink Amount Indicator Always Visible",
+    "config.splatcraft.category.ui.ink_amount_indicator_always_visible.tooltip": "Enable or disable the ink amount indicator always being visible if an ink tank is present.",
     "config.splatcraft.category.colors": "Colors",
     "config.splatcraft.category.colors.color_lock": "Color Lock",
     "config.splatcraft.category.colors.color_lock.tooltip": "Enable or disable color lock."

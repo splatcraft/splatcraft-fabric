@@ -89,7 +89,7 @@ public abstract class InGameHudMixin {
             ItemStack chestStack = this.client.player.getEquippedStack(EquipmentSlot.CHEST);
             if (chestStack.getItem() instanceof InkTankArmorItem) {
                 float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
-                if (inkAmount < 1.0F) {
+                if (inkAmount < 1.0F || SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getBoolean()) {
                     if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() != InkAmountIndicator.OFF) {
                         this.client.getTextureManager().bindTexture(SQUID_GUI_ICONS_TEXTURE);
                         int color = ColorUtils.getInkColor(client.player).getColor();

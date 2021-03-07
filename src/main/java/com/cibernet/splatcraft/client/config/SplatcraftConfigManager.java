@@ -35,6 +35,7 @@ public class SplatcraftConfigManager {
         jsonObject.addProperty(UI.invisibleCrosshairWhenSquid.getId(), UI.invisibleCrosshairWhenSquid.getBoolean());
         jsonObject.addProperty(UI.inkColoredCrosshairWhenSquid.getId(), UI.inkColoredCrosshairWhenSquid.getBoolean());
         jsonObject.addProperty(UI.inkAmountIndicator.getId(), UI.inkAmountIndicator.getString());
+        jsonObject.addProperty(UI.inkAmountIndicatorAlwaysVisible.getId(), UI.inkAmountIndicatorAlwaysVisible.getBoolean());
         SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
         jsonObject.addProperty(COLORS.colorLock.getId(), COLORS.colorLock.getBoolean());
 
@@ -63,6 +64,7 @@ public class SplatcraftConfigManager {
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
                 UI.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.inkColoredCrosshairWhenSquid).getAsBoolean();
                 UI.inkAmountIndicator.value = InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, UI.inkAmountIndicator).getAsString());
+                UI.inkAmountIndicatorAlwaysVisible.value = SplatcraftConfigManager.load(jsonObject, UI.inkAmountIndicatorAlwaysVisible).getAsBoolean();
                 SplatcraftConfig.ColorsGroup COLORS = SplatcraftConfig.COLORS;
                 COLORS.colorLock.value = SplatcraftConfigManager.load(jsonObject, COLORS.colorLock).getAsBoolean();
             }

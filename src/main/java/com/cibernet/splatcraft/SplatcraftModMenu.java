@@ -84,6 +84,8 @@ public class SplatcraftModMenu implements ModMenuApi {
             SplatcraftConfig.Option inkColoredCrosshairWhenSquidOption = SplatcraftConfig.UI.inkColoredCrosshairWhenSquid;
             TranslatableText inkAmountIndicator = createUIText(SplatcraftConfig.UI.inkAmountIndicator.getId());
             SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
+            TranslatableText inkAmountIndicatorAlwaysVisible = createUIText(SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getId());
+            SplatcraftConfig.Option inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible;
             UI.addEntry(
                 entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.getEnum())
                     .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())
@@ -119,6 +121,12 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setDefaultValue(inkAmountIndicatorOption.getDefaultEnum())
                     .setSaveConsumer(value -> inkAmountIndicatorOption.value = value)
                     .setTooltip(createTooltip(inkAmountIndicator))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(inkAmountIndicatorAlwaysVisible, inkAmountIndicatorAlwaysVisibleOption.getBoolean())
+                    .setDefaultValue(inkAmountIndicatorAlwaysVisibleOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> inkAmountIndicatorAlwaysVisibleOption.value = value)
+                    .setTooltip(createTooltip(inkAmountIndicatorAlwaysVisible))
                     .build()
             );
 

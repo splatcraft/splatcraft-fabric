@@ -50,7 +50,10 @@ public class SplatcraftConfig {
          * Choose where the ink amount indicator is displayed, if at all.
          */
         public EnumOption<InkAmountIndicator> inkAmountIndicator = new EnumOption<>("ink_amount_indicator", InkAmountIndicator.class, InkAmountIndicator.HOTBAR);
-
+        /**
+         * Enable or disable the ink amount indicator always being visible if an ink tank is present.
+         */
+        public Option inkAmountIndicatorAlwaysVisible = new Option("ink_amount_indicator_always_visible", false);
     }
 
     public static ColorsGroup COLORS = new ColorsGroup();
