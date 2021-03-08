@@ -86,6 +86,12 @@ public class SplatcraftModMenu implements ModMenuApi {
             SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
             TranslatableText inkAmountIndicatorAlwaysVisible = createUIText(SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getId());
             SplatcraftConfig.Option inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible;
+            TranslatableText inkAmountIndicatorExclamations = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamations.getId());
+            SplatcraftConfig.Option inkAmountIndicatorExclamationsOption = SplatcraftConfig.UI.inkAmountIndicatorExclamations;
+            TranslatableText inkAmountIndicatorExclamationsMin = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin.getId());
+            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin;
+            TranslatableText inkAmountIndicatorExclamationsMax = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax.getId());
+            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax;
             UI.addEntry(
                 entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.getEnum())
                     .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())
@@ -127,6 +133,24 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setDefaultValue(inkAmountIndicatorAlwaysVisibleOption.getDefaultBoolean())
                     .setSaveConsumer(value -> inkAmountIndicatorAlwaysVisibleOption.value = value)
                     .setTooltip(createTooltip(inkAmountIndicatorAlwaysVisible))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(inkAmountIndicatorExclamations, inkAmountIndicatorExclamationsOption.getBoolean())
+                    .setDefaultValue(inkAmountIndicatorExclamationsOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> inkAmountIndicatorExclamationsOption.value = value)
+                    .setTooltip(createTooltip(inkAmountIndicatorExclamations))
+                    .build()
+            ).addEntry(
+                entryBuilder.startIntSlider(inkAmountIndicatorExclamationsMin, inkAmountIndicatorExclamationsMinOption.getInt(), inkAmountIndicatorExclamationsMinOption.getMinInt(), inkAmountIndicatorExclamationsMinOption.getMaxInt())
+                    .setDefaultValue(inkAmountIndicatorExclamationsMinOption.getDefaultInt())
+                    .setSaveConsumer(value -> inkAmountIndicatorExclamationsMinOption.value = value)
+                    .setTooltip(createTooltip(inkAmountIndicatorExclamationsMin))
+                    .build()
+            ).addEntry(
+                entryBuilder.startIntSlider(inkAmountIndicatorExclamationsMax, inkAmountIndicatorExclamationsMaxOption.getInt(), inkAmountIndicatorExclamationsMaxOption.getMinInt(), inkAmountIndicatorExclamationsMaxOption.getMaxInt())
+                    .setDefaultValue(inkAmountIndicatorExclamationsMaxOption.getDefaultInt())
+                    .setSaveConsumer(value -> inkAmountIndicatorExclamationsMaxOption.value = value)
+                    .setTooltip(createTooltip(inkAmountIndicatorExclamationsMax))
                     .build()
             );
 

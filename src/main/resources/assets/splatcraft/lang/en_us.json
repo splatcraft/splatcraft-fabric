@@ -504,6 +504,12 @@
     "config.splatcraft.category.ui.ink_amount_indicator.tooltip": "Choose where the ink amount indicator is displayed, if at all.",
     "config.splatcraft.category.ui.ink_amount_indicator_always_visible": "Ink Amount Indicator Always Visible",
     "config.splatcraft.category.ui.ink_amount_indicator_always_visible.tooltip": "Enable or disable the ink amount indicator always being visible if an ink tank is present.",
+    "config.splatcraft.category.ui.ink_amount_exclamations": "Ink Amount Indicator Exclamations",
+    "config.splatcraft.category.ui.ink_amount_exclamations.tooltip": "Enable or disable the ink amount indicator displaying exclamation points when full or empty.",
+    "config.splatcraft.category.ui.ink_amount_exclamations_min": "Ink Amount Indicator Exclamations Minimum",
+    "config.splatcraft.category.ui.ink_amount_exclamations_min.tooltip": "When the ink amount indicator low ink warning should display.",
+    "config.splatcraft.category.ui.ink_amount_exclamations_max": "Ink Amount Indicator Exclamations Maximum",
+    "config.splatcraft.category.ui.ink_amount_exclamations_max.tooltip": "When the ink amount indicator full ink warning should display.",
     "config.splatcraft.category.colors": "Colors",
     "config.splatcraft.category.colors.color_lock": "Color Lock",
     "config.splatcraft.category.colors.color_lock.tooltip": "Enable or disable color lock."

@@ -126,6 +126,14 @@ public abstract class InGameHudMixin {
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             // draw background (uncolored)
                             $this.drawTexture(matrices, x, y, 0, 94, 18, 18);
+
+                            if (SplatcraftConfig.UI.inkAmountIndicatorExclamations.getBoolean()) {
+                                if (inkAmount <= (float) SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin.getInt() / 100) {
+                                    $this.drawTexture(matrices, x, y, 0, 112, 18, 18);
+                                } else if (inkAmount >= (float) SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax.getInt() / 100) {
+                                    $this.drawTexture(matrices, x, y, 18, 112, 18, 18);
+                                }
+                            }
                         }
                     }
                 }

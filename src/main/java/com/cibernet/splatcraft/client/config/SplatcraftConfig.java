@@ -54,6 +54,18 @@ public class SplatcraftConfig {
          * Enable or disable the ink amount indicator always being visible if an ink tank is present.
          */
         public Option inkAmountIndicatorAlwaysVisible = new Option("ink_amount_indicator_always_visible", false);
+        /**
+         * Enable or disable the ink amount indicator displaying exclamation points when full or empty.
+         */
+        public Option inkAmountIndicatorExclamations = new Option("ink_amount_exclamations", false);
+        /**
+         * When the ink amount indicator low ink warning should display.
+         */
+        public RangedOption inkAmountIndicatorExclamationsMin = new RangedOption("ink_amount_exclamations_min", 12, 0, 100);
+        /**
+         * When the ink amount indicator full ink warning should display.
+         */
+        public RangedOption inkAmountIndicatorExclamationsMax = new RangedOption("ink_amount_exclamations_max", 92, 0, 100);
     }
 
     public static ColorsGroup COLORS = new ColorsGroup();
