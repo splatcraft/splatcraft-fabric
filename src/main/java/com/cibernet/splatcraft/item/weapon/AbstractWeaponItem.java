@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.weapon;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
@@ -8,6 +8,10 @@ import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.item.AttackInputDetectable;
+import com.cibernet.splatcraft.item.EntityTickable;
+import com.cibernet.splatcraft.item.InkTankArmorItem;
+import com.cibernet.splatcraft.item.MatchItem;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Material;

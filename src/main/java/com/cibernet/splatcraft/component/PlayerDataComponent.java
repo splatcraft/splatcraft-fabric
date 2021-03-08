@@ -4,7 +4,7 @@ import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.item.ChargeableItem;
+import com.cibernet.splatcraft.item.weapon.ChargeableItem;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.weapon;
 
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;

@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.weapon;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

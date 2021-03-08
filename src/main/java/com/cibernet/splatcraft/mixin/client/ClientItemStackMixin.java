@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.mixin.client;
 
-import com.cibernet.splatcraft.item.AbstractWeaponItem;
-import com.cibernet.splatcraft.item.InkableArmorItem;
+import com.cibernet.splatcraft.item.inkable.InkableArmorItem;
+import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;

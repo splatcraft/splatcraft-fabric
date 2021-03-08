@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.remote;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;

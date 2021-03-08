@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.remote;
 
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.inkcolor.InkColor;

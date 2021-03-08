@@ -17,7 +17,7 @@ import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
-import com.cibernet.splatcraft.item.RemoteItem;
+import com.cibernet.splatcraft.item.remote.RemoteItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

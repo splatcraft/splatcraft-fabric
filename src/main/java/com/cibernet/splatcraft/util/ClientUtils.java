@@ -2,8 +2,8 @@ package com.cibernet.splatcraft.util;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
-import com.cibernet.splatcraft.item.AbstractWeaponItem;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
+import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;

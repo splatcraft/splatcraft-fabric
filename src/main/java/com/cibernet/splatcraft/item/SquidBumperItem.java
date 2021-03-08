@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.item;
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.item.inkable.AbstractInkableItem;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;

@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.mixin.client;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
-import com.cibernet.splatcraft.item.AbstractWeaponItem;
+import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.input.Input;

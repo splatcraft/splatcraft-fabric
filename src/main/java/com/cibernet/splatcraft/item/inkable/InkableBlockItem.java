@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.inkable;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;

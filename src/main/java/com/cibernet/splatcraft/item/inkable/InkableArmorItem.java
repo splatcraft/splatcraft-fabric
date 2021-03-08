@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.inkable;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkwellBlock;
@@ -6,6 +6,8 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.item.EntityTickable;
+import com.cibernet.splatcraft.item.MatchItem;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;

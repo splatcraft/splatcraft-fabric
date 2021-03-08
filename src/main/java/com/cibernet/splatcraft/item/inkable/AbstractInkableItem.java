@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.item;
+package com.cibernet.splatcraft.item.inkable;
 
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;

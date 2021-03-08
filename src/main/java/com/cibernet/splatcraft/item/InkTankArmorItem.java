@@ -5,6 +5,8 @@ import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.item.inkable.InkableArmorItem;
+import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.cibernet.splatcraft.tag.SplatcraftItemTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
