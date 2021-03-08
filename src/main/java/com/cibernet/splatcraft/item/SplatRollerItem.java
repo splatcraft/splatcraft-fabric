@@ -6,15 +6,8 @@ import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,7 +30,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
     protected float flingDamage;
     protected float flingConsumption;
 
-    /*private final double rollSpeed;*/
+    /*private final double rollSpeed; TODO */
 
     public SplatRollerItem(Settings settings, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
         super(inkConsumption, settings);
@@ -74,25 +67,12 @@ public class SplatRollerItem extends AbstractWeaponItem {
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        Multimap<EntityAttribute, EntityAttributeModifier> multimap = HashMultimap.create();
-        if (slot == EquipmentSlot.MAINHAND) {
-            multimap.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", getWeaponSpeed(), EntityAttributeModifier.Operation.ADDITION));
-        }
-        return multimap;
-    }
-
-    public double getWeaponSpeed() {
-        return 50.0D;
-    }
-
-    @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) user;
             InkBlockUtils.InkType isGlowing = InkBlockUtils.getInkType(player);
 
-            if (hasInk(player, stack)) {
+            if (hasInk(player, stack, false)) {
                 InkColor color = ColorUtils.getInkColor(stack);
                 int downReach = player.getY() % 1 < 0.5 ? 1 : 0;
                 Vec3d fwd = getFwd(0, player.yaw).normalize();
@@ -131,7 +111,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
 
                         if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing)) {
                             ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
-                            reduceInk(player);
+                            reduceInk(player, false);
 
                             if (player.getVelocity().getX() != 0 && player.getVelocity().getZ() != 0) {
                                 player.setSprinting(true);
@@ -156,45 +136,10 @@ public class SplatRollerItem extends AbstractWeaponItem {
         }
     }
 
-    public void applyEntityCollision(Entity source, Entity target, double power) {
-        if (!target.isConnectedThroughVehicle(source) && !target.equals(source)) {
-            if (!source.noClip && !target.noClip) {
-                double d0 = target.getX() - source.getX();
-                double d1 = target.getZ() - source.getZ();
-                double d2 = MathHelper.absMax(d0, d1);
-
-                if (d2 >= 0.009999999776482582D) {
-                    d2 = MathHelper.sqrt(d2);
-                    d0 = d0 / d2;
-                    d1 = d1 / d2;
-                    double d3 = 1.0D / d2;
-
-                    if (d3 > 1.0D) {
-                        d3 = 1.0D;
-                    }
-
-                    d0 = d0 * d3;
-                    d1 = d1 * d3;
-                    d0 = d0 * 0.05000000074505806D;
-                    d1 = d1 * 0.05000000074505806D;
-                    d0 = d0 * (double)(1.0F - source.pushSpeedReduction);
-                    d1 = d1 * (double)(1.0F - source.pushSpeedReduction);
-                    d0 *= power;
-                    d1 *= power;
-
-                    if (!target.hasPassengers()) {
-                        target.setVelocity(0.0D, target.getVelocity().getY(), 0.0D);
-                        target.addVelocity(d0, 0.0D, d1);
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public void onAttack(ServerPlayerEntity player, ItemStack stack) {
-        if (hasInk(player, stack)) {
-            reduceInk(player);
+        if (hasInk(player, stack, true)) {
+            reduceInk(player, true);
 
             InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.flingSize, this.flingDamage);
             proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
@@ -210,11 +155,6 @@ public class SplatRollerItem extends AbstractWeaponItem {
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);
         float f3 = MathHelper.sin(-pitch * 0.017453292F);
         return new Vec3d(f1 * f2, f3, f * f2);
-    }
-
-    @Override
-    public boolean doesNotAffectMovementWhenUsed() {
-        return true;
     }
 
     @Override

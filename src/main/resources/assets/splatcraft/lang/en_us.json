@@ -411,8 +411,8 @@
     "death.attack.splatcraft.dissolve.player": "%s dissolved in water whilst trying to escape %s",
     "death.attack.splatcraft.splat": "%s was splatted by %s",
     "death.attack.splatcraft.splat.item": "%s was splatted by %s using %s",
-    "death.attack.splatcraft.roll": "%s was crushed by %s",
-    "death.attack.splatcraft.roll.item": "%s was crushed by %s using %s",
+    "death.attack.splatcraft.roll": "%s was rolled over by %s",
+    "death.attack.splatcraft.roll.item": "%s was rolled over %s using %s",
     "death.attack.splatcraft.squish": "%s was squished by %s",
     "death.attack.splatcraft.squish.item": "%s was squished by %s using %s",
 

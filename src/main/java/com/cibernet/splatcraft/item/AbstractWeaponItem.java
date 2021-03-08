@@ -8,6 +8,8 @@ import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -15,6 +17,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -119,18 +124,21 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
         return InkTankArmorItem.getInkAmount(tank, weapon);
     }
 
-    public static boolean hasInk(LivingEntity player, ItemStack weapon) {
-        return getInkAmount(player, weapon) > (player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * (((AbstractWeaponItem) weapon.getItem()).inkConsumption / 25));
+    public static boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
+        return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || getInkAmount(player, weapon) > getInkReductionAmount(player, (AbstractWeaponItem) weapon.getItem(), fling);
     }
 
-    public static void reduceInk(LivingEntity player, float amount) {
+    public static void reduceInk(PlayerEntity player, float amount) {
         ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
-        if (!(!SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || !(tank.getItem() instanceof InkTankArmorItem))) {
-            InkTankArmorItem.setInkAmount(tank, InkTankArmorItem.getInkAmount(tank) - (tank.getMaxDamage() * (amount / 25)));
+        if (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) && tank.getItem() instanceof InkTankArmorItem) {
+            InkTankArmorItem.setInkAmount(tank, InkTankArmorItem.getInkAmount(tank) - amount);
         }
     }
-    public void reduceInk(PlayerEntity player) {
-        reduceInk(player, this.inkConsumption);
+    public void reduceInk(PlayerEntity player, boolean fling) {
+        reduceInk(player, getInkReductionAmount(player, this, fling));
+    }
+    public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {
+        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? ((SplatRollerItem) weapon).flingConsumption : weapon.inkConsumption) / 25);
     }
 
     public static void sendNoInkMessage(LivingEntity entity) {
@@ -143,11 +151,18 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
                 entity.world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundCategory.PLAYERS, 0.8F, ((entity.world.random.nextFloat() - entity.world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
             }
         }
-
     }
 
-    public boolean doesNotAffectMovementWhenUsed() {
-        return false;
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        Multimap<EntityAttribute, EntityAttributeModifier> multimap = HashMultimap.create();
+        if (slot == EquipmentSlot.MAINHAND) {
+            multimap.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", getWeaponSpeed(), EntityAttributeModifier.Operation.ADDITION));
+        }
+        return multimap;
+    }
+    public double getWeaponSpeed() {
+        return 50.0D;
     }
 
     public PlayerPoseHandler.WeaponPose getPose() {

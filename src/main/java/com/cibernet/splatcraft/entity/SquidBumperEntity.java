@@ -7,7 +7,6 @@ import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -96,7 +95,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     @Override
-    public boolean onEntityInked(InkDamageUtils.InkDamageSource source, float damage, InkColor color) {
+    public boolean onEntityInked(DamageSource source, float damage, InkColor color) {
         if (!inkproof && (this.getInkColor() != color || SplatcraftGameRules.getBoolean(this.world, SplatcraftGameRules.INK_FRIENDLY_FIRE))) {
             ink(damage);
             if (getInkHealth() <= 0)

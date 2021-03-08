@@ -6,8 +6,8 @@ import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
-import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.nbt.CompoundTag;
@@ -56,7 +56,7 @@ public interface InkableEntity {
     DataTracker getDataTracker();
 
     @SuppressWarnings("unused")
-     default boolean onEntityInked(InkDamageUtils.InkDamageSource source, float damage, InkColor color) {
+     default boolean onEntityInked(DamageSource source, float damage, InkColor color) {
         return false;
     }
 }
