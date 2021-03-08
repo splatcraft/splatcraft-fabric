@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.item.AbstractWeaponItem;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
@@ -85,7 +86,7 @@ public abstract class InGameHudMixin {
     private void renderInkTank(MatrixStack matrices) {
         InGameHud $this = InGameHud.class.cast(this);
 
-        if (this.client.player != null) {
+        if (this.client.player != null && SplatcraftGameRules.getBoolean(this.client.player.world, SplatcraftGameRules.REQUIRE_INK_TANK)) {
             ItemStack chestStack = this.client.player.getEquippedStack(EquipmentSlot.CHEST);
             if (chestStack.getItem() instanceof InkTankArmorItem) {
                 float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
