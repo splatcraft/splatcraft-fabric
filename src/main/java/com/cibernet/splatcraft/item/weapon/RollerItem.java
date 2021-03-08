@@ -17,39 +17,21 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-public class SplatRollerItem extends AbstractWeaponItem {
-    public static final String id = "splat_roller";
-
+public class RollerItem extends AbstractWeaponItem {
     protected final Item.Settings settings;
+    protected final RollerComponent rollerComponent;
 
-    protected float flingSpeed;
-    protected boolean isBrush;
-    protected int rollRadius;
-    protected float flingSize;
-    protected float rollDamage;
-    protected float flingDamage;
-    protected float flingConsumption;
-
-    /*private final double rollSpeed; TODO */
-
-    public SplatRollerItem(Settings settings, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
-        super(inkConsumption, settings);
+    public RollerItem(Item.Settings settings, RollerComponent rollerComponent) {
+        super(settings, rollerComponent.consumption);
 
         this.settings = settings;
-
-        this.flingSpeed = flingSpeed;
-        this.rollRadius = rollRadius;
-        this.flingSize = flingSize;
-        this.rollDamage = rollDamage;
-        this.flingDamage = flingDamage;
-        this.flingConsumption = flingConsumption;
-        this.isBrush = isBrush;
+        this.rollerComponent = rollerComponent;
     }
-    public SplatRollerItem(SplatRollerItem item) {
-        this(item.settings, item.flingSpeed, item.flingDamage, item.flingSize, item.flingConsumption, item.rollRadius, item.rollDamage, item.inkConsumption, item.isBrush);
+    public RollerItem(RollerItem rollerItem) {
+        this(rollerItem.settings, rollerItem.rollerComponent);
     }
-    public SplatRollerItem(SplatRollerItem item, float flingSpeed, float flingDamage, float flingSize, float flingConsumption/*, double rollSpeed*/, int rollRadius, float rollDamage, float inkConsumption, boolean isBrush) {
-        this(item.settings, flingSpeed, flingDamage, flingSize, flingConsumption, rollRadius, rollDamage, inkConsumption, isBrush);
+    public RollerItem(RollerItem rollerItem, RollerComponent rollerComponent) {
+        this(rollerItem.settings, rollerComponent);
     }
 
     @Override
@@ -80,7 +62,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
 
                 BlockPos pos = new BlockPos(Math.floor(player.getX()) + 0.5, player.getY() - downReach, Math.floor(player.getZ()) + 0.5);
 
-                for (int i = 0; i < rollRadius; i++)
+                for (int i = 0; i < this.rollerComponent.radius; i++)
                     for (int rollDepth = 0; rollDepth < 2; rollDepth++) {
                         double xOff = i == 0 ? 0 : Math.round(fwd.z) * Math.ceil(i/2.0);
                         double zOff = i == 0 ? 0 : Math.round(fwd.x) * Math.ceil(i/2.0);
@@ -91,7 +73,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
                         }
 
                         if (player.getHorizontalFacing().equals(Direction.NORTH) || player.getHorizontalFacing().equals(Direction.SOUTH)) {
-                            zOff = (rollDepth - 1) * player.getHorizontalFacing().getDirection().offset();
+                            zOff = (rollDepth - 2) * player.getHorizontalFacing().getDirection().offset();
                         } else {
                             xOff = (rollDepth - 1) * player.getHorizontalFacing().getDirection().offset();
                         }
@@ -109,7 +91,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
                             h++;
                         }
 
-                        if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, rollDamage, isGlowing)) {
+                        if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, this.rollerComponent.damage, isGlowing)) {
                             ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
                             reduceInk(player, false);
 
@@ -121,7 +103,7 @@ public class SplatRollerItem extends AbstractWeaponItem {
                         if (player.getAttackCooldownProgress(0.0F) >= 1.0F) {
                             for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
                                 if (!target.equals(player)) {
-                                    InkDamageUtils.rollDamage(world, target, this.rollDamage, color, player, stack, false);
+                                    InkDamageUtils.rollDamage(world, target, this.rollerComponent.damage, color, player, stack, false);
                                 }
                             }
                         }
@@ -138,14 +120,16 @@ public class SplatRollerItem extends AbstractWeaponItem {
 
     @Override
     public void onAttack(ServerPlayerEntity player, ItemStack stack) {
-        if (hasInk(player, stack, true)) {
-            reduceInk(player, true);
+        if (this.rollerComponent.flingComponent != null) {
+            if (hasInk(player, stack, true)) {
+                reduceInk(player, true);
 
-            InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.flingSize, this.flingDamage);
-            proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
-            player.world.spawnEntity(proj);
-        } else {
-            sendNoInkMessage(player);
+                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.rollerComponent.flingComponent.size, this.rollerComponent.flingComponent.damage);
+                proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
+                player.world.spawnEntity(proj);
+            } else {
+                sendNoInkMessage(player);
+            }
         }
     }
 

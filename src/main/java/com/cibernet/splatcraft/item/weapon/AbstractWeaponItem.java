@@ -38,13 +38,14 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractWeaponItem extends Item implements MatchItem, EntityTickable, AttackInputDetectable {
-    public float inkConsumption;
+    protected final float consumption;
 
-    public AbstractWeaponItem(float inkConsumption, Item.Settings settings) {
+    public AbstractWeaponItem(Item.Settings settings, float consumption) {
         super(settings);
-        this.inkConsumption = inkConsumption;
+        this.consumption = consumption;
     }
 
     @Override
@@ -142,7 +143,7 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
         reduceInk(player, getInkReductionAmount(player, this, fling));
     }
     public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {
-        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? ((SplatRollerItem) weapon).flingConsumption : weapon.inkConsumption) / 25);
+        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? Objects.requireNonNull(((RollerItem) weapon).rollerComponent.flingComponent).consumption : weapon.consumption) / 25);
     }
 
     public static void sendNoInkMessage(LivingEntity entity) {
