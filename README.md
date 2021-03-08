@@ -1,6 +1,6 @@
 ![splatcraft_logo](https://raw.githubusercontent.com/splatcraft/splatcraft/fabric/1.16.5/src/main/resources/pack.png)
 
-# splatcraft (for fabric)
+# Splatcraft (for fabric)
 [![GitHub License](https://img.shields.io/github/license/splatcraft/splatcraft.svg?style=flat-square)](https://github.com/splatcraft/splatcraft/blob/HEAD/LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/splatcraft/splatcraft?color=DF641A&style=flat-square)](https://github.com/splatcraft/splatcraft/issues)
 [![Discord Chat](https://img.shields.io/discord/671749458840518656?label=discord&logo=discord&style=flat-square)](https://discord.gg/JAraVNecyz)
