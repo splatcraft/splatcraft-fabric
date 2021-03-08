@@ -494,6 +494,8 @@
     "config.splatcraft.category.ui.prevent_bob_view_when_squid.tooltip": "Choose when view bobbing should occur when in squid form, if at all.",
     "config.splatcraft.category.ui.invisible_hotbar_when_squid": "Invisible Hotbar When Squid",
     "config.splatcraft.category.ui.invisible_hotbar_when_squid.tooltip": "Enable or disable disabling the hotbar when in squid form.",
+    "config.splatcraft.category.ui.render_held_item_when_hotbar_invisible": "Render Held Item When Hotbar Is Invisible",
+    "config.splatcraft.category.ui.render_held_item_when_hotbar_invisible.tooltip": "Enable or disable rendering the held item when the hotbar is set to be invisible in squid form.",
     "config.splatcraft.category.ui.invisible_hotbar_status_bars_shift": "Invisible Hotbar Status Bars Shift Amount",
     "config.splatcraft.category.ui.invisible_hotbar_status_bars_shift.tooltip": "How far the status bars should shift when the hotbar is invisible.",
     "config.splatcraft.category.ui.invisible_crosshair_when_squid": "Invisible Crosshair When Squid",

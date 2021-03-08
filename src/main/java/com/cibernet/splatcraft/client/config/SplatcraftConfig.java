@@ -35,6 +35,10 @@ public class SplatcraftConfig {
          */
         public Option invisibleHotbarWhenSquid = new Option("invisible_hotbar_when_squid", true);
         /**
+         * Enable or disable rendering the held item when the hotbar is set to be invisible in squid form.
+         */
+        public Option renderHeldItemWhenHotbarInvisible = new Option("render_held_item_when_hotbar_invisible", false);
+        /**
          * How far the status bars should shift when the hotbar is invisible.
          */
         public Option invisibleHotbarStatusBarsShift = new Option("invisible_hotbar_status_bars_shift", -22);

@@ -31,6 +31,7 @@ public class SplatcraftConfigManager {
         SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
         jsonObject.addProperty(UI.preventBobViewWhenSquid.getId(), UI.preventBobViewWhenSquid.getString());
         jsonObject.addProperty(UI.invisibleHotbarWhenSquid.getId(), UI.invisibleHotbarWhenSquid.getBoolean());
+        jsonObject.addProperty(UI.renderHeldItemWhenHotbarInvisible.getId(), UI.renderHeldItemWhenHotbarInvisible.getBoolean());
         jsonObject.addProperty(UI.invisibleHotbarStatusBarsShift.getId(), UI.invisibleHotbarStatusBarsShift.getInt());
         jsonObject.addProperty(UI.invisibleCrosshairWhenSquid.getId(), UI.invisibleCrosshairWhenSquid.getBoolean());
         jsonObject.addProperty(UI.inkColoredCrosshairWhenSquid.getId(), UI.inkColoredCrosshairWhenSquid.getBoolean());
@@ -63,6 +64,7 @@ public class SplatcraftConfigManager {
                 SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
                 UI.preventBobViewWhenSquid.value = PreventBobView.valueOf(SplatcraftConfigManager.load(jsonObject, UI.preventBobViewWhenSquid).getAsString());
                 UI.invisibleHotbarWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarWhenSquid).getAsBoolean();
+                UI.renderHeldItemWhenHotbarInvisible.value = SplatcraftConfigManager.load(jsonObject, UI.renderHeldItemWhenHotbarInvisible).getAsBoolean();
                 UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
                 UI.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.inkColoredCrosshairWhenSquid).getAsBoolean();

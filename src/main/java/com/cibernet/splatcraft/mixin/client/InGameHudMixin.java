@@ -35,14 +35,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class InGameHudMixin {
     @Shadow private int scaledHeight;
     @Shadow private int scaledWidth;
+    @Shadow private ItemStack currentStack;
+    @Shadow private int heldItemTooltipFade;
     @Shadow @Final private MinecraftClient client;
+
     @Shadow protected abstract PlayerEntity getCameraPlayer();
+    @Shadow protected abstract void renderHotbarItem(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack);
 
     private static final Identifier SQUID_GUI_ICONS_TEXTURE = new Identifier(Splatcraft.MOD_ID, "textures/gui/squid_icons.png");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
         if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.getBoolean() && PlayerDataComponent.isSquid(client.player)) {
+            // render held item
+            if (SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getBoolean()) {
+                int alpha = (int)((float)this.heldItemTooltipFade * 256.0F / 10.0F);
+                if (alpha > 255) {
+                    alpha = 255;
+                }
+
+                if (!this.currentStack.isEmpty()) {
+                    int x = (this.scaledWidth / 2) - 90 + 4 * 20 + 2;
+                    int y = this.scaledHeight - 16 - 64;
+                    this.renderHotbarItem(x, y + (alpha > 0 ? 0 : 21) - SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getInt(), tickDelta, this.getCameraPlayer(), this.currentStack);
+                }
+            }
+
             // hide hotbar when squid
             ci.cancel();
         }

@@ -76,6 +76,8 @@ public class SplatcraftModMenu implements ModMenuApi {
             SplatcraftConfig.EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
             TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
             SplatcraftConfig.Option invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
+            TranslatableText renderHeldItemWhenHotbarInvisible = createUIText(SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getId());
+            SplatcraftConfig.Option renderHeldItemWhenHotbarInvisibleOption = SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible;
             TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
             SplatcraftConfig.Option invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
             TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
@@ -103,6 +105,12 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setDefaultValue(invisibleHotbarWhenSquidOption.getDefaultBoolean())
                     .setSaveConsumer(value -> invisibleHotbarWhenSquidOption.value = value)
                     .setTooltip(createTooltip(invisibleHotbarWhenSquid))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(renderHeldItemWhenHotbarInvisible, renderHeldItemWhenHotbarInvisibleOption.getBoolean())
+                    .setDefaultValue(renderHeldItemWhenHotbarInvisibleOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> renderHeldItemWhenHotbarInvisibleOption.value = value)
+                    .setTooltip(createTooltip(renderHeldItemWhenHotbarInvisible))
                     .build()
             ).addEntry(
                 entryBuilder.startIntField(invisibleHotbarStatusBarsShift, invisibleHotbarStatusBarsShiftOption.getInt())
