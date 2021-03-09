@@ -49,15 +49,13 @@ public abstract class InGameHudMixin {
         if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.getBoolean() && PlayerDataComponent.isSquid(client.player)) {
             // render held item
             if (SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getBoolean()) {
-                int alpha = (int)((float)this.heldItemTooltipFade * 256.0F / 10.0F);
-                if (alpha > 255) {
-                    alpha = 255;
-                }
-
                 if (!this.currentStack.isEmpty()) {
+                    PlayerEntity player = this.getCameraPlayer();
+                    boolean isCreative = player.isCreative();
+
                     int x = (this.scaledWidth / 2) - 90 + 4 * 20 + 2;
-                    int y = this.scaledHeight - 16 - 64;
-                    this.renderHotbarItem(x, y + (alpha > 0 ? 0 : 21) - SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getInt(), tickDelta, this.getCameraPlayer(), this.currentStack);
+                    int y = this.scaledHeight - 16 - 70 + (isCreative ? + 0 : + 8);
+                    this.renderHotbarItem(x, y + (((Math.min((int)((float)this.heldItemTooltipFade * 256.0F / 10.0F), 255) > 0) ? 0 :  + (isCreative ? + 46 : + 21))) - SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getInt(), tickDelta, player, this.currentStack);
                 }
             }
 
