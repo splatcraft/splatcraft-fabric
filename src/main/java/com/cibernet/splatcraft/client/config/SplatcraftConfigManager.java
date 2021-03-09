@@ -30,6 +30,8 @@ public class SplatcraftConfigManager {
         jsonObject.addProperty(RENDER.inkedBlocksColorLayerIsTransparent.getId(), RENDER.inkedBlocksColorLayerIsTransparent.getBoolean());
         SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
         jsonObject.addProperty(UI.preventBobViewWhenSquid.getId(), UI.preventBobViewWhenSquid.getString());
+        jsonObject.addProperty(UI.modifyFovForSquidForm.getId(), UI.modifyFovForSquidForm.getBoolean());
+        jsonObject.addProperty(UI.fovForSquidForm.getId(), UI.fovForSquidForm.getInt());
         jsonObject.addProperty(UI.invisibleHotbarWhenSquid.getId(), UI.invisibleHotbarWhenSquid.getBoolean());
         jsonObject.addProperty(UI.renderHeldItemWhenHotbarInvisible.getId(), UI.renderHeldItemWhenHotbarInvisible.getBoolean());
         jsonObject.addProperty(UI.invisibleHotbarStatusBarsShift.getId(), UI.invisibleHotbarStatusBarsShift.getInt());
@@ -63,6 +65,8 @@ public class SplatcraftConfigManager {
                 RENDER.inkedBlocksColorLayerIsTransparent.value = SplatcraftConfigManager.load(jsonObject, RENDER.inkedBlocksColorLayerIsTransparent).getAsBoolean();
                 SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
                 UI.preventBobViewWhenSquid.value = PreventBobView.valueOf(SplatcraftConfigManager.load(jsonObject, UI.preventBobViewWhenSquid).getAsString());
+                UI.modifyFovForSquidForm.value = SplatcraftConfigManager.load(jsonObject, UI.modifyFovForSquidForm).getAsBoolean();
+                UI.fovForSquidForm.value = SplatcraftConfigManager.load(jsonObject, UI.fovForSquidForm).getAsInt();
                 UI.invisibleHotbarWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarWhenSquid).getAsBoolean();
                 UI.renderHeldItemWhenHotbarInvisible.value = SplatcraftConfigManager.load(jsonObject, UI.renderHeldItemWhenHotbarInvisible).getAsBoolean();
                 UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();

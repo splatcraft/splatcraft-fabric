@@ -110,7 +110,7 @@ public class SplatcraftClient implements ClientModInitializer {
             InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
 
             client.execute(() -> {
-                if (player.getRandom().nextFloat() <= 0.482F) {
+                if (player != null && player.getRandom().nextFloat() <= 0.482F) {
                     PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
                     if (data.isSquid()) {
                         if (!data.isSubmerged()) {

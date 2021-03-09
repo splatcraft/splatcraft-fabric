@@ -104,8 +104,11 @@ public class InkBlockUtils {
         return PlayerDataComponent.isSquid(player) && (InkBlockUtils.canSwim(player) || InkBlockUtils.canClimb(player));
     }
 
+    public static boolean canSwim(PlayerEntity player, boolean ignoreOnGround) {
+        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || !InkBlockUtils.onEnemyInk(player));
+    }
     public static boolean canSwim(PlayerEntity player) {
-        return player.isOnGround() && InkBlockUtils.isOnInk(player) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || !InkBlockUtils.onEnemyInk(player));
+        return canSwim(player, false);
     }
     public static boolean takeDamage(PlayerEntity player) {
         return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) && InkBlockUtils.onEnemyInk(player);

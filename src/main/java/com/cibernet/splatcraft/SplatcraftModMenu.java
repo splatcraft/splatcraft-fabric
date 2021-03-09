@@ -74,6 +74,10 @@ public class SplatcraftModMenu implements ModMenuApi {
             ConfigCategory UI = builder.getOrCreateCategory(createUIText());
             TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
             SplatcraftConfig.EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
+            TranslatableText modifyFovForSquidForm = createUIText(SplatcraftConfig.UI.modifyFovForSquidForm.getId());
+            SplatcraftConfig.Option modifyFovForSquidFormOption = SplatcraftConfig.UI.modifyFovForSquidForm;
+            TranslatableText fovForSquidForm = createUIText(SplatcraftConfig.UI.fovForSquidForm.getId());
+            SplatcraftConfig.RangedOption fovForSquidFormOption = SplatcraftConfig.UI.fovForSquidForm;
             TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
             SplatcraftConfig.Option invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
             TranslatableText renderHeldItemWhenHotbarInvisible = createUIText(SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getId());
@@ -99,6 +103,18 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())
                     .setSaveConsumer(value -> preventBobViewWhenSquidOption.value = value)
                     .setTooltip(createTooltip(preventBobViewWhenSquid))
+                    .build()
+            ).addEntry(
+                entryBuilder.startBooleanToggle(modifyFovForSquidForm, modifyFovForSquidFormOption.getBoolean())
+                    .setDefaultValue(modifyFovForSquidFormOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> modifyFovForSquidFormOption.value = value)
+                    .setTooltip(createTooltip(modifyFovForSquidForm))
+                    .build()
+            ).addEntry(
+                entryBuilder.startIntSlider(fovForSquidForm, fovForSquidFormOption.getInt(), fovForSquidFormOption.getMinInt(), fovForSquidFormOption.getMaxInt())
+                    .setDefaultValue(fovForSquidFormOption.getDefaultInt())
+                    .setSaveConsumer(value -> fovForSquidFormOption.value = value)
+                    .setTooltip(createTooltip(fovForSquidForm))
                     .build()
             ).addEntry(
                 entryBuilder.startBooleanToggle(invisibleHotbarWhenSquid, invisibleHotbarWhenSquidOption.getBoolean())

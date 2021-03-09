@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Final;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
@@ -31,5 +33,15 @@ public class GameRendererMixin {
                 }
             }
         }
+    }
+
+    @ModifyVariable(method = "updateMovementFovMultiplier", at = @At(value = "STORE", ordinal = 1))
+    private float modifyFovForSquidForm(float c) {
+        ClientPlayerEntity player = this.client.player;
+        if (player != null && PlayerDataComponent.isSquid(player)) {
+            return c + (float) SplatcraftConfig.UI.fovForSquidForm.getInt() / 100;
+        }
+
+        return c;
     }
 }

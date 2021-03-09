@@ -31,6 +31,14 @@ public class SplatcraftConfig {
          */
         public EnumOption<PreventBobView> preventBobViewWhenSquid = new EnumOption<>("prevent_bob_view_when_squid", PreventBobView.class, PreventBobView.ALWAYS);
         /**
+         * Enable or disable modifying the player's fov if in squid form.
+         */
+        public Option modifyFovForSquidForm = new Option("modify_fov_for_squid_form", true);
+        /**
+         * How much to modify the player's fov if in squid form.
+         */
+        public RangedOption fovForSquidForm = new RangedOption("fov_for_squid_form", 15, -100, 100);
+        /**
          * Enable or disable disabling the hotbar when in squid form.
          */
         public Option invisibleHotbarWhenSquid = new Option("invisible_hotbar_when_squid", true);

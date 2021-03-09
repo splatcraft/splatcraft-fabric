@@ -93,7 +93,7 @@ public class PlayerHandler {
             player.stopUsingItem();
             player.setSneaking(false);
             player.setSwimming(false);
-            player.setSprinting(!player.isOnGround());
+            player.setSprinting(false);
             player.incrementStat(SplatcraftStats.SQUID_TIME);
 
             if (InkBlockUtils.takeDamage(player) && player.age % 20 == 0 && player.world.getDifficulty() != Difficulty.PEACEFUL) {
