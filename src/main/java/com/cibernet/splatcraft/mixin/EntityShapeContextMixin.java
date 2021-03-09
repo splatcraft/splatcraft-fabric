@@ -11,16 +11,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityShapeContext.class)
 public class EntityShapeContextMixin implements EntityAccessShapeContext {
-    private Entity entity;
+    private Entity splatcraft_entity;
 
     @Inject(method = "<init>(Lnet/minecraft/entity/Entity;)V", at = @At("RETURN"))
     private void onInit(Entity entity, CallbackInfo info) {
-        this.entity = entity;
+        this.splatcraft_entity = entity;
     }
 
     @Override
     @Nullable
-    public Entity getEntity() {
-        return entity;
+    public Entity splatcraft_getEntity() {
+        return splatcraft_entity;
     }
 }

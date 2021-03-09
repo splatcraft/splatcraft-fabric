@@ -20,7 +20,7 @@ public abstract class AbstractPassableBlock extends Block {
     @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView worldIn, BlockPos pos, ShapeContext shapeContext) {
-        Entity entity = ((EntityAccessShapeContext) shapeContext).getEntity();
+        Entity entity = ((EntityAccessShapeContext) shapeContext).splatcraft_getEntity();
         return entity != null && InkBlockUtils.entityPassesThroughGaps(entity)
             ? VoxelShapes.empty()
             : super.getCollisionShape(state, worldIn, pos, shapeContext);

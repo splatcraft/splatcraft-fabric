@@ -19,8 +19,7 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 @Mixin(ArmorFeatureRenderer.class)
 public class ArmorFeatureRendererMixin {
-    @Shadow @Final
-    private static Map<String, Identifier> ARMOR_TEXTURE_CACHE;
+    @Shadow @Final private static Map<String, Identifier> ARMOR_TEXTURE_CACHE;
 
     /**
      * Vanilla Minecraft defaults all registered armor textures to the <code>minecraft</code> assets namespace. This fixes them to use the namespace of the mod.

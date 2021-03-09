@@ -20,8 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
-    @Shadow @Final
-    private MinecraftClient client;
+    @Shadow @Final private MinecraftClient client;
 
     /**
      * Hides the player's hand when in squid form.

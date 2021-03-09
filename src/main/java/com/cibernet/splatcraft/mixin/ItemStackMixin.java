@@ -12,8 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
-    @Shadow @Final @Deprecated
-    private Item item;
+    @Shadow @Final @Deprecated private Item item;
 
     @Inject(method = "isDamaged", at = @At("HEAD"), cancellable = true)
     private void isDamaged(CallbackInfoReturnable<Boolean> cir) {

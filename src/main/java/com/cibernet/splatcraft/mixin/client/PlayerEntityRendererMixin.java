@@ -18,18 +18,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin {
-    private static PlayerEntityInkSquidRenderer renderer;
+    private static PlayerEntityInkSquidRenderer splatcraft_playerInkSquidRenderer;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumers, int light, CallbackInfo ci) {
-        if (renderer == null) {
-            renderer = new PlayerEntityInkSquidRenderer(PlayerEntityRenderer.class.cast(this).getRenderManager());
+        if (splatcraft_playerInkSquidRenderer == null) {
+            splatcraft_playerInkSquidRenderer = new PlayerEntityInkSquidRenderer(PlayerEntityRenderer.class.cast(this).getRenderManager());
         }
 
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         if (data.isSquid()) {
             if (!InkBlockUtils.shouldBeSubmerged(player)) {
-                renderer.render(player, yaw, tickDelta, matrices, consumers, light);
+                splatcraft_playerInkSquidRenderer.render(player, yaw, tickDelta, matrices, consumers, light);
             }
 
             ci.cancel();

@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ItemStack.class)
 public abstract class ClientItemStackMixin {
-    @Shadow
-    public abstract Item getItem();
+    @Shadow public abstract Item getItem();
 
     @Environment(EnvType.CLIENT)
     @Inject(method = "getHideFlags", at = @At("HEAD"), cancellable = true)

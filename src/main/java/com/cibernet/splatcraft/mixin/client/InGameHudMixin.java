@@ -42,7 +42,7 @@ public abstract class InGameHudMixin {
     @Shadow protected abstract PlayerEntity getCameraPlayer();
     @Shadow protected abstract void renderHotbarItem(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack);
 
-    private static final Identifier SQUID_GUI_ICONS_TEXTURE = new Identifier(Splatcraft.MOD_ID, "textures/gui/squid_icons.png");
+    private static final Identifier splatcraft_SQUID_GUI_ICONS_TEXTURE = new Identifier(Splatcraft.MOD_ID, "textures/gui/squid_icons.png");
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
@@ -108,7 +108,7 @@ public abstract class InGameHudMixin {
                 float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
                 if (inkAmount < 1.0F || SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getBoolean()) {
                     if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() != InkAmountIndicator.OFF) {
-                        this.client.getTextureManager().bindTexture(SQUID_GUI_ICONS_TEXTURE);
+                        this.client.getTextureManager().bindTexture(splatcraft_SQUID_GUI_ICONS_TEXTURE);
                         int color = ColorUtils.getInkColor(client.player).getColor();
                         float r = (float) (color >> 16 & 255) / 255.0F;
                         float g = (float) (color >> 8 & 255) / 255.0F;

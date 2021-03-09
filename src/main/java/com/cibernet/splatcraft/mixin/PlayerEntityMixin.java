@@ -36,10 +36,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
-    @Shadow @Final
-    public PlayerAbilities abilities;
+    @Shadow @Final public PlayerAbilities abilities;
 
-    private Vec3d posLastTick = Vec3d.ZERO;
+    private Vec3d splatcraft_posLastTick = Vec3d.ZERO;
 
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
@@ -71,7 +70,7 @@ public class PlayerEntityMixin {
 
         if ($this.world instanceof ServerWorld) {
             double threshold = 0.13D;
-            if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(posLastTick.getX() - $this.getX()) >= threshold || Math.abs(posLastTick.getY() - $this.getY()) >= threshold || Math.abs(posLastTick.getZ() - $this.getZ()) >= threshold)) {
+            if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeUuid($this.getUuid());
 
@@ -86,7 +85,7 @@ public class PlayerEntityMixin {
                 }
             }
 
-            posLastTick = $this.getPos();
+            splatcraft_posLastTick = $this.getPos();
         }
     }
 

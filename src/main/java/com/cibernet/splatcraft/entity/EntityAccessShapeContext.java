@@ -5,5 +5,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface EntityAccessShapeContext {
     @Nullable
-    Entity getEntity();
+    Entity splatcraft_getEntity();
 }
