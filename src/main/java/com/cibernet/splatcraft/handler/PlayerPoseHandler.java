@@ -37,8 +37,8 @@ public class PlayerPoseHandler {
                                 offHand.pivotX = -((float) Math.PI / 2F) + $this.getHead().pivotX;
                             }
                         case FIRE:
-                            mainHand.pivotY = -0.1F + $this.getHead().pivotY;
-                            mainHand.pivotX = -((float) Math.PI / 2F) + $this.getHead().pivotX;
+                            mainHand.roll = -0.1F + $this.getHead().roll;
+                            mainHand.pitch = -((float) Math.PI / 2F) + $this.getHead().pitch;
                             break;
                         case ROLL:
                             mainHand.pitch = -0.30978097624F;

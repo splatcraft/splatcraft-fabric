@@ -8,7 +8,6 @@ import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.item.AttackInputDetectable;
 import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
@@ -40,8 +39,10 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractWeaponItem extends Item implements MatchItem, EntityTickable, AttackInputDetectable {
+public abstract class AbstractWeaponItem extends Item implements MatchItem, EntityTickable {
     protected final float consumption;
+
+    protected boolean secret;
 
     public AbstractWeaponItem(Item.Settings settings, float consumption) {
         super(settings);
@@ -132,6 +133,9 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
     public static boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
         return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || getInkAmount(player, weapon) > getInkReductionAmount(player, (AbstractWeaponItem) weapon.getItem(), fling);
     }
+    public static boolean hasInk(PlayerEntity player, ItemStack weapon) {
+        return AbstractWeaponItem.hasInk(player, weapon, false);
+    }
 
     public static void reduceInk(PlayerEntity player, float amount) {
         ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
@@ -142,6 +146,10 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
     public void reduceInk(PlayerEntity player, boolean fling) {
         reduceInk(player, getInkReductionAmount(player, this, fling));
     }
+    public void reduceInk(PlayerEntity player) {
+        reduceInk(player, getInkReductionAmount(player, this, false));
+    }
+
     public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {
         return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? Objects.requireNonNull(((RollerItem) weapon).rollerComponent.flingComponent).consumption : weapon.consumption) / 25);
     }
@@ -172,5 +180,10 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
 
     public PlayerPoseHandler.WeaponPose getPose() {
         return PlayerPoseHandler.WeaponPose.NONE;
+    }
+
+    public AbstractWeaponItem setSecret() {
+        this.secret = true;
+        return this;
     }
 }

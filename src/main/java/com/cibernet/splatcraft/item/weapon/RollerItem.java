@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
+import com.cibernet.splatcraft.item.AttackInputDetectable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +18,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-public class RollerItem extends AbstractWeaponItem {
+public class RollerItem extends AbstractWeaponItem implements AttackInputDetectable {
     protected final Item.Settings settings;
     protected final RollerComponent rollerComponent;
 

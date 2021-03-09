@@ -1,5 +1,6 @@
 package com.cibernet.splatcraft.entity;
 
+import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
@@ -28,7 +29,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
 
     public static final TrackedData<String> INK_COLOR = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.STRING);
     private static final TrackedData<Float> PROJ_SIZE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final DamageSource DAMAGE_SOURCE = new DamageSource("ink"){};
+    private static final DamageSource DAMAGE_SOURCE = SplatcraftDamageSources.ENEMY_INK;
 
     public float gravity = 0.075f;
     public int lifespan = 600;
@@ -41,7 +42,6 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     public float trailSize;
     public float trailCooldown = 0;
     public InkBlockUtils.InkType inkType;
-
 
     public InkProjectileEntity(EntityType<? extends InkProjectileEntity> entity, World world) {
         super(entity, world);
@@ -59,12 +59,14 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         this.sourceWeapon = sourceWeapon;
     }
 
-    public InkProjectileEntity(World world, LivingEntity thrower, InkColor color, InkBlockUtils.InkType inkType, float size, float damage) {
-        this(world, thrower, color, inkType, size, damage, ItemStack.EMPTY);
-    }
-
     public InkProjectileEntity(World world, LivingEntity thrower, ItemStack sourceWeapon, InkBlockUtils.InkType inkType, float size, float damage) {
         this(world, thrower, ColorUtils.getInkColor(sourceWeapon), inkType, size, damage, sourceWeapon);
+    }
+
+    @Override
+    public void setProperties(Entity user, float pitch, float yaw, float roll, float modifierZ, float modifierXYZ) {
+        super.setProperties(user, pitch, yaw, roll, modifierZ, modifierXYZ);
+        this.setPos(this.getX(), user.getEyeY(), this.getZ());
     }
 
     public InkProjectileEntity setShooterTrail() {
@@ -154,17 +156,20 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         Entity target = result.getEntity();
 
         if (!canPierce) {
-            if (target instanceof LivingEntity) {
-                InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), this.getOwner(), sourceWeapon, damageMobs);
-            }
-
-            if (target instanceof SheepEntity) {
-                DyeColor dyeColor = DyeColor.byName(this.getInkColor().getId().getPath(), ((SheepEntity) target).getColor());
-                if (dyeColor != null) {
-                    ((SheepEntity) target).setColor(dyeColor);
+            if (target != this.getOwner()) {
+                if (target instanceof LivingEntity) {
+                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), this.getOwner(), sourceWeapon, damageMobs);
                 }
+
+                if (target instanceof SheepEntity) {
+                    DyeColor dyeColor = DyeColor.byName(this.getInkColor().getId().getPath(), ((SheepEntity) target).getColor());
+                    if (dyeColor != null) {
+                        ((SheepEntity) target).setColor(dyeColor);
+                    }
+                }
+
+                this.remove();
             }
-            this.remove();
         }
     }
 

@@ -11,7 +11,6 @@ import com.cibernet.splatcraft.tag.SplatcraftItemTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
@@ -41,23 +40,20 @@ public class InkTankArmorItem extends InkableArmorItem {
     private AbstractInkTankArmorModel model;
 
     public InkTankArmorItem(float capacity, ArmorMaterial material, Item.Settings settings) {
-        super(material, EquipmentSlot.CHEST, settings);
+        super(material, EquipmentSlot.CHEST, InkTankArmorItem.createItemSettings(settings, capacity));
         this.capacity = capacity;
         this.settings = settings;
     }
-
-    public InkTankArmorItem(float capacity, ArmorMaterial material) {
-        this(capacity, material, new FabricItemSettings().maxDamage((int) capacity).group(Splatcraft.ItemGroups.WEAPONS));
-    }
-
     public InkTankArmorItem(InkTankArmorItem parent) {
         this(parent.capacity, parent.getMaterial(), parent.settings);
         this.model = parent.model;
     }
+    public InkTankArmorItem(float capacity, Item.Settings settings) {
+        this(capacity, SplatcraftArmorMaterials.INK_TANK, settings);
+    }
 
-    @SuppressWarnings("unused")
-    public InkTankArmorItem(float capacity) {
-        this(capacity, SplatcraftArmorMaterials.INK_TANK);
+    protected static Item.Settings createItemSettings(Item.Settings settings, float capacity) {
+        return settings.maxDamage((int) capacity);
     }
 
     @Override
