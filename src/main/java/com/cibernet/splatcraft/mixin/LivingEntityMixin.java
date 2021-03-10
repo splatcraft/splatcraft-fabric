@@ -35,7 +35,14 @@ public class LivingEntityMixin {
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player)) {
-                splatcraft_lastLandedBlockInkColor = ColorUtils.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
+                InkColor inkColor = ColorUtils.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
+                if (inkColor == InkColors.NONE) {
+                    if (player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
+                        return c;
+                    }
+                }
+
+                splatcraft_lastLandedBlockInkColor = inkColor;
             }
         }
 
@@ -43,7 +50,7 @@ public class LivingEntityMixin {
     }
     @SuppressWarnings("ConstantConditions")
     @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91F, ordinal = 1)) // targets the SECOND place a float is defined as 0.91F, not on ground
-    private float fixSquidJumpVelocity(float c) {
+    private float fixSquidAirborneVelocity(float c) {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
@@ -53,5 +60,17 @@ public class LivingEntityMixin {
         }
 
         return c; // default to original, pre-mixin value
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Inject(method = "getJumpVelocity", at = @At("RETURN"), cancellable = true)
+    private void fixSquidJumpVelocity(CallbackInfoReturnable<Float> cir) {
+        LivingEntity $this = LivingEntity.class.cast(this);
+        if ($this instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) $this;
+            if (PlayerDataComponent.isSquid(player) && player.isOnGround() && splatcraft_lastLandedBlockInkColor != InkColors.NONE && splatcraft_lastLandedBlockInkColor == ColorUtils.getInkColor(player)) {
+                cir.setReturnValue(cir.getReturnValueF() * 1.36F);
+            }
+        }
     }
 }
