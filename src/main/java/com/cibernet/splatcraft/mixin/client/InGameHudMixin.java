@@ -78,7 +78,7 @@ public abstract class InGameHudMixin {
             if (PlayerDataComponent.isSquid(this.client.player)) {
                 if (SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getBoolean()) {
                     ci.cancel();
-                } else if (SplatcraftConfig.UI.inkColoredCrosshairWhenSquid.getBoolean()) {
+                } else if (SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getBoolean()) {
                     ci.cancel();
 
                     // set color
@@ -106,8 +106,8 @@ public abstract class InGameHudMixin {
             ItemStack chestStack = this.client.player.getEquippedStack(EquipmentSlot.CHEST);
             if (chestStack.getItem() instanceof InkTankArmorItem) {
                 float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
-                if (inkAmount < 1.0F || SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getBoolean()) {
-                    if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() != InkAmountIndicator.OFF) {
+                if (inkAmount < 1.0F || SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getBoolean()) {
+                    if (SplatcraftConfig.INK.inkAmountIndicator.getEnum() != InkAmountIndicator.OFF) {
                         this.client.getTextureManager().bindTexture(splatcraft_SQUID_GUI_ICONS_TEXTURE);
                         int color = ColorUtils.getInkColor(client.player).getColor();
                         float r = (float) (color >> 16 & 255) / 255.0F;
@@ -115,7 +115,7 @@ public abstract class InGameHudMixin {
                         float b = (float) (color & 255) / 255.0F;
                         RenderSystem.color4f(r, g, b, 1.0F);
 
-                        if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == InkAmountIndicator.CROSSHAIR) {
+                        if (SplatcraftConfig.INK.inkAmountIndicator.getEnum() == InkAmountIndicator.CROSSHAIR) {
                             float attackCooldownProgress = PlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0F : this.client.player.getAttackCooldownProgress(0.0F);
                             boolean targetingEntity = false;
                             if (this.client.options.attackIndicator == AttackIndicator.CROSSHAIR && this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && attackCooldownProgress >= 1.0F) {
@@ -132,7 +132,7 @@ public abstract class InGameHudMixin {
                             // draw background (uncolored)
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             $this.drawTexture(matrices, x, y, 36, 94, 16, 4);
-                        } else if (SplatcraftConfig.UI.inkAmountIndicator.getEnum() == InkAmountIndicator.HOTBAR) {
+                        } else if (SplatcraftConfig.INK.inkAmountIndicator.getEnum() == InkAmountIndicator.HOTBAR) {
                             int halfScaledWidth = this.scaledWidth / 2;
                             int y = this.scaledHeight - 20;
                             int x = halfScaledWidth + 91 + 32 + (this.getCameraPlayer().getMainArm().getOpposite() == Arm.RIGHT ? -91 - 22 : 0);
@@ -144,10 +144,10 @@ public abstract class InGameHudMixin {
                             // draw background (uncolored)
                             $this.drawTexture(matrices, x, y, 0, 94, 18, 18);
 
-                            if (SplatcraftConfig.UI.inkAmountIndicatorExclamations.getBoolean()) {
-                                if (inkAmount <= (float) SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin.getInt() / 100) {
+                            if (SplatcraftConfig.INK.inkAmountIndicatorExclamations.getBoolean()) {
+                                if (inkAmount <= (float) SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin.getInt() / 100) {
                                     $this.drawTexture(matrices, x, y, 0, 112, 18, 18);
-                                } else if (inkAmount >= (float) SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax.getInt() / 100) {
+                                } else if (inkAmount >= (float) SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax.getInt() / 100) {
                                     $this.drawTexture(matrices, x, y, 18, 112, 18, 18);
                                 }
                             }

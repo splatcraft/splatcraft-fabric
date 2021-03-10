@@ -86,18 +86,6 @@ public class SplatcraftModMenu implements ModMenuApi {
             SplatcraftConfig.Option invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
             TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
             SplatcraftConfig.Option invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
-            TranslatableText inkColoredCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.inkColoredCrosshairWhenSquid.getId());
-            SplatcraftConfig.Option inkColoredCrosshairWhenSquidOption = SplatcraftConfig.UI.inkColoredCrosshairWhenSquid;
-            TranslatableText inkAmountIndicator = createUIText(SplatcraftConfig.UI.inkAmountIndicator.getId());
-            SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.UI.inkAmountIndicator;
-            TranslatableText inkAmountIndicatorAlwaysVisible = createUIText(SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible.getId());
-            SplatcraftConfig.Option inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.UI.inkAmountIndicatorAlwaysVisible;
-            TranslatableText inkAmountIndicatorExclamations = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamations.getId());
-            SplatcraftConfig.Option inkAmountIndicatorExclamationsOption = SplatcraftConfig.UI.inkAmountIndicatorExclamations;
-            TranslatableText inkAmountIndicatorExclamationsMin = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin.getId());
-            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.UI.inkAmountIndicatorExclamationsMin;
-            TranslatableText inkAmountIndicatorExclamationsMax = createUIText(SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax.getId());
-            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.UI.inkAmountIndicatorExclamationsMax;
             UI.addEntry(
                 entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.getEnum())
                     .setDefaultValue(preventBobViewWhenSquidOption.getDefaultEnum())
@@ -140,6 +128,33 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .setSaveConsumer(value -> invisibleCrosshairWhenSquidOption.value = value)
                     .setTooltip(createTooltip(invisibleCrosshairWhenSquid))
                     .build()
+            );
+
+            //
+            // COLORS CATEGORY
+            //
+
+            ConfigCategory INK = builder.getOrCreateCategory(createInkText());
+            TranslatableText colorLock = createInkText(SplatcraftConfig.INK.colorLock.getId());
+            SplatcraftConfig.Option colorLockOption = SplatcraftConfig.INK.colorLock;
+            SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
+            TranslatableText inkColoredCrosshairWhenSquid = createInkText(SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getId());
+            SplatcraftConfig.Option inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
+            TranslatableText inkAmountIndicator = createInkText(SplatcraftConfig.INK.inkAmountIndicator.getId());
+            TranslatableText inkAmountIndicatorAlwaysVisible = createInkText(SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getId());
+            SplatcraftConfig.Option inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible;
+            TranslatableText inkAmountIndicatorExclamations = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamations.getId());
+            SplatcraftConfig.Option inkAmountIndicatorExclamationsOption = SplatcraftConfig.INK.inkAmountIndicatorExclamations;
+            TranslatableText inkAmountIndicatorExclamationsMin = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin.getId());
+            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin;
+            TranslatableText inkAmountIndicatorExclamationsMax = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax.getId());
+            SplatcraftConfig.RangedOption inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax;
+            INK.addEntry(
+                entryBuilder.startBooleanToggle(colorLock, colorLockOption.getBoolean())
+                    .setDefaultValue(colorLockOption.getDefaultBoolean())
+                    .setSaveConsumer(value -> colorLockOption.value = value)
+                    .setTooltip(createTooltip(colorLock))
+                    .build()
             ).addEntry(
                 entryBuilder.startBooleanToggle(inkColoredCrosshairWhenSquid, inkColoredCrosshairWhenSquidOption.getBoolean())
                     .setDefaultValue(inkColoredCrosshairWhenSquidOption.getDefaultBoolean())
@@ -178,21 +193,6 @@ public class SplatcraftModMenu implements ModMenuApi {
                     .build()
             );
 
-            //
-            // COLORS CATEGORY
-            //
-
-            ConfigCategory COLORS = builder.getOrCreateCategory(createColorsText());
-            TranslatableText colorLock = createColorsText(SplatcraftConfig.COLORS.colorLock.getId());
-            SplatcraftConfig.Option colorLockOption = SplatcraftConfig.COLORS.colorLock;
-            COLORS.addEntry(
-                entryBuilder.startBooleanToggle(colorLock, colorLockOption.getBoolean())
-                    .setDefaultValue(colorLockOption.getDefaultBoolean())
-                    .setSaveConsumer(value -> colorLockOption.value = value)
-                    .setTooltip(createTooltip(colorLock))
-                    .build()
-            );
-
             return builder.build();
         };
     }
@@ -212,11 +212,11 @@ public class SplatcraftModMenu implements ModMenuApi {
     private TranslatableText createUIText() {
         return createUIText("");
     }
-    private TranslatableText createColorsText(String label) {
-        return createCatText("colors" + (label.isEmpty() ? "" : "." + label));
+    private TranslatableText createInkText(String label) {
+        return createCatText("ink" + (label.isEmpty() ? "" : "." + label));
     }
-    private TranslatableText createColorsText() {
-        return createColorsText("");
+    private TranslatableText createInkText() {
+        return createInkText("");
     }
     private TranslatableText createCatText(String group) {
         return createConfigText("category." + group);
