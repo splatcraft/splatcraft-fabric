@@ -46,6 +46,9 @@ public abstract class InGameHudMixin {
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
+        // render ink tank
+        this.renderInkTank(matrices);
+
         if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.getBoolean() && PlayerDataComponent.isSquid(client.player)) {
             // render held item
             if (SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getBoolean()) {
@@ -93,9 +96,6 @@ public abstract class InGameHudMixin {
                     $this.drawTexture(matrices, (this.scaledWidth - 15) / 2, (this.scaledHeight - 15) / 2, 0, 0, 15, 15);
                 }
             }
-
-            // render ink tank
-            this.renderInkTank(matrices);
         }
     }
 
@@ -123,8 +123,8 @@ public abstract class InGameHudMixin {
                                 targetingEntity &= this.client.targetedEntity.isAlive();
                             }
 
-                            int y = this.scaledHeight / 2 - 7 + 17 + (targetingEntity || attackCooldownProgress < 1.0F ? 8 : -2);
-                            int x = this.scaledWidth / 2 - 9;
+                            int y = this.scaledHeight / 2 - 7 + 17 + (this.client.options.getPerspective().isFirstPerson() ? (targetingEntity || attackCooldownProgress < 1.0F ? 8 : -2) : - 18);
+                            int x = this.scaledWidth / 2 + (this.client.options.getPerspective().isFirstPerson() ? - 9 : + 23);
 
                             int width = (int) (inkAmount * 17.0F);
                             // draw foreground (colored)
