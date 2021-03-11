@@ -68,9 +68,8 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
-        return TypedActionResult.success(stack, false);
+        return super.use(world, user, hand);
     }
 
     @Override

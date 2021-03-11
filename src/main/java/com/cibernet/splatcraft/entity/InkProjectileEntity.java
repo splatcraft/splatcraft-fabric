@@ -22,6 +22,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class InkProjectileEntity extends ThrownItemEntity implements InkableEntity {
@@ -66,7 +67,8 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     @Override
     public void setProperties(Entity user, float pitch, float yaw, float roll, float modifierZ, float modifierXYZ) {
         super.setProperties(user, pitch, yaw, roll, modifierZ, modifierXYZ);
-        this.setPos(this.getX(), user.getEyeY(), this.getZ());
+        Vec3d center = user.getBoundingBox().getCenter();
+        this.updatePosition(center.getX(), user.getEyeY() - 0.10000000149011612D, center.getZ());
     }
 
     public InkProjectileEntity setShooterTrail() {
@@ -133,19 +135,21 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
                 ColorUtils.addInkSplashParticle(world, this.getInkColor(), this.getPos());
                 world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
             }
-            remove();
+
+            this.remove();
         }
 
-        if (trailSize > 0 && this.age % this.trailCooldown == 0)
-            for (double y = this.getY(); y >= 0 && this.getY()-y <= 8; y--) {
+        if (trailSize > 0 && this.age % this.trailCooldown == 0) {
+            for (double y = this.getY(); y >= 0 && this.getY() - y <= 8; y--) {
                 BlockPos inkPos = new BlockPos(this.getX(), y, this.getZ());
                 if (!InkBlockUtils.canInkPassthrough(world, inkPos)) {
                     InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, inkPos.up(), trailSize, 0, 0, damageMobs, this.getInkColor(), inkType, sourceWeapon);
                     InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), trailSize, 0, 0, damageMobs, this.getInkColor(), inkType, sourceWeapon);
+
                     break;
                 }
             }
-
+        }
     }
 
     @Override
