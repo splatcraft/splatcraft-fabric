@@ -38,7 +38,7 @@ public class GameRendererMixin {
     @ModifyVariable(method = "updateMovementFovMultiplier", at = @At(value = "STORE", ordinal = 1))
     private float modifyFovForSquidForm(float c) {
         ClientPlayerEntity player = this.client.player;
-        if (player != null && PlayerDataComponent.isSquid(player)) {
+        if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.getBoolean() && PlayerDataComponent.isSquid(player)) {
             return c + (float) SplatcraftConfig.UI.fovForSquidForm.getInt() / 100;
         }
 
