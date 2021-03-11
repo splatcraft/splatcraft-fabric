@@ -207,5 +207,8 @@ public class InkBlockUtils {
                     return SplatcraftBlocks.GLOWING_INKED_BLOCK;
             }
         }
+        public static InkType fromBlock(InkedBlock block) {
+            return block.isGlowing() ? GLOWING : NORMAL;
+        }
     }
 }

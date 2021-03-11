@@ -12,7 +12,10 @@ import com.cibernet.splatcraft.item.inkable.InkableBlockItem;
 import com.cibernet.splatcraft.item.remote.ColorChangerItem;
 import com.cibernet.splatcraft.item.remote.InkDisruptorItem;
 import com.cibernet.splatcraft.item.remote.TurfScannerItem;
-import com.cibernet.splatcraft.item.weapon.*;
+import com.cibernet.splatcraft.item.weapon.RollerItem;
+import com.cibernet.splatcraft.item.weapon.ShooterItem;
+import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
+import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
@@ -39,12 +42,12 @@ public class SplatcraftItems {
 
     public static final Item.Settings WEAPON_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.WEAPONS);
 
-    public static final Item SPLAT_ROLLER = register("splat_roller", new RollerItem(WEAPON_SETTINGS, new RollerComponent(0.1F, 2, 25.0F, 0.45F, false, new FlingComponent(9.0F, 0.8F, 8.0F, 0.4F))));
+    public static final Item SPLAT_ROLLER = register("splat_roller", new RollerItem(WEAPON_SETTINGS, new RollerComponent(0.1F, 2, 25.0F, 0.45F, false, new RollerComponent.Fling(9.0F, 0.8F, 8.0F, 0.4F))));
     public static final Item KRAK_ON_SPLAT_ROLLER = register("krak_on_splat_roller", new RollerItem((RollerItem) SPLAT_ROLLER));
     public static final Item COROCORO_SPLAT_ROLLER = register("corocoro_splat_roller", new RollerItem((RollerItem) SPLAT_ROLLER, RollerComponent.copy((RollerItem) SPLAT_ROLLER).setSpeed(0.5F).setRadius(2)));
-    public static final Item CARBON_ROLLER = register("carbon_roller", new RollerItem((RollerItem) SPLAT_ROLLER, RollerComponent.copy((RollerItem) SPLAT_ROLLER).setDamage(14.0F).setFlingComponent(new FlingComponent(4.0F, 0.7F, 8.0F, 0.63F))));
-    public static final Item INKBRUSH = register("inkbrush", new RollerItem((RollerItem) SPLAT_ROLLER, new RollerComponent(0.135F, 1, 4.0F, 1.0F, true, new FlingComponent(2.0F, 1.0F, 6.0F, 0.5F))));
-    public static final Item OCTOBRUSH = register("octobrush", new RollerItem((RollerItem) SPLAT_ROLLER, new RollerComponent(0.18F, 1, 5.0F, 0.8F, true, FlingComponent.copy((RollerItem) INKBRUSH))));
+    public static final Item CARBON_ROLLER = register("carbon_roller", new RollerItem((RollerItem) SPLAT_ROLLER, RollerComponent.copy((RollerItem) SPLAT_ROLLER).setDamage(14.0F).setFlingComponent(new RollerComponent.Fling(4.0F, 0.7F, 8.0F, 0.63F))));
+    public static final Item INKBRUSH = register("inkbrush", new RollerItem((RollerItem) SPLAT_ROLLER, new RollerComponent(0.135F, 1, 4.0F, 1.0F, true, new RollerComponent.Fling(2.0F, 1.0F, 6.0F, 0.5F))));
+    public static final Item OCTOBRUSH = register("octobrush", new RollerItem((RollerItem) SPLAT_ROLLER, new RollerComponent(0.18F, 1, 5.0F, 0.8F, true, RollerComponent.Fling.copy((RollerItem) INKBRUSH))));
 
     public static final Item SPLATTERSHOT = register("splattershot", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(0.9F, 1.05F, 8.0F, 4.0F, 0.75F, 12.0F)));
     public static final Item TENTATEK_SPLATTERSHOT = register("tentatek_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT));

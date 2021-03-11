@@ -7,6 +7,7 @@ import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
 import com.cibernet.splatcraft.item.AttackInputDetectable;
+import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,19 +21,19 @@ import net.minecraft.world.World;
 
 public class RollerItem extends AbstractWeaponItem implements AttackInputDetectable {
     protected final Item.Settings settings;
-    protected final RollerComponent rollerComponent;
+    public final RollerComponent component;
 
-    public RollerItem(Item.Settings settings, RollerComponent rollerComponent) {
-        super(settings, rollerComponent.consumption);
+    public RollerItem(Item.Settings settings, RollerComponent component) {
+        super(settings, component.consumption);
 
         this.settings = settings;
-        this.rollerComponent = rollerComponent;
+        this.component = component;
     }
     public RollerItem(RollerItem rollerItem) {
-        this(rollerItem.settings, rollerItem.rollerComponent);
+        this(rollerItem.settings, rollerItem.component);
     }
-    public RollerItem(RollerItem rollerItem, RollerComponent rollerComponent) {
-        this(rollerItem.settings, rollerComponent);
+    public RollerItem(RollerItem rollerItem, RollerComponent component) {
+        this(rollerItem.settings, component);
     }
 
     @Override
@@ -63,36 +64,36 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
                 BlockPos pos = new BlockPos(Math.floor(player.getX()) + 0.5, player.getY() - downReach, Math.floor(player.getZ()) + 0.5);
 
-                for (int i = 0; i < this.rollerComponent.radius; i++)
+                for (int i = 0; i < this.component.radius; i++) {
                     for (int rollDepth = 0; rollDepth < 2; rollDepth++) {
-                        double xOff = i == 0 ? 0 : Math.round(fwd.z) * Math.ceil(i/2.0);
-                        double zOff = i == 0 ? 0 : Math.round(fwd.x) * Math.ceil(i/2.0);
+                        double xOff = i == 0 ? 0 : Math.round(fwd.z) * Math.ceil(i / 2.0);
+                        double zOff = i == 0 ? 0 : Math.round(fwd.x) * Math.ceil(i / 2.0);
 
                         if (i % 2 == 0) {
                             xOff *= -1;
                             zOff *= -1;
                         }
 
-                        if (player.getHorizontalFacing().equals(Direction.NORTH) || player.getHorizontalFacing().equals(Direction.SOUTH)) {
-                            zOff = (rollDepth - 2) * player.getHorizontalFacing().getDirection().offset();
+                        Direction horizontalFacing = player.getHorizontalFacing();
+                        if (horizontalFacing.equals(Direction.NORTH) || horizontalFacing.equals(Direction.SOUTH)) {
+                            zOff = (rollDepth - 1) * horizontalFacing.getDirection().offset();
+                            xOff = i * (horizontalFacing.equals(Direction.SOUTH) ? -1 : 1);
                         } else {
-                            xOff = (rollDepth - 1) * player.getHorizontalFacing().getDirection().offset();
+                            xOff = (rollDepth);
                         }
-
 
                         BlockPos inkPos = pos.add(fwd.x * 2 + xOff, -1, fwd.z * 2 + zOff);
 
                         int h = 0;
-                        while (h <= downReach) {
+                        for (; h <= downReach; h++) {
                             if (InkBlockUtils.canInkPassthrough(world, inkPos.up())) {
                                 break;
                             } else {
                                 inkPos = inkPos.up();
                             }
-                            h++;
                         }
 
-                        if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, this.rollerComponent.damage, isGlowing)) {
+                        if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, this.component.damage, isGlowing)) {
                             ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
                             reduceInk(player, false);
 
@@ -101,11 +102,9 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                             }
                         }
 
-                        if (player.getAttackCooldownProgress(0.0F) >= 1.0F) {
-                            for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
-                                if (!target.equals(player)) {
-                                    InkDamageUtils.rollDamage(world, target, this.rollerComponent.damage, color, player, stack, false);
-                                }
+                        for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
+                            if (!target.equals(player)) {
+                                InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, stack, false);
                             }
                         }
 
@@ -113,6 +112,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                             break;
                         }
                     }
+                }
             } else {
                 sendNoInkMessage(player);
             }
@@ -121,11 +121,11 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
     @Override
     public void onAttack(ServerPlayerEntity player, ItemStack stack) {
-        if (this.rollerComponent.flingComponent != null) {
+        if (this.component.fling != null) {
             if (hasInk(player, stack, true)) {
                 reduceInk(player, true);
 
-                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.rollerComponent.flingComponent.size, this.rollerComponent.flingComponent.damage);
+                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.component.fling.size, this.component.fling.damage);
                 proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
                 player.world.spawnEntity(proj);
             } else {

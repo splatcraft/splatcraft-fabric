@@ -151,7 +151,7 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
     }
 
     public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {
-        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? Objects.requireNonNull(((RollerItem) weapon).rollerComponent.flingComponent).consumption : weapon.consumption) / 25);
+        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? Objects.requireNonNull(((RollerItem) weapon).component.fling).consumption : weapon.consumption) / 25);
     }
 
     public static void sendNoInkMessage(LivingEntity entity) {

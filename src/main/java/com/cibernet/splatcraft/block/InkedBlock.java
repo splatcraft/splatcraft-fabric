@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -16,6 +17,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -29,6 +33,8 @@ import java.util.Random;
 public class InkedBlock extends AbstractInkableBlock {
     public static final String id = "inked_block";
 
+    private boolean glowing;
+
     public static final AbstractBlock.Settings DEFAULT_PROPERTIES = FabricBlockSettings.of(Material.ORGANIC_PRODUCT, MaterialColor.BLACK_TERRACOTTA)
         .breakByTool(FabricToolTags.PICKAXES).requiresTool()
         .sounds(BlockSoundGroup.SLIME).nonOpaque()
@@ -40,6 +46,11 @@ public class InkedBlock extends AbstractInkableBlock {
     }
     public InkedBlock(boolean glowing) {
         this(glowing ? DEFAULT_PROPERTIES.luminance(state -> GLOWING_LIGHT_LEVEL) : DEFAULT_PROPERTIES);
+        this.glowing = glowing;
+    }
+
+    public boolean isGlowing() {
+        return this.glowing;
     }
 
     @Override
@@ -192,10 +203,35 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            Block block = world.getBlockState(pos).getBlock();
+            InkBlockUtils.InkType inkType = InkBlockUtils.InkType.fromBlock((InkedBlock) block);
+            InkColor inkColor = ColorUtils.getInkColor(blockEntity);
+
+            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
+            ActionResult actionResult = savedState.getBlock().onUse(savedState, world, pos, player, hand, hit);
+
+            if (actionResult.isAccepted()) {
+                block = world.getBlockState(pos).getBlock();
+                if (!(block instanceof InkedBlock)) {
+                    InkBlockUtils.inkBlock(world, pos, inkColor, 0.0F, inkType);
+                }
+            }
+
+            return actionResult;
+        }
+
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
-            return ((InkedBlockEntity) blockEntity).getSavedState().getBlock().getPickStack(world, pos, state);
+            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
+            return savedState.getBlock().getPickStack(world, pos, savedState);
         }
 
         return super.getPickStack(world, pos, state);
@@ -205,7 +241,8 @@ public class InkedBlock extends AbstractInkableBlock {
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
-            return ((InkedBlockEntity) blockEntity).getSavedState().getBlock().isTranslucent(state, world, pos);
+            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
+            return savedState.getBlock().isTranslucent(savedState, world, pos);
         }
 
         return super.isTranslucent(state, world, pos);

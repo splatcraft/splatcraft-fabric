@@ -1,15 +1,15 @@
-package com.cibernet.splatcraft.item.weapon;
+package com.cibernet.splatcraft.item.weapon.component;
 
 /**
  * Represents the components that make up the properties of a shooter item.
  */
 public class ShooterComponent {
-    protected float consumption;
-    protected float size;
-    protected float damage;
-    protected float firingSpeed;
-    protected float speed;
-    protected float inaccuracy;
+    public float consumption;
+    public float size;
+    public float damage;
+    public float firingSpeed;
+    public float speed;
+    public float inaccuracy;
 
     public ShooterComponent(float consumption, float size, float damage, float firingSpeed, float speed, float inaccuracy) {
         this.consumption = consumption;
@@ -27,9 +27,5 @@ public class ShooterComponent {
     public ShooterComponent setSize(int size) {
         this.size = size;
         return this;
-    }
-
-    public static ShooterComponent copy(ShooterItem item) {
-        return item.shooterComponent;
     }
 }
