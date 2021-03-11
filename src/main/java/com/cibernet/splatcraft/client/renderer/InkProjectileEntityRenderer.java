@@ -23,7 +23,7 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
 
     @Override
     public void render(InkProjectileEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        if (entity.age >= 3 || this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity) >= 12.25D) {
+        if (this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity.getPos().add(0.0D, entity.getStandingEyeHeight(), 0.0D)) >= 4.0D) {
             float scale = entity.getProjectileSize();
             int color = entity.getInkColor().getColor();
 
@@ -39,8 +39,6 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
             matrices.scale(scale, scale, scale);
             this.MODEL.render(matrices, vertexConsumers.getBuffer(this.MODEL.getLayer(TEXTURE)), light, OverlayTexture.DEFAULT_UV, r, g, b, 1);
             matrices.pop();
-
-            super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         }
     }
 
