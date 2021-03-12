@@ -10,6 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class ShooterItem extends AbstractWeaponItem {
@@ -36,20 +38,31 @@ public class ShooterItem extends AbstractWeaponItem {
     }
 
     @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        this.shoot(world, user, hand);
+        return super.use(world, user, hand);
+    }
+
+    @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (!world.isClient && user instanceof PlayerEntity && (this.getMaxUseTime(stack) - remainingUseTicks - 1) % this.component.firingSpeed == 0) {
-            PlayerEntity player = (PlayerEntity) user;
-            if (hasInk(player, stack)) {
-                reduceInk(player);
+        int useDelta = this.getMaxUseTime(stack) - remainingUseTicks - 1;
+        if (!world.isClient && user instanceof PlayerEntity && useDelta != 0 && useDelta % this.component.firingSpeed == 0) {
+            this.shoot(world, (PlayerEntity) user, user.getActiveHand());
+        }
+    }
 
-                InkProjectileEntity proj = new InkProjectileEntity(world, user, stack, InkBlockUtils.getInkType(player), this.component.size, this.component.damage).setShooterTrail();
-                proj.setProperties(user, user.pitch, user.yaw, 0.0f, this.component.speed, this.component.inaccuracy);
-                world.spawnEntity(proj);
+    public void shoot(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
+        if (hasInk(player, stack)) {
+            reduceInk(player);
 
-                world.playSound(null, user.getX(), user.getY() + 1, user.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
-            } else {
-                sendNoInkMessage(player);
-            }
+            InkProjectileEntity proj = new InkProjectileEntity(world, player, stack, InkBlockUtils.getInkType(player), this.component.size, this.component.damage).setShooterTrail();
+            proj.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.speed, this.component.inaccuracy);
+            world.spawnEntity(proj);
+
+            world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
+        } else {
+            sendNoInkMessage(player);
         }
     }
 
