@@ -479,6 +479,7 @@
 
     "key.categories.splatcraft": "Splatcraft",
     "key.splatcraft.toggle_squid": "Toggle Squid Form",
+    "key.splatcraft.open_config_menu": "Open Configuration Menu",
 
     "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed Bonus",
 

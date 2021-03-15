@@ -6,9 +6,16 @@ import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -16,35 +23,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfigManager {
     private static final File FILE = FabricLoader.getInstance().getConfigDir().toFile().toPath().resolve(Splatcraft.MOD_ID + ".json").toFile();
+    public static final List<SplatcraftConfig.Option<?>> OPTIONS = new LinkedList<>();
 
     public static void save() {
         JsonObject jsonObject = new JsonObject();
-
-        SplatcraftConfig.RenderGroup RENDER = SplatcraftConfig.RENDER;
-        jsonObject.addProperty(RENDER.holdStageBarrierToRender.getId(), RENDER.holdStageBarrierToRender.getBoolean());
-        jsonObject.addProperty(RENDER.barrierRenderDistance.getId(), RENDER.barrierRenderDistance.getInt());
-        jsonObject.addProperty(RENDER.inkedBlocksColorLayerIsTransparent.getId(), RENDER.inkedBlocksColorLayerIsTransparent.getBoolean());
-        SplatcraftConfig.UIGroup UI = SplatcraftConfig.UI;
-        jsonObject.addProperty(UI.preventBobViewWhenSquid.getId(), UI.preventBobViewWhenSquid.getString());
-        jsonObject.addProperty(UI.modifyFovForSquidForm.getId(), UI.modifyFovForSquidForm.getBoolean());
-        jsonObject.addProperty(UI.fovForSquidForm.getId(), UI.fovForSquidForm.getInt());
-        jsonObject.addProperty(UI.invisibleHotbarWhenSquid.getId(), UI.invisibleHotbarWhenSquid.getBoolean());
-        jsonObject.addProperty(UI.renderHeldItemWhenHotbarInvisible.getId(), UI.renderHeldItemWhenHotbarInvisible.getBoolean());
-        jsonObject.addProperty(UI.invisibleHotbarStatusBarsShift.getId(), UI.invisibleHotbarStatusBarsShift.getInt());
-        jsonObject.addProperty(UI.invisibleCrosshairWhenSquid.getId(), UI.invisibleCrosshairWhenSquid.getBoolean());
-        SplatcraftConfig.InkGroup INK = SplatcraftConfig.INK;
-        jsonObject.addProperty(INK.colorLock.getId(), INK.colorLock.getBoolean());
-        // jsonObject.addProperty(INK.dynamicInkDurabilityColor.getId(), INK.dynamicInkDurabilityColor.getBoolean());
-        jsonObject.addProperty(INK.inkColoredCrosshairWhenSquid.getId(), INK.inkColoredCrosshairWhenSquid.getBoolean());
-        jsonObject.addProperty(INK.inkAmountIndicator.getId(), INK.inkAmountIndicator.getString());
-        jsonObject.addProperty(INK.inkAmountIndicatorAlwaysVisible.getId(), INK.inkAmountIndicatorAlwaysVisible.getBoolean());
-        jsonObject.addProperty(INK.inkAmountIndicatorExclamations.getId(), INK.inkAmountIndicatorExclamations.getBoolean());
-        jsonObject.addProperty(INK.inkAmountIndicatorExclamationsMin.getId(), INK.inkAmountIndicatorExclamationsMin.getInt());
-        jsonObject.addProperty(INK.inkAmountIndicatorExclamationsMax.getId(), INK.inkAmountIndicatorExclamationsMax.getInt());
+        OPTIONS.forEach(option -> jsonObject.addProperty(option.getId(), option.getValueForSave()));
 
         try (PrintWriter out = new PrintWriter(FILE)) {
             out.println(jsonObject.toString());
@@ -57,7 +46,7 @@ public class SplatcraftConfigManager {
     public static void load() {
         try {
             String json = new String(Files.readAllBytes(FILE.toPath()));
-            if (!json.equals("")) {
+            if (!json.isEmpty()) {
                 JsonObject jsonObject = (JsonObject) new JsonParser().parse(json);
 
                 SplatcraftConfig.RenderGroup RENDER = SplatcraftConfig.RENDER;
@@ -91,12 +80,12 @@ public class SplatcraftConfigManager {
             Splatcraft.log(Level.ERROR, "Configuration option failed to load: " + e.toString());
         }
     }
-    private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option option) {
+    private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option<?> option) {
         try {
             return jsonObject.getAsJsonPrimitive(option.getId());
         } catch (RuntimeException e) {
             Object optionDefault = option.getDefault();
-            System.out.println(option.getId() + " is not present! Defaulting to " + optionDefault);
+            Splatcraft.log(Level.WARN, option.getId() + " is not present! Defaulting to " + optionDefault);
             if (optionDefault instanceof Boolean) {
                 return new JsonPrimitive((Boolean) optionDefault);
             } else if (optionDefault instanceof Integer) {
@@ -107,5 +96,210 @@ public class SplatcraftConfigManager {
 
             return null;
         }
+    }
+
+    public static Screen createScreen(Screen parentScreen) {
+        ConfigBuilder builder = ConfigBuilder.create()
+            .setParentScreen(parentScreen)
+            .setDefaultBackgroundTexture(new Identifier(Splatcraft.MOD_ID, "textures/block/inked_block.png"))
+            .setTitle(createConfigText("title"))
+            .setSavingRunnable(SplatcraftConfigManager::save);
+
+        builder.setGlobalized(true);
+        builder.setGlobalizedExpanded(false);
+
+        ConfigEntryBuilder entryBuilder = builder.entryBuilder();
+
+        //
+        // RENDER CATEGORY
+        //
+
+        ConfigCategory RENDER = builder.getOrCreateCategory(createRenderText());
+        TranslatableText holdStageBarrierToRender = createRenderText(SplatcraftConfig.RENDER.holdStageBarrierToRender.getId());
+        TranslatableText barrierRenderDistance = createRenderText(SplatcraftConfig.RENDER.barrierRenderDistance.getId());
+        TranslatableText inkedBlocksColorLayerIsTransparent = createRenderText(SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.getId());
+        SplatcraftConfig.Option<Boolean> holdStageBarrierToRenderOption = SplatcraftConfig.RENDER.holdStageBarrierToRender;
+        SplatcraftConfig.RangedOption<Integer> barrierRenderDistanceOption = SplatcraftConfig.RENDER.barrierRenderDistance;
+        SplatcraftConfig.Option<Boolean> inkedBlocksColorLayerIsTransparentOption = SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent;
+        RENDER.addEntry(
+            entryBuilder.startBooleanToggle(holdStageBarrierToRender, holdStageBarrierToRenderOption.value)
+                .setDefaultValue(holdStageBarrierToRenderOption.getDefault())
+                .setSaveConsumer(value -> holdStageBarrierToRenderOption.value = value)
+                .setTooltip(createTooltip(holdStageBarrierToRender))
+                .build()
+        ).addEntry(
+            entryBuilder.startIntSlider(barrierRenderDistance, barrierRenderDistanceOption.value, barrierRenderDistanceOption.getMin(), barrierRenderDistanceOption.getMax())
+                .setDefaultValue(barrierRenderDistanceOption.getDefault())
+                .setSaveConsumer(value -> barrierRenderDistanceOption.value = value)
+                .setTooltip(createTooltip(barrierRenderDistance))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(inkedBlocksColorLayerIsTransparent, inkedBlocksColorLayerIsTransparentOption.value)
+                .setDefaultValue(inkedBlocksColorLayerIsTransparentOption.getDefault())
+                .setSaveConsumer(value -> {
+                    if (inkedBlocksColorLayerIsTransparentOption.value != value) {
+                        MinecraftClient.getInstance().worldRenderer.reload();
+                    }
+                    inkedBlocksColorLayerIsTransparentOption.value = value;
+                })
+                .setTooltip(createTooltip(inkedBlocksColorLayerIsTransparent))
+                .build()
+        );
+
+        //
+        // UI CATEGORY
+        //
+
+        ConfigCategory UI = builder.getOrCreateCategory(createUIText());
+        TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
+        SplatcraftConfig.EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
+        TranslatableText modifyFovForSquidForm = createUIText(SplatcraftConfig.UI.modifyFovForSquidForm.getId());
+        SplatcraftConfig.Option<Boolean> modifyFovForSquidFormOption = SplatcraftConfig.UI.modifyFovForSquidForm;
+        TranslatableText fovForSquidForm = createUIText(SplatcraftConfig.UI.fovForSquidForm.getId());
+        SplatcraftConfig.RangedOption<Integer> fovForSquidFormOption = SplatcraftConfig.UI.fovForSquidForm;
+        TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
+        SplatcraftConfig.Option<Boolean> invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
+        TranslatableText renderHeldItemWhenHotbarInvisible = createUIText(SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getId());
+        SplatcraftConfig.Option<Boolean> renderHeldItemWhenHotbarInvisibleOption = SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible;
+        TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
+        SplatcraftConfig.Option<Integer> invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
+        TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
+        SplatcraftConfig.Option<Boolean> invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
+        UI.addEntry(
+            entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.value)
+                .setDefaultValue(preventBobViewWhenSquidOption.getDefault())
+                .setSaveConsumer(value -> preventBobViewWhenSquidOption.value = value)
+                .setTooltip(createTooltip(preventBobViewWhenSquid))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(modifyFovForSquidForm, modifyFovForSquidFormOption.value)
+                .setDefaultValue(modifyFovForSquidFormOption.getDefault())
+                .setSaveConsumer(value -> modifyFovForSquidFormOption.value = value)
+                .setTooltip(createTooltip(modifyFovForSquidForm))
+                .build()
+        ).addEntry(
+            entryBuilder.startIntSlider(fovForSquidForm, fovForSquidFormOption.value, fovForSquidFormOption.getMin(), fovForSquidFormOption.getMax())
+                .setDefaultValue(fovForSquidFormOption.getDefault())
+                .setSaveConsumer(value -> fovForSquidFormOption.value = value)
+                .setTooltip(createTooltip(fovForSquidForm))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(invisibleHotbarWhenSquid, invisibleHotbarWhenSquidOption.value)
+                .setDefaultValue(invisibleHotbarWhenSquidOption.getDefault())
+                .setSaveConsumer(value -> invisibleHotbarWhenSquidOption.value = value)
+                .setTooltip(createTooltip(invisibleHotbarWhenSquid))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(renderHeldItemWhenHotbarInvisible, renderHeldItemWhenHotbarInvisibleOption.value)
+                .setDefaultValue(renderHeldItemWhenHotbarInvisibleOption.getDefault())
+                .setSaveConsumer(value -> renderHeldItemWhenHotbarInvisibleOption.value = value)
+                .setTooltip(createTooltip(renderHeldItemWhenHotbarInvisible))
+                .build()
+        ).addEntry(
+            entryBuilder.startIntField(invisibleHotbarStatusBarsShift, invisibleHotbarStatusBarsShiftOption.value)
+                .setDefaultValue(invisibleHotbarStatusBarsShiftOption.getDefault())
+                .setSaveConsumer(value -> invisibleHotbarStatusBarsShiftOption.value = value)
+                .setTooltip(createTooltip(invisibleHotbarStatusBarsShift))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(invisibleCrosshairWhenSquid, invisibleCrosshairWhenSquidOption.value)
+                .setDefaultValue(invisibleCrosshairWhenSquidOption.getDefault())
+                .setSaveConsumer(value -> invisibleCrosshairWhenSquidOption.value = value)
+                .setTooltip(createTooltip(invisibleCrosshairWhenSquid))
+                .build()
+        );
+
+        //
+        // COLORS CATEGORY
+        //
+
+        ConfigCategory INK = builder.getOrCreateCategory(createInkText());
+        TranslatableText colorLock = createInkText(SplatcraftConfig.INK.colorLock.getId());
+        SplatcraftConfig.Option<Boolean> colorLockOption = SplatcraftConfig.INK.colorLock;
+        SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
+        TranslatableText inkColoredCrosshairWhenSquid = createInkText(SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getId());
+        SplatcraftConfig.Option<Boolean> inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
+        TranslatableText inkAmountIndicator = createInkText(SplatcraftConfig.INK.inkAmountIndicator.getId());
+        TranslatableText inkAmountIndicatorAlwaysVisible = createInkText(SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getId());
+        SplatcraftConfig.Option<Boolean> inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible;
+        TranslatableText inkAmountIndicatorExclamations = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamations.getId());
+        SplatcraftConfig.Option<Boolean> inkAmountIndicatorExclamationsOption = SplatcraftConfig.INK.inkAmountIndicatorExclamations;
+        TranslatableText inkAmountIndicatorExclamationsMin = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin.getId());
+        SplatcraftConfig.RangedOption<Integer> inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin;
+        TranslatableText inkAmountIndicatorExclamationsMax = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax.getId());
+        SplatcraftConfig.RangedOption<Integer> inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax;
+        INK.addEntry(
+            entryBuilder.startBooleanToggle(colorLock, colorLockOption.value)
+                .setDefaultValue(colorLockOption.getDefault())
+                .setSaveConsumer(value -> colorLockOption.value = value)
+                .setTooltip(createTooltip(colorLock))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(inkColoredCrosshairWhenSquid, inkColoredCrosshairWhenSquidOption.value)
+                .setDefaultValue(inkColoredCrosshairWhenSquidOption.getDefault())
+                .setSaveConsumer(value -> inkColoredCrosshairWhenSquidOption.value = value)
+                .setTooltip(createTooltip(inkColoredCrosshairWhenSquid))
+                .build()
+        ).addEntry(
+            entryBuilder.startEnumSelector(inkAmountIndicator, inkAmountIndicatorOption.getClazz(), inkAmountIndicatorOption.value)
+                .setDefaultValue(inkAmountIndicatorOption.getDefault())
+                .setSaveConsumer(value -> inkAmountIndicatorOption.value = value)
+                .setTooltip(createTooltip(inkAmountIndicator))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(inkAmountIndicatorAlwaysVisible, inkAmountIndicatorAlwaysVisibleOption.value)
+                .setDefaultValue(inkAmountIndicatorAlwaysVisibleOption.getDefault())
+                .setSaveConsumer(value -> inkAmountIndicatorAlwaysVisibleOption.value = value)
+                .setTooltip(createTooltip(inkAmountIndicatorAlwaysVisible))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(inkAmountIndicatorExclamations, inkAmountIndicatorExclamationsOption.value)
+                .setDefaultValue(inkAmountIndicatorExclamationsOption.getDefault())
+                .setSaveConsumer(value -> inkAmountIndicatorExclamationsOption.value = value)
+                .setTooltip(createTooltip(inkAmountIndicatorExclamations))
+                .build()
+        ).addEntry(
+            entryBuilder.startIntSlider(inkAmountIndicatorExclamationsMin, inkAmountIndicatorExclamationsMinOption.value, inkAmountIndicatorExclamationsMinOption.getMin(), inkAmountIndicatorExclamationsMinOption.getMax())
+                .setDefaultValue(inkAmountIndicatorExclamationsMinOption.getDefault())
+                .setSaveConsumer(value -> inkAmountIndicatorExclamationsMinOption.value = value)
+                .setTooltip(createTooltip(inkAmountIndicatorExclamationsMin))
+                .build()
+        ).addEntry(
+            entryBuilder.startIntSlider(inkAmountIndicatorExclamationsMax, inkAmountIndicatorExclamationsMaxOption.value, inkAmountIndicatorExclamationsMaxOption.getMin(), inkAmountIndicatorExclamationsMaxOption.getMax())
+                .setDefaultValue(inkAmountIndicatorExclamationsMaxOption.getDefault())
+                .setSaveConsumer(value -> inkAmountIndicatorExclamationsMaxOption.value = value)
+                .setTooltip(createTooltip(inkAmountIndicatorExclamationsMax))
+                .build()
+        );
+
+        return builder.build();
+    }
+
+    private static TranslatableText createTooltip(TranslatableText text) {
+        return new TranslatableText(text.getKey() + ".tooltip");
+    }
+    private static TranslatableText createRenderText(String label) {
+        return createCatText("render" + (label.isEmpty() ? "" : "." + label));
+    }
+    private static TranslatableText createRenderText() {
+        return createRenderText("");
+    }
+    private static TranslatableText createUIText(String label) {
+        return createCatText("ui" + (label.isEmpty() ? "" : "." + label));
+    }
+    private static TranslatableText createUIText() {
+        return createUIText("");
+    }
+    private static TranslatableText createInkText(String label) {
+        return createCatText("ink" + (label.isEmpty() ? "" : "." + label));
+    }
+    private static TranslatableText createInkText() {
+        return createInkText("");
+    }
+    private static TranslatableText createCatText(String group) {
+        return createConfigText("category." + group);
+    }
+    private static TranslatableText createConfigText(String label) {
+        return new TranslatableText("config." + Splatcraft.MOD_ID + "." + label);
     }
 }

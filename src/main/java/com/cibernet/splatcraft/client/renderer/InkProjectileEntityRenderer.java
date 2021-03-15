@@ -27,7 +27,7 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
             float scale = entity.getProjectileSize();
             int color = entity.getInkColor().getColor();
 
-            /*if (SplatcraftConfig.COLORS.colorLock.getBoolean()) {
+            /*if (SplatcraftConfig.COLORS.colorLock.value) {
                 color = ColorUtils.getLockedColor(color);
             } TODO */
 

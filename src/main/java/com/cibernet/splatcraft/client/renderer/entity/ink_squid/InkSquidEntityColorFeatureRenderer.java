@@ -21,7 +21,7 @@ public class InkSquidEntityColorFeatureRenderer extends FeatureRenderer<LivingEn
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, int i, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         InkColor color = ColorUtils.getEntityColor(entity);
-        if (SplatcraftConfig.INK.colorLock.getBoolean()) {
+        if (SplatcraftConfig.INK.colorLock.value) {
             color = /*ColorUtils.getLockedColor(color)*/ InkColors.COLOR_LOCK_FRIENDLY;
         }
 

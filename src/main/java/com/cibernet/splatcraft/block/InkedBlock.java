@@ -268,7 +268,7 @@ public class InkedBlock extends AbstractInkableBlock {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         try {
-            return SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.getBoolean() ? BlockRenderType.INVISIBLE : BlockRenderType.MODEL;
+            return SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.value ? BlockRenderType.INVISIBLE : BlockRenderType.MODEL;
         } catch (RuntimeException ignored) {
             return BlockRenderType.MODEL;
         }

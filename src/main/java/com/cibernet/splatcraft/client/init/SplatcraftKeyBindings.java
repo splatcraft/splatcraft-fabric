@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.client.init;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.api.EnvType;
@@ -16,12 +17,16 @@ import org.lwjgl.glfw.GLFW;
 @Environment(EnvType.CLIENT)
 public class SplatcraftKeyBindings {
     private static final KeyBinding TOGGLE_SQUID = register("toggle_squid", GLFW.GLFW_KEY_Z);
+    private static final KeyBinding OPEN_CONFIG_MENU = register("open_config_menu", GLFW.GLFW_KEY_UNKNOWN);
 
     public SplatcraftKeyBindings() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (TOGGLE_SQUID.wasPressed()) {
                 ClientPlayNetworking.send(SplatcraftNetworkingConstants.TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
                 PlayerDataComponent.toggleSquidForm(client.player);
+            }
+            if (OPEN_CONFIG_MENU.wasPressed()) {
+                client.openScreen(SplatcraftConfigManager.createScreen(client.currentScreen));
             }
         });
     }

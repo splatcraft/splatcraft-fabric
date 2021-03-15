@@ -13,15 +13,15 @@ public class SplatcraftConfig {
         /**
          * Enable or disable having to hold stage barriers or voids to render.
          */
-        public Option holdStageBarrierToRender = new Option("hold_stage_barrier_to_render", true);
+        public Option<Boolean> holdStageBarrierToRender = new Option<>("hold_stage_barrier_to_render", true);
         /**
          * How far away stage barriers or voids will render away from you.
          */
-        public RangedOption barrierRenderDistance = new RangedOption("barrier_render_distance", 16, 4, 80);
+        public RangedOption<Integer> barrierRenderDistance = new RangedOption<>("barrier_render_distance", 16, 4, 80);
         /**
          * Enable or disable inked blocks' color layer being transparent.
          */
-        public Option inkedBlocksColorLayerIsTransparent = new Option("inked_blocks_color_layer_is_transparent", true);
+        public Option<Boolean> inkedBlocksColorLayerIsTransparent = new Option<>("inked_blocks_color_layer_is_transparent", true);
     }
 
     public static UIGroup UI = new UIGroup();
@@ -33,27 +33,27 @@ public class SplatcraftConfig {
         /**
          * Enable or disable modifying the player's fov if in squid form.
          */
-        public Option modifyFovForSquidForm = new Option("modify_fov_for_squid_form", true);
+        public Option<Boolean> modifyFovForSquidForm = new Option<>("modify_fov_for_squid_form", true);
         /**
          * How much to modify the player's fov if in squid form.
          */
-        public RangedOption fovForSquidForm = new RangedOption("fov_for_squid_form", 15, -100, 100);
+        public RangedOption<Integer> fovForSquidForm = new RangedOption<>("fov_for_squid_form", 15, -100, 100);
         /**
          * Enable or disable disabling the hotbar when in squid form.
          */
-        public Option invisibleHotbarWhenSquid = new Option("invisible_hotbar_when_squid", true);
+        public Option<Boolean> invisibleHotbarWhenSquid = new Option<>("invisible_hotbar_when_squid", true);
         /**
          * Enable or disable rendering the held item when the hotbar is set to be invisible in squid form.
          */
-        public Option renderHeldItemWhenHotbarInvisible = new Option("render_held_item_when_hotbar_invisible", false);
+        public Option<Boolean> renderHeldItemWhenHotbarInvisible = new Option<>("render_held_item_when_hotbar_invisible", false);
         /**
          * How far the status bars should shift when the hotbar is invisible.
          */
-        public Option invisibleHotbarStatusBarsShift = new Option("invisible_hotbar_status_bars_shift", -22);
+        public Option<Integer> invisibleHotbarStatusBarsShift = new Option<>("invisible_hotbar_status_bars_shift", -22);
         /**
          * Enable or disable disabling the crosshair when in squid form.
          */
-        public Option invisibleCrosshairWhenSquid = new Option("invisible_crosshair_when_squid", true);
+        public Option<Boolean> invisibleCrosshairWhenSquid = new Option<>("invisible_crosshair_when_squid", true);
     }
 
     public static InkGroup INK = new InkGroup();
@@ -61,15 +61,15 @@ public class SplatcraftConfig {
         /**
          * Enable or disable color lock.
          */
-        public Option colorLock = new Option("color_lock", false);
+        public Option<Boolean> colorLock = new Option<>("color_lock", false);
         // /**
         //  * Enable or disable a weapon's durability bar's colour to match the player's ink colour.
         //  */
-        // public Option dynamicInkDurabilityColor = new Option("dynamic_ink_durability_color", true);
+        // public Option dynamicInkDurabilityColor<Boolean> = new Option<>("dynamic_ink_durability_color", true);
         /**
          * Enable or disable an ink-colored crosshair when in squid form.
          */
-        public Option inkColoredCrosshairWhenSquid = new Option("ink_colored_crosshair_when_squid", true);
+        public Option<Boolean> inkColoredCrosshairWhenSquid = new Option<>("ink_colored_crosshair_when_squid", true);
         /**
          * Choose where the ink amount indicator is displayed, if at all.
          */
@@ -77,32 +77,28 @@ public class SplatcraftConfig {
         /**
          * Enable or disable the ink amount indicator always being visible if an ink tank is present.
          */
-        public Option inkAmountIndicatorAlwaysVisible = new Option("ink_amount_indicator_always_visible", false);
+        public Option<Boolean> inkAmountIndicatorAlwaysVisible = new Option<>("ink_amount_indicator_always_visible", false);
         /**
          * Enable or disable the ink amount indicator displaying exclamation points when full or empty.
          */
-        public Option inkAmountIndicatorExclamations = new Option("ink_amount_exclamations", false);
+        public Option<Boolean> inkAmountIndicatorExclamations = new Option<>("ink_amount_exclamations", false);
         /**
          * When the ink amount indicator low ink warning should display.
          */
-        public RangedOption inkAmountIndicatorExclamationsMin = new RangedOption("ink_amount_exclamations_min", 12, 0, 100);
+        public RangedOption<Integer> inkAmountIndicatorExclamationsMin = new RangedOption<>("ink_amount_exclamations_min", 12, 0, 100);
         /**
          * When the ink amount indicator full ink warning should display.
          */
-        public RangedOption inkAmountIndicatorExclamationsMax = new RangedOption("ink_amount_exclamations_max", 92, 0, 100);
-    }
-
-    public static ColorsGroup COLORS = new ColorsGroup();
-    public static class ColorsGroup {
+        public RangedOption<Integer> inkAmountIndicatorExclamationsMax = new RangedOption<>("ink_amount_exclamations_max", 92, 0, 100);
     }
 
     /**
      * A configuration option.
      */
-    public static class Option {
+    public static class Option<T> {
         private final String id;
-        public Object value;
-        protected final Object defaultValue;
+        public T value;
+        protected final T defaultValue;
 
         /**
          * Instantiates a new configuration option.
@@ -110,45 +106,32 @@ public class SplatcraftConfig {
          * @param id The option's identifier.
          * @param defaultVal The option's default value.
          */
-        private Option(String id, Object defaultVal) {
+        private Option(String id, T defaultVal) {
             this.id = id;
             this.defaultValue = defaultVal;
             this.value = this.defaultValue;
+
+            SplatcraftConfigManager.OPTIONS.add(this);
         }
 
-        public boolean getBoolean() {
-            if (value instanceof Boolean) return (Boolean)this.value;
-            else throw new RuntimeException();
-        }
-        public int getInt() {
-            if (value instanceof Integer) return (Integer)this.value;
-            else throw new RuntimeException();
-        }
-        public float getFloat() {
-            if (value instanceof Float) return (Float)this.value;
-            else throw new RuntimeException();
-        }
-
-        public Boolean getDefaultBoolean() {
-            if (value instanceof Boolean) return (Boolean)this.defaultValue;
-            else throw new RuntimeException();
-        }
-        public int getDefaultInt() {
-            if (value instanceof Integer) return (Integer)this.defaultValue;
-            else throw new RuntimeException();
-        }
-
-        public Object getDefault() {
+        public T getDefault() {
             return this.defaultValue;
+        }
+        public void setValue(T value) {
+            this.value = value;
         }
 
         public String getId() {
-            return id;
+            return this.id;
+        }
+
+        public String getValueForSave() {
+            return String.valueOf(this.value);
         }
     }
-    public static class RangedOption extends Option {
-        private final Integer min;
-        private final Integer max;
+    public static class RangedOption<T extends Number> extends Option<T> {
+        private final T min;
+        private final T max;
 
         /**
          * Instantiates a new ranged configuration option.
@@ -158,22 +141,20 @@ public class SplatcraftConfig {
          * @param min        The option's minimum value.
          * @param max        The option's maximum value.
          */
-        private RangedOption(String id, Object defaultVal, Integer min, Integer max) {
+        private RangedOption(String id, T defaultVal, T min, T max) {
             super(id, defaultVal);
             this.min = min;
             this.max = max;
         }
 
-        public int getMinInt() {
-            if (value instanceof Integer) return this.min;
-            else throw new RuntimeException();
+        public T getMin() {
+            return this.min;
         }
-        public int getMaxInt() {
-            if (value instanceof Integer) return this.max;
-            else throw new RuntimeException();
+        public T getMax() {
+            return this.max;
         }
     }
-    public static class EnumOption <T extends Enum<?>> extends Option {
+    public static class EnumOption<T extends Enum<?>> extends Option<T> {
         private final Class<T> clazz;
 
         /**
@@ -191,20 +172,9 @@ public class SplatcraftConfig {
             return this.clazz;
         }
 
-        @SuppressWarnings("unchecked")
-        public T getEnum() {
-            if (value instanceof Enum<?>) return (T) this.value;
-            else throw new RuntimeException();
-        }
-        @SuppressWarnings("unchecked")
-        public T getDefaultEnum() {
-            if (value instanceof Enum<?>) return (T) this.defaultValue;
-            else throw new RuntimeException();
-        }
-
-        public String getString() {
-            if (value instanceof Enum<?>) return this.value.toString();
-            else throw new RuntimeException();
+        @Override
+        public String getValueForSave() {
+            return this.value.toString();
         }
     }
 }

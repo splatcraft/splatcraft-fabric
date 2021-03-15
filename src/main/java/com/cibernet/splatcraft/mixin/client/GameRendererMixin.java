@@ -26,7 +26,7 @@ public class GameRendererMixin {
     private void bobView(MatrixStack matrixStack, float f, CallbackInfo ci) {
         if (this.client.player != null) {
             PlayerDataComponent data = PlayerDataComponent.getComponent(this.client.player);
-            PreventBobView preventBobView = SplatcraftConfig.UI.preventBobViewWhenSquid.getEnum();
+            PreventBobView preventBobView = SplatcraftConfig.UI.preventBobViewWhenSquid.value;
             if (preventBobView != PreventBobView.OFF && data.isSquid()) {
                 if (preventBobView != PreventBobView.SUBMERGED || data.isSubmerged()) {
                     ci.cancel();
@@ -38,8 +38,8 @@ public class GameRendererMixin {
     @ModifyVariable(method = "updateMovementFovMultiplier", at = @At(value = "STORE", ordinal = 1))
     private float modifyFovForSquidForm(float c) {
         ClientPlayerEntity player = this.client.player;
-        if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.getBoolean() && PlayerDataComponent.isSquid(player)) {
-            return c + (float) SplatcraftConfig.UI.fovForSquidForm.getInt() / 100;
+        if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.value && PlayerDataComponent.isSquid(player)) {
+            return c + (float) SplatcraftConfig.UI.fovForSquidForm.value / 100;
         }
 
         return c;

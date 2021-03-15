@@ -53,8 +53,8 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
             PlayerEntity player = MinecraftClient.getInstance().player;
             if (player != null && player.isCreative()) {
                 Block block = blockEntity.getCachedState().getBlock();
-                if (!SplatcraftConfig.RENDER.holdStageBarrierToRender.getBoolean() || player.getMainHandStack().getItem() == block.asItem() || player.getOffHandStack().getItem() == block.asItem()) {
-                    int barrierRenderDistance = SplatcraftConfig.RENDER.barrierRenderDistance.getInt();
+                if (!SplatcraftConfig.RENDER.holdStageBarrierToRender.value || player.getMainHandStack().getItem() == block.asItem() || player.getOffHandStack().getItem() == block.asItem()) {
+                    int barrierRenderDistance = SplatcraftConfig.RENDER.barrierRenderDistance.value;
                     if (player.squaredDistanceTo(Vec3d.of(blockEntity.getPos())) <= barrierRenderDistance * barrierRenderDistance) {
                         blockEntity.incrementActiveTime();
                     }

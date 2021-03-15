@@ -23,7 +23,7 @@ public class SquidBumperEntityColorFeatureRenderer extends FeatureRenderer<Squid
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider consumers, int light, SquidBumperEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         int color = ColorUtils.getInkColor(entity).getColor();
-        /*if (SplatcraftConfig.COLORS.colorLock.getBoolean()) {
+        /*if (SplatcraftConfig.COLORS.colorLock.value) {
             color = ColorUtils.getLockedColor(color);
         } TODO */
         float r = ((color & 16711680) >> 16) / 255.0f;
