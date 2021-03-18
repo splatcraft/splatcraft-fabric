@@ -22,7 +22,7 @@ public class SplatcraftKeyBindings {
     public SplatcraftKeyBindings() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (TOGGLE_SQUID.wasPressed()) {
-                ClientPlayNetworking.send(SplatcraftNetworkingConstants.TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
+                ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
                 PlayerDataComponent.toggleSquidForm(client.player);
             }
             if (OPEN_CONFIG_MENU.wasPressed()) {

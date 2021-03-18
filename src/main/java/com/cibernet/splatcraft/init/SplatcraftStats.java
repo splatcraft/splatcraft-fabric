@@ -10,8 +10,6 @@ public class SplatcraftStats {
     public static final Identifier BLOCKS_INKED = register("blocks_inked", StatFormatter.DEFAULT);
     public static final Identifier SQUID_TIME = register("squid_time", StatFormatter.TIME);
 
-    public SplatcraftStats() {}
-
     private static Identifier register(String id, StatFormatter statFormatter) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);
 

@@ -73,11 +73,10 @@ public class PlayerHandler {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeUuid(player.getUuid());
                 buf.writeBoolean(shouldBeSubmerged);
-                buf.writeString(ColorUtils.getInkColor(player.world.getBlockEntity(InkBlockUtils.getVelocityAffectingPos(player))).toString());
-                buf.writeBlockPos(InkBlockUtils.getVelocityAffectingPos(player));
+                buf.writeString(ColorUtils.getInkColor(player.world.getBlockEntity(shouldBeSubmerged ? InkBlockUtils.getVelocityAffectingPos(player) : InkBlockUtils.getVelocityAffectingPos(player).down())).toString());
 
                 for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) player.world, player.getBlockPos())) {
-                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_TOGGLE_SQUID_FORM_EFFECTS_PACKET_ID, buf);
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID, buf);
                 }
             }
 

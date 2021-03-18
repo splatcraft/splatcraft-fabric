@@ -4,9 +4,17 @@ import com.cibernet.splatcraft.Splatcraft;
 import net.minecraft.util.Identifier;
 
 public class SplatcraftNetworkingConstants {
-    public static final Identifier SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_ink_color");
-    public static final Identifier SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_saved_state");
-    public static final Identifier PLAY_PLAYER_TRAVEL_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_player_travel_effects_packet_id");
-    public static final Identifier PLAY_TOGGLE_SQUID_FORM_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_toggle_squid_form_effects");
-    public static final Identifier TOGGLE_SQUID_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "toggle_squid");
+    /*
+        Inked/inking blocks.
+     */
+    public static final Identifier SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_ink_color"); // S2C
+    public static final Identifier SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_saved_state"); // S2C
+    public static final Identifier PLAY_BLOCK_INKING_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_block_inking_effects"); // S2C
+
+    /*
+        Player squid form.
+     */
+    public static final Identifier PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_squid_travel_effects"); // S2C
+    public static final Identifier PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_player_toggle_squid_effects"); // S2C
+    public static final Identifier PLAYER_TOGGLE_SQUID_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "player_toggle_squid"); // C2S
 }

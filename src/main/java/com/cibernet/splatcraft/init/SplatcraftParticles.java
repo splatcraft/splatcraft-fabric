@@ -13,8 +13,6 @@ import java.util.function.Function;
 public class SplatcraftParticles {
     public static final ParticleType<InkSplashParticleEffect> INK_SPLASH = register("ink_splash", InkSplashParticleEffect.PARAMETERS_FACTORY, particleType -> InkSplashParticleEffect.CODEC);
 
-    public SplatcraftParticles() {}
-
     @SuppressWarnings("deprecation")
     private static <T extends ParticleEffect> ParticleType<T> register(String id, ParticleEffect.Factory<T> factory, final Function<ParticleType<T>, Codec<T>> function) {
         return Registry.register(Registry.PARTICLE_TYPE, new Identifier(Splatcraft.MOD_ID, id), new ParticleType<T>(false, factory) {

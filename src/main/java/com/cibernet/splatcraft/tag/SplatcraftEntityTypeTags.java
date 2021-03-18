@@ -9,8 +9,6 @@ import net.minecraft.util.Identifier;
 public class SplatcraftEntityTypeTags {
     public static final Tag<EntityType<?>> PASSES_THROUGH_GAPS = register("passes_through_gaps");
 
-    public SplatcraftEntityTypeTags() {}
-
     private static Tag<EntityType<?>> register(String id) {
         return TagRegistry.entityType(new Identifier(Splatcraft.MOD_ID, id));
     }

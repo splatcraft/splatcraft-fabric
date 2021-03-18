@@ -59,7 +59,7 @@ public class Splatcraft implements ModInitializer {
         new SplatcraftItems();
         new SplatcraftEntities();
 
-        ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
+        ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
         PlayerHandler.registerEvents();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> InkColorCommand.register(dispatcher));

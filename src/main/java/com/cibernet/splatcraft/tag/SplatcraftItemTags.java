@@ -10,8 +10,6 @@ public class SplatcraftItemTags {
     public static final Tag<Item> INK_TANK_WHITELIST = register("ink_tank_whitelist");
     public static final Tag<Item> INK_TANK_BLACKLIST = register("ink_tank_blacklist");
 
-    public SplatcraftItemTags() {}
-
     private static Tag<Item> register(String id) {
         return TagRegistry.item(new Identifier(Splatcraft.MOD_ID, id));
     }

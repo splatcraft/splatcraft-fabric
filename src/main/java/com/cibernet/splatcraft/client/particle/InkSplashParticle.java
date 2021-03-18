@@ -27,7 +27,7 @@ public class InkSplashParticle extends RainSplashParticle {
         this.colorRed = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getRed() * rand;
         this.colorGreen = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getGreen() * rand;
         this.colorBlue = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getBlue() * rand;
-        this.scale = 0.33F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F;
+        this.scale = particleEffect.getScale() * (0.33F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F);
 
         this.maxAge = 20 + this.random.nextInt(4);
         this.spriteProvider = spriteProvider;

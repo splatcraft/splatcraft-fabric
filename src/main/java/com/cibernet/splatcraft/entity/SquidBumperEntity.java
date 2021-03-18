@@ -98,8 +98,9 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     public boolean onEntityInked(DamageSource source, float damage, InkColor color) {
         if (!inkproof && (this.getInkColor() != color || SplatcraftGameRules.getBoolean(this.world, SplatcraftGameRules.INK_FRIENDLY_FIRE))) {
             ink(damage);
-            if (getInkHealth() <= 0)
+            if (getInkHealth() <= 0) {
                 this.world.sendEntityStatus(this, (byte) 34);
+            }
         }
 
         return false;

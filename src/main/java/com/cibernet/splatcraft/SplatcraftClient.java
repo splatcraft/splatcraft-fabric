@@ -19,6 +19,7 @@ import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.remote.RemoteItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,6 +44,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -104,10 +106,36 @@ public class SplatcraftClient implements ClientModInitializer {
                 world.addSyncedBlockEvent(pos, blockEntity.getCachedState().getBlock(), 0, 0);
             });
         });
-        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_PLAYER_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID, (client, handler, buf, responseSender) -> {
+            BlockState state = Block.getStateFromRawId(buf.readInt());
+            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
+            BlockPos pos = buf.readBlockPos();
+            InkBlockUtils.InkType inkType = buf.readEnumConstant(InkBlockUtils.InkType.class);
+
+            client.execute(() -> {
+                InkedBlockEntity blockEntity = new InkedBlockEntity();
+                blockEntity.setSavedState(state);
+                blockEntity.setInkColor(inkColor);
+                World world = MinecraftClient.getInstance().world;
+                world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                world.setBlockEntity(pos, blockEntity);
+            });
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
+            float r = buf.readFloat();
+            float g = buf.readFloat();
+            float b = buf.readFloat();
+            float scale = buf.readFloat();
+
+            Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+
+            client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(r, g, b, scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
             PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(buf.readUuid());
             Vec3d vec3d = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
             InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
+            float scale = buf.readFloat();
 
             client.execute(() -> {
                 if (player != null && player.getRandom().nextFloat() <= 0.482F) {
@@ -123,10 +151,10 @@ public class SplatcraftClient implements ClientModInitializer {
                     }
                 }
 
-                ColorUtils.addInkSplashParticle(player.world, inkColor, vec3d);
+                player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
             });
         });
-        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_TOGGLE_SQUID_FORM_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
             PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(buf.readUuid());
             boolean shouldBeSubmerged = buf.readBoolean();
             InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
@@ -135,25 +163,10 @@ public class SplatcraftClient implements ClientModInitializer {
                 player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23F, 0.86F, false);
 
                 if (inkColor == ColorUtils.getInkColor(player)) {
-                    for (int i = 0; i < 10; ++i) {
-                        ColorUtils.addInkSplashParticle(player.world, inkColor, new Vec3d(player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D)));
+                    for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
+                        client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
                     }
                 }
-            });
-        });
-        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID, (client, handler, buf, responseSender) -> {
-            BlockState state = Block.getStateFromRawId(buf.readInt());
-            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
-            BlockPos pos = buf.readBlockPos();
-            InkBlockUtils.InkType inkType = buf.readEnumConstant(InkBlockUtils.InkType.class);
-
-            client.execute(() -> {
-                InkedBlockEntity blockEntity = new InkedBlockEntity();
-                blockEntity.setSavedState(state);
-                blockEntity.setInkColor(inkColor);
-                World world = MinecraftClient.getInstance().world;
-                world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                world.setBlockEntity(pos, blockEntity);
             });
         });
 

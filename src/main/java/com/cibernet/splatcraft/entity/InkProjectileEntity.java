@@ -129,6 +129,8 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     public void tick() {
         super.tick();
 
+        ColorUtils.addInkSplashParticle(world, this.getInkColor(), this.getPos(), 0.3F);
+
         if (lifespan-- <= 0) {
             InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), getProjectileSize() * 0.85F, damage, splashDamage, damageMobs, this.getInkColor(), inkType, sourceWeapon);
             if (explodes) {
@@ -143,8 +145,9 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
             for (double y = this.getY(); y >= 0 && this.getY() - y <= 8; y--) {
                 BlockPos inkPos = new BlockPos(this.getX(), y, this.getZ());
                 if (!InkBlockUtils.canInkPassthrough(world, inkPos)) {
-                    InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, inkPos.up(), trailSize, 0, 0, damageMobs, this.getInkColor(), inkType, sourceWeapon);
-                    InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), trailSize, 0, 0, damageMobs, this.getInkColor(), inkType, sourceWeapon);
+                    for (BlockPos pos : new BlockPos[]{ inkPos.up(), this.getBlockPos() }) {
+                        InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, pos, trailSize, 0, 0, damageMobs, this.getInkColor(), inkType, sourceWeapon);
+                    }
 
                     break;
                 }
@@ -162,7 +165,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         if (!canPierce) {
             if (target != this.getOwner()) {
                 if (target instanceof LivingEntity) {
-                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), this.getOwner(), sourceWeapon, damageMobs);
+                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), this.getOwner(), damageMobs);
                 }
 
                 if (target instanceof SheepEntity) {

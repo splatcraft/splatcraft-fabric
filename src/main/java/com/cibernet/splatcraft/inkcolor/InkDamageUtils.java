@@ -7,19 +7,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class InkDamageUtils {
-    public static void splatDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, ItemStack sourceItem, boolean damageMobs) {
-        InkDamageUtils.attackDamage(world, target, damage, color, source, sourceItem, damageMobs, "splat");
+    public static void splatDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, boolean damageMobs) {
+        InkDamageUtils.attackDamage(world, target, damage, color, source, damageMobs, "splat");
     }
 
-    public static void rollDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, ItemStack sourceItem, boolean damageMobs) {
-        InkDamageUtils.attackDamage(world, target, damage, color, source, sourceItem, damageMobs, "roll");
+    public static void rollDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, boolean damageMobs) {
+        InkDamageUtils.attackDamage(world, target, damage, color, source, damageMobs, "roll");
     }
 
-    public static void attackDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, ItemStack sourceItem, boolean damageMobs, String damageSourceId) {
+    public static void attackDamage(World world, LivingEntity target, float damage, InkColor color, Entity source, boolean damageMobs, String damageSourceId) {
         InkDamageUtils.attackDamage(world, target, damage, color, damageMobs, new EntityDamageSource(Splatcraft.MOD_ID + "." + damageSourceId, source) {
         });
     }

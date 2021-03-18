@@ -19,6 +19,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class RollerItem extends AbstractWeaponItem implements AttackInputDetectable {
     protected final Item.Settings settings;
     public final RollerComponent component;
@@ -66,11 +68,10 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
                 for (int i = 0; i < this.component.radius; i++) {
                     for (int rollDepth = 0; rollDepth < 2; rollDepth++) {
-                        double xOff = i == 0 ? 0 : Math.round(fwd.z) * Math.ceil(i / 2.0);
+                        double xOff;
                         double zOff = i == 0 ? 0 : Math.round(fwd.x) * Math.ceil(i / 2.0);
 
                         if (i % 2 == 0) {
-                            xOff *= -1;
                             zOff *= -1;
                         }
 
@@ -94,17 +95,26 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                         }
 
                         if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, this.component.damage, isGlowing)) {
-                            ColorUtils.addInkSplashParticle(world, color, Vec3d.ofCenter(inkPos.up()));
+                            Random random = world.random;
+                            double min = -0.5D;
+                            double max = 0.5D;
+
+                            for (int pCount = 0; pCount < 4; pCount++) {
+                                double x = inkPos.getX() + 0.5D + (min + random.nextDouble() * (max - min));
+                                double y = inkPos.getY() + 1.0D + (0.0D + random.nextDouble() * (0.02D - 0.0D));
+                                double z = inkPos.getZ() + 0.5D + (min + random.nextDouble() * (max - min));
+                                ColorUtils.addInkSplashParticle(world, color, new Vec3d(x, y, z));
+                            }
                             reduceInk(player, false);
 
-                            if (player.getVelocity().getX() != 0 && player.getVelocity().getZ() != 0) {
+                            if (player.getVelocity().getX() != 0 || player.getVelocity().getZ() != 0) {
                                 player.setSprinting(true);
                             }
                         }
 
                         for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
                             if (!target.equals(player)) {
-                                InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, stack, false);
+                                InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, false);
                             }
                         }
 

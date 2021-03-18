@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.particle;
 
 import com.cibernet.splatcraft.init.SplatcraftParticles;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -19,7 +20,8 @@ public class InkSplashParticleEffect implements ParticleEffect {
     public static final Codec<InkSplashParticleEffect> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codec.FLOAT.fieldOf("r").forGetter(dustParticleEffect -> dustParticleEffect.red),
         Codec.FLOAT.fieldOf("g").forGetter(dustParticleEffect -> dustParticleEffect.green),
-        Codec.FLOAT.fieldOf("b").forGetter(dustParticleEffect -> dustParticleEffect.blue)
+        Codec.FLOAT.fieldOf("b").forGetter(dustParticleEffect -> dustParticleEffect.blue),
+        Codec.FLOAT.fieldOf("scale").forGetter(dustParticleEffect -> dustParticleEffect.scale)
     ).apply(instance, InkSplashParticleEffect::new));
     @SuppressWarnings("deprecation")
     public static final ParticleEffect.Factory<InkSplashParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<InkSplashParticleEffect>() {
@@ -31,30 +33,40 @@ public class InkSplashParticleEffect implements ParticleEffect {
             float g = (float)stringReader.readDouble();
             stringReader.expect(' ');
             float b = (float)stringReader.readDouble();
-            return new InkSplashParticleEffect(r, g, b);
+            stringReader.expect(' ');
+            float scale = (float)stringReader.readDouble();
+            return new InkSplashParticleEffect(r, g, b, scale);
         }
 
         @Override
-        public InkSplashParticleEffect read(ParticleType<InkSplashParticleEffect> particleType, PacketByteBuf packetByteBuf) {
-            return new InkSplashParticleEffect(packetByteBuf.readFloat(), packetByteBuf.readFloat(), packetByteBuf.readFloat());
+        public InkSplashParticleEffect read(ParticleType<InkSplashParticleEffect> particleType, PacketByteBuf buf) {
+            return new InkSplashParticleEffect(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat());
         }
     };
 
     private final float red;
     private final float green;
     private final float blue;
+    private final float scale;
 
-    public InkSplashParticleEffect(float red, float green, float blue) {
+    public InkSplashParticleEffect(float red, float green, float blue, float scale) {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.scale = scale;
+    }
+    public InkSplashParticleEffect(float[] color, float scale) {
+        this(color[0], color[1], color[2], scale);
+    }
+    public InkSplashParticleEffect(InkColor inkColor, float scale) {
+        this(ColorUtils.getColorsFromInt(inkColor.getColor()), scale);
+    }
+
+    public InkSplashParticleEffect(float[] color) {
+        this(color, 1.0F);
     }
     public InkSplashParticleEffect(InkColor inkColor) {
-        int colorInt = inkColor.getColor();
-
-        this.red = ((colorInt & 16711680) >> 16) / 255.0f;
-        this.green = ((colorInt & '\uff00') >> 8) / 255.0f;
-        this.blue = (colorInt & 255) / 255.0f;
+        this(inkColor, 1.0F);
     }
 
     @Override
@@ -62,11 +74,12 @@ public class InkSplashParticleEffect implements ParticleEffect {
         buf.writeFloat(this.red);
         buf.writeFloat(this.green);
         buf.writeFloat(this.blue);
+        buf.writeFloat(this.scale);
     }
 
     @Override
     public String asString() {
-        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f", Registry.PARTICLE_TYPE.getId(this.getType()), this.red, this.green, this.blue);
+        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f", Registry.PARTICLE_TYPE.getId(this.getType()), this.red, this.green, this.blue, this.scale);
     }
 
     @Override
@@ -87,5 +100,10 @@ public class InkSplashParticleEffect implements ParticleEffect {
     @Environment(EnvType.CLIENT)
     public float getBlue() {
         return this.blue;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public float getScale() {
+        return this.scale;
     }
 }

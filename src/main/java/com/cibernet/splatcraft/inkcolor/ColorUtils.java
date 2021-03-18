@@ -6,7 +6,10 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
-import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -14,6 +17,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -120,6 +126,14 @@ public class ColorUtils {
         return false;
     }
 
+    public static float[] getColorsFromInt(int color) {
+        float r = ((color & 16711680) >> 16) / 255.0f;
+        float g = ((color & '\uff00') >> 8) / 255.0f;
+        float b = (color & 255) / 255.0f;
+
+        return new float[]{ r, g, b };
+    }
+
     public static Text getFormattedColorName(InkColor color, boolean colorless) {
         return color == InkColors.NONE
             ? new TranslatableText( (colorless ? Formatting.GRAY : "") + color.getTranslationKey())
@@ -147,19 +161,38 @@ public class ColorUtils {
         return ColorUtils.getInkColor(player) == ColorUtils.getInkColor(stack);
     }
 
-    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d spawnPos) {
-        int colorInt = inkColor.getColor();
-        float r = ((colorInt & 16711680) >> 16) / 255.0f;
-        float g = ((colorInt & '\uff00') >> 8) / 255.0f;
-        float b = (colorInt & 255) / 255.0f;
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {
+        if (!world.isClient) {
+            PacketByteBuf buf = PacketByteBufs.create();
 
-        world.addParticle(new InkSplashParticleEffect(r, g, b), spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.0D, 0.0D, 0.0D);
+            // write color
+            float[] colors = ColorUtils.getColorsFromInt(inkColor.getColor());
+            for (float color : colors) {
+                buf.writeFloat(color);
+            }
+            buf.writeFloat(scale);
+
+            // write spawn pos
+            buf.writeDouble(pos.getX());
+            buf.writeDouble(pos.getY());
+            buf.writeDouble(pos.getZ());
+
+            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, new BlockPos(pos))) {
+                ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, buf);
+            }
+        }
     }
-    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos) {
+        ColorUtils.addInkSplashParticle(world, inkColor, pos, 1.0F);
+    }
+    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos, float scale) {
         BlockEntity blockEntity = world.getBlockEntity(sourcePos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            ColorUtils.addInkSplashParticle(world, ((AbstractInkableBlockEntity) blockEntity).getInkColor(), spawnPos);
+            ColorUtils.addInkSplashParticle(world, ((AbstractInkableBlockEntity) blockEntity).getInkColor(), spawnPos, scale);
         }
+    }
+    public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
+        ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0F);
     }
 
     public static InkColor getRandomStarterColor(Random random) {

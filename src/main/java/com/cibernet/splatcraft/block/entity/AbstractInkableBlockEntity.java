@@ -53,24 +53,25 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
     public boolean setInkColor(InkColor inkColor) {
         if (this.inkColor != inkColor) {
             this.inkColor = inkColor;
-            return true;
-        }
 
-        if (this.world != null) {
-            if (this.world instanceof ServerWorld) {
-                this.sync();
+            if (this.world != null) {
+                if (this.world instanceof ServerWorld) {
+                    this.sync();
 
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeBlockPos(this.pos);
-                buf.writeString(this.getInkColor().toString());
-                buf.writeInt(Block.getRawIdFromState(this.world.getBlockState(pos)));
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeBlockPos(this.pos);
+                    buf.writeString(this.getInkColor().toString());
+                    buf.writeInt(Block.getRawIdFromState(this.world.getBlockState(pos)));
 
-                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
-                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
+                    for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
+                        ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
+                    }
                 }
+
+                this.world.addSyncedBlockEvent(pos, this.getCachedState().getBlock(), 0, 0);
             }
 
-            this.world.addSyncedBlockEvent(pos, this.getCachedState().getBlock(), 0, 0);
+            return true;
         }
 
         return false;
