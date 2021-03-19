@@ -6,8 +6,13 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.HashMap;
+import java.util.Optional;
+
 @SuppressWarnings("unused")
 public class InkColors {
+    private static HashMap<Identifier, InkColor> COLORS = new HashMap<>();
+
     public static final InkColor NONE = register("none", ColorUtils.DEFAULT);
 
     // color lock
@@ -81,5 +86,35 @@ public class InkColors {
     }
     private static InkColor register(DyeColor dyeColor) {
         return register(new Identifier(dyeColor.getName()), new InkColor(dyeColor));
+    }
+
+    public static Optional<InkColor> getOrEmpty(Identifier id) {
+        return Optional.of(get(id));
+    }
+    public static InkColor get(Identifier id) {
+        return getAll().getOrDefault(id, null);
+    }
+    public static HashMap<Identifier, InkColor> getAllWith(HashMap<Identifier, InkColor> base) {
+        SplatcraftRegistries.INK_COLORS.forEach(inkColor -> {
+            if (!base.containsKey(inkColor.getId())) { // allows overriding built-in ink colors
+                base.put(inkColor.getId(), inkColor);
+            }
+        });
+
+        return COLORS = base;
+    }
+    public static HashMap<Identifier, InkColor> getAll() {
+        return getAllWith(COLORS);
+    }
+
+    public static void replace(Identifier id, InkColor inkColor) {
+        if (COLORS.containsKey(id)) {
+            COLORS.replace(id, inkColor);
+        } else {
+            COLORS.put(id, inkColor);
+        }
+    }
+    public static void resetMap() {
+        COLORS = new HashMap<>();
     }
 }

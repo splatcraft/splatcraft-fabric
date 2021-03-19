@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.command.argument;
 
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,7 +30,7 @@ public class InkColorArgumentType implements ArgumentType<Identifier> {
     }
 
     private static Identifier validate(Identifier identifier) throws CommandSyntaxException {
-        SplatcraftRegistries.INK_COLORS.getOrEmpty(identifier).orElseThrow(() -> NOT_FOUND_EXCEPTION.create(identifier));
+        InkColors.getOrEmpty(identifier).orElseThrow(() -> NOT_FOUND_EXCEPTION.create(identifier));
         return identifier;
     }
 
@@ -41,7 +41,7 @@ public class InkColorArgumentType implements ArgumentType<Identifier> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        return context.getSource() instanceof CommandSource ? CommandSource.suggestIdentifiers(SplatcraftRegistries.INK_COLORS.getIds().stream(), builder) : Suggestions.empty();
+        return context.getSource() instanceof CommandSource ? CommandSource.suggestIdentifiers(InkColors.getAll().keySet().stream(), builder) : Suggestions.empty();
     }
 
     @Override

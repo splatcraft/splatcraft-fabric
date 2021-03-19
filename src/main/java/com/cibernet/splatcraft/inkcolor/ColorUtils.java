@@ -96,8 +96,7 @@ public class ColorUtils {
     }
     public static ItemStack setInkColor(ItemStack stack, InkColor color) {
         CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getOrCreateSubTag("BlockEntityTag") : stack.getOrCreateTag();
-        CompoundTag splatcraft = new CompoundTag();
-
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(stack.getOrCreateTag());
         splatcraft.putString("InkColor", color.toString());
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
@@ -197,5 +196,10 @@ public class ColorUtils {
 
     public static InkColor getRandomStarterColor(Random random) {
         return STARTER_COLORS[random.nextInt(STARTER_COLORS.length)];
+    }
+
+    public static CompoundTag getOrCreateSplatcraftTag(CompoundTag tag) {
+        CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
+        return splatcraft == null ? new CompoundTag() : splatcraft;
     }
 }

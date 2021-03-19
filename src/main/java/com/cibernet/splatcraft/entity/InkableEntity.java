@@ -3,9 +3,9 @@ package com.cibernet.splatcraft.entity;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -29,8 +29,7 @@ public interface InkableEntity {
     }
 
     default void inkColorToTag(CompoundTag tag) {
-        CompoundTag splatcraft = new CompoundTag();
-
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", this.getInkColor().toString());
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
@@ -50,7 +49,7 @@ public interface InkableEntity {
         return false;
     }
     default InkColor getInkColor() {
-        return SplatcraftRegistries.INK_COLORS.get(new Identifier(this.getDataTracker().get(getInkColorTrackedData())));
+        return InkColors.get(new Identifier(this.getDataTracker().get(getInkColorTrackedData())));
     }
     TrackedData<String> getInkColorTrackedData();
     DataTracker getDataTracker();

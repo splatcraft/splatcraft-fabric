@@ -120,7 +120,7 @@ public class InkBlockUtils {
             Block block = blockEntity.getCachedState().getBlock();
             if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
                 InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-                return comparisonColor != InkColors.NONE && inkColor != InkColors.NONE && comparisonColor != inkColor;
+                return comparisonColor != InkColors.NONE && inkColor != InkColors.NONE && !comparisonColor.matches(inkColor.getColor());
             }
         }
 

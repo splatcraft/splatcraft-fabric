@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.block.entity;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
@@ -30,9 +31,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-        if (splatcraft == null) splatcraft = new CompoundTag();
-
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", this.inkColor.toString());
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
@@ -43,7 +42,6 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-
         this.inkColor = InkColor.getFromId(splatcraft.getString("InkColor"));
     }
 
@@ -51,7 +49,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         return this.inkColor;
     }
     public boolean setInkColor(InkColor inkColor) {
-        if (this.inkColor != inkColor) {
+        if (!this.inkColor.matches(inkColor)) {
             this.inkColor = inkColor;
 
             if (this.world != null) {

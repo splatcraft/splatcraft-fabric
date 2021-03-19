@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.block.entity;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
@@ -20,8 +21,7 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = new CompoundTag();
-
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.put("SavedState", NbtHelper.fromBlockState(savedState));
 
         tag.put(Splatcraft.MOD_ID, splatcraft);

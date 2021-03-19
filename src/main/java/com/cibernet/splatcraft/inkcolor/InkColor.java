@@ -1,11 +1,8 @@
 package com.cibernet.splatcraft.inkcolor;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-
-import java.util.Objects;
 
 public class InkColor {
     private final int color;
@@ -23,12 +20,11 @@ public class InkColor {
     }
 
     public String getTranslationKey() {
-        Identifier identifier = SplatcraftRegistries.INK_COLORS.getId(this);
-        return Splatcraft.MOD_ID + ".ink_color." + Objects.requireNonNull(identifier).toString();
+        return Splatcraft.MOD_ID + ".ink_color." + this.id;
     }
 
     public static InkColor getFromId(Identifier identifier) {
-        InkColor object = SplatcraftRegistries.INK_COLORS.get(identifier);
+        InkColor object = InkColors.get(identifier);
         return object == null ? InkColors.NONE : object;
     }
     public static InkColor getFromId(String identifier) {
@@ -45,5 +41,19 @@ public class InkColor {
     @Override
     public String toString() {
         return this.getId().toString();
+    }
+
+    /**
+     * A hard check for ink color matching.
+     */
+    public boolean matches(InkColor color) {
+        return this == color;
+    }
+
+    /**
+     * A soft check for ink color matching. Checks only the color's id.
+     */
+    public boolean matches(int color) {
+        return this.getColor() == color;
     }
 }

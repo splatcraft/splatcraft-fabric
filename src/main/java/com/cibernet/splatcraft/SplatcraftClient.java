@@ -46,7 +46,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
@@ -93,33 +92,37 @@ public class SplatcraftClient implements ClientModInitializer {
         brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP/*, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, (client, handler, buf, responseSender) -> {
-            BlockPos pos = buf.readBlockPos();
-            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
-            BlockState state = Block.getStateFromRawId(buf.readInt());
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                BlockPos pos = buf.readBlockPos();
+                InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
+                BlockState state = Block.getStateFromRawId(buf.readInt());
 
-            client.execute(() -> {
-                ClientWorld world = MinecraftClient.getInstance().world;
-                world.setBlockState(pos, state);
+                client.execute(() -> {
+                    world.setBlockState(pos, state);
 
-                BlockEntity blockEntity = world.getBlockEntity(pos);
-                ColorUtils.setInkColor(blockEntity, inkColor);
-                world.addSyncedBlockEvent(pos, blockEntity.getCachedState().getBlock(), 0, 0);
-            });
+                    BlockEntity blockEntity = world.getBlockEntity(pos);
+                    ColorUtils.setInkColor(blockEntity, inkColor);
+                    world.addSyncedBlockEvent(pos, blockEntity.getCachedState().getBlock(), 0, 0);
+                });
+            }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID, (client, handler, buf, responseSender) -> {
-            BlockState state = Block.getStateFromRawId(buf.readInt());
-            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
-            BlockPos pos = buf.readBlockPos();
-            InkBlockUtils.InkType inkType = buf.readEnumConstant(InkBlockUtils.InkType.class);
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                BlockState state = Block.getStateFromRawId(buf.readInt());
+                InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
+                BlockPos pos = buf.readBlockPos();
+                InkBlockUtils.InkType inkType = buf.readEnumConstant(InkBlockUtils.InkType.class);
 
-            client.execute(() -> {
-                InkedBlockEntity blockEntity = new InkedBlockEntity();
-                blockEntity.setSavedState(state);
-                blockEntity.setInkColor(inkColor);
-                World world = MinecraftClient.getInstance().world;
-                world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                world.setBlockEntity(pos, blockEntity);
-            });
+                client.execute(() -> {
+                    InkedBlockEntity blockEntity = new InkedBlockEntity();
+                    blockEntity.setSavedState(state);
+                    blockEntity.setInkColor(inkColor);
+                    world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                    world.setBlockEntity(pos, blockEntity);
+                });
+            }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
             float r = buf.readFloat();
@@ -132,42 +135,48 @@ public class SplatcraftClient implements ClientModInitializer {
             client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(r, g, b, scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
-            PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(buf.readUuid());
-            Vec3d vec3d = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
-            float scale = buf.readFloat();
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                PlayerEntity player = world.getPlayerByUuid(buf.readUuid());
+                Vec3d vec3d = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
+                float scale = buf.readFloat();
 
-            client.execute(() -> {
-                if (player != null && player.getRandom().nextFloat() <= 0.482F) {
-                    PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-                    if (data.isSquid()) {
-                        if (!data.isSubmerged()) {
-                            if (player.getRandom().nextFloat() <= 0.9F) {
-                                player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15F, 1.0F, false);
+                client.execute(() -> {
+                    if (player != null && player.getRandom().nextFloat() <= 0.482F) {
+                        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
+                        if (data.isSquid()) {
+                            if (!data.isSubmerged()) {
+                                if (player.getRandom().nextFloat() <= 0.9F) {
+                                    player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15F, 1.0F, false);
+                                }
+                            } else {
+                                player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05F, 2.0F, false);
                             }
-                        } else {
-                            player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05F, 2.0F, false);
                         }
                     }
-                }
 
-                player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
-            });
+                    player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
+                });
+            }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
-            PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(buf.readUuid());
-            boolean shouldBeSubmerged = buf.readBoolean();
-            InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(Identifier.tryParse(buf.readString()));
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                PlayerEntity player = world.getPlayerByUuid(buf.readUuid());
+                boolean shouldBeSubmerged = buf.readBoolean();
+                InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
 
-            client.execute(() -> {
-                player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23F, 0.86F, false);
+                client.execute(() -> {
+                    player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23F, 0.86F, false);
 
-                if (inkColor == ColorUtils.getInkColor(player)) {
-                    for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
-                        client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
+                    if (inkColor == ColorUtils.getInkColor(player)) {
+                        for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
+                            client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
+                        }
                     }
-                }
-            });
+                });
+            }
         });
 
         Splatcraft.log("Initialized client");

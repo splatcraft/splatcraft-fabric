@@ -5,20 +5,34 @@ import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.*;
+import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
 
 public class Splatcraft implements ModInitializer {
     public static final String MOD_ID = "splatcraft";
@@ -58,6 +72,43 @@ public class Splatcraft implements ModInitializer {
         new SplatcraftBlocks();
         new SplatcraftItems();
         new SplatcraftEntities();
+
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return new Identifier(Splatcraft.MOD_ID, "ink_colors");
+            }
+
+            @Override
+            public void apply(ResourceManager manager) {
+                Collection<Identifier> inkColors = manager.findResources(Splatcraft.MOD_ID + "_ink_colors", (r) -> r.endsWith(".json") || r.endsWith(".json5"));
+                InkColors.resetMap();
+
+                for (Identifier fileId : inkColors) {
+                    try (
+                        InputStream is = manager.getResource(fileId).getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is))
+                    ) {
+                        JsonObject inkColorData = new JsonParser().parse(reader).getAsJsonObject();
+                        JsonElement colorElement = inkColorData.get("color");
+                        int color = colorElement.getAsJsonPrimitive().isString()
+                            ? Integer.parseInt(colorElement.getAsString().replaceFirst("#", ""), 16)
+                            : colorElement.getAsInt();
+
+                        String id1 = fileId.toString();
+                        String id2 = id1.substring(id1.indexOf("/") + 1);
+                        InkColor inkColor = new InkColor(new Identifier(fileId.getNamespace(), id2.substring(0, id2.lastIndexOf("."))), color);
+
+                        InkColors.replace(inkColor.getId(), inkColor);
+                    } catch (Exception e) {
+                        log(Level.ERROR, "Unable to load ink color from '" + fileId + "'.");
+                        e.printStackTrace();
+                    }
+                }
+
+                log("Loaded " + InkColors.getAll().size() + " ink colors!");
+            }
+        });
 
         ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
         PlayerHandler.registerEvents();

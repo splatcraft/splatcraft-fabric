@@ -2,9 +2,9 @@ package com.cibernet.splatcraft.command;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -29,7 +29,7 @@ public class InkColorCommand {
     }
 
     private static int executeSelf(ServerCommandSource source, Identifier identifier) {
-        InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(identifier);
+        InkColor inkColor = InkColors.get(identifier);
         Entity self = source.getEntity();
 
         if (self != null) {
@@ -44,7 +44,7 @@ public class InkColorCommand {
     }
 
     private static int executeOthers(ServerCommandSource source, Identifier identifier, Collection<? extends Entity> entities) {
-        InkColor inkColor = SplatcraftRegistries.INK_COLORS.get(identifier);
+        InkColor inkColor = InkColors.get(identifier);
 
         int successes = 0;
         for (Entity entity : entities) {

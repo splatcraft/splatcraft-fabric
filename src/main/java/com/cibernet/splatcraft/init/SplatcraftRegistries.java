@@ -8,6 +8,9 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
 
 public class SplatcraftRegistries {
+    /**
+     * Splatcraft's built in ink colors.
+     */
     public static final Registry<InkColor> INK_COLORS = createSimple(InkColor.class, "ink_colors");
 
     public SplatcraftRegistries() {}
