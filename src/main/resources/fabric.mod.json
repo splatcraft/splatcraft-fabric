@@ -46,9 +46,12 @@
   ],
   "accessWidener": "splatcraft.accesswidener",
   "depends": {
-    "fabricloader": ">=0.11.0",
-    "fabric": ">=0.31.0",
-    "minecraft": ">=1.16.2"
+    "fabricloader": ">=0.10.5",
+    "fabric": ">=0.32.0",
+    "minecraft": ">=1.16.2",
+
+    "cardinal-components-entity": "*",
+    "cloth-config2": "*"
   },
   "breaks": {
     "lithium": "*"

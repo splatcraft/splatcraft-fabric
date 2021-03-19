@@ -25,7 +25,7 @@ repositories {
     maven { url = "https://dl.bintray.com/ladysnake/libs" }
     maven { url = "https://jitpack.io" }
     maven { url = "https://maven.shedaniel.me/" }
-    maven { url "https://maven.shadew.net/" }
+    maven { url = "https://maven.shadew.net/" }
 }
 
 dependencies {
@@ -35,19 +35,20 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modImplementation "me.shedaniel.cloth:cloth-config:${project.cloth_config_version}:fabric"
-
     modImplementation "io.github.prospector:modmenu:${project.mod_menu_version}"
+
+    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:${project.cardinal_version}"
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
-    include "me.shedaniel.cloth:cloth-config:${project.cloth_config_version}:fabric"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:${project.cardinal_version}"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 
     // runtime utils
-    modRuntime "com.github.joaoh1:OkZoomer:${project.okzoomer_version}"
+    modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }
     modRuntime "net.shadew:jedt:${project.jedt_version}"
 
     modRuntime "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
@@ -56,7 +57,7 @@ dependencies {
 }
 
 loom {
-    accessWidener "src/main/resources/splatcraft.accesswidener"
+    accessWidener "src/main/resources/${project.archives_base_name}.accesswidener"
 }
 
 processResources {
