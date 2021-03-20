@@ -15,6 +15,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.options.AttackIndicator;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -22,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -126,9 +131,9 @@ public abstract class InGameHudMixin {
                             int y = this.scaledHeight / 2 - 7 + 17 + (this.client.options.getPerspective().isFirstPerson() ? (targetingEntity || attackCooldownProgress < 1.0F ? 8 : -2) : - 18);
                             int x = this.scaledWidth / 2 + (this.client.options.getPerspective().isFirstPerson() ? - 9 : + 23);
 
-                            int width = (int) (inkAmount * 17.0F);
+                            float width = (inkAmount * 17.0F);
                             // draw foreground (colored)
-                            $this.drawTexture(matrices, x, y, 52, 94, width, 4);
+                            splatcraft_drawTexture(matrices, x, y, 52, 94, width, 4);
                             // draw background (uncolored)
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             $this.drawTexture(matrices, x, y, 36, 94, 16, 4);
@@ -137,9 +142,9 @@ public abstract class InGameHudMixin {
                             int y = this.scaledHeight - 20;
                             int x = halfScaledWidth + 91 + 32 + (this.getCameraPlayer().getMainArm().getOpposite() == Arm.RIGHT ? -91 - 22 : 0);
 
-                            int offset = (int) (inkAmount * 19.0F);
+                            float offset = (inkAmount * 19.0F);
                             // draw foreground (colored)
-                            $this.drawTexture(matrices, x, y + 18 - offset, 18, 112 - offset, 18, offset);
+                            splatcraft_drawTexture(matrices, x, y + 18 - offset, 18, 112 - offset, 18, offset);
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             // draw background (uncolored)
                             $this.drawTexture(matrices, x, y, 0, 94, 18, 18);
@@ -159,5 +164,27 @@ public abstract class InGameHudMixin {
 
         this.client.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    public void splatcraft_drawTexture(MatrixStack matrices, float x, float y, float u, float v, float width, float height) {
+        InGameHud $this = InGameHud.class.cast(this);
+        splatcraft_drawTexture(matrices, x, y, $this.getZOffset(), u, v, width, height, 256, 256);
+    }
+    private static void splatcraft_drawTexture(MatrixStack matrices, float x, float y, float z, float u, float v, float width, float height, float textureHeight, float textureWidth) {
+        splatcraft_drawTexture(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight);
+    }
+    private static void splatcraft_drawTexture(MatrixStack matrices, float x0, float x1, float y0, float y1, float z, float regionWidth, float regionHeight, float u, float v, float textureWidth, float textureHeight) {
+        splatcraft_drawTexturedQuad(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / textureWidth, (u + regionWidth) / textureWidth, (v + 0.0F) / textureHeight, (v + regionHeight) / textureHeight);
+    }
+    private static void splatcraft_drawTexturedQuad(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.vertex(matrices, x0, y1, z).texture(u0, v1).next();
+        bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
+        bufferBuilder.vertex(matrices, x1, y0, z).texture(u1, v0).next();
+        bufferBuilder.vertex(matrices, x0, y0, z).texture(u0, v0).next();
+        bufferBuilder.end();
+        RenderSystem.enableAlphaTest();
+        BufferRenderer.draw(bufferBuilder);
     }
 }
