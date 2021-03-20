@@ -163,7 +163,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     private void playParticles() {
-        if (this.world instanceof ServerWorld) {
+        if (!this.world.isClient) {
             ((ServerWorld)this.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.WHITE_WOOL.getDefaultState()), this.getX(), this.getBodyY(0.6666666666666666D), this.getZ(), 10, this.getWidth() / 4.0F, this.getHeight() / 4.0F, this.getWidth() / 4.0F, 0.05D);
         }
     }

@@ -67,8 +67,7 @@ public class PlayerEntityMixin {
     @Inject(method = "travel", at = @At("TAIL"))
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-
-        if ($this.world instanceof ServerWorld) {
+        if (!$this.world.isClient) {
             double threshold = 0.13D;
             if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
                 PacketByteBuf buf = PacketByteBufs.create();

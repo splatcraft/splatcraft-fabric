@@ -35,6 +35,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Splatcraft implements ModInitializer {
@@ -86,7 +88,7 @@ public class Splatcraft implements ModInitializer {
             @Override
             public void apply(ResourceManager manager) {
                 Collection<Identifier> inkColors = manager.findResources(Splatcraft.MOD_ID + "_ink_colors", (r) -> r.endsWith(".json") || r.endsWith(".json5"));
-                InkColors.resetMap();
+                HashMap<Identifier, InkColor> loaded = new LinkedHashMap<>();
 
                 for (Identifier fileId : inkColors) {
                     try (
@@ -103,13 +105,14 @@ public class Splatcraft implements ModInitializer {
                         String id2 = id1.substring(id1.indexOf("/") + 1);
                         InkColor inkColor = new InkColor(new Identifier(fileId.getNamespace(), id2.substring(0, id2.lastIndexOf("."))), color);
 
-                        InkColors.replace(inkColor.getId(), inkColor);
+                        loaded.put(inkColor.getId(), inkColor);
                     } catch (Exception e) {
                         log(Level.ERROR, "Unable to load ink color from '" + fileId + "'.");
                         e.printStackTrace();
                     }
                 }
 
+                InkColors.rebuildIfNeeded(loaded);
                 log("Loaded " + InkColors.getAll().size() + " ink colors!");
             }
         });

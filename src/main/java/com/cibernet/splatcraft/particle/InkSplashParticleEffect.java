@@ -59,7 +59,7 @@ public class InkSplashParticleEffect implements ParticleEffect {
         this(color[0], color[1], color[2], scale);
     }
     public InkSplashParticleEffect(InkColor inkColor, float scale) {
-        this(ColorUtils.getColorsFromInt(inkColor.getColor()), scale);
+        this(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked()), scale);
     }
 
     public InkSplashParticleEffect(float[] color) {

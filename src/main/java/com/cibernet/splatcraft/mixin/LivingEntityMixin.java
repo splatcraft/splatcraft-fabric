@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.mixin;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
@@ -62,7 +63,7 @@ public class LivingEntityMixin {
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player) && splatcraft_lastLandedBlockInkColor != InkColors.NONE && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())) {
-                if (player.world instanceof ServerWorld) {
+                if (!player.world.isClient) {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeUuid($this.getUuid());
 

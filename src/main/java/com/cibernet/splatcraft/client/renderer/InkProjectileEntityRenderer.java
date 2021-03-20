@@ -24,20 +24,18 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
     @Override
     public void render(InkProjectileEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         if (this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity.getPos().add(0.0D, entity.getStandingEyeHeight(), 0.0D)) >= 4.0D) {
-            float scale = entity.getProjectileSize();
-            int color = entity.getInkColor().getColor();
+            matrices.push();
 
-            /*if (SplatcraftConfig.COLORS.colorLock.value) {
-                color = ColorUtils.getLockedColor(color);
-            } TODO */
-
+            int color = entity.getInkColor().getColorOrLocked();
             float r = (float) (Math.floor(color / (256.0F * 256.0F)) / 255.0F);
             float g = (float) ((Math.floor(color / 256.0F) % 256.0F) / 255.0F);
             float b = (color % 256) / 255f;
 
-            matrices.push();
+            float scale = entity.getProjectileSize();
             matrices.scale(scale, scale, scale);
+
             this.MODEL.render(matrices, vertexConsumers.getBuffer(this.MODEL.getLayer(TEXTURE)), light, OverlayTexture.DEFAULT_UV, r, g, b, 1);
+
             matrices.pop();
         }
     }

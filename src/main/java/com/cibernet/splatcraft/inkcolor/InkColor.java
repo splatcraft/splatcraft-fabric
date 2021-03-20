@@ -1,8 +1,15 @@
 package com.cibernet.splatcraft.inkcolor;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.component.PlayerDataComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+
+import java.util.Objects;
 
 public class InkColor {
     private final int color;
@@ -34,6 +41,15 @@ public class InkColor {
     public int getColor() {
         return this.color;
     }
+    @Environment(EnvType.CLIENT)
+    public int getColorOrLocked() {
+        return this != InkColors.NONE && SplatcraftConfig.INK.colorLock.value
+            ? (this.matches(PlayerDataComponent.getInkColor(MinecraftClient.getInstance().player).getColor())
+                    ? InkColors.COLOR_LOCK_FRIENDLY
+                    : InkColors.COLOR_LOCK_HOSTILE
+                ).getColor()
+            : this.color;
+    }
     public Identifier getId() {
         return this.id;
     }
@@ -41,6 +57,14 @@ public class InkColor {
     @Override
     public String toString() {
         return this.getId().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InkColor inkColor = (InkColor) o;
+        return color == inkColor.color && Objects.equals(id, inkColor.id);
     }
 
     /**

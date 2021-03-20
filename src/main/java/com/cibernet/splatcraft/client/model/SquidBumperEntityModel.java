@@ -73,7 +73,7 @@ public class SquidBumperEntityModel extends EntityModel<SquidBumperEntity> {
 
     public void render(SquidBumperEntity entity, MatrixStack matrices, VertexConsumer consumer, int light) {
         float scale = (10 - Math.min(entity.getRespawnTime(), 10))/10f;
-        int color = entity.getInkColor().getColor();
+        int color = entity.getInkColor().getColorOrLocked();
         float r = (float) (Math.floor(color / (256.0F * 256.0F)) / 255.0F);
         float g = (float) ((Math.floor(color / 256.0F) % 256.0F) / 255.0F);
         float b = (color % 256) / 255f;

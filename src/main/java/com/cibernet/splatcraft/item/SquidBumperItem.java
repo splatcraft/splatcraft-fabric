@@ -34,7 +34,7 @@ public class SquidBumperItem extends AbstractInkableItem {
             Vec3d vec3d = Vec3d.ofBottomCenter(blockPos);
             Box box = SplatcraftEntities.SQUID_BUMPER.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
             if (world.isSpaceEmpty(null, box, entity -> true) && world.getOtherEntities(null, box).isEmpty()) {
-                if (world instanceof ServerWorld) {
+                if (!world.isClient) {
                     ServerWorld serverWorld = (ServerWorld)world;
                     SquidBumperEntity entity = SplatcraftEntities.SQUID_BUMPER.create(serverWorld, itemStack.getTag(), null, ctx.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
                     if (entity == null) {

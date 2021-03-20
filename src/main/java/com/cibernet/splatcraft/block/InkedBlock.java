@@ -14,6 +14,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
@@ -28,6 +29,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.Optional;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
@@ -233,8 +235,11 @@ public class InkedBlock extends AbstractInkableBlock {
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
-            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
-            return savedState.getBlock().getPickStack(world, pos, savedState);
+            CompoundTag tag = new CompoundTag();
+            CompoundTag blockEntityTag = blockEntity.toTag(new CompoundTag());
+            tag.put("BlockEntityTag", blockEntityTag);
+
+            return new ItemStack(this, 1, Optional.of(tag));
         }
 
         return super.getPickStack(world, pos, state);

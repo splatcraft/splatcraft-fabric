@@ -88,7 +88,7 @@ public class SplatcraftConfig {
         /**
          * When the ink amount indicator low ink warning should display.
          */
-        public RangedOption<Integer> inkAmountIndicatorExclamationsMin = register(new RangedOption<>("ink_amount_exclamations_min", 0, 0, 100));
+        public RangedOption<Integer> inkAmountIndicatorExclamationsMin = register(new RangedOption<>("ink_amount_exclamations_min", 1, 1, 100));
         /**
          * When the ink amount indicator full ink warning should display.
          */

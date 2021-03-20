@@ -35,10 +35,10 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
         if (blockEntity.getCachedState().getRenderType().equals(BlockRenderType.INVISIBLE)) {
             BakedModel model = blockRendererDispatcher.getModel(state);
 
-            int i = ColorUtils.getInkColor(blockEntity).getColor();
-            float r = (float) (i >> 16 & 255) / 255.0F;
-            float g = (float) (i >> 8 & 255) / 255.0F;
-            float b = (float) (i & 255) / 255.0F;
+            int color = ColorUtils.getInkColor(blockEntity).getColorOrLocked();
+            float r = (float) (color >> 16 & 255) / 255.0F;
+            float g = (float) (color >> 8 & 255) / 255.0F;
+            float b = (float) (color & 255) / 255.0F;
 
             renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, false)), state, model, r, g, b, light, overlay);
         }

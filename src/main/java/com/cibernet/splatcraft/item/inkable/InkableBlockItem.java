@@ -1,6 +1,5 @@
 package com.cibernet.splatcraft.item.inkable;
 
-import com.cibernet.splatcraft.init.SplatcraftItems;
 import me.andante.chord.item.TabbedItemGroupAppendLogic;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -11,7 +10,6 @@ import net.minecraft.util.collection.DefaultedList;
 public class InkableBlockItem extends BlockItem implements InkableItem, TabbedItemGroupAppendLogic {
     public InkableBlockItem(Block block, Settings settings) {
         super(block, settings);
-        SplatcraftItems.addToInkables(this);
     }
 
     @Override

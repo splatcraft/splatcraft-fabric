@@ -57,6 +57,11 @@ public class ColorUtils {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
         if (data.getInkColor() != color) {
             data.setInkColor(color);
+
+            if (!player.world.isClient) {
+                ServerPlayNetworking.send((ServerPlayerEntity) player, SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, PacketByteBufs.empty());
+            }
+
             return true;
         } else {
             return false;
@@ -164,11 +169,7 @@ public class ColorUtils {
         if (!world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
 
-            // write color
-            float[] colors = ColorUtils.getColorsFromInt(inkColor.getColor());
-            for (float color : colors) {
-                buf.writeFloat(color);
-            }
+            buf.writeString(inkColor.toString());
             buf.writeFloat(scale);
 
             // write spawn pos

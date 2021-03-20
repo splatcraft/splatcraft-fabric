@@ -11,6 +11,7 @@ import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
+import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
 import com.cibernet.splatcraft.item.inkable.InkableItem;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -43,7 +44,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractWeaponItem extends Item implements InkableItem, MatchItem, EntityTickable, TabbedItemGroupAppendLogic {
+public abstract class AbstractWeaponItem extends Item implements EntityTickable, TabbedItemGroupAppendLogic, InkableItem, MatchItem, ColorLockItemColorProvider {
     protected final float consumption;
 
     protected boolean secret;

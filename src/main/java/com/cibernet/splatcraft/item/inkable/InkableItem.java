@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.item.inkable;
 
-import com.cibernet.splatcraft.init.SplatcraftRegistries;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public interface InkableItem {
 
     default void appendStacks(Item $this, ItemGroup group, DefaultedList<ItemStack> stacks) {
         if ($this.isIn(group)) {
-            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> stacks.add(ColorUtils.setInkColor(new ItemStack($this, 1, Optional.of(new CompoundTag())), inkColor)));
+            InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtils.setInkColor(new ItemStack($this, 1, Optional.of(new CompoundTag())), inkColor)));
         }
     }
 }

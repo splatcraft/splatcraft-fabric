@@ -234,7 +234,12 @@ public class SplatcraftConfigManager {
         INK.addEntry(
             entryBuilder.startBooleanToggle(colorLock, colorLockOption.value)
                 .setDefaultValue(colorLockOption.getDefault())
-                .setSaveConsumer(value -> colorLockOption.value = value)
+                .setSaveConsumer(value -> {
+                    if (colorLockOption.value != value) {
+                        MinecraftClient.getInstance().worldRenderer.reload();
+                    }
+                    colorLockOption.value = value;
+                })
                 .setTooltip(createTooltip(colorLock))
                 .build()
         ).addEntry(

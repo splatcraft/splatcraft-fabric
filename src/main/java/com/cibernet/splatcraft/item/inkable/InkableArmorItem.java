@@ -9,6 +9,8 @@ import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.MatchItem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -85,8 +87,9 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
         return true;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public int getColor(ItemStack stack) {
-        return ColorUtils.getInkColor(stack).getColor();
+        return ColorUtils.getInkColor(stack).getColorOrLocked();
     }
 }

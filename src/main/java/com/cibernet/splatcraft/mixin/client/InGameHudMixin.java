@@ -90,7 +90,7 @@ public abstract class InGameHudMixin {
                     ci.cancel();
 
                     // set color
-                    int color = ColorUtils.getInkColor(client.player).getColor();
+                    int color = ColorUtils.getInkColor(client.player).getColorOrLocked();
                     float r = (float) (color >> 16 & 255) / 255.0F;
                     float g = (float) (color >> 8 & 255) / 255.0F;
                     float b = (float) (color & 255) / 255.0F;
@@ -114,7 +114,7 @@ public abstract class InGameHudMixin {
                 if (inkAmount < 1.0F || SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.value) {
                     if (SplatcraftConfig.INK.inkAmountIndicator.value != InkAmountIndicator.OFF) {
                         this.client.getTextureManager().bindTexture(splatcraft_SQUID_GUI_ICONS_TEXTURE);
-                        int color = ColorUtils.getInkColor(client.player).getColor();
+                        int color = ColorUtils.getInkColor(client.player).getColorOrLocked();
                         float r = (float) (color >> 16 & 255) / 255.0F;
                         float g = (float) (color >> 8 & 255) / 255.0F;
                         float b = (float) (color & 255) / 255.0F;

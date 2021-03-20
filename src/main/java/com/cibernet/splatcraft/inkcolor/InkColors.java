@@ -7,11 +7,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class InkColors {
-    private static HashMap<Identifier, InkColor> DATA = new HashMap<>();
+    private static HashMap<Identifier, InkColor> ALL = new LinkedHashMap<>();
+    private static HashMap<Identifier, InkColor> CACHED_DATA = new LinkedHashMap<>();
 
     public static final InkColor NONE = register("none", ColorUtils.DEFAULT);
 
@@ -95,27 +97,25 @@ public class InkColors {
         return getAll().getOrDefault(id, null);
     }
 
-    public static HashMap<Identifier, InkColor> getAllWith(HashMap<Identifier, InkColor> base) {
-        SplatcraftRegistries.INK_COLORS.forEach(inkColor -> {
-            if (!base.containsKey(inkColor.getId())) { // allows overriding built-in ink colors
-                base.put(inkColor.getId(), inkColor);
-            }
-        });
-
-        return base;
-    }
     public static HashMap<Identifier, InkColor> getAll() {
-        return getAllWith(DATA);
+        return ALL;
     }
 
-    public static void replaceData(Identifier id, InkColor inkColor) {
-        if (DATA.containsKey(id)) {
-            DATA.replace(id, inkColor);
-        } else {
-            DATA.put(id, inkColor);
+    public static void rebuildIfNeeded(HashMap<Identifier, InkColor> inputData) {
+        if (ALL.isEmpty() || !inputData.equals(CACHED_DATA)) {
+            HashMap<Identifier, InkColor> data = new LinkedHashMap<>();
+
+            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> data.put(inkColor.getId(), inkColor));
+            inputData.forEach((id, inkColor) -> {
+                if (data.containsKey(id)) {
+                    data.replace(id, inkColor);
+                } else {
+                    data.put(id, inkColor);
+                }
+            });
+
+            ALL = data;
+            CACHED_DATA = inputData;
         }
-    }
-    public static void resetData() {
-        DATA = new HashMap<>();
     }
 }

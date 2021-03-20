@@ -17,6 +17,7 @@ import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
+import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
 import com.cibernet.splatcraft.item.remote.RemoteItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
@@ -71,9 +72,19 @@ public class SplatcraftClient implements ClientModInitializer {
         ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
 
         // color providers
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null ? InkColors.NONE.getColor() : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColor(), SplatcraftBlocks.getInkables());
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null
+            ? InkColors.NONE.getColorOrLocked()
+            : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColorOrLocked(), SplatcraftBlocks.getInkables()
+        );
+
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtils.getInkColor(stack).getColor(), SplatcraftBlocks.getInkables());
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ColorUtils.getInkColor(stack).getColor(), SplatcraftItems.getInkables());
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0
+            ? -1
+            : stack.getItem() instanceof ColorLockItemColorProvider
+                ? ColorUtils.getInkColor(stack).getColorOrLocked()
+                : ColorUtils.getInkColor(stack).getColor(),
+            SplatcraftItems.getInkables()
+        );
 
         // model predicates
         for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER }) {
@@ -125,9 +136,10 @@ public class SplatcraftClient implements ClientModInitializer {
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
-            float r = buf.readFloat();
-            float g = buf.readFloat();
-            float b = buf.readFloat();
+            int color = InkColors.get(Identifier.tryParse(buf.readString())).getColorOrLocked();
+            float r = ((color & 16711680) >> 16) / 255.0f;
+            float g = ((color & '\uff00') >> 8) / 255.0f;
+            float b = (color & 255) / 255.0f;
             float scale = buf.readFloat();
 
             Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -156,7 +168,7 @@ public class SplatcraftClient implements ClientModInitializer {
                         }
                     }
 
-                    player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
+                    player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
                 });
             }
         });
@@ -172,8 +184,19 @@ public class SplatcraftClient implements ClientModInitializer {
 
                     if (inkColor == ColorUtils.getInkColor(player)) {
                         for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
-                            client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColor())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
+                            client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
                         }
+                    }
+                });
+            }
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                client.execute(() -> {
+                    for (BlockEntity blockEntity : world.blockEntities) {
+                        BlockPos pos = blockEntity.getPos();
+                        world.addSyncedBlockEvent(pos, world.getBlockState(pos).getBlock(), 0, 0);
                     }
                 });
             }

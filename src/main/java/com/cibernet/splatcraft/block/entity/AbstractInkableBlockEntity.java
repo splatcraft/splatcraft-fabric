@@ -53,7 +53,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
             this.inkColor = inkColor;
 
             if (this.world != null) {
-                if (this.world instanceof ServerWorld) {
+                if (!this.world.isClient) {
                     this.sync();
 
                     PacketByteBuf buf = PacketByteBufs.create();
