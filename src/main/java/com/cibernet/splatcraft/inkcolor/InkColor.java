@@ -44,10 +44,9 @@ public class InkColor {
     @Environment(EnvType.CLIENT)
     public int getColorOrLocked() {
         return this != InkColors.NONE && SplatcraftConfig.INK.colorLock.value
-            ? (this.matches(PlayerDataComponent.getInkColor(MinecraftClient.getInstance().player).getColor())
-                    ? InkColors.COLOR_LOCK_FRIENDLY
-                    : InkColors.COLOR_LOCK_HOSTILE
-                ).getColor()
+            ? this.matches(PlayerDataComponent.getInkColor(MinecraftClient.getInstance().player).getColor())
+                ? ColorUtils.COLOR_LOCK_FRIENDLY
+                : ColorUtils.COLOR_LOCK_HOSTILE
             : this.color;
     }
     public Identifier getId() {

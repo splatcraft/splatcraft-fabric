@@ -17,10 +17,6 @@ public class InkColors {
 
     public static final InkColor NONE = register("none", ColorUtils.DEFAULT);
 
-    // color lock
-    public static final InkColor COLOR_LOCK_FRIENDLY = register("color_lock_friendly", 0xDEA801);
-    public static final InkColor COLOR_LOCK_HOSTILE = register("color_lock_hostile", 0x4717A9);
-
     // starter Colors
     public static final InkColor ORANGE = register("orange", 0xDF641A);
     public static final InkColor BLUE = register("blue", 0x26229F);

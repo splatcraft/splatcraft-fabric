@@ -34,6 +34,9 @@ import java.util.Random;
 
 public class ColorUtils {
     public static final int DEFAULT = 0x00FFFFFF;
+    public static final int COLOR_LOCK_FRIENDLY = 0xDEA801;
+    public static final int COLOR_LOCK_HOSTILE = 0x4717A9;
+
     public static final InkColor[] STARTER_COLORS = { InkColors.ORANGE, InkColors.BLUE, InkColors.GREEN, InkColors.PINK };
 
     public static InkColor getEntityColor(Entity entity) {

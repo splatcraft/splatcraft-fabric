@@ -27,8 +27,6 @@
     "block.splatcraft.sardinium_ore": "Sardinium Ore",
 
     "block.splatcraft.canvas": "Canvas",
-    "block.splatcraft.canvas.splatcraft:color_lock_friendly": "Color Lock Friendly Canvas",
-    "block.splatcraft.canvas.splatcraft:color_lock_hostile": "Color Lock Hostile Canvas",
     "block.splatcraft.canvas.splatcraft:none": "Undyed Canvas",
     "block.splatcraft.canvas.splatcraft:orange": "Orange Canvas",
     "block.splatcraft.canvas.splatcraft:blue": "Blue Canvas",
@@ -72,8 +70,6 @@
     "block.splatcraft.canvas.minecraft:black": "Organic Black Canvas",
 
     "item.splatcraft.squid_bumper": "Squid Bumper",
-    "item.splatcraft.squid_bumper.splatcraft:color_lock_friendly": "Color Lock Friendly Squid Bumper",
-    "item.splatcraft.squid_bumper.splatcraft:color_lock_hostile": "Color Lock Hostile Squid Bumper",
     "item.splatcraft.squid_bumper.splatcraft:none": "Undyed Squid Bumper",
     "item.splatcraft.squid_bumper.splatcraft:orange": "Orange Squid Bumper",
     "item.splatcraft.squid_bumper.splatcraft:blue": "Blue Squid Bumper",
@@ -117,8 +113,6 @@
     "item.splatcraft.squid_bumper.minecraft:black": "Organic Black Squid Bumper",
 
     "block.splatcraft.inkwell": "Inkwell",
-    "block.splatcraft.inkwell.splatcraft:color_lock_friendly": "Color Lock Friendly Inkwell",
-    "block.splatcraft.inkwell.splatcraft:color_lock_hostile": "Color Lock Hostile Inkwell",
     "block.splatcraft.inkwell.splatcraft:none": "Undyed Inkwell",
     "block.splatcraft.inkwell.splatcraft:orange": "Orange Inkwell",
     "block.splatcraft.inkwell.splatcraft:blue": "Blue Inkwell",
