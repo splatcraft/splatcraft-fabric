@@ -6,6 +6,9 @@ import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import me.andante.chord.client.config.EnumOption;
+import me.andante.chord.client.config.Option;
+import me.andante.chord.client.config.RangedOption;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -29,7 +32,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfigManager {
     private static final File FILE = FabricLoader.getInstance().getConfigDir().toFile().toPath().resolve(Splatcraft.MOD_ID + ".json").toFile();
-    public static final List<SplatcraftConfig.Option<?>> OPTIONS = new LinkedList<>();
+    public static final List<Option<?>> OPTIONS = new LinkedList<>();
 
     public static void save() {
         JsonObject jsonObject = new JsonObject();
@@ -80,7 +83,7 @@ public class SplatcraftConfigManager {
             Splatcraft.log(Level.ERROR, "Configuration option failed to load: " + e.toString());
         }
     }
-    private static JsonPrimitive load(JsonObject jsonObject, SplatcraftConfig.Option<?> option) {
+    private static JsonPrimitive load(JsonObject jsonObject, Option<?> option) {
         try {
             return jsonObject.getAsJsonPrimitive(option.getId());
         } catch (RuntimeException e) {
@@ -118,9 +121,9 @@ public class SplatcraftConfigManager {
         TranslatableText holdStageBarrierToRender = createRenderText(SplatcraftConfig.RENDER.holdStageBarrierToRender.getId());
         TranslatableText barrierRenderDistance = createRenderText(SplatcraftConfig.RENDER.barrierRenderDistance.getId());
         TranslatableText inkedBlocksColorLayerIsTransparent = createRenderText(SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent.getId());
-        SplatcraftConfig.Option<Boolean> holdStageBarrierToRenderOption = SplatcraftConfig.RENDER.holdStageBarrierToRender;
-        SplatcraftConfig.RangedOption<Integer> barrierRenderDistanceOption = SplatcraftConfig.RENDER.barrierRenderDistance;
-        SplatcraftConfig.Option<Boolean> inkedBlocksColorLayerIsTransparentOption = SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent;
+        Option<Boolean> holdStageBarrierToRenderOption = SplatcraftConfig.RENDER.holdStageBarrierToRender;
+        RangedOption<Integer> barrierRenderDistanceOption = SplatcraftConfig.RENDER.barrierRenderDistance;
+        Option<Boolean> inkedBlocksColorLayerIsTransparentOption = SplatcraftConfig.RENDER.inkedBlocksColorLayerIsTransparent;
         RENDER.addEntry(
             entryBuilder.startBooleanToggle(holdStageBarrierToRender, holdStageBarrierToRenderOption.value)
                 .setDefaultValue(holdStageBarrierToRenderOption.getDefault())
@@ -152,19 +155,19 @@ public class SplatcraftConfigManager {
 
         ConfigCategory UI = builder.getOrCreateCategory(createUIText());
         TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
-        SplatcraftConfig.EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
+        EnumOption<PreventBobView> preventBobViewWhenSquidOption = SplatcraftConfig.UI.preventBobViewWhenSquid;
         TranslatableText modifyFovForSquidForm = createUIText(SplatcraftConfig.UI.modifyFovForSquidForm.getId());
-        SplatcraftConfig.Option<Boolean> modifyFovForSquidFormOption = SplatcraftConfig.UI.modifyFovForSquidForm;
+        Option<Boolean> modifyFovForSquidFormOption = SplatcraftConfig.UI.modifyFovForSquidForm;
         TranslatableText fovForSquidForm = createUIText(SplatcraftConfig.UI.fovForSquidForm.getId());
-        SplatcraftConfig.RangedOption<Integer> fovForSquidFormOption = SplatcraftConfig.UI.fovForSquidForm;
+        RangedOption<Integer> fovForSquidFormOption = SplatcraftConfig.UI.fovForSquidForm;
         TranslatableText invisibleHotbarWhenSquid = createUIText(SplatcraftConfig.UI.invisibleHotbarWhenSquid.getId());
-        SplatcraftConfig.Option<Boolean> invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
+        Option<Boolean> invisibleHotbarWhenSquidOption = SplatcraftConfig.UI.invisibleHotbarWhenSquid;
         TranslatableText renderHeldItemWhenHotbarInvisible = createUIText(SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.getId());
-        SplatcraftConfig.Option<Boolean> renderHeldItemWhenHotbarInvisibleOption = SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible;
+        Option<Boolean> renderHeldItemWhenHotbarInvisibleOption = SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible;
         TranslatableText invisibleHotbarStatusBarsShift = createUIText(SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.getId());
-        SplatcraftConfig.Option<Integer> invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
+        Option<Integer> invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
         TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
-        SplatcraftConfig.Option<Boolean> invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
+        Option<Boolean> invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
         UI.addEntry(
             entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.value)
                 .setDefaultValue(preventBobViewWhenSquidOption.getDefault())
@@ -215,19 +218,19 @@ public class SplatcraftConfigManager {
 
         ConfigCategory INK = builder.getOrCreateCategory(createInkText());
         TranslatableText colorLock = createInkText(SplatcraftConfig.INK.colorLock.getId());
-        SplatcraftConfig.Option<Boolean> colorLockOption = SplatcraftConfig.INK.colorLock;
-        SplatcraftConfig.EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
+        Option<Boolean> colorLockOption = SplatcraftConfig.INK.colorLock;
+        EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
         TranslatableText inkColoredCrosshairWhenSquid = createInkText(SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getId());
-        SplatcraftConfig.Option<Boolean> inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
+        Option<Boolean> inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
         TranslatableText inkAmountIndicator = createInkText(SplatcraftConfig.INK.inkAmountIndicator.getId());
         TranslatableText inkAmountIndicatorAlwaysVisible = createInkText(SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getId());
-        SplatcraftConfig.Option<Boolean> inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible;
+        Option<Boolean> inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible;
         TranslatableText inkAmountIndicatorExclamations = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamations.getId());
-        SplatcraftConfig.Option<Boolean> inkAmountIndicatorExclamationsOption = SplatcraftConfig.INK.inkAmountIndicatorExclamations;
+        Option<Boolean> inkAmountIndicatorExclamationsOption = SplatcraftConfig.INK.inkAmountIndicatorExclamations;
         TranslatableText inkAmountIndicatorExclamationsMin = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin.getId());
-        SplatcraftConfig.RangedOption<Integer> inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin;
+        RangedOption<Integer> inkAmountIndicatorExclamationsMinOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMin;
         TranslatableText inkAmountIndicatorExclamationsMax = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax.getId());
-        SplatcraftConfig.RangedOption<Integer> inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax;
+        RangedOption<Integer> inkAmountIndicatorExclamationsMaxOption = SplatcraftConfig.INK.inkAmountIndicatorExclamationsMax;
         INK.addEntry(
             entryBuilder.startBooleanToggle(colorLock, colorLockOption.value)
                 .setDefaultValue(colorLockOption.getDefault())

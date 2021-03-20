@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "splatcraft:grate",
+    "splatcraft:grate_ramp",
+    "splatcraft:barrier_bar",
+
+    "splatcraft:stage_barrier",
+    "splatcraft:stage_void",
+
+    "splatcraft:color_changer",
+    "splatcraft:ink_disruptor",
+    "splatcraft:turf_scanner"
+  ]
+}

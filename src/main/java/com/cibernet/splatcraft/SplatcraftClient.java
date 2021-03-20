@@ -71,9 +71,9 @@ public class SplatcraftClient implements ClientModInitializer {
         ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
 
         // color providers
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null ? InkColors.NONE.getColor() : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColor(), SplatcraftBlocks.getInkableBlocks());
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtils.getInkColor(stack).getColor(), SplatcraftBlocks.getInkableBlocks());
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ColorUtils.getInkColor(stack).getColor(), SplatcraftItems.getInkableItems());
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null ? InkColors.NONE.getColor() : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColor(), SplatcraftBlocks.getInkables());
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtils.getInkColor(stack).getColor(), SplatcraftBlocks.getInkables());
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0 ? -1 : ColorUtils.getInkColor(stack).getColor(), SplatcraftItems.getInkables());
 
         // model predicates
         for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER }) {

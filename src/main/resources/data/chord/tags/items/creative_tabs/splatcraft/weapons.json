@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "splatcraft:splat_roller",
+    "splatcraft:krak_on_splat_roller",
+    "splatcraft:corocoro_splat_roller",
+    "splatcraft:carbon_roller",
+    "splatcraft:inkbrush",
+    "splatcraft:octobrush",
+    "splatcraft:splattershot",
+    "splatcraft:tentatek_splattershot",
+    "splatcraft:wasabi_splattershot",
+    "splatcraft:splattershot_jr",
+    "splatcraft:aerospray_mg",
+    "splatcraft:aerospray_rg",
+    "splatcraft:52_gal",
+    "splatcraft:52_gal_deco",
+    "splatcraft:96_gal",
+    "splatcraft:96_gal_deco",
+
+    "splatcraft:ink_tank",
+    "splatcraft:classic_ink_tank",
+    "splatcraft:ink_tank_jr",
+    "splatcraft:armored_ink_tank",
+
+    "splatcraft:ink_cloth_helmet",
+    "splatcraft:ink_cloth_chestplate",
+    "splatcraft:ink_cloth_leggings",
+    "splatcraft:ink_cloth_boots"
+  ]
+}

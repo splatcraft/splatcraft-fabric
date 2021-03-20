@@ -9,11 +9,13 @@ import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import me.andante.chord.client.gui.itemgroup.AbstractTabbedItemGroup;
+import me.andante.chord.client.gui.itemgroup.ItemGroupTab;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -33,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.List;
 
 public class Splatcraft implements ModInitializer {
     public static final String MOD_ID = "splatcraft";
@@ -40,20 +43,21 @@ public class Splatcraft implements ModInitializer {
 
     public static Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-    public static class ItemGroups {
-        public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(
-            new Identifier(MOD_ID, "item_group"),
-            () -> new ItemStack(SplatcraftBlocks.CANVAS)
-        );
-        public static final ItemGroup COLORED_BLOCKS = FabricItemGroupBuilder.build(
-            new Identifier(MOD_ID, "colored_blocks"),
-            () -> new ItemStack(SplatcraftBlocks.INKWELL)
-        );
-        public static final ItemGroup WEAPONS = FabricItemGroupBuilder.build(
-            new Identifier(MOD_ID, "weapons"),
-            () -> new ItemStack(SplatcraftItems.SPLAT_ROLLER)
-        );
-    }
+    public static final ItemGroup ITEM_GROUP = new AbstractTabbedItemGroup(Splatcraft.MOD_ID) {
+        @Override
+        protected List<ItemGroupTab> initTabs() {
+            return ImmutableList.of(
+                createTab(SplatcraftBlocks.INKWELL, "colorables"),
+                createTab(SplatcraftItems.SPLAT_ROLLER, "weapons"),
+                createTab(SplatcraftBlocks.GRATE, "stage_tools")
+            );
+        }
+
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(SplatcraftBlocks.CANVAS);
+        }
+    };
 
     @Override
     public void onInitialize() {

@@ -14,8 +14,13 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class SplatcraftBlocks {
+    private static final List<Block> INKABLES = new LinkedList<>();
+
     //
     // INKABLE BLOCKS
     //
@@ -70,7 +75,7 @@ public class SplatcraftBlocks {
 
         Block registeredBlock = Registry.register(Registry.BLOCK, identifier, block);
         if (registerItem) {
-            Registry.register(Registry.ITEM, identifier, new BlockItem(registeredBlock, new FabricItemSettings().maxCount(64).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+            Registry.register(Registry.ITEM, identifier, new BlockItem(registeredBlock, new FabricItemSettings().maxCount(64).group(Splatcraft.ITEM_GROUP)));
         }
 
         return registeredBlock;
@@ -79,7 +84,10 @@ public class SplatcraftBlocks {
         return register(id, block, true);
     }
 
-    public static Block[] getInkableBlocks() {
-        return new Block[]{ INKWELL, CANVAS, INKED_BLOCK, GLOWING_INKED_BLOCK };
+    public static Block[] getInkables() {
+        return INKABLES.toArray(new Block[]{});
+    }
+    public static void addToInkables(Block block) {
+        INKABLES.add(block);
     }
 }

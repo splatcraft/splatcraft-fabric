@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.CanvasBlockEntity;
+import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -12,6 +13,7 @@ public class CanvasBlock extends AbstractInkableBlock {
 
     public CanvasBlock(AbstractBlock.Settings settings) {
         super(settings);
+        SplatcraftBlocks.addToInkables(this);
     }
 
     @Override

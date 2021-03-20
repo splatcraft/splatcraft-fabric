@@ -2,6 +2,9 @@ package com.cibernet.splatcraft.client.config;
 
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
+import me.andante.chord.client.config.EnumOption;
+import me.andante.chord.client.config.Option;
+import me.andante.chord.client.config.RangedOption;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -90,91 +93,5 @@ public class SplatcraftConfig {
          * When the ink amount indicator full ink warning should display.
          */
         public RangedOption<Integer> inkAmountIndicatorExclamationsMax = new RangedOption<>("ink_amount_exclamations_max", 92, 0, 100);
-    }
-
-    /**
-     * A configuration option.
-     */
-    public static class Option<T> {
-        private final String id;
-        public T value;
-        protected final T defaultValue;
-
-        /**
-         * Instantiates a new configuration option.
-         *
-         * @param id The option's identifier.
-         * @param defaultVal The option's default value.
-         */
-        private Option(String id, T defaultVal) {
-            this.id = id;
-            this.defaultValue = defaultVal;
-            this.value = this.defaultValue;
-
-            SplatcraftConfigManager.OPTIONS.add(this);
-        }
-
-        public T getDefault() {
-            return this.defaultValue;
-        }
-        public void setValue(T value) {
-            this.value = value;
-        }
-
-        public String getId() {
-            return this.id;
-        }
-
-        public String getValueForSave() {
-            return String.valueOf(this.value);
-        }
-    }
-    public static class RangedOption<T extends Number> extends Option<T> {
-        private final T min;
-        private final T max;
-
-        /**
-         * Instantiates a new ranged configuration option.
-         *
-         * @param id         The option's identifier.
-         * @param defaultVal The option's default value.
-         * @param min        The option's minimum value.
-         * @param max        The option's maximum value.
-         */
-        private RangedOption(String id, T defaultVal, T min, T max) {
-            super(id, defaultVal);
-            this.min = min;
-            this.max = max;
-        }
-
-        public T getMin() {
-            return this.min;
-        }
-        public T getMax() {
-            return this.max;
-        }
-    }
-    public static class EnumOption<T extends Enum<?>> extends Option<T> {
-        private final Class<T> clazz;
-
-        /**
-         * Instantiates a new ranged configuration option.
-         *
-         * @param id         The option's identifier.
-         * @param defaultVal The option's default value.
-         */
-        private EnumOption(String id, Class<T> clazz, T defaultVal) {
-            super(id, defaultVal);
-            this.clazz = clazz;
-        }
-
-        public Class<T> getClazz() {
-            return this.clazz;
-        }
-
-        @Override
-        public String getValueForSave() {
-            return this.value.toString();
-        }
     }
 }

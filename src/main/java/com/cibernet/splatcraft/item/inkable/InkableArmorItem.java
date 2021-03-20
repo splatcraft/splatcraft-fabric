@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.item.inkable;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
+import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
@@ -32,6 +33,7 @@ import java.util.List;
 public class InkableArmorItem extends DyeableArmorItem implements MatchItem, EntityTickable, InkableItem {
     public InkableArmorItem(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings) {
         super(material, slot, settings);
+        SplatcraftItems.addToInkables(this);
     }
 
     @Override

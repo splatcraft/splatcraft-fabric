@@ -35,7 +35,7 @@ public class SplatcraftEntities {
         EntityType<T> builtEntityType = entityType.build();
 
         if (spawnEggColors != null) {
-            Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id + "_spawn_egg"), new SpawnEggItem(builtEntityType, spawnEggColors[0], spawnEggColors[1], new Item.Settings().maxCount(64).group(Splatcraft.ItemGroups.ITEM_GROUP)));
+            Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id + "_spawn_egg"), new SpawnEggItem(builtEntityType, spawnEggColors[0], spawnEggColors[1], new Item.Settings().maxCount(64).group(Splatcraft.ITEM_GROUP)));
         }
 
         return Registry.register(Registry.ENTITY_TYPE, new Identifier(Splatcraft.MOD_ID, id), builtEntityType);

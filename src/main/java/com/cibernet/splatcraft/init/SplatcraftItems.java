@@ -24,23 +24,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class SplatcraftItems {
-    //
-    // COLORABLES
-    //
-
-    public static final Item INKWELL = register(InkwellBlock.id, new InkableBlockItem(SplatcraftBlocks.INKWELL, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
-    public static final Item CANVAS = register(CanvasBlock.id, new InkableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
-    public static final Item SQUID_BUMPER = register("squid_bumper", new SquidBumperItem(new FabricItemSettings().maxCount(16).group(Splatcraft.ItemGroups.COLORED_BLOCKS)));
-
-    public static final Item INKED_BLOCK = register(InkedBlock.id, new BlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
-
+    private static final List<Item> INKABLES = new LinkedList<>();
     //
     // WEAPONS
     //
 
-    public static final Item.Settings WEAPON_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.WEAPONS);
+    public static final Item.Settings WEAPON_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP);
 
     public static final Item SPLAT_ROLLER = register("splat_roller", new RollerItem(WEAPON_SETTINGS, new RollerComponent(0.1F, 2, 25.0F, 0.45F, false, new RollerComponent.Fling(9.0F, 0.8F, 8.0F, 0.4F))));
     public static final Item KRAK_ON_SPLAT_ROLLER = register("krak_on_splat_roller", new RollerItem((RollerItem) SPLAT_ROLLER));
@@ -65,7 +59,7 @@ public class SplatcraftItems {
     // WEARABLES
     //
 
-    public static final Item.Settings WEARABLE_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP);
+    public static final Item.Settings WEARABLE_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP);
 
     public static final Item INK_TANK = register(InkTankArmorItem.id, new InkTankArmorItem(100, WEARABLE_SETTINGS));
     public static final Item CLASSIC_INK_TANK = register("classic_" + InkTankArmorItem.id, new InkTankArmorItem((InkTankArmorItem) INK_TANK));
@@ -83,11 +77,21 @@ public class SplatcraftItems {
     // INK
     //
 
-    public static final Item.Settings REMOTE_SETTINGS = new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ItemGroups.ITEM_GROUP);
+    public static final Item.Settings REMOTE_SETTINGS = new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ITEM_GROUP);
 
     public static final Item COLOR_CHANGER = register("color_changer", new ColorChangerItem(REMOTE_SETTINGS));
     public static final Item INK_DISRUPTOR = register("ink_disruptor", new InkDisruptorItem(REMOTE_SETTINGS));
     public static final Item TURF_SCANNER = register("turf_scanner", new TurfScannerItem(REMOTE_SETTINGS));
+
+    //
+    // COLORABLES
+    //
+
+    public static final Item INKWELL = register(InkwellBlock.id, new InkableBlockItem(SplatcraftBlocks.INKWELL, new FabricItemSettings().group(Splatcraft.ITEM_GROUP)));
+    public static final Item CANVAS = register(CanvasBlock.id, new InkableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ITEM_GROUP)));
+    public static final Item SQUID_BUMPER = register("squid_bumper", new SquidBumperItem(new FabricItemSettings().maxCount(16).group(Splatcraft.ITEM_GROUP)));
+
+    public static final Item INKED_BLOCK = register(InkedBlock.id, new BlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
 
     public SplatcraftItems() {}
 
@@ -95,7 +99,10 @@ public class SplatcraftItems {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);
     }
 
-    public static Item[] getInkableItems() {
-        return new Item[]{ SPLAT_ROLLER, KRAK_ON_SPLAT_ROLLER, COROCORO_SPLAT_ROLLER, CARBON_ROLLER, INKBRUSH, OCTOBRUSH, SPLATTERSHOT, TENTATEK_SPLATTERSHOT, WASABI_SPLATTERSHOT, ANCIENT_SPLATTERSHOT, SPLATTERSHOT_JR, AEROSPRAY_MG, AEROSPRAY_RG, GAL_52, GAL_52_DECO, GAL_96, GAL_96_DECO, INK_TANK, CLASSIC_INK_TANK, INK_TANK_JR, ARMORED_INK_TANK, SQUID_BUMPER, INK_CLOTH_HELMET, INK_CLOTH_CHESTPLATE, INK_CLOTH_LEGGINGS, INK_CLOTH_BOOTS, COLOR_CHANGER };
+    public static Item[] getInkables() {
+        return INKABLES.toArray(new Item[]{});
+    }
+    public static void addToInkables(Item item) {
+        INKABLES.add(item);
     }
 }

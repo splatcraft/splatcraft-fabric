@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.block;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
@@ -47,6 +48,8 @@ public class InkedBlock extends AbstractInkableBlock {
     public InkedBlock(boolean glowing) {
         this(glowing ? DEFAULT_PROPERTIES.luminance(state -> GLOWING_LIGHT_LEVEL) : DEFAULT_PROPERTIES);
         this.glowing = glowing;
+
+        SplatcraftBlocks.addToInkables(this);
     }
 
     public boolean isGlowing() {

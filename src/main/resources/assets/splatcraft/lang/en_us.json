@@ -1,7 +1,13 @@
 {
-    "itemGroup.splatcraft.item_group": "Splatcraft",
-    "itemGroup.splatcraft.colored_blocks": "Splatcraft - Colored Block Sets",
-    "itemGroup.splatcraft.weapons": "Splatcraft - Weapons",
+    "mod.splatcraft.name": "Splatcraft",
+    "mod.splatcraft.description": "Splatoon in Minecraft",
+
+    "itemGroup.splatcraft": "Splatcraft (%s)",
+    "itemGroup.splatcraft.title": "Splatcraft",
+    "itemGroup.tab.splatcraft:all": "All",
+    "itemGroup.tab.splatcraft:colorables": "Colorables",
+    "itemGroup.tab.splatcraft:weapons": "Weapons",
+    "itemGroup.tab.splatcraft:stage_tools": "Stage Tools",
 
     "block.splatcraft.inked_block": "Inked Block",
     "block.splatcraft.inked_stairs": "Inked Stairs",

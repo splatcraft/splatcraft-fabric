@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
+import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.item.EntityTickable;
@@ -25,6 +26,7 @@ import java.util.Objects;
 public class ColorChangerItem extends RemoteItem implements EntityTickable {
     public ColorChangerItem(Item.Settings settings) {
         super(settings);
+        SplatcraftItems.addToInkables(this);
     }
 
     @Override

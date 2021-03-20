@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
+import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
@@ -41,6 +42,8 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
     public InkwellBlock(AbstractBlock.Settings settings) {
         super(settings);
         this.setDefaultState(this.stateManager.getDefaultState().with(WATERLOGGED, false));
+
+        SplatcraftBlocks.addToInkables(this);
     }
 
     /*@Override

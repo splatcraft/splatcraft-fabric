@@ -11,8 +11,10 @@ import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
+import com.cibernet.splatcraft.item.inkable.InkableItem;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import me.andante.chord.item.TabbedItemGroupAppendLogic;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -25,6 +27,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.sound.SoundCategory;
@@ -32,6 +35,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -39,7 +43,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractWeaponItem extends Item implements MatchItem, EntityTickable {
+public abstract class AbstractWeaponItem extends Item implements InkableItem, MatchItem, EntityTickable, TabbedItemGroupAppendLogic {
     protected final float consumption;
 
     protected boolean secret;
@@ -47,6 +51,15 @@ public abstract class AbstractWeaponItem extends Item implements MatchItem, Enti
     public AbstractWeaponItem(Item.Settings settings, float consumption) {
         super(settings);
         this.consumption = consumption;
+
+        SplatcraftItems.addToInkables(this);
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        if (!this.secret) {
+            stacks.add(new ItemStack(this));
+        }
     }
 
     @Override
