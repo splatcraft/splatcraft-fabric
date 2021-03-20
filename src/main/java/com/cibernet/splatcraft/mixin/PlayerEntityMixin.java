@@ -94,20 +94,25 @@ public class PlayerEntityMixin {
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(PlayerEntity.class.cast(this));
         if (data.isSquid()) {
-            cir.setReturnValue(pose == EntityPose.FALL_FLYING ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
+            cir.setReturnValue(data.isSubmerged() ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
         }
     }
     @Inject(method = "getActiveEyeHeight", at = @At("RETURN"), cancellable = true)
     private void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        if (pose != EntityPose.FALL_FLYING) {
-            try {
-                PlayerEntity $this = PlayerEntity.class.cast(this);
-                PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-                if (data.isSquid()) {
-                    cir.setReturnValue(cir.getReturnValueF() / 2);
-                }
-            } catch (NullPointerException ignored) {}
-        }
+        PlayerEntity $this = PlayerEntity.class.cast(this);
+        try {
+            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+            if (data.isSquid()) {
+                cir.setReturnValue(dimensions.height / (
+                        data.isSubmerged()
+                            ? 3.0F
+                            : $this.isOnGround()
+                                ? 2.6F
+                                : 1.2F
+                    )
+                );
+            }
+        } catch (NullPointerException ignored) {}
     }
 
     @Inject(method = "isBlockBreakingRestricted", at = @At("HEAD"), cancellable = true)

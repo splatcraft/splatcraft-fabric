@@ -87,11 +87,11 @@ public class LivingEntityMixin {
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "getJumpVelocity", at = @At("RETURN"), cancellable = true)
-    private void fixSquidJumpVelocity(CallbackInfoReturnable<Float> cir) {
+    private void modifySquidJumpVelocity(CallbackInfoReturnable<Float> cir) {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
-            if (PlayerDataComponent.isSquid(player) && player.isOnGround() && splatcraft_lastLandedBlockInkColor != InkColors.NONE && splatcraft_lastLandedBlockInkColor == ColorUtils.getInkColor(player)) {
+            if (PlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
                 cir.setReturnValue(cir.getReturnValueF() * 1.36F);
             }
         }
