@@ -13,7 +13,7 @@ public class InkableBlockItem extends BlockItem implements InkableItem, TabbedIt
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+    public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
         this.appendStacks(this.asItem(), group, stacks);
     }
 

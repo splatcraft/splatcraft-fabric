@@ -19,7 +19,7 @@ public abstract class AbstractInkableItem extends Item implements InkableItem, T
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+    public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtils.setInkColor(new ItemStack(this, 1, Optional.of(new CompoundTag())), inkColor)));
         }

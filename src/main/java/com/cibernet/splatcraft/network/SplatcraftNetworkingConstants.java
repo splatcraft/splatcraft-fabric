@@ -5,7 +5,7 @@ import net.minecraft.util.Identifier;
 
 public class SplatcraftNetworkingConstants {
     /*
-        Inked/inking blocks.
+        Ink colors.
      */
     public static final Identifier SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_ink_color"); // S2C
     public static final Identifier SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_block_entity_saved_state"); // S2C

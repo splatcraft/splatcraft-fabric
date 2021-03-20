@@ -57,7 +57,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+    public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group) && !this.secret) {
             stacks.add(new ItemStack(this));
         }
