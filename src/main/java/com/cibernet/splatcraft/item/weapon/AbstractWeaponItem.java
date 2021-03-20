@@ -57,7 +57,7 @@ public abstract class AbstractWeaponItem extends Item implements InkableItem, Ma
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (!this.secret) {
+        if (this.isIn(group) && !this.secret) {
             stacks.add(new ItemStack(this));
         }
     }
