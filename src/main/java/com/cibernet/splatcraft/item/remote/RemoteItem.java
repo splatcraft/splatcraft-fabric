@@ -51,8 +51,8 @@ public abstract class RemoteItem extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext ctx) {
+        String key = hasCoordA(ctx.getStack()) ? "b" : "a";
         if (addCoords(ctx.getStack(), ctx.getBlockPos())) {
-            String key = hasCoordA(ctx.getStack()) ? "b" : "a";
             BlockPos pos = ctx.getBlockPos();
 
             if (ctx.getWorld().isClient) {
