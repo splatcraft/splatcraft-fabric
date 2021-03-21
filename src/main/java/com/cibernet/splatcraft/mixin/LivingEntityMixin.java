@@ -44,7 +44,7 @@ public class LivingEntityMixin {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player)) {
                 InkColor inkColor = ColorUtils.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
-                if (inkColor == InkColors.NONE) {
+                if (inkColor.equals(InkColors.NONE)) {
                     if (player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
                         return c;
                     }

@@ -34,8 +34,8 @@ import java.util.Random;
 
 public class ColorUtils {
     public static final int DEFAULT = 0x00FFFFFF;
-    public static final int COLOR_LOCK_FRIENDLY = 0xDEA801;
-    public static final int COLOR_LOCK_HOSTILE = 0x4717A9;
+    public static final int DEFAULT_COLOR_LOCK_FRIENDLY = 0xDEA801;
+    public static final int DEFAULT_COLOR_LOCK_HOSTILE = 0x4717A9;
 
     public static final InkColor[] STARTER_COLORS = { InkColors.ORANGE, InkColors.BLUE, InkColors.GREEN, InkColors.PINK };
 
@@ -142,9 +142,18 @@ public class ColorUtils {
     }
 
     public static Text getFormattedColorName(InkColor color, boolean colorless) {
-        return color == InkColors.NONE
-            ? new TranslatableText( (colorless ? Formatting.GRAY : "") + color.getTranslationKey())
-            : new TranslatableText(color.getTranslationKey()).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color.getColor())));
+        TranslatableText text = new TranslatableText(color.getTranslationKey());
+        if (!colorless) {
+            text.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color.getColor())));
+        }
+
+        return text;
+    }
+    public static TranslatableText getTranslatableTextWithColor(String key, InkColor color, boolean colorless) {
+        return new TranslatableText(key, getFormattedColorName(color, colorless));
+    }
+    public static TranslatableText getTranslatableTextWithColor(ItemStack stack, boolean colorless) {
+        return getTranslatableTextWithColor(((TranslatableText)stack.getItem().getName()).getKey(), ColorUtils.getInkColor(stack), colorless);
     }
 
     public static void setColorLocked(ItemStack stack, boolean isLocked) {

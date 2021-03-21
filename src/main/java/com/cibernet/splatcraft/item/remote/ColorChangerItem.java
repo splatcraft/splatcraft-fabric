@@ -93,7 +93,7 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
                     if (block instanceof AbstractInkableBlock && world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) {
                         InkColor blockEntityColor = ((AbstractInkableBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).getInkColor();
 
-                        if (!blockEntityColor.matches(affectedColor) && (mode == 0 || mode == 1 && blockEntityColor.matches(color) || mode == 2 && !blockEntityColor.matches(color)) && ((AbstractInkableBlock) block).remoteColorChange(world, pos, affectedColor)) {
+                        if (!blockEntityColor.equals(affectedColor) && (mode == 0 || mode == 1 && blockEntityColor.equals(color) || mode == 2 && !blockEntityColor.equals(color)) && ((AbstractInkableBlock) block).remoteColorChange(world, pos, affectedColor)) {
                             count++;
                         }
                     }

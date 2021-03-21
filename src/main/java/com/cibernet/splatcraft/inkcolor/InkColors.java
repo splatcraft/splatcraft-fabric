@@ -80,7 +80,7 @@ public class InkColors {
         return register(new Identifier(Splatcraft.MOD_ID, id), inkColor);
     }
     private static InkColor register(String id, int color) {
-        return register(id, new InkColor(id, color));
+        return register(id, new InkColor(new Identifier(Splatcraft.MOD_ID, id), color));
     }
     private static InkColor register(DyeColor dyeColor) {
         return register(new Identifier(dyeColor.getName()), new InkColor(dyeColor));
@@ -94,23 +94,30 @@ public class InkColors {
     }
 
     public static HashMap<Identifier, InkColor> getAll() {
-        return ALL;
+        return InkColors.ALL;
+    }
+    public static void setAll(HashMap<Identifier, InkColor> all) {
+        InkColors.ALL = all;
+    }
+
+    public static HashMap<Identifier, InkColor> getCachedData() {
+        return InkColors.CACHED_DATA;
     }
 
     public static void rebuildIfNeeded(HashMap<Identifier, InkColor> inputData) {
-        if (ALL.isEmpty() || !inputData.equals(CACHED_DATA)) {
-            HashMap<Identifier, InkColor> data = new LinkedHashMap<>();
+        if (ALL.isEmpty() || inputData.isEmpty() || !inputData.equals(CACHED_DATA)) {
+            HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
 
-            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> data.put(inkColor.getId(), inkColor));
+            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> all.put(inkColor.getId(), inkColor));
             inputData.forEach((id, inkColor) -> {
-                if (data.containsKey(id)) {
-                    data.replace(id, inkColor);
+                if (all.containsKey(id)) {
+                    all.replace(id, inkColor);
                 } else {
-                    data.put(id, inkColor);
+                    all.put(id, inkColor);
                 }
             });
 
-            ALL = data;
+            ALL = all;
             CACHED_DATA = inputData;
         }
     }

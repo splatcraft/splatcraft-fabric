@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.client.config;
 
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
+import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import me.andante.chord.client.config.EnumOption;
 import me.andante.chord.client.config.Option;
 import me.andante.chord.client.config.RangedOption;
@@ -11,7 +12,6 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfig {
     public static RenderGroup RENDER = new RenderGroup();
-
     public static class RenderGroup {
         /**
          * Enable or disable having to hold stage barriers or voids to render.
@@ -61,10 +61,6 @@ public class SplatcraftConfig {
 
     public static InkGroup INK = new InkGroup();
     public static class InkGroup {
-        /**
-         * Enable or disable color lock.
-         */
-        public Option<Boolean> colorLock = register(new Option<>("color_lock", false));
         // /**
         //  * Enable or disable a weapon's durability bar's colour to match the player's ink colour.
         //  */
@@ -93,6 +89,22 @@ public class SplatcraftConfig {
          * When the ink amount indicator full ink warning should display.
          */
         public RangedOption<Integer> inkAmountIndicatorExclamationsMax = register(new RangedOption<>("ink_amount_exclamations_max", 92, 0, 100));
+    }
+
+    public static AccessibilityGroup ACCESSIBILITY = new AccessibilityGroup();
+    public static class AccessibilityGroup {
+        /**
+         * Enable or disable color lock.
+         */
+        public Option<Boolean> colorLock = register(new Option<>("color_lock", false));
+        /**
+         * Your color when color lock is enabled.
+         */
+        public Option<Integer> colorLockFriendly = register(new Option<>("color_lock_friendly", ColorUtils.DEFAULT_COLOR_LOCK_FRIENDLY));
+        /**
+         * Others' color when color lock is enabled.
+         */
+        public Option<Integer> colorLockHostile = register(new Option<>("color_lock_hostile", ColorUtils.DEFAULT_COLOR_LOCK_HOSTILE));
     }
 
     private static <T extends Option<?>> T register(T option) {

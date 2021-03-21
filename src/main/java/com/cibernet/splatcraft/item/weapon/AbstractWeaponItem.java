@@ -12,7 +12,6 @@ import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
-import com.cibernet.splatcraft.item.inkable.InkableItem;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import me.andante.chord.item.TabbedItemGroupAppendLogic;
@@ -44,7 +43,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractWeaponItem extends Item implements EntityTickable, TabbedItemGroupAppendLogic, InkableItem, MatchItem, ColorLockItemColorProvider {
+public abstract class AbstractWeaponItem extends Item implements EntityTickable, TabbedItemGroupAppendLogic, MatchItem, ColorLockItemColorProvider {
     protected final float consumption;
 
     protected boolean secret;
@@ -68,11 +67,13 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
         super.appendTooltip(stack, player, tooltip, advanced);
 
         InkColor inkColor = ColorUtils.getInkColor(stack);
-        if (inkColor != InkColors.NONE || ColorUtils.isColorLocked(stack)) {
-            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), true));
+        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
+            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), false));
         } else {
             tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, "ink_cloth_armor")) + ".tooltip.colorless"));
         }
+
+
     }
 
     @Override

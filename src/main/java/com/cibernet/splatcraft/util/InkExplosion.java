@@ -127,8 +127,8 @@ public class InkExplosion extends Explosion {
                 targetColor = ColorUtils.getInkColor(entity);
             }
 
-            if (color != targetColor && targetColor != InkColors.NONE) {
-                InkDamageUtils.splatDamage(world, (LivingEntity) entity, damage, color, this.entity, damageMobs);
+            if (!this.color.matches(targetColor.getColor()) && !targetColor.equals(InkColors.NONE)) {
+                InkDamageUtils.splatDamage(world, (LivingEntity) entity, damage, this.color, this.entity, damageMobs);
             }
 
             if (entity instanceof SheepEntity) {

@@ -41,6 +41,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -48,12 +50,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Splatcraft.log("Initializing client");
 
+        InkColors.rebuildIfNeeded(new LinkedHashMap<>());
         SplatcraftConfigManager.load();
         new SplatcraftKeyBindings();
 
@@ -73,7 +79,7 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // color providers
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null
-            ? InkColors.NONE.getColorOrLocked()
+            ? InkColors.NONE.getColor()
             : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColorOrLocked(), SplatcraftBlocks.getInkables()
         );
 
@@ -146,6 +152,17 @@ public class SplatcraftClient implements ClientModInitializer {
 
             client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(r, g, b, scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
         });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
+            ClientWorld world = MinecraftClient.getInstance().world;
+            if (world != null) {
+                client.execute(() -> {
+                    for (BlockEntity blockEntity : world.blockEntities) {
+                        BlockPos pos = blockEntity.getPos();
+                        world.addSyncedBlockEvent(pos, world.getBlockState(pos).getBlock(), 0, 0);
+                    }
+                });
+            }
+        });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientWorld world = MinecraftClient.getInstance().world;
             if (world != null) {
@@ -190,16 +207,20 @@ public class SplatcraftClient implements ClientModInitializer {
                 });
             }
         });
-        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
-            ClientWorld world = MinecraftClient.getInstance().world;
-            if (world != null) {
-                client.execute(() -> {
-                    for (BlockEntity blockEntity : world.blockEntities) {
-                        BlockPos pos = blockEntity.getPos();
-                        world.addSyncedBlockEvent(pos, world.getBlockState(pos).getBlock(), 0, 0);
-                    }
-                });
-            }
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, (client, handler, buf, responseSender) -> {
+            InkColors.rebuildIfNeeded(InkColors.getCachedData());
+
+            CompoundTag tag = buf.readCompoundTag();
+            ListTag inkColors = tag.getList("InkColors", 10);
+            HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
+            inkColors.forEach(inkColor -> {
+                CompoundTag inkColorTag = (CompoundTag) inkColor;
+                Identifier id = Identifier.tryParse(inkColorTag.getString("id"));
+                all.put(id, new InkColor(id, inkColorTag.getInt("Color")));
+            });
+
+            Splatcraft.log("Synchronised ink colors with server");
+            client.execute(() -> InkColors.setAll(all));
         });
 
         Splatcraft.log("Initialized client");

@@ -6,6 +6,8 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
@@ -20,7 +22,7 @@ public class InkColor {
         this.color = color;
     }
     public InkColor(String id, int color) {
-        this(new Identifier(Splatcraft.MOD_ID, id), color);
+        this(Identifier.tryParse(id), color);
     }
     public InkColor(DyeColor dyeColor) {
         this(new Identifier(dyeColor.getName()), dyeColor.color);
@@ -43,10 +45,10 @@ public class InkColor {
     }
     @Environment(EnvType.CLIENT)
     public int getColorOrLocked() {
-        return this != InkColors.NONE && SplatcraftConfig.INK.colorLock.value
+        return !this.equals(InkColors.NONE) && SplatcraftConfig.ACCESSIBILITY.colorLock.value
             ? this.matches(PlayerDataComponent.getInkColor(MinecraftClient.getInstance().player).getColor())
-                ? ColorUtils.COLOR_LOCK_FRIENDLY
-                : ColorUtils.COLOR_LOCK_HOSTILE
+                ? SplatcraftConfig.ACCESSIBILITY.colorLockFriendly.value
+                : SplatcraftConfig.ACCESSIBILITY.colorLockHostile.value
             : this.color;
     }
     public Identifier getId() {
@@ -77,6 +79,14 @@ public class InkColor {
      * A soft check for ink color matching. Checks only the color's id.
      */
     public boolean matches(int color) {
-        return this.getColor() == color;
+        return this.color == color;
+    }
+
+    public Tag toTag() {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", id.toString());
+        tag.putInt("Color", color);
+
+        return tag;
     }
 }

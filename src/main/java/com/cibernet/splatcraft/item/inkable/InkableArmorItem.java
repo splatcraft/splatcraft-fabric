@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class InkableArmorItem extends DyeableArmorItem implements MatchItem, EntityTickable, InkableItem {
+public class InkableArmorItem extends DyeableArmorItem implements MatchItem, EntityTickable {
     public InkableArmorItem(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings) {
         super(material, slot, settings);
         SplatcraftItems.addToInkables(this);
@@ -43,7 +43,7 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
         super.appendTooltip(stack, world, tooltip, context);
 
         InkColor inkColor = ColorUtils.getInkColor(stack);
-        if (inkColor != InkColors.NONE || ColorUtils.isColorLocked(stack)) {
+        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
             tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), true));
         } else {
             tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, "ink_cloth_armor")) + ".tooltip.colorless"));

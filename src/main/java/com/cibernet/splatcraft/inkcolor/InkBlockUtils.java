@@ -29,7 +29,7 @@ public class InkBlockUtils {
     public static boolean inkBlock(World world, BlockPos pos, InkColor inkColor, float damage, InkType inkType) {
         BlockState state = world.getBlockState(pos);
 
-        if (inkColor != InkColors.NONE && !InkedBlock.isTouchingLiquid(world, pos)) {
+        if (!inkColor.equals(InkColors.NONE) && !InkedBlock.isTouchingLiquid(world, pos)) {
             if (state.getBlock() instanceof AbstractInkableBlock) {
                 return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, inkColor, damage, inkType, true);
             } else if (canInk(world, pos) && world.getBlockEntity(pos) == null) {
@@ -105,7 +105,7 @@ public class InkBlockUtils {
     }
 
     public static boolean canSwim(PlayerEntity player, boolean ignoreOnGround) {
-        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || !InkBlockUtils.onEnemyInk(player));
+        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && !PlayerDataComponent.getInkColor(player).equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || !InkBlockUtils.onEnemyInk(player));
     }
     public static boolean canSwim(PlayerEntity player) {
         return canSwim(player, false);
@@ -120,7 +120,7 @@ public class InkBlockUtils {
             Block block = blockEntity.getCachedState().getBlock();
             if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
                 InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-                return comparisonColor != InkColors.NONE && inkColor != InkColors.NONE && !comparisonColor.matches(inkColor.getColor());
+                return !comparisonColor.equals(InkColors.NONE) && !inkColor.equals(InkColors.NONE) && !comparisonColor.matches(inkColor.getColor());
             }
         }
 
@@ -134,7 +134,7 @@ public class InkBlockUtils {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            return ColorUtils.getInkColor(blockEntity) != InkColors.NONE && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
+            return !ColorUtils.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
         }
 
         return false;
@@ -175,7 +175,7 @@ public class InkBlockUtils {
     }
 
     public static boolean canClimb(PlayerEntity player) {
-        if (InkBlockUtils.onEnemyInk(player)) {
+        if (InkBlockUtils.onEnemyInk(player) || PlayerDataComponent.getInkColor(player).equals(InkColors.NONE)) {
             return false;
         } else {
             BlockPos pos = InkBlockUtils.getClimbingPos(player);

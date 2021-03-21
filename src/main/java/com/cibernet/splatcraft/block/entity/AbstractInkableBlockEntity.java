@@ -49,7 +49,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         return this.inkColor;
     }
     public boolean setInkColor(InkColor inkColor) {
-        if (!this.inkColor.matches(inkColor)) {
+        if (!this.inkColor.equals(inkColor)) {
             this.inkColor = inkColor;
 
             if (this.world != null) {
@@ -75,7 +75,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         return false;
     }
     public boolean isColored() {
-        return this.inkColor != InkColors.NONE;
+        return !this.inkColor.equals(InkColors.NONE);
     }
 
     @Override

@@ -8,11 +8,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 
 import java.util.Optional;
 
-public abstract class AbstractInkableItem extends Item implements InkableItem, TabbedItemGroupAppendLogic {
+public abstract class AbstractInkableItem extends Item implements TabbedItemGroupAppendLogic {
     public AbstractInkableItem(Settings settings) {
         super(settings);
         SplatcraftItems.addToInkables(this);
@@ -26,7 +27,7 @@ public abstract class AbstractInkableItem extends Item implements InkableItem, T
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
-        return this.getTranslationKey(super.getTranslationKey(stack), stack);
+    public Text getName(ItemStack stack) {
+        return ColorUtils.getTranslatableTextWithColor(stack, true);
     }
 }
