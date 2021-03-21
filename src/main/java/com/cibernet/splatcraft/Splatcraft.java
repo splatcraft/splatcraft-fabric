@@ -17,7 +17,8 @@ import me.andante.chord.client.gui.itemgroup.AbstractTabbedItemGroup;
 import me.andante.chord.client.gui.itemgroup.ItemGroupTab;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -26,11 +27,9 @@ import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -49,6 +48,8 @@ public class Splatcraft implements ModInitializer {
     public static final String MOD_NAME = "Splatcraft";
 
     public static Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+    public static MinecraftServer SERVER_INSTANCE = null;
 
     public static final ItemGroup ITEM_GROUP = new AbstractTabbedItemGroup(Splatcraft.MOD_ID) {
         @Override
@@ -119,23 +120,18 @@ public class Splatcraft implements ModInitializer {
 
                 InkColors.rebuildIfNeeded(loaded);
                 log("Loaded " + InkColors.getAll().size() + " ink colors!");
+
+                if (SERVER_INSTANCE != null) {
+                    InkColors.sync(PlayerLookup.all(SERVER_INSTANCE));
+                }
             }
         });
 
         ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            PacketByteBuf buf = PacketByteBufs.create();
-
-            CompoundTag tag = new CompoundTag();
-            ListTag inkColors = new ListTag();
-            InkColors.getAll().forEach((identifier, inkColor) -> inkColors.add(inkColor.toTag()));
-            tag.put("InkColors", inkColors);
-            buf.writeCompoundTag(tag);
-
-            sender.sendPacket(SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, buf);
-            Splatcraft.log("Synchronised ink colors with " + handler.player.getDisplayName().asString());
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER_INSTANCE = null);
+        ServerPlayConnectionEvents.JOIN.register(InkColors::sync);
 
         PlayerHandler.registerEvents();
 
