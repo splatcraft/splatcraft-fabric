@@ -24,7 +24,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -174,7 +173,7 @@ public class ColorUtils {
     }
 
     public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
-        return ColorUtils.getInkColor(player) == ColorUtils.getInkColor(stack);
+        return ColorUtils.getInkColor(player).matches(ColorUtils.getInkColor(stack).getColor());
     }
 
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {

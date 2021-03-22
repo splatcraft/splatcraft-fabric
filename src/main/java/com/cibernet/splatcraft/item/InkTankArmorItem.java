@@ -68,8 +68,8 @@ public class InkTankArmorItem extends InkableArmorItem {
             PlayerEntity player = (PlayerEntity) entity;
             float ink = getInkAmount(stack);
 
-            if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtils.colorEquals(player, stack) && ink < capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
-                setInkAmount(stack, Math.min(capacity, ink + (PlayerDataComponent.isSubmerged(player) ? 1 : 0.1f)));
+            if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtils.colorEquals(player, stack) && ink < this.capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
+                setInkAmount(stack, Math.min(this.capacity, ink + (PlayerDataComponent.isSubmerged(player) ? 1 : 0.1f)));
             }
         }
     }

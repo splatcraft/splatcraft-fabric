@@ -62,7 +62,7 @@ public class LivingEntityMixin {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
-            if (PlayerDataComponent.isSquid(player) && splatcraft_lastLandedBlockInkColor != InkColors.NONE && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())) {
+            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())) {
                 if (!player.world.isClient) {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeUuid($this.getUuid());

@@ -199,7 +199,7 @@ public class SplatcraftClient implements ClientModInitializer {
                 client.execute(() -> {
                     player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23F, 0.86F, false);
 
-                    if (inkColor == ColorUtils.getInkColor(player)) {
+                    if (inkColor.matches(ColorUtils.getInkColor(player).getColor())) {
                         for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
                             client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
                         }

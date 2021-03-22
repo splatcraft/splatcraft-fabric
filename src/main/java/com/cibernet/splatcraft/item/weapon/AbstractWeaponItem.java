@@ -63,14 +63,14 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World player, List<Text> tooltip, TooltipContext advanced) {
-        super.appendTooltip(stack, player, tooltip, advanced);
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext advanced) {
+        super.appendTooltip(stack, world, tooltip, advanced);
 
         InkColor inkColor = ColorUtils.getInkColor(stack);
         if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
             tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), false));
         } else {
-            tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, "ink_cloth_armor")) + ".tooltip.colorless"));
+            tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless"));
         }
 
 

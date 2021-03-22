@@ -46,7 +46,7 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
         if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
             tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), true));
         } else {
-            tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, "ink_cloth_armor")) + ".tooltip.colorless"));
+            tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless"));
         }
     }
 
@@ -54,7 +54,7 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity) {
             InkColor inkColor = ColorUtils.getInkColor((PlayerEntity) entity);
-            if (!ColorUtils.isColorLocked(stack) && inkColor != ColorUtils.getInkColor(stack)) {
+            if (!ColorUtils.isColorLocked(stack) && !inkColor.equals(ColorUtils.getInkColor(stack))) {
                 ColorUtils.setInkColor(stack, inkColor);
             }
         }
