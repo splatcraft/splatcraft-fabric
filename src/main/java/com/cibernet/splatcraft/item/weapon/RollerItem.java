@@ -76,11 +76,12 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                         }
 
                         Direction horizontalFacing = player.getHorizontalFacing();
-                        if (horizontalFacing.equals(Direction.NORTH) || horizontalFacing.equals(Direction.SOUTH)) {
-                            zOff = (rollDepth - 1) * horizontalFacing.getDirection().offset();
+                        boolean horizontalFacingIsSouth = horizontalFacing.equals(Direction.SOUTH);
+                        if (horizontalFacing.equals(Direction.NORTH) || horizontalFacingIsSouth) {
+                            zOff = rollDepth - (horizontalFacingIsSouth ? horizontalFacing.getDirection().offset() : 0);
                             xOff = i * (horizontalFacing.equals(Direction.SOUTH) ? -1 : 1);
                         } else {
-                            xOff = (rollDepth);
+                            xOff = rollDepth;
                         }
 
                         BlockPos inkPos = pos.add(fwd.x * 2 + xOff, -1, fwd.z * 2 + zOff);
