@@ -76,6 +76,7 @@ public class Splatcraft implements ModInitializer {
         new SplatcraftBlockTags();
         // new SplatcraftInkColorTags();
 
+        new SplatcraftStats();
         new SplatcraftAttributes();
         new SplatcraftGameRules();
         new SplatcraftSoundEvents();

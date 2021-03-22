@@ -13,7 +13,7 @@ public class SplatcraftStats {
     private static Identifier register(String id, StatFormatter statFormatter) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);
 
-        Registry.register(Registry.CUSTOM_STAT, id, identifier);
+        Registry.register(Registry.CUSTOM_STAT, identifier.toString(), identifier);
         Stats.CUSTOM.getOrCreateStat(identifier, statFormatter);
 
         return identifier;
