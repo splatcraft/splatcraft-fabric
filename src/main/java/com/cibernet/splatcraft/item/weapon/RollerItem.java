@@ -8,6 +8,7 @@ import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
 import com.cibernet.splatcraft.item.AttackInputDetectable;
 import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,11 +32,22 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
         this.settings = settings;
         this.component = component;
     }
+
     public RollerItem(RollerItem rollerItem) {
         this(rollerItem.settings, rollerItem.component);
     }
+
     public RollerItem(RollerItem rollerItem, RollerComponent component) {
         this(rollerItem.settings, component);
+    }
+
+    @Override
+    protected ImmutableList<WeaponStat> createWeaponStats() {
+        return ImmutableList.of(
+            new WeaponStat("range", (stack, world) -> (int) ((this.component.fling.speed /*+ this.component.swing.speed*/) * 50)),
+            new WeaponStat("ink_speed", (stack, world) -> (int) (/*this.component.dash.speed /*/ 2f * 100)),
+            new WeaponStat("handling", (stack, world) -> (int) ((20/* - (this.component.fling.time + this.component.swing.time)*/ / 2f) * 5))
+        );
     }
 
     @Override

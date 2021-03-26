@@ -95,7 +95,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     }
 
     @Override
-    public DataTracker getDataTracker() {
+    public DataTracker getIEDataTracker() {
         return this.dataTracker;
     }
 

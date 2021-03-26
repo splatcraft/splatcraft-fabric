@@ -7,7 +7,6 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
-import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -90,11 +89,8 @@ public abstract class InGameHudMixin {
                     ci.cancel();
 
                     // set color
-                    int color = ColorUtils.getInkColor(client.player).getColorOrLocked();
-                    float r = (float) (color >> 16 & 255) / 255.0F;
-                    float g = (float) (color >> 8 & 255) / 255.0F;
-                    float b = (float) (color & 255) / 255.0F;
-                    RenderSystem.color4f(r, g, b, 1.0F);
+                    float[] color = ColorUtils.getColorsFromInt(ColorUtils.getInkColor(client.player).getColorOrLocked());
+                    RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
 
                     // render crosshair
                     InGameHud $this = InGameHud.class.cast(this);
@@ -110,15 +106,12 @@ public abstract class InGameHudMixin {
         if (this.client.player != null && SplatcraftGameRules.getBoolean(this.client.player.world, SplatcraftGameRules.REQUIRE_INK_TANK)) {
             ItemStack chestStack = this.client.player.getEquippedStack(EquipmentSlot.CHEST);
             if (chestStack.getItem() instanceof InkTankArmorItem) {
-                float inkAmount = AbstractWeaponItem.getInkAmount(this.client.player, chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
+                float inkAmount = InkTankArmorItem.getInkAmount(chestStack) / ((InkTankArmorItem) chestStack.getItem()).capacity;
                 if (inkAmount < 1.0F || SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.value) {
                     if (SplatcraftConfig.INK.inkAmountIndicator.value != InkAmountIndicator.OFF) {
                         this.client.getTextureManager().bindTexture(splatcraft_SQUID_GUI_ICONS_TEXTURE);
-                        int color = ColorUtils.getInkColor(client.player).getColorOrLocked();
-                        float r = (float) (color >> 16 & 255) / 255.0F;
-                        float g = (float) (color >> 8 & 255) / 255.0F;
-                        float b = (float) (color & 255) / 255.0F;
-                        RenderSystem.color4f(r, g, b, 1.0F);
+                        float[] color = ColorUtils.getColorsFromInt(ColorUtils.getInkColor(client.player).getColorOrLocked());
+                        RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
 
                         if (SplatcraftConfig.INK.inkAmountIndicator.value == InkAmountIndicator.CROSSHAIR) {
                             float attackCooldownProgress = PlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0F : this.client.player.getAttackCooldownProgress(0.0F);

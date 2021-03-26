@@ -1,6 +1,5 @@
 package com.cibernet.splatcraft.item.inkable;
 
-import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftItems;
@@ -23,9 +22,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -41,13 +37,7 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-
-        InkColor inkColor = ColorUtils.getInkColor(stack);
-        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
-            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), true));
-        } else {
-            tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless"));
-        }
+        ColorUtils.appendTooltip(stack, tooltip);
     }
 
     @Override

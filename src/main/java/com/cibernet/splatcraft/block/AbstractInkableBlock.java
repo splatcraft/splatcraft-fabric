@@ -97,7 +97,7 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
 
     public boolean remoteColorChange(World world, BlockPos pos, InkColor newColor) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor() != newColor) {
+        if (blockEntity instanceof AbstractInkableBlockEntity && !((AbstractInkableBlockEntity) blockEntity).getInkColor().equals(newColor)) {
             ColorUtils.setInkColor(blockEntity, newColor);
             return true;
         }

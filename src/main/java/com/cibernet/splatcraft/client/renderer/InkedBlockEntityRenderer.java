@@ -2,6 +2,8 @@ package com.cibernet.splatcraft.client.renderer;
 
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.List;
 import java.util.Random;
 
+@Environment(EnvType.CLIENT)
 public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEntity> {
     public InkedBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
@@ -35,34 +38,30 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
         if (blockEntity.getCachedState().getRenderType().equals(BlockRenderType.INVISIBLE)) {
             BakedModel model = blockRendererDispatcher.getModel(state);
 
-            int color = ColorUtils.getInkColor(blockEntity).getColorOrLocked();
-            float r = (float) (color >> 16 & 255) / 255.0F;
-            float g = (float) (color >> 8 & 255) / 255.0F;
-            float b = (float) (color & 255) / 255.0F;
-
-            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, false)), state, model, r, g, b, light, overlay);
+            float[] color = ColorUtils.getColorsFromInt(ColorUtils.getInkColor(blockEntity).getColorOrLocked());
+            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay);
         }
     }
 
-    private static void renderModel(MatrixStack.Entry matrices, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
+    private static void renderModel(MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
         Random random = new Random();
 
         for (Direction direction : Direction.values()) {
             random.setSeed(42L);
-            renderModelBrightnessColorQuads(matrices, buffer, red, green, blue, model.getQuads(state, direction, random), light, overlay);
+            renderModelBrightnessColorQuads(matrix, buffer, red, green, blue, model.getQuads(state, direction, random), light, overlay);
         }
 
         random.setSeed(42L);
-        renderModelBrightnessColorQuads(matrices, buffer, red, green, blue, model.getQuads(state, null, random), light, overlay);
+        renderModelBrightnessColorQuads(matrix, buffer, red, green, blue, model.getQuads(state, null, random), light, overlay);
     }
 
-    private static void renderModelBrightnessColorQuads(MatrixStack.Entry matrixEntry, VertexConsumer buffer, float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
+    private static void renderModelBrightnessColorQuads(MatrixStack.Entry matrix, VertexConsumer buffer, float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedquad : quads) {
             float r = MathHelper.clamp(red, 0.0F, 1.0F);
             float g = MathHelper.clamp(green, 0.0F, 1.0F);
             float b = MathHelper.clamp(blue, 0.0F, 1.0F);
 
-            buffer.quad(matrixEntry, bakedquad, r, g, b, light, overlay);
+            buffer.quad(matrix, bakedquad, r, g, b, light, overlay);
         }
     }
 }

@@ -18,12 +18,12 @@ public class SplatcraftEntities {
         .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0D))
         .dimensions(EntityDimensions.fixed(0.6F, 0.6F))
         .spawnGroup(SpawnGroup.AMBIENT)
-        , new int[]{ 0xe87422, 0xf5d7a6 }
+        , createSpawnEggColors(0xe87422, 0xf5d7a6)
     );
     public static final EntityType<SquidBumperEntity> SQUID_BUMPER = register(SquidBumperEntity.id, FabricEntityTypeBuilder.createLiving()
         .entityFactory(SquidBumperEntity::new)
         .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0D))
-        .dimensions(EntityDimensions.fixed(0.6F, 1.8F))
+        .dimensions(EntityDimensions.changing(0.8F, 1.575F))
         .spawnGroup(SpawnGroup.MISC)
         , null
     );
@@ -43,5 +43,8 @@ public class SplatcraftEntities {
 
     public static Identifier texture(String path) {
         return Splatcraft.texture("entity/" + path);
+    }
+    protected static int[] createSpawnEggColors(int primary, int secondary) {
+        return new int[]{ primary, secondary };
     }
 }

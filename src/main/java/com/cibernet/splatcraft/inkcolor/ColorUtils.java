@@ -24,10 +24,12 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -57,7 +59,7 @@ public class ColorUtils {
     }
     public static boolean setInkColor(PlayerEntity player, InkColor color) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-        if (data.getInkColor() != color) {
+        if (!data.getInkColor().equals(color)) {
             data.setInkColor(color);
 
             if (!player.world.isClient) {
@@ -88,7 +90,7 @@ public class ColorUtils {
     }
 
     public static InkColor getInkColor(ItemStack stack) {
-        CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getSubTag("BlockEntityTag") : stack.getTag();
+        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
         if (tag == null) {
             return InkColors.NONE;
         } else {
@@ -101,13 +103,20 @@ public class ColorUtils {
             }
         }
     }
-    public static ItemStack setInkColor(ItemStack stack, InkColor color) {
-        CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getOrCreateSubTag("BlockEntityTag") : stack.getOrCreateTag();
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(stack.getOrCreateTag());
+    public static ItemStack setInkColor(ItemStack stack, InkColor color, boolean setColorLocked) {
+        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", color.toString());
-
         tag.put(Splatcraft.MOD_ID, splatcraft);
+
+        if (setColorLocked) {
+            ColorUtils.setColorLocked(stack, true);
+        }
+
         return stack;
+    }
+    public static ItemStack setInkColor(ItemStack stack, InkColor color) {
+        return ColorUtils.setInkColor(stack, color, false);
     }
 
     public static InkColor getInkColor(BlockEntity blockEntity) {
@@ -155,21 +164,31 @@ public class ColorUtils {
         return getTranslatableTextWithColor(((TranslatableText)stack.getItem().getName()).getKey(), ColorUtils.getInkColor(stack), colorless);
     }
 
-    public static void setColorLocked(ItemStack stack, boolean isLocked) {
-        stack.getOrCreateSubTag(Splatcraft.MOD_ID).putBoolean("ColorLocked", isLocked);
+    public static void appendTooltip(ItemStack stack, List<Text> tooltip) {
+        InkColor inkColor = ColorUtils.getInkColor(stack);
+        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
+            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), false));
+        } else {
+            tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless").formatted(Formatting.GRAY));
+        }
+    }
+
+    public static ItemStack setColorLocked(ItemStack stack, boolean isLocked) {
+        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        splatcraft.putBoolean("ColorLocked", isLocked);
+        tag.put(Splatcraft.MOD_ID, splatcraft);
+
+        return stack;
     }
     public static boolean isColorLocked(ItemStack stack) {
-        CompoundTag tag = stack.getItem() instanceof BlockItem ? stack.getSubTag("BlockEntityTag") : stack.getTag();
-        if (tag == null) {
-            return false;
-        } else {
-            CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-            if (splatcraft == null) {
-                return false;
-            } else {
-                return splatcraft.getBoolean("ColorLocked");
-            }
-        }
+        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        return splatcraft.getBoolean("ColorLocked");
+    }
+
+    public static CompoundTag getBlockEntityTagOrRoot(ItemStack stack) {
+        return stack.getItem() instanceof BlockItem ? stack.getOrCreateSubTag("BlockEntityTag") : stack.getOrCreateTag();
     }
 
     public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
@@ -206,12 +225,36 @@ public class ColorUtils {
         ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0F);
     }
 
+    public static void playSquidTravelEffects(Entity entity, InkColor inkColor, float scale) {
+        if (!entity.world.isClient) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeUuid(entity.getUuid());
+
+            buf.writeDouble(entity.getX());
+            buf.writeDouble(entity.getY());
+            buf.writeDouble(entity.getZ());
+
+            buf.writeString(inkColor.toString());
+            buf.writeFloat(scale);
+
+            for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) entity.world, entity.getBlockPos())) {
+                ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, buf);
+            }
+        }
+    }
+
     public static InkColor getRandomStarterColor(Random random) {
         return STARTER_COLORS[random.nextInt(STARTER_COLORS.length)];
     }
 
     public static CompoundTag getOrCreateSplatcraftTag(CompoundTag tag) {
-        CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-        return splatcraft == null ? new CompoundTag() : splatcraft;
+        if (tag != null) {
+            CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
+            if (splatcraft != null) {
+                return splatcraft;
+            }
+        }
+
+        return new CompoundTag();
     }
 }

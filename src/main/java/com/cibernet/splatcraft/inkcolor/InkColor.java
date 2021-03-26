@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.DyeColor;
@@ -45,8 +46,9 @@ public class InkColor {
     }
     @Environment(EnvType.CLIENT)
     public int getColorOrLocked() {
+        PlayerEntity player = MinecraftClient.getInstance().player;
         return !this.equals(InkColors.NONE) && SplatcraftConfig.ACCESSIBILITY.colorLock.value
-            ? this.matches(PlayerDataComponent.getInkColor(MinecraftClient.getInstance().player).getColor())
+            ? player != null && this.matches(PlayerDataComponent.getInkColor(player).getColor())
                 ? SplatcraftConfig.ACCESSIBILITY.colorLockFriendly.value
                 : SplatcraftConfig.ACCESSIBILITY.colorLockHostile.value
             : this.color;
@@ -66,13 +68,6 @@ public class InkColor {
         if (o == null || getClass() != o.getClass()) return false;
         InkColor inkColor = (InkColor) o;
         return color == inkColor.color && Objects.equals(id, inkColor.id);
-    }
-
-    /**
-     * A hard check for ink color matching.
-     */
-    public boolean matches(InkColor color) {
-        return this == color;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -23,18 +24,21 @@ public class ShooterItem extends AbstractWeaponItem {
 
         this.settings = settings;
         this.component = component;
-
-        /*if (!(this instanceof BlasterItem)) {
-            addStat(new WeaponStat("range", (stack, world) -> (int) ((projectileSpeed/1.2f)*100)));
-            addStat(new WeaponStat("damage", (stack, world) -> (int) ((damage/20)*100)));
-            addStat(new WeaponStat("fire_rate", (stack, world) -> (int) ((11-(firingSpeed))*10)));
-        } TODO */
     }
     public ShooterItem(ShooterItem shooterItem) {
         this(shooterItem.settings, shooterItem.component);
     }
     public ShooterItem(ShooterItem rollerItem, ShooterComponent rollerComponent) {
         this(rollerItem.settings, rollerComponent);
+    }
+
+    @Override
+    protected ImmutableList<WeaponStat> createWeaponStats() {
+        return ImmutableList.of(
+            new WeaponStat("range", (stack, world) -> (int) (this.component.projectileSpeed / 1.2f * 100)),
+            new WeaponStat("damage", (stack, world) -> (int) (this.component.damage / 20 * 100)),
+            new WeaponStat("fire_rate", (stack, world) -> (int) ((11 - this.component.firingSpeed) * 10))
+        );
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ShooterItem extends AbstractWeaponItem {
             reduceInk(player);
 
             InkProjectileEntity proj = new InkProjectileEntity(world, player, stack, InkBlockUtils.getInkType(player), this.component.size, this.component.damage).setShooterTrail();
-            proj.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.speed, this.component.inaccuracy);
+            proj.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
             world.spawnEntity(proj);
 
             world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);

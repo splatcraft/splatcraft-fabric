@@ -2,20 +2,14 @@ package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.WeaponHandler;
+import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -67,23 +61,8 @@ public class LivingEntityMixin {
                 splatcraft_lastLandedBlockInkColor = InkColors.NONE;
             }
 
-            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())) {
-                if (!player.world.isClient) {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeUuid($this.getUuid());
-
-                    buf.writeDouble($this.getX());
-                    buf.writeDouble($this.getY());
-                    buf.writeDouble($this.getZ());
-
-                    buf.writeString(splatcraft_lastLandedBlockInkColor.toString());
-                    buf.writeFloat(0.335F);
-
-                    for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) $this.world, $this.getBlockPos())) {
-                        ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, buf);
-                    }
-                }
-
+            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())))) {
+                ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335F);
                 return 1.0F;
             }
         }

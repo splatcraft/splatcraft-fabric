@@ -151,14 +151,14 @@
 
     "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
-    "weaponStat.range": "Range: %s%%",
-    "weaponStat.damage": "Damage: %s%%",
-    "weaponStat.impact": "Impact: %s%%",
-    "weaponStat.fire_rate": "Fire Rate: %s%%",
-    "weaponStat.handling": "Handling: %s%%",
-    "weaponStat.ink_speed": "Ink Speed: %s%%",
-    "weaponStat.mobility": "Mobility: %s%%",
-    "weaponStat.charge_speed": "Charge Speed: %s%%",
+    "splatcraft.weaponStat.range": "Range: %s%%",
+    "splatcraft.weaponStat.damage": "Damage: %s%%",
+    "splatcraft.weaponStat.impact": "Impact: %s%%",
+    "splatcraft.weaponStat.fire_rate": "Fire Rate: %s%%",
+    "splatcraft.weaponStat.handling": "Handling: %s%%",
+    "splatcraft.weaponStat.ink_speed": "Ink Speed: %s%%",
+    "splatcraft.weaponStat.mobility": "Mobility: %s%%",
+    "splatcraft.weaponStat.charge_speed": "Charge Speed: %s%%",
 
     "weaponTab.splatcraft:weapon_workbench_tabs/shooters": "Shooters",
     "weaponTab.splatcraft:weapon_workbench_tabs/rollers": "Rollers",
@@ -295,6 +295,7 @@
     "entity.splatcraft.ink_projectile": "Ink Projectile",
     "entity.splatcraft.ink_squid": "Ink Squid",
     "entity.splatcraft.squid_bumper": "Squid Bumper",
+    "entity.splatcraft.squid_bumper.name": "%s ♥",
 
     "gamerule.splatcraft.category": "Splatcraft",
     "gamerule.splatcraft.inkDecay": "Ink decay",

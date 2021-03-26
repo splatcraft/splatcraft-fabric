@@ -30,12 +30,9 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> texts, TooltipContext ctx) {
-        super.appendTooltip(stack, world, texts, ctx);
-
-        if (ColorUtils.isColorLocked(stack)) {
-            texts.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), true));
-        }
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext ctx) {
+        super.appendTooltip(stack, world, tooltip, ctx);
+        ColorUtils.appendTooltip(stack, tooltip);
     }
 
     @Override

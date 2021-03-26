@@ -47,7 +47,7 @@ public class SplatcraftItems {
     public static final Item TENTATEK_SPLATTERSHOT = register("tentatek_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT));
     public static final Item WASABI_SPLATTERSHOT = register("wasabi_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT));
     public static final Item ANCIENT_SPLATTERSHOT = register("ancient_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT).setSecret());
-    public static final Item SPLATTERSHOT_JR = register("splattershot_jr", new ShooterItem((ShooterItem) SPLATTERSHOT, new ShooterComponent(0.5F, 1.0F, 6.5F, 4.0F, 0.55F, 13.5F)));
+    public static final Item SPLATTERSHOT_JR = register("splattershot_jr", new ShooterItem((ShooterItem) SPLATTERSHOT, new ShooterComponent(0.5F, 1.0F, 6.5F, 4.0F, 0.55F, 13.5F)).setJunior());
     public static final Item AEROSPRAY_MG = register("aerospray_mg", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(0.5F, 1.3F, 4.8F, 2.0F, 0.45F, 26.0F)));
     public static final Item AEROSPRAY_RG = register("aerospray_rg", new ShooterItem((ShooterItem) AEROSPRAY_MG));
     public static final Item GAL_52 = register("52_gal", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(1.3F, 1.2F, 10.4F, 9.0F, 0.78F, 16.0F)));
@@ -63,7 +63,7 @@ public class SplatcraftItems {
 
     public static final Item INK_TANK = register(InkTankArmorItem.id, new InkTankArmorItem(100, WEARABLE_SETTINGS));
     public static final Item CLASSIC_INK_TANK = register("classic_" + InkTankArmorItem.id, new InkTankArmorItem((InkTankArmorItem) INK_TANK));
-    public static final Item INK_TANK_JR = register(InkTankArmorItem.id + "_jr", new InkTankArmorItem(110, WEARABLE_SETTINGS)/*.addAllowedWeapons(SPLATTERSHOT_JR) TODO */);
+    public static final Item INK_TANK_JR = register(InkTankArmorItem.id + "_jr", new InkTankArmorItem(110, WEARABLE_SETTINGS).allowedWeapons(SPLATTERSHOT_JR));
     public static final Item ARMORED_INK_TANK = register("armored_" + InkTankArmorItem.id, new InkTankArmorItem(85,  SplatcraftArmorMaterials.ARMORED_INK_TANK, WEARABLE_SETTINGS));
 
     public static final Item INK_CLOTH_HELMET = register("ink_cloth_helmet", new InkableArmorItem(SplatcraftArmorMaterials.INK_CLOTH, EquipmentSlot.HEAD, WEARABLE_SETTINGS));

@@ -7,19 +7,12 @@ import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -70,19 +63,7 @@ public class PlayerEntityMixin {
         if (!$this.world.isClient) {
             double threshold = 0.13D;
             if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeUuid($this.getUuid());
-
-                buf.writeDouble($this.getX());
-                buf.writeDouble($this.getY());
-                buf.writeDouble($this.getZ());
-
-                buf.writeString(ColorUtils.getInkColor($this).toString());
-                buf.writeFloat(1.0F);
-
-                for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) $this.world, $this.getBlockPos())) {
-                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, buf);
-                }
+                ColorUtils.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0F);
             }
 
             splatcraft_posLastTick = $this.getPos();

@@ -1,6 +1,8 @@
 package com.cibernet.splatcraft.client.renderer.entity.ink_squid;
 
 import com.cibernet.splatcraft.client.model.InkSquidEntityModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,6 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
+@Environment(EnvType.CLIENT)
 public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
     public PlayerEntityInkSquidRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, null);

@@ -1,18 +1,17 @@
 package com.cibernet.splatcraft.item.weapon;
 
-import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import me.andante.chord.item.TabbedItemGroupAppendLogic;
 import net.minecraft.block.Material;
@@ -32,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
@@ -44,9 +44,10 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractWeaponItem extends Item implements EntityTickable, TabbedItemGroupAppendLogic, MatchItem, ColorLockItemColorProvider {
-    protected final float consumption;
-
     protected boolean secret;
+    protected boolean junior;
+
+    protected final float consumption;
 
     public AbstractWeaponItem(Item.Settings settings, float consumption) {
         super(settings);
@@ -54,6 +55,8 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
 
         SplatcraftItems.addToInkables(this);
     }
+
+    protected abstract ImmutableList<WeaponStat> createWeaponStats();
 
     @Override
     public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
@@ -65,15 +68,16 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext advanced) {
         super.appendTooltip(stack, world, tooltip, advanced);
+        ColorUtils.appendTooltip(stack, tooltip);
 
-        InkColor inkColor = ColorUtils.getInkColor(stack);
-        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
-            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), false));
-        } else {
-            tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless"));
+        ImmutableList<WeaponStat> stats = this.createWeaponStats();
+        for (int i = 0; i < stats.size(); i++) {
+            if (i == 0) {
+                tooltip.add(LiteralText.EMPTY);
+            }
+
+            tooltip.add(stats.get(i).getTextComponent(stack, world).formatted(Formatting.DARK_GREEN));
         }
-
-
     }
 
     @Override
@@ -134,14 +138,14 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     public static float getInkAmount(LivingEntity player, ItemStack weapon) {
         if (!SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK)) {
             return Float.MAX_VALUE;
+        } else {
+            ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
+            if (tank.getItem() instanceof InkTankArmorItem) {
+                return InkTankArmorItem.getInkAmount(tank, weapon);
+            }
         }
 
-        ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
-        if (!(tank.getItem() instanceof InkTankArmorItem)) {
-            return 0;
-        }
-
-        return InkTankArmorItem.getInkAmount(tank, weapon);
+        return 0.0F;
     }
 
     public static boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
@@ -198,6 +202,10 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
 
     public AbstractWeaponItem setSecret() {
         this.secret = true;
+        return this;
+    }
+    public AbstractWeaponItem setJunior() {
+        this.junior = true;
         return this;
     }
 }

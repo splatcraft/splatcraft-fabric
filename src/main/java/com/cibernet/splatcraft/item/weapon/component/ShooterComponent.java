@@ -8,15 +8,15 @@ public class ShooterComponent {
     public float size;
     public float damage;
     public float firingSpeed;
-    public float speed;
+    public float projectileSpeed;
     public float inaccuracy;
 
-    public ShooterComponent(float consumption, float size, float damage, float firingSpeed, float speed, float inaccuracy) {
+    public ShooterComponent(float consumption, float size, float damage, float firingSpeed, float projectileSpeed, float inaccuracy) {
         this.consumption = consumption;
         this.size = size;
         this.damage = damage;
         this.firingSpeed = firingSpeed;
-        this.speed = speed;
+        this.projectileSpeed = projectileSpeed;
         this.inaccuracy = inaccuracy;
     }
 

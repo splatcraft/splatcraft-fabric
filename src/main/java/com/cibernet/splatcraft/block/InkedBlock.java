@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -56,6 +57,15 @@ public class InkedBlock extends AbstractInkableBlock {
 
     public boolean isGlowing() {
         return this.glowing;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        super.onPlaced(world, pos, state, entity, stack);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            ((InkedBlockEntity) blockEntity).setSavedState(((InkedBlockEntity) blockEntity).getSavedState());
+        }
     }
 
     @Override
@@ -159,14 +169,11 @@ public class InkedBlock extends AbstractInkableBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
             InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
-            BlockState oldState = world.getBlockState(pos);
-            BlockState state = world.getBlockState(pos);
-
-            if (inkedBlockEntity.getInkColor() != color) {
+            if (!inkedBlockEntity.getInkColor().equals(color)) {
                 inkedBlockEntity.setInkColor(color);
                 return true;
             } else {
-                world.updateListeners(pos, oldState, state, 2);
+                world.updateListeners(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
             }
         }
 

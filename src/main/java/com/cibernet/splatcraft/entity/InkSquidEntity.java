@@ -92,7 +92,7 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     }
 
     @Override
-    public DataTracker getDataTracker() {
+    public DataTracker getIEDataTracker() {
         return this.dataTracker;
     }
 }

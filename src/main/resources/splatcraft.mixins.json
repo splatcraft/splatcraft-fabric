@@ -14,16 +14,10 @@
     "ServerPlayerEntityMixin"
   ],
   "client": [
-    "client.ArmorFeatureRendererMixin",
-    "client.ClientItemStackMixin",
-    "client.ClientPlayerEntityMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.EntityRenderDispatcherMixin",
-    "client.GameRendererMixin",
-    "client.HeldItemRendererMixin",
-    "client.InGameHudMixin",
-    "client.PlayerEntityModelMixin",
-    "client.PlayerEntityRendererMixin"
+    "client.ArmorFeatureRendererMixin", "client.ClientItemStackMixin", "client.ClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin", "client.EntityRenderDispatcherMixin", "client.GameRendererMixin",
+    "client.HeldItemRendererMixin", "client.InGameHudMixin", "client.MinecraftClientMixin",
+    "client.PlayerEntityModelMixin", "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

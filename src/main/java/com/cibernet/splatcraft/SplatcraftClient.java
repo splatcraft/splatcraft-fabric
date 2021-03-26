@@ -113,11 +113,8 @@ public class SplatcraftClient implements ClientModInitializer {
             if (world != null) {
                 BlockPos pos = buf.readBlockPos();
                 InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
-                BlockState state = Block.getStateFromRawId(buf.readInt());
 
                 client.execute(() -> {
-                    world.setBlockState(pos, state);
-
                     BlockEntity blockEntity = world.getBlockEntity(pos);
                     ColorUtils.setInkColor(blockEntity, inkColor);
                     world.addSyncedBlockEvent(pos, blockEntity.getCachedState().getBlock(), 0, 0);
@@ -142,15 +139,12 @@ public class SplatcraftClient implements ClientModInitializer {
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
-            int color = InkColors.get(Identifier.tryParse(buf.readString())).getColorOrLocked();
-            float r = ((color & 16711680) >> 16) / 255.0f;
-            float g = ((color & '\uff00') >> 8) / 255.0f;
-            float b = (color & 255) / 255.0f;
+            float[] color = ColorUtils.getColorsFromInt(InkColors.get(Identifier.tryParse(buf.readString())).getColorOrLocked());
             float scale = buf.readFloat();
 
             Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
-            client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(r, g, b, scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
+            client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientWorld world = MinecraftClient.getInstance().world;

@@ -6,6 +6,8 @@ import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.handler.RendererHandler;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,6 +29,7 @@ import net.minecraft.world.World;
 
 import java.util.Objects;
 
+@Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")
 public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBarrierBlockEntity> {
     private static final RenderLayer BARRIER_RENDER = RenderLayer.of(new Identifier(Splatcraft.MOD_ID, StageBarrierBlock.id + "s").toString(), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, 7, 131072, true, false, RenderLayer.MultiPhaseParameters.builder()

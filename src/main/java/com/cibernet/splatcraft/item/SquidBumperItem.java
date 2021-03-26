@@ -56,4 +56,9 @@ public class SquidBumperItem extends AbstractInkableItem {
             }
         }
     }
+
+    @Override
+    protected ItemStack filterCreativeStack(ItemStack stack) {
+        return ColorUtils.setColorLocked(super.filterCreativeStack(stack), true);
+    }
 }

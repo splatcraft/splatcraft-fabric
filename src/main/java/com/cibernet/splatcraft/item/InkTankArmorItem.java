@@ -27,6 +27,8 @@ import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InkTankArmorItem extends InkableArmorItem {
@@ -37,6 +39,7 @@ public class InkTankArmorItem extends InkableArmorItem {
 
     @Environment(EnvType.CLIENT)
     private AbstractInkTankArmorModel model;
+    private ArrayList<Item> allowedWeapons = new ArrayList<>();
 
     public InkTankArmorItem(float capacity, ArmorMaterial material, Item.Settings settings) {
         super(material, EquipmentSlot.CHEST, InkTankArmorItem.createItemSettings(settings, capacity));
@@ -46,6 +49,7 @@ public class InkTankArmorItem extends InkableArmorItem {
     public InkTankArmorItem(InkTankArmorItem parent) {
         this(parent.capacity, parent.getMaterial(), parent.settings);
         this.model = parent.model;
+        this.allowedWeapons = parent.allowedWeapons;
     }
     public InkTankArmorItem(float capacity, Item.Settings settings) {
         this(capacity, SplatcraftArmorMaterials.INK_TANK, settings);
@@ -138,25 +142,18 @@ public class InkTankArmorItem extends InkableArmorItem {
     }
 
     public static void setInkAmount(ItemStack stack, float value) {
-        CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
-        if (tag != null) {
-            tag.putFloat("ContainedInk", Math.max(0, value));
+        CompoundTag splatcraft = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
+        if (splatcraft != null) {
+            splatcraft.putFloat("ContainedInk", Math.max(0, value));
         }
     }
 
     public boolean canUse(Item item) {
-        boolean hasWhitelist = SplatcraftItemTags.INK_TANK_WHITELIST.values().size() > 0;
-        boolean inWhitelist = SplatcraftItemTags.INK_TANK_WHITELIST.contains(item);
-        boolean inBlacklist = SplatcraftItemTags.INK_TANK_BLACKLIST.contains(item);
-
-        return !inBlacklist && (!hasWhitelist || inWhitelist);
+        return (this.allowedWeapons.isEmpty() || this.allowedWeapons.contains(item)) && !SplatcraftItemTags.INK_TANK_BLACKLIST.contains(item) && (!(SplatcraftItemTags.INK_TANK_WHITELIST.values().size() > 0) || SplatcraftItemTags.INK_TANK_WHITELIST.contains(item));
     }
 
-    public void refill(ItemStack stack) {
-        setInkAmount(stack, capacity);
-    }
-
-    public static void deplete(ItemStack stack) {
-        setInkAmount(stack, 0);
+    public InkTankArmorItem allowedWeapons(Item... items) {
+        Collections.addAll(this.allowedWeapons, items);
+        return this;
     }
 }

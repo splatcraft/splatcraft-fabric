@@ -36,26 +36,24 @@ public interface InkableEntity {
     }
     default void inkColorFromTag(CompoundTag tag) {
         CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-
         this.setInkColor(InkColor.getFromId(splatcraft.getString("InkColor")));
     }
 
     default boolean setInkColor(InkColor inkColor) {
-        if (this.getInkColor() != inkColor) {
-            this.getDataTracker().set(getInkColorTrackedData(), inkColor.toString());
+        if (!this.getInkColor().equals(inkColor)) {
+            this.getIEDataTracker().set(this.getInkColorTrackedData(), inkColor.toString());
             return true;
         }
 
         return false;
     }
     default InkColor getInkColor() {
-        return InkColors.get(new Identifier(this.getDataTracker().get(getInkColorTrackedData())));
+        return InkColors.get(new Identifier(this.getIEDataTracker().get(this.getInkColorTrackedData())));
     }
     TrackedData<String> getInkColorTrackedData();
-    DataTracker getDataTracker();
+    DataTracker getIEDataTracker();
 
-    @SuppressWarnings("unused")
-     default boolean onEntityInked(DamageSource source, float damage, InkColor color) {
+    default boolean onEntityInked(DamageSource source, float damage, InkColor color) {
         return false;
     }
 }

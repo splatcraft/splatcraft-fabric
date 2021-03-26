@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -27,6 +26,21 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     public AbstractInkableBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
+    }
+
+    @Override
+    public void sync() {
+        if (this.world != null) {
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeBlockPos(this.pos);
+            buf.writeString(this.getInkColor().toString());
+
+            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
+                ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
+            }
+        }
+
+        BlockEntityClientSerializable.super.sync();
     }
 
     @Override
@@ -55,15 +69,6 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
             if (this.world != null) {
                 if (!this.world.isClient) {
                     this.sync();
-
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeBlockPos(this.pos);
-                    buf.writeString(this.getInkColor().toString());
-                    buf.writeInt(Block.getRawIdFromState(this.world.getBlockState(pos)));
-
-                    for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
-                        ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);
-                    }
                 }
 
                 this.world.addSyncedBlockEvent(pos, this.getCachedState().getBlock(), 0, 0);

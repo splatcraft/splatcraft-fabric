@@ -4,10 +4,18 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.registry.Registry;
 
 public class InkedBlockEntity extends AbstractInkableBlockEntity {
@@ -17,6 +25,21 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
 
     public InkedBlockEntity() {
         super(SplatcraftBlockEntities.INKED_BLOCK);
+    }
+
+    @Override
+    public void sync() {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(Block.getRawIdFromState(savedState));
+        buf.writeString(this.getInkColor().toString());
+        buf.writeBlockPos(pos);
+        buf.writeEnumConstant(InkBlockUtils.InkType.fromBlock((InkedBlock) this.getCachedState().getBlock()));
+
+        for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking(this)) {
+            ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_SAVED_STATE_PACKET_ID, buf);
+        }
+
+        super.sync();
     }
 
     @Override
