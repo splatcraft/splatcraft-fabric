@@ -29,8 +29,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.Difficulty;
 
 public class PlayerHandler {
-    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.fixed(0.5F, 0.5F);
-    public static final EntityDimensions SQUID_FORM_AIRBORNE_DIMENSIONS = EntityDimensions.fixed(0.5F, 1.0F);
+    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.fixed(0.5f, 0.5f);
+    public static final EntityDimensions SQUID_FORM_AIRBORNE_DIMENSIONS = EntityDimensions.fixed(0.5f, 1.0f);
 
     public static void registerEvents() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -123,6 +123,6 @@ public class PlayerHandler {
     }
 
     public static float getMovementSpeed(PlayerEntity player, float movementSpeed) {
-        return !InkBlockUtils.canSwim(player) ? -1.0F : (float) (movementSpeed * (1.0F + player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100));
+        return !InkBlockUtils.canSwim(player) ? -1.0f : (float) (movementSpeed * (1.0f + player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100));
     }
 }

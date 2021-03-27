@@ -7,11 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class SplatcraftAttributes {
-    public static final EntityAttribute INK_SWIM_SPEED = register("ink_swim_speed", new ClampedEntityAttribute(
-        SplatcraftAttributes.createTranslationKey("ink_swim_speed"),
-        0.7F, 0.0D, 1024.0D
-        ).setTracked(true)
-    );
+    public static final EntityAttribute INK_SWIM_SPEED = register("ink_swim_speed", new ClampedEntityAttribute(SplatcraftAttributes.createTranslationKey("ink_swim_speed"), 0.7f, 0.0d, 1024.0d).setTracked(true));
 
     public SplatcraftAttributes() {}
 

@@ -34,17 +34,17 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
             bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevBodyYaw, livingEntity.bodyYaw);
             headBodyYawDelta = headYaw - bodyYaw;
             float rotationWrapped = MathHelper.wrapDegrees(headBodyYawDelta);
-            if (rotationWrapped < -85.0F) {
-                rotationWrapped = -85.0F;
+            if (rotationWrapped < -85.0f) {
+                rotationWrapped = -85.0f;
             }
 
-            if (rotationWrapped >= 85.0F) {
-                rotationWrapped = 85.0F;
+            if (rotationWrapped >= 85.0f) {
+                rotationWrapped = 85.0f;
             }
 
             bodyYaw = headYaw - rotationWrapped;
-            if (rotationWrapped * rotationWrapped > 2500.0F) {
-                bodyYaw += rotationWrapped * 0.2F;
+            if (rotationWrapped * rotationWrapped > 2500.0f) {
+                bodyYaw += rotationWrapped * 0.2f;
             }
 
             headBodyYawDelta = headYaw - bodyYaw;
@@ -54,27 +54,27 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         if (entity.getPose() == EntityPose.SLEEPING) {
             Direction direction = entity.getSleepingDirection();
             if (direction != null) {
-                float f4 = entity.getEyeHeight(EntityPose.STANDING) - 0.1F;
-                matrices.translate((float) -direction.getOffsetX() * f4, 0.0D, (float) -direction.getOffsetZ() * f4);
+                float f4 = entity.getEyeHeight(EntityPose.STANDING) - 0.1f;
+                matrices.translate((float) -direction.getOffsetX() * f4, 0.0d, (float) -direction.getOffsetZ() * f4);
             }
         }
 
         float animationProgress = this.getAnimationProgress(entity, tickDelta);
         this.setupTransforms(entity, matrices, animationProgress, bodyYaw, tickDelta);
-        matrices.scale(-1.0F, -1.0F, 1.0F);
+        matrices.scale(-1.0f, -1.0f, 1.0f);
         this.scale(entity, matrices, tickDelta);
-        matrices.translate(0.0D, -1.501F, 0.0D);
-        float limbDistance = 0.0F;
-        float limbDistanceDelta = 0.0F;
+        matrices.translate(0.0d, -1.501f, 0.0d);
+        float limbDistance = 0.0f;
+        float limbDistanceDelta = 0.0f;
         if (entity.isAlive()) {
             limbDistance = MathHelper.lerp(tickDelta, entity.lastLimbDistance, entity.limbDistance);
-            limbDistanceDelta = entity.limbAngle - entity.limbDistance * (1.0F - tickDelta);
+            limbDistanceDelta = entity.limbAngle - entity.limbDistance * (1.0f - tickDelta);
             if (entity.isBaby()) {
-                limbDistanceDelta *= 3.0F;
+                limbDistanceDelta *= 3.0f;
             }
 
-            if (limbDistance > 1.0F) {
-                limbDistance = 1.0F;
+            if (limbDistance > 1.0f) {
+                limbDistance = 1.0f;
             }
         }
 
@@ -83,7 +83,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         boolean isTranslucent = entity.isSpectator() || entity.isInvisibleTo(MinecraftClient.getInstance().player);
         RenderLayer renderLayer = isTranslucent ? RenderLayer.getItemEntityTranslucentCull(this.getTexture(entity)) : this.model.getLayer(this.getTexture(entity));
         if (renderLayer != null) {
-            this.model.render(matrices, consumers.getBuffer(renderLayer), light, 900000, 1.0F, 1.0F, 1.0F, isTranslucent ? 0.25F : 1.0F);
+            this.model.render(matrices, consumers.getBuffer(renderLayer), light, 900000, 1.0f, 1.0f, 1.0f, isTranslucent ? 0.25f : 1.0f);
         }
 
         if (!isTranslucent) {

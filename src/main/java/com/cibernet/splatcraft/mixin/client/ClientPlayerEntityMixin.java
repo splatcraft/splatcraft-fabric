@@ -43,8 +43,8 @@ public class ClientPlayerEntityMixin {
             ItemStack stack = player.getActiveItem();
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof AbstractWeaponItem) {
-                    input.movementSideways *= 5.0F;
-                    input.movementForward *= 5.0F;
+                    input.movementSideways *= 5.0f;
+                    input.movementForward *= 5.0f;
                 }
             }
         }

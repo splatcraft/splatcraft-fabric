@@ -15,19 +15,19 @@ public class InkSplashParticle extends RainSplashParticle {
 
     private InkSplashParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, InkSplashParticleEffect particleEffect, SpriteProvider spriteProvider) {
         super(world, x, y, z);
-        this.gravityStrength = 0.04F;
+        this.gravityStrength = 0.04f;
 
-        if (velocityY == 0.0D && (velocityX != 0.0D || velocityZ != 0.0D)) {
+        if (velocityY == 0.0d && (velocityX != 0.0d || velocityZ != 0.0d)) {
             this.velocityX = velocityX;
-            this.velocityY = 0.4D;
+            this.velocityY = 0.4d;
             this.velocityZ = velocityZ;
         }
 
-        float rand = (float)Math.random() * 0.4F + 0.6F;
-        this.colorRed = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getRed() * rand;
-        this.colorGreen = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getGreen() * rand;
-        this.colorBlue = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * particleEffect.getBlue() * rand;
-        this.scale = particleEffect.getScale() * (0.33F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F);
+        float rand = (float)Math.random() * 0.4f + 0.6f;
+        this.colorRed = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * particleEffect.getRed() * rand;
+        this.colorGreen = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * particleEffect.getGreen() * rand;
+        this.colorBlue = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * particleEffect.getBlue() * rand;
+        this.scale = particleEffect.getScale() * (0.33f * (this.random.nextFloat() * 0.5f + 0.5f) * 2.0f);
 
         this.maxAge = 20 + this.random.nextInt(4);
         this.spriteProvider = spriteProvider;

@@ -94,7 +94,7 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // model predicates
         for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER }) {
-            registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0F : 0.0F);
+            registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0f : 0.0f);
             registerModelPredicate(item, "mode", (stack, world, entity) -> RemoteItem.getRemoteMode(stack));
         }
         registerUnfoldedModelPredicate(SplatcraftItems.SPLAT_ROLLER, SplatcraftItems.KRAK_ON_SPLAT_ROLLER, SplatcraftItems.COROCORO_SPLAT_ROLLER, SplatcraftItems.OCTOBRUSH, SplatcraftItems.CARBON_ROLLER, SplatcraftItems.INKBRUSH);
@@ -106,7 +106,7 @@ public class SplatcraftClient implements ClientModInitializer {
         // block render layers
         BlockRenderLayerMap brlmInstance = BlockRenderLayerMap.INSTANCE;
         brlmInstance.putBlocks(RenderLayer.getTranslucent(), SplatcraftBlocks.GLOWING_INKED_BLOCK);
-        brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP/*, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
+        brlmInstance.putBlocks(RenderLayer.getCutout(), SplatcraftBlocks.STAGE_BARRIER, SplatcraftBlocks.STAGE_VOID, SplatcraftBlocks.INKWELL/*, SplatcraftBlocks.EMPTY_INKWELL*/, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP/*, SplatcraftBlocks.CRATE, SplatcraftBlocks.SUNKEN_CRATE*/);
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientWorld world = MinecraftClient.getInstance().world;
@@ -144,7 +144,7 @@ public class SplatcraftClient implements ClientModInitializer {
 
             Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
-            client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D));
+            client.execute(() -> client.world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d));
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
             ClientWorld world = MinecraftClient.getInstance().world;
@@ -166,20 +166,20 @@ public class SplatcraftClient implements ClientModInitializer {
                 float scale = buf.readFloat();
 
                 client.execute(() -> {
-                    if (player != null && player.getRandom().nextFloat() <= 0.482F) {
+                    if (player != null && player.getRandom().nextFloat() <= 0.482f) {
                         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
                         if (data.isSquid()) {
                             if (!data.isSubmerged()) {
-                                if (player.getRandom().nextFloat() <= 0.9F) {
-                                    player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15F, 1.0F, false);
+                                if (player.getRandom().nextFloat() <= 0.9f) {
+                                    player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15f, 1.0f, false);
                                 }
                             } else {
-                                player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05F, 2.0F, false);
+                                player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05f, 2.0f, false);
                             }
                         }
                     }
 
-                    player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0D, 0.0D, 0.0D);
+                    player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked()), scale), vec3d.getX(), vec3d.getY(), vec3d.getZ(), 0.0d, 0.0d, 0.0d);
                 });
             }
         });
@@ -191,11 +191,11 @@ public class SplatcraftClient implements ClientModInitializer {
                 InkColor inkColor = InkColors.get(Identifier.tryParse(buf.readString()));
 
                 client.execute(() -> {
-                    player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23F, 0.86F, false);
+                    player.world.playSound(player.getX(), player.getY(), player.getZ(), shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23f, 0.86f, false);
 
                     if (inkColor.matches(ColorUtils.getInkColor(player).getColor())) {
                         for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
-                            client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5D), player.getRandomBodyY() - 0.25D, player.getParticleZ(0.5D), 0.0D, 0.0D, 0.0D);
+                            client.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5d), player.getRandomBodyY() - 0.25d, player.getParticleZ(0.5d), 0.0d, 0.0d, 0.0d);
                         }
                     }
                 });
@@ -225,7 +225,7 @@ public class SplatcraftClient implements ClientModInitializer {
     }
     private static void registerUnfoldedModelPredicate(Item... items) {
         for (Item item : items) {
-            registerModelPredicate(item, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+            registerModelPredicate(item, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
         }
     }
 }

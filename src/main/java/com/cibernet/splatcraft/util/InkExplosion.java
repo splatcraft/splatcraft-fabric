@@ -79,22 +79,22 @@ public class InkExplosion extends Explosion {
             for (int k = 0; k < 16; ++k) {
                 for (int l = 0; l < 16; ++l) {
                     if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                        double d0 = (float)j / 15.0F * 2.0F - 1.0F;
-                        double d1 = (float)k / 15.0F * 2.0F - 1.0F;
-                        double d2 = (float)l / 15.0F * 2.0F - 1.0F;
+                        double d0 = (float)j / 15.0f * 2.0f - 1.0f;
+                        double d1 = (float)k / 15.0f * 2.0f - 1.0f;
+                        double d2 = (float)l / 15.0f * 2.0f - 1.0f;
                         double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                         d0 = d0 / d3;
                         d1 = d1 / d3;
                         d2 = d2 / d3;
-                        float f = this.size * (0.7F + this.world.random.nextFloat() * 0.6F);
+                        float f = this.size * (0.7f + this.world.random.nextFloat() * 0.6f);
                         double d4 = this.x;
                         double d6 = this.y;
                         double d8 = this.z;
 
-                        for (; f > 0.0F; f -= 0.22500001F) {
+                        for (; f > 0.0f; f -= 0.22500001f) {
                             BlockHitResult raytrace = world.raycast(new RaycastContext(new Vec3d(x+0.5f, y+0.5f, z+0.5f), new Vec3d(d4+0.5f, d6+0.5f, d8+0.5f), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this.entity));
                             BlockPos blockpos = new BlockPos(d4, d6, d8);
-                            f -= 0.3f * 0.3F;
+                            f -= 0.3f * 0.3f;
 
                             if (raytrace != null) {
                                 blockpos = raytrace.getBlockPos();
@@ -102,9 +102,9 @@ public class InkExplosion extends Explosion {
 
                             set.add(blockpos);
 
-                            d4 += d0 * (double)0.3F;
-                            d6 += d1 * (double)0.3F;
-                            d8 += d2 * (double)0.3F;
+                            d4 += d0 * (double)0.3f;
+                            d6 += d1 * (double)0.3f;
+                            d8 += d2 * (double)0.3f;
                         }
                     }
                 }
@@ -112,13 +112,13 @@ public class InkExplosion extends Explosion {
         }
 
         this.affectedBlockPositions.addAll(set);
-        float f2 = this.size * 2.0F;
-        int k1 = MathHelper.floor(this.x - (double)f2 - 1.0D);
-        int l1 = MathHelper.floor(this.x + (double)f2 + 1.0D);
-        int i2 = MathHelper.floor(this.y - (double)f2 - 1.0D);
-        int i1 = MathHelper.floor(this.y + (double)f2 + 1.0D);
-        int j2 = MathHelper.floor(this.z - (double)f2 - 1.0D);
-        int j1 = MathHelper.floor(this.z + (double)f2 + 1.0D);
+        float f2 = this.size * 2.0f;
+        int k1 = MathHelper.floor(this.x - (double)f2 - 1.0d);
+        int l1 = MathHelper.floor(this.x + (double)f2 + 1.0d);
+        int i2 = MathHelper.floor(this.y - (double)f2 - 1.0d);
+        int i1 = MathHelper.floor(this.y + (double)f2 + 1.0d);
+        int j2 = MathHelper.floor(this.z - (double)f2 - 1.0d);
+        int j1 = MathHelper.floor(this.z + (double)f2 + 1.0d);
         List<Entity> list = this.world.getOtherEntities(this.entity, new Box(k1, i2, j2, l1, i1, j1));
 
         for (Entity entity : list) {
@@ -142,10 +142,10 @@ public class InkExplosion extends Explosion {
 
     public void affectBlocks(boolean spawnParticles) {
         if (spawnParticles) {
-            if (!(this.size < 2.0F)) {
-                this.world.addParticle(new InkSplashParticleEffect(this.color) /* TODO emitter */, this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+            if (!(this.size < 2.0f)) {
+                this.world.addParticle(new InkSplashParticleEffect(this.color) /* TODO emitter */, this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
             } else {
-                this.world.addParticle(new InkSplashParticleEffect(this.color), this.x, this.y, this.z, 1.0D, 0.0D, 0.0D);
+                this.world.addParticle(new InkSplashParticleEffect(this.color), this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
             }
         }
 

@@ -12,10 +12,10 @@ import net.minecraft.util.Lazy;
 import java.util.function.Supplier;
 
 public enum SplatcraftArmorMaterials implements ArmorMaterial {
-    INK_CLOTH("ink_cloth", -1, new int[]{ 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> null),
+    INK_CLOTH("ink_cloth", -1, new int[]{ 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> null),
 
-    INK_TANK(InkTankArmorItem.id, -1, new int[]{ 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0F, 0.0F, () -> null),
-    ARMORED_INK_TANK("armored_" + InkTankArmorItem.id, -1, new int[]{ 1, 1, 1, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0F, 0.05F, () -> null);
+    INK_TANK(InkTankArmorItem.id, -1, new int[]{ 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0f, 0.0f, () -> null),
+    ARMORED_INK_TANK("armored_" + InkTankArmorItem.id, -1, new int[]{ 1, 1, 1, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0f, 0.05f, () -> null);
 
     private static final int[] BASE_DURABILITY = new int[]{ 13, 15, 16, 11 };
     private final String name;

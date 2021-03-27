@@ -79,9 +79,9 @@ public class InkTankArmorItem extends InkableArmorItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, InkTankArmorItem.id)) + ".tooltip.ink", String.format("%.1f",getInkAmount(stack)), capacity));
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
+        super.appendTooltip(stack, world, tooltip, ctx);
+        tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, InkTankArmorItem.id)) + ".tooltip.ink" + (ctx.isAdvanced() ? ".advanced" : ""), String.format("%.1f",getInkAmount(stack)), capacity));
     }
 
     @Environment(EnvType.CLIENT)

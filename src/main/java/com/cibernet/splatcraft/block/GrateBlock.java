@@ -23,8 +23,8 @@ public class GrateBlock extends AbstractPassableBlock implements Waterloggable {
     public static final EnumProperty<BlockHalf> HALF = Properties.BLOCK_HALF;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    protected static final VoxelShape SHAPE_BOTTOM = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D);
-    protected static final VoxelShape SHAPE_TOP = Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SHAPE_BOTTOM = Block.createCuboidShape(0.0d, 0.0d, 0.0d, 16.0d, 3.0d, 16.0d);
+    protected static final VoxelShape SHAPE_TOP = Block.createCuboidShape(0.0d, 13.0d, 0.0d, 16.0d, 16.0d, 16.0d);
 
     public GrateBlock(AbstractBlock.Settings settings) {
         super(settings);
@@ -47,7 +47,7 @@ public class GrateBlock extends AbstractPassableBlock implements Waterloggable {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         Direction direction = ctx.getSide();
         if (!ctx.canReplaceExisting() && direction.getAxis().isHorizontal()) {
-            state = state.with(HALF, ctx.getHitPos().y - (double)ctx.getBlockPos().getY() > 0.5D ? BlockHalf.TOP : BlockHalf.BOTTOM);
+            state = state.with(HALF, ctx.getHitPos().y - (double)ctx.getBlockPos().getY() > 0.5d ? BlockHalf.TOP : BlockHalf.BOTTOM);
         } else {
             state = state.with(HALF, direction == Direction.UP ? BlockHalf.BOTTOM : BlockHalf.TOP);
         }

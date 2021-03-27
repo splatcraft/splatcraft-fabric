@@ -105,7 +105,7 @@ public class BarrierBarBlock extends Block implements Waterloggable {
         Direction direction = context.getSide();
         BlockPos blockpos = context.getBlockPos();
         FluidState fluidstate = context.getWorld().getFluidState(blockpos);
-        BlockState blockstate = this.getDefaultState().with(FACING, context.getPlayerFacing()).with(HALF, direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitPos().y - (double)blockpos.getY() > 0.5D)) ? BlockHalf.BOTTOM : BlockHalf.TOP).with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
+        BlockState blockstate = this.getDefaultState().with(FACING, context.getPlayerFacing()).with(HALF, direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitPos().y - (double)blockpos.getY() > 0.5d)) ? BlockHalf.BOTTOM : BlockHalf.TOP).with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
         return blockstate.with(SHAPE, getShapeProperty(blockstate, context.getWorld(), blockpos));
     }
 

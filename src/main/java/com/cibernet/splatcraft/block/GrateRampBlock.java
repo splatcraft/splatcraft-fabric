@@ -19,9 +19,9 @@ import net.minecraft.world.BlockView;
 public class GrateRampBlock extends AbstractPassableBlock implements Waterloggable {
     public static final String id = GrateBlock.id + "_ramp";
 
-    private static final VoxelShape START = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 3.0D, 16.0D);
-    private static final VoxelShape END = Block.createCuboidShape(13.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    private static final VoxelShape SEGMENT = Block.createCuboidShape(1.0D, 2.0D, 0.0D, 4.0D, 5.0D, 16.0D);
+    private static final VoxelShape START = Block.createCuboidShape(0.0d, 0.0d, 0.0d, 3.0d, 3.0d, 16.0d);
+    private static final VoxelShape END = Block.createCuboidShape(13.0d, 13.0d, 0.0d, 16.0d, 16.0d, 16.0d);
+    private static final VoxelShape SEGMENT = Block.createCuboidShape(1.0d, 2.0d, 0.0d, 4.0d, 5.0d, 16.0d);
 
     public static final VoxelShape[] SHAPES = getVoxelShapes(START, END, SEGMENT);
 
@@ -49,7 +49,7 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getSide();
         FluidState fluidState = context.getWorld().getFluidState(blockPos);
-        boolean flip = direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitPos().y - (double)blockPos.getY() > 0.5D));
+        boolean flip = direction != Direction.DOWN && (direction == Direction.UP || !(context.getHitPos().y - (double)blockPos.getY() > 0.5d));
         return this.getDefaultState().with(FACING, flip ? context.getPlayerFacing().getOpposite() : context.getPlayerFacing()).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
     }
 
@@ -62,7 +62,7 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
         VoxelShape[] shapes = new VoxelShape[8];
 
         for (int i = 0; i < 6; i++)
-            shapes[i] = segment.offset(0.125D * i, 0.125D * i, 0.0D);
+            shapes[i] = segment.offset(0.125d * i, 0.125d * i, 0.0d);
 
         shapes[6] = start;
         shapes[7] = end;

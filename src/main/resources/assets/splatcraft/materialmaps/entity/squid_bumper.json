@@ -1,0 +1,12 @@
+{
+  "map": [
+    {
+      "predicate": {
+        "materialPredicate": {
+          "renderLayerName": "splatcraft:squid_bumper_emissive"
+        }
+      },
+      "material": "canvas:emissive_transform"
+    }
+  ]
+}

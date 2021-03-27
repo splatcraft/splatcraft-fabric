@@ -1,5 +1,6 @@
 package com.cibernet.splatcraft.item.remote;
 
+import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
@@ -69,13 +70,13 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
         BlockPos blockpos3 = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(to.getY(), from.getY()), Math.max(from.getZ(), to.getZ()));
 
         if (!(blockpos2.getY() >= 0 && blockpos3.getY() < 256))
-            return createResult(false, new TranslatableText("status.change_color.out_of_world"));
+            return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.out_of_world"));
 
 
         for (int iZ = blockpos2.getZ(); iZ <= blockpos3.getZ(); iZ += 16) {
             for (int iX = blockpos2.getX(); iX <= blockpos3.getX(); iX += 16) {
                 if (!world.isChunkLoaded(new BlockPos(iX, blockpos3.getY() - blockpos2.getY(), iZ))) {
-                    return ColorChangerItem.createResult(false, new TranslatableText("status.change_color.out_of_world"));
+                    return ColorChangerItem.createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.out_of_world"));
                 }
             }
         }
@@ -98,6 +99,6 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
                     blockTotal++;
                 }
 
-        return ColorChangerItem.createResult(true, new TranslatableText("status.change_color.success", count, ColorUtils.getFormattedColorName(affectedColor, false))).setIntResults(count, count * 15 / blockTotal);
+        return ColorChangerItem.createResult(true, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.success", count, ColorUtils.getFormattedColorName(affectedColor, false))).setIntResults(count, count * 15 / blockTotal);
     }
 }

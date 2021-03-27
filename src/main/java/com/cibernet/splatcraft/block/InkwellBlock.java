@@ -34,9 +34,9 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final VoxelShape SHAPE = VoxelShapes.union(
-        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D),
-        Block.createCuboidShape(1.0D, 12.0D, 1.0D, 14.0D, 13.0D, 14.0D),
-        Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D)
+        Block.createCuboidShape(0.0d, 0.0d, 0.0d, 16.0d, 12.0d, 16.0d),
+        Block.createCuboidShape(1.0d, 12.0d, 1.0d, 14.0d, 13.0d, 14.0d),
+        Block.createCuboidShape(0.0d, 13.0d, 0.0d, 16.0d, 16.0d, 16.0d)
     );
 
     public InkwellBlock(AbstractBlock.Settings settings) {

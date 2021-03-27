@@ -70,7 +70,7 @@ public class InkedBlock extends AbstractInkableBlock {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && world.getBlockEntity(pos) instanceof InkedBlockEntity && random.nextFloat() <= 0.7F) {
+        if (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && world.getBlockEntity(pos) instanceof InkedBlockEntity && random.nextFloat() <= 0.7f) {
             InkedBlock.clearInk(world, pos);
         }
     }
@@ -228,7 +228,7 @@ public class InkedBlock extends AbstractInkableBlock {
             if (actionResult.isAccepted()) {
                 block = world.getBlockState(pos).getBlock();
                 if (!(block instanceof InkedBlock)) {
-                    InkBlockUtils.inkBlock(world, pos, inkColor, 0.0F, inkType);
+                    InkBlockUtils.inkBlock(world, pos, inkColor, 0.0f, inkType);
                 }
             }
 

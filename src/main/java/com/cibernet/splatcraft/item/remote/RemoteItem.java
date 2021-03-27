@@ -14,6 +14,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,17 +37,27 @@ public abstract class RemoteItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> texts, TooltipContext ctx) {
-        super.appendTooltip(stack, world, texts, ctx);
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext ctx) {
+        super.appendTooltip(stack, world, tooltip, ctx);
+
+        TranslatableText text = null;
 
         CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
+        if (RemoteItem.hasCoordSet(stack)) {
+            text = new TranslatableText(
+                "item." + Splatcraft.MOD_ID + ".remote.coords.b",
+                tag.getInt("PointAX"), tag.getInt("PointAY"), tag.getInt("PointAZ"),
+                tag.getInt("PointBX"), tag.getInt("PointBY"), tag.getInt("PointBZ")
+            );
+        } else if (RemoteItem.hasCoordA(stack)) {
+            text = new TranslatableText("item." + Splatcraft.MOD_ID + ".remote.coords.a",
+                tag.getInt("PointAX"), tag.getInt("PointAY"), tag.getInt("PointAZ")
+            );
+        }
 
-        if (hasCoordSet(stack))
-            texts.add(new TranslatableText(this.getTranslationKey() + ".coords.b", tag.getInt("PointAX"), tag.getInt("PointAY"), tag.getInt("PointAZ"),
-                tag.getInt("PointBX"), tag.getInt("PointBY"), tag.getInt("PointBZ")));
-        else if (hasCoordA(stack))
-            texts.add(new TranslatableText(this.getTranslationKey() + ".coords.a", tag.getInt("PointAX"), tag.getInt("PointAY"), tag.getInt("PointAZ")));
-
+        if (text != null) {
+            tooltip.add(text.formatted(Formatting.GRAY));
+        }
     }
 
     @Override
@@ -56,7 +67,7 @@ public abstract class RemoteItem extends Item {
             BlockPos pos = ctx.getBlockPos();
 
             if (ctx.getWorld().isClient) {
-                Objects.requireNonNull(ctx.getPlayer()).sendMessage(new TranslatableText("status.coord_set." + key, pos.getX(), pos.getY(), pos.getZ()), true);
+                Objects.requireNonNull(ctx.getPlayer()).sendMessage(new TranslatableText("status." + Splatcraft.MOD_ID + ".coord_set." + key, pos.getX(), pos.getY(), pos.getZ()), true);
             }
 
             return ActionResult.success(ctx.getWorld().isClient);
@@ -72,12 +83,13 @@ public abstract class RemoteItem extends Item {
         if (playerEntity.isSneaking() && totalModes > 1) {
             mode = cycleRemoteMode(stack);
             String statusMsg = getTranslationKey() + ".mode." + mode;
-            playerEntity.sendMessage(new TranslatableText("status.remote_mode", new TranslatableText(statusMsg)), true);
+            playerEntity.sendMessage(new TranslatableText("status." + Splatcraft.MOD_ID + ".remote_mode", new TranslatableText(statusMsg)), true);
         } else if (hasCoordSet(stack)) {
             RemoteResult remoteResult = this.onRemoteUse(world, stack, ColorUtils.getInkColor(playerEntity), mode);
 
-            if (remoteResult.getOutput() != null) {
-                playerEntity.sendMessage(remoteResult.getOutput(), true);
+            Text output = remoteResult.getOutput();
+            if (output != null) {
+                playerEntity.sendMessage(output, true);
             }
             world.playSound(playerEntity, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), SplatcraftSoundEvents.REMOTE_USE, SoundCategory.PLAYERS, 0.8f, 1);
             return new TypedActionResult<>(remoteResult.wasSuccessful() ? ActionResult.SUCCESS : ActionResult.FAIL, stack);
@@ -89,11 +101,9 @@ public abstract class RemoteItem extends Item {
     public static int getRemoteMode(ItemStack stack) {
         return stack.getOrCreateSubTag(Splatcraft.MOD_ID).getInt("Mode");
     }
-
     public static void setRemoteMode(ItemStack stack, int mode) {
         stack.getOrCreateSubTag(Splatcraft.MOD_ID).putInt("Mode", mode);
     }
-
     public static int cycleRemoteMode(ItemStack stack) {
         int mode = RemoteItem.getRemoteMode(stack) + 1;
         if (stack.getItem() instanceof RemoteItem) {
@@ -103,20 +113,18 @@ public abstract class RemoteItem extends Item {
         return mode;
     }
 
-    public static boolean hasCoordSet(ItemStack stack) {
-        return RemoteItem.hasCoordA(stack) && RemoteItem.hasCoordB(stack);
-    }
-
     public static boolean hasCoordA(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         return tag != null && tag.contains("PointAX") && tag.contains("PointAY") && tag.contains("PointAZ");
     }
-
     public static boolean hasCoordB(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         return tag != null && tag.contains("PointBX") && tag.contains("PointBY") && tag.contains("PointBZ");
     }
 
+    public static boolean hasCoordSet(ItemStack stack) {
+        return RemoteItem.hasCoordA(stack) && RemoteItem.hasCoordB(stack);
+    }
     public static BlockPos[] getCoordSet(ItemStack stack) {
         if (!hasCoordSet(stack)) {
             return new BlockPos[0];
@@ -128,26 +136,23 @@ public abstract class RemoteItem extends Item {
             new BlockPos(tag.getInt("PointBX"), tag.getInt("PointBY"), tag.getInt("PointBZ"))
         };
     }
-
     public static boolean addCoords(ItemStack stack, BlockPos pos) {
-        if (RemoteItem.hasCoordSet(stack)) {
-            return false;
+        if (!RemoteItem.hasCoordSet(stack)) {
+            CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
+
+            String key = hasCoordA(stack) ? "B" : "A";
+
+            tag.putInt("Point" + key + "X", pos.getX());
+            tag.putInt("Point" + key + "Y", pos.getY());
+            tag.putInt("Point" + key + "Z", pos.getZ());
+
+            return true;
         }
 
-        CompoundTag tag = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
-
-        String key = hasCoordA(stack) ? "B" : "A";
-
-        tag.putInt("Point" + key + "X", pos.getX());
-        tag.putInt("Point" + key + "Y", pos.getY());
-        tag.putInt("Point" + key + "Z", pos.getZ());
-
-        return true;
+        return false;
     }
 
-
     public abstract RemoteResult onRemoteUse(World world, BlockPos posA, BlockPos posB, ItemStack stack, InkColor color, int mode);
-
     public RemoteResult onRemoteUse(World world, ItemStack stack, InkColor color, int mode) {
         BlockPos[] coordSet = getCoordSet(stack);
         BlockPos start = coordSet[0];

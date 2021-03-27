@@ -145,7 +145,7 @@ public class InkBlockUtils {
     }
     public static BlockPos getClimbingPos(PlayerEntity player) {
         for (int i = 0; i < 4; i++) {
-            float xOff = (i < 2 ? 0.32F : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : 0.32F) * (i % 2 == 0 ? 1 : -1);
+            float xOff = (i < 2 ? 0.32f : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : 0.32f) * (i % 2 == 0 ? 1 : -1);
             BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
             Block block = player.world.getBlockState(pos).getBlock();
 

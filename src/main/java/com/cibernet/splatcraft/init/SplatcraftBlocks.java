@@ -27,13 +27,13 @@ public class SplatcraftBlocks {
 
     public static final Block INKWELL = register(InkwellBlock.id, new InkwellBlock(
         FabricBlockSettings.of(Material.GLASS)
-            .strength(0.35F).breakByTool(FabricToolTags.PICKAXES)
+            .strength(0.35f).breakByTool(FabricToolTags.PICKAXES)
             .sounds(SplatcraftBlockSoundGroups.INKWELL)
         ), false
     );
     public static final Block CANVAS = register(CanvasBlock.id, new CanvasBlock(
         FabricBlockSettings.of(Material.WOOL)
-            .strength(0.8F).sounds(BlockSoundGroup.WOOL)
+            .strength(0.8f).sounds(BlockSoundGroup.WOOL)
         ), false
     );
 
@@ -48,7 +48,7 @@ public class SplatcraftBlocks {
         FabricBlockSettings.of(Material.METAL)
             .requiresTool().breakByTool(FabricToolTags.PICKAXES)
             .nonOpaque().sounds(BlockSoundGroup.METAL)
-            .strength(4.0F)
+            .strength(4.0f)
         )
     );
     public static final Block GRATE_RAMP = register(GrateRampBlock.id, new GrateRampBlock(FabricBlockSettings.copy(GRATE)));
@@ -61,7 +61,7 @@ public class SplatcraftBlocks {
 
     public static final Block STAGE_BARRIER = register(StageBarrierBlock.id, new StageBarrierBlock(
             FabricBlockSettings.of(Material.BARRIER, MaterialColor.CLEAR)
-                .strength(-1.0F, 3600000.8F).dropsNothing()
+                .strength(-1.0f, 3600000.8f).dropsNothing()
                 .nonOpaque(),
             false
         )

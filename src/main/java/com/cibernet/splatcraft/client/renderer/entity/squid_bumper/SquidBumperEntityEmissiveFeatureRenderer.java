@@ -1,5 +1,6 @@
 package com.cibernet.splatcraft.client.renderer.entity.squid_bumper;
 
+import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.model.SquidBumperEntityModel;
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
@@ -17,11 +18,11 @@ public class SquidBumperEntityEmissiveFeatureRenderer<T extends SquidBumperEntit
     public static final Identifier TEXTURE = SplatcraftEntities.texture(SquidBumperEntity.id + "/" + SquidBumperEntity.id + "_overlay");
 
     private static final RenderLayer RENDER_LAYER = RenderLayer.of(
-        SquidBumperEntity.id + "_emissive", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+        new Identifier(Splatcraft.MOD_ID, SquidBumperEntity.id + "_emissive").toString(), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
         7, 256, false, true,
         RenderLayer.MultiPhaseParameters.builder()
             .texture(new RenderPhase.Texture(TEXTURE, false, false))
-            .alpha(new RenderPhase.Alpha(0.0001F))
+            .alpha(new RenderPhase.Alpha(0.0001f))
             .build(false)
     );
 

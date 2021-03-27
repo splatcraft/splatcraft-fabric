@@ -63,10 +63,10 @@ public class InkSplashParticleEffect implements ParticleEffect {
     }
 
     public InkSplashParticleEffect(float[] color) {
-        this(color, 1.0F);
+        this(color, 1.0f);
     }
     public InkSplashParticleEffect(InkColor inkColor) {
-        this(inkColor, 1.0F);
+        this(inkColor, 1.0f);
     }
 
     @Override

@@ -213,7 +213,7 @@ public class ColorUtils {
         }
     }
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos) {
-        ColorUtils.addInkSplashParticle(world, inkColor, pos, 1.0F);
+        ColorUtils.addInkSplashParticle(world, inkColor, pos, 1.0f);
     }
     public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos, float scale) {
         BlockEntity blockEntity = world.getBlockEntity(sourcePos);
@@ -222,7 +222,7 @@ public class ColorUtils {
         }
     }
     public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
-        ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0F);
+        ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0f);
     }
 
     public static void playSquidTravelEffects(Entity entity, InkColor inkColor, float scale) {

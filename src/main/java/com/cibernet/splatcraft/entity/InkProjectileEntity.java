@@ -68,7 +68,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     public void setProperties(Entity user, float pitch, float yaw, float roll, float modifierZ, float modifierXYZ) {
         super.setProperties(user, pitch, yaw, roll, modifierZ, modifierXYZ);
         Vec3d center = user.getBoundingBox().getCenter();
-        this.updatePosition(center.getX(), user.getEyeY() - 0.10000000149011612D, center.getZ());
+        this.updatePosition(center.getX(), user.getEyeY() - 0.10000000149011612d, center.getZ());
     }
 
     public InkProjectileEntity setShooterTrail() {
@@ -103,7 +103,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     protected void initDataTracker() {
         super.initDataTracker();
         dataTracker.startTracking(INK_COLOR, InkColors.NONE.toString());
-        dataTracker.startTracking(PROJ_SIZE, 1.0F);
+        dataTracker.startTracking(PROJ_SIZE, 1.0f);
     }
 
     @Override
@@ -129,13 +129,13 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     public void tick() {
         super.tick();
 
-        ColorUtils.addInkSplashParticle(world, this.getInkColor(), this.getPos(), 0.3F);
+        ColorUtils.addInkSplashParticle(world, this.getInkColor(), this.getPos(), 0.3f);
 
         if (lifespan-- <= 0) {
-            InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), getProjectileSize() * 0.85F, damage, splashDamage, damageMobs, this.getInkColor(), inkType, sourceWeapon);
+            InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), getProjectileSize() * 0.85f, damage, splashDamage, damageMobs, this.getInkColor(), inkType, sourceWeapon);
             if (explodes) {
                 ColorUtils.addInkSplashParticle(world, this.getInkColor(), this.getPos());
-                world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
+                world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
             }
 
             this.remove();
@@ -189,10 +189,10 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         super.onBlockHit(result);
         ColorUtils.addInkSplashParticle(this.world, this.getInkColor(), this.getPos());
 
-        InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), getProjectileSize() * 0.85F, damage, splashDamage, damageMobs, this.getInkColor(), inkType, sourceWeapon);
+        InkExplosion.createInkExplosion(world, this.getOwner(), DAMAGE_SOURCE, this.getBlockPos(), getProjectileSize() * 0.85f, damage, splashDamage, damageMobs, this.getInkColor(), inkType, sourceWeapon);
         if (explodes) {
             //TODO particles
-            world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
+            world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
         }
         this.remove();
     }
@@ -250,7 +250,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return super.getDimensions(pose).scaled(getProjectileSize() / 2.0F);
+        return super.getDimensions(pose).scaled(getProjectileSize() / 2.0f);
     }
 
     @Override

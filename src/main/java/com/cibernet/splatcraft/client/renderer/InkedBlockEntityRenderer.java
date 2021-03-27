@@ -57,9 +57,9 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
 
     private static void renderModelBrightnessColorQuads(MatrixStack.Entry matrix, VertexConsumer buffer, float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedquad : quads) {
-            float r = MathHelper.clamp(red, 0.0F, 1.0F);
-            float g = MathHelper.clamp(green, 0.0F, 1.0F);
-            float b = MathHelper.clamp(blue, 0.0F, 1.0F);
+            float r = MathHelper.clamp(red, 0.0f, 1.0f);
+            float g = MathHelper.clamp(green, 0.0f, 1.0f);
+            float b = MathHelper.clamp(blue, 0.0f, 1.0f);
 
             buffer.quad(matrix, bakedquad, r, g, b, light, overlay);
         }

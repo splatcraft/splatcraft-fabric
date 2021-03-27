@@ -43,10 +43,10 @@ public class SquidBumperItem extends AbstractInkableItem {
 
                     ColorUtils.setInkColor(entity, ColorUtils.getInkColor(itemStack));
                     serverWorld.spawnEntityAndPassengers(entity);
-                    float yaw = (float) MathHelper.floor((MathHelper.wrapDegrees(ctx.getPlayerYaw() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
-                    entity.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), yaw, 0.0F);
+                    float yaw = (float) MathHelper.floor((MathHelper.wrapDegrees(ctx.getPlayerYaw() - 180.0f) + 22.5f) / 45.0f) * 45.0f;
+                    entity.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), yaw, 0.0f);
                     world.spawnEntity(entity);
-                    world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
+                    world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75f, 0.8f);
                 }
 
                 itemStack.decrement(1);

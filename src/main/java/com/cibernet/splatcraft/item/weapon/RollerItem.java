@@ -109,13 +109,13 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
                         if (InkBlockUtils.inkBlockAsPlayer(player, world, inkPos, color, this.component.damage, isGlowing)) {
                             Random random = world.random;
-                            double min = -0.5D;
-                            double max = 0.5D;
+                            double min = -0.5d;
+                            double max = 0.5d;
 
                             for (int pCount = 0; pCount < 4; pCount++) {
-                                double x = inkPos.getX() + 0.5D + (min + random.nextDouble() * (max - min));
-                                double y = inkPos.getY() + 1.0D + (0.0D + random.nextDouble() * (0.02D - 0.0D));
-                                double z = inkPos.getZ() + 0.5D + (min + random.nextDouble() * (max - min));
+                                double x = inkPos.getX() + 0.5d + (min + random.nextDouble() * (max - min));
+                                double y = inkPos.getY() + 1.0d + (0.0d + random.nextDouble() * (0.02d - 0.0d));
+                                double z = inkPos.getZ() + 0.5d + (min + random.nextDouble() * (max - min));
                                 ColorUtils.addInkSplashParticle(world, color, new Vec3d(x, y, z));
                             }
                             reduceInk(player, false);
@@ -149,7 +149,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                 reduceInk(player, true);
 
                 InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.component.fling.size, this.component.fling.damage);
-                proj.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
+                proj.setProperties(player, player.pitch, player.yaw, 0.0f, 1.5f, 1.0f);
                 player.world.spawnEntity(proj);
             } else {
                 sendNoInkMessage(player);
@@ -158,10 +158,10 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
     }
 
     private Vec3d getFwd(float pitch, float yaw) {
-        float f = MathHelper.cos(-yaw * 0.017453292F - (float)Math.PI);
-        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float)Math.PI);
-        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
-        float f3 = MathHelper.sin(-pitch * 0.017453292F);
+        float f = MathHelper.cos(-yaw * 0.017453292f - (float)Math.PI);
+        float f1 = MathHelper.sin(-yaw * 0.017453292f - (float)Math.PI);
+        float f2 = -MathHelper.cos(-pitch * 0.017453292f);
+        float f3 = MathHelper.sin(-pitch * 0.017453292f);
         return new Vec3d(f1 * f2, f3, f * f2);
     }
 

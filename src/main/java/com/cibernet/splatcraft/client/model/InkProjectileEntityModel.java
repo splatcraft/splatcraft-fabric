@@ -13,8 +13,8 @@ public class InkProjectileEntityModel extends CompositeEntityModel<InkProjectile
         textureHeight = 16;
 
         cube = new ModelPart(this);
-        cube.setPivot(0.0F, -8.0F, 0.0F);
-        cube.setTextureOffset(0, 0).addCuboid(-4.0F, 0.0F, -4.0F, 8.0F, 8.0F, 8.0F, false);
+        cube.setPivot(0.0f, -8.0f, 0.0f);
+        cube.setTextureOffset(0, 0).addCuboid(-4.0f, 0.0f, -4.0f, 8.0f, 8.0f, 8.0f, false);
     }
 
     @Override

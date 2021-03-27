@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class StageBarrierBlock extends BlockWithEntity {
     public static final String id = "stage_barrier";
 
-    public static final VoxelShape SHAPE_DAMAGES_PLAYER = Block.createCuboidShape(0.1D, 0.1D, 0.1D, 15.9D, 15.9D, 15.9D);
-    public static final VoxelShape SHAPE = Block.createCuboidShape(0.1D, 0.0D, 0.1D, 15.9D, 16.0D, 15.9D);
+    public static final VoxelShape SHAPE_DAMAGES_PLAYER = Block.createCuboidShape(0.1d, 0.1d, 0.1d, 15.9d, 15.9d, 15.9d);
+    public static final VoxelShape SHAPE = Block.createCuboidShape(0.1d, 0.0d, 0.1d, 15.9d, 16.0d, 15.9d);
 
     public final boolean damagesEntity;
 
@@ -98,7 +98,7 @@ public class StageBarrierBlock extends BlockWithEntity {
 
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
-        return 1.0F;
+        return 1.0f;
     }
 
     public void touchWithNeighbors(BlockView world, Entity entity, BlockPos pos, TouchStatus touchStatus) {

@@ -15,19 +15,19 @@ public class SquidBumperEntityModel<T extends SquidBumperEntity> extends Composi
         textureWidth = 80;
         textureHeight = 64;
         bumper = new ModelPart(this);
-        bumper.setPivot(0.0F, 24.0F, 0.0F);
-        bumper.setTextureOffset(0, 24).addCuboid(-6.0F, -25.0F, -5.0F, 12.0F, 23.0F, 10.0F, 0.0F, false);
-        bumper.setTextureOffset(0, 0).addCuboid(-7.0F, -14.0F, -6.0F, 14.0F, 12.0F, 12.0F, 0.0F, false);
+        bumper.setPivot(0.0f, 24.0f, 0.0f);
+        bumper.setTextureOffset(0, 24).addCuboid(-6.0f, -25.0f, -5.0f, 12.0f, 23.0f, 10.0f, 0.0f, false);
+        bumper.setTextureOffset(0, 0).addCuboid(-7.0f, -14.0f, -6.0f, 14.0f, 12.0f, 12.0f, 0.0f, false);
 
         ears = new ModelPart(this);
-        ears.setPivot(0.0F, -17.15F, 0.0F);
+        ears.setPivot(0.0f, -17.15f, 0.0f);
         bumper.addChild(ears);
-        setAngles(ears, 0.0F, 0.0F, 0.7854F);
-        ears.setTextureOffset(44, 40).addCuboid(-9.0F, -9.0F, -1.0F, 16.0F, 16.0F, 2.0F, 0.0F, false);
+        setAngles(ears, 0.0f, 0.0f, 0.7854f);
+        ears.setTextureOffset(44, 40).addCuboid(-9.0f, -9.0f, -1.0f, 16.0f, 16.0f, 2.0f, 0.0f, false);
 
         base = new ModelPart(this);
-        base.setPivot(0.0F, 24.0F, 0.0F);
-        base.setTextureOffset(0, 47).addCuboid(-6.0F, -2.0F, -5.0F, 12.0F, 2.0F, 10.0F, 0.0F, false);
+        base.setPivot(0.0f, 24.0f, 0.0f);
+        base.setTextureOffset(0, 47).addCuboid(-6.0f, -2.0f, -5.0f, 12.0f, 2.0f, 10.0f, 0.0f, false);
     }
 
     @Override

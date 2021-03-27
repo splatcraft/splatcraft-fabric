@@ -33,16 +33,16 @@ public class PlayerPoseHandler {
                     switch (((AbstractWeaponItem) mainStack.getItem()).getPose()) {
                         case DUAL_FIRE:
                             if (offStack.getItem() instanceof AbstractWeaponItem && ((AbstractWeaponItem) offStack.getItem()).getPose().equals(WeaponPose.DUAL_FIRE)) {
-                                offHand.pivotY = -0.1F + $this.getHead().pivotY;
+                                offHand.pivotY = -0.1f + $this.getHead().pivotY;
                                 offHand.pivotX = -((float) Math.PI / 2F) + $this.getHead().pivotX;
                             }
                         case FIRE:
-                            mainHand.roll = -0.1F + $this.getHead().roll;
+                            mainHand.roll = -0.1f + $this.getHead().roll;
                             mainHand.pitch = -((float) Math.PI / 2F) + $this.getHead().pitch;
                             break;
                         case ROLL:
-                            mainHand.pitch = -0.30978097624F;
-                            mainHand.roll = 0.0F;
+                            mainHand.pitch = -0.30978097624f;
+                            mainHand.roll = 0.0f;
                             break;
                     /*case BUCKET_SWING:
                         float animTime = ((SlosherItem) mainStack.getItem()).startupTicks * 0.5f; TODO
@@ -52,7 +52,7 @@ public class PlayerPoseHandler {
                         float angle = useTime / animTime;
 
                         if (angle < 6.5f)
-                            mainHand.pivotX = MathHelper.cos(angle * 0.6662F);
+                            mainHand.pivotX = MathHelper.cos(angle * 0.6662f);
                         break;*/
                     }
 

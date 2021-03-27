@@ -113,7 +113,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
 
     @Override
     public void entityTick(ItemStack stack, ItemEntity entity) {
-        BlockPos floorPos = new BlockPos(entity.getPos().subtract(0.0D, -1.0D, 0.0D));
+        BlockPos floorPos = new BlockPos(entity.getPos().subtract(0.0d, -1.0d, 0.0d));
 
         if (entity.world.getBlockState(floorPos).getBlock().equals(SplatcraftBlocks.INKWELL)) {
             BlockEntity blockEntity = entity.world.getBlockEntity(floorPos);
@@ -145,7 +145,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
             }
         }
 
-        return 0.0F;
+        return 0.0f;
     }
 
     public static boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
@@ -179,7 +179,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
         if (entity instanceof PlayerEntity) {
             ((PlayerEntity) entity).sendMessage(new TranslatableText(Util.createTranslationKey("item", Registry.ITEM.getId(SplatcraftItems.INK_TANK)) + ".noInk").formatted(Formatting.RED), true);
             if (sound != null) {
-                entity.world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundCategory.PLAYERS, 0.8F, ((entity.world.random.nextFloat() - entity.world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
+                entity.world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundCategory.PLAYERS, 0.8f, ((entity.world.random.nextFloat() - entity.world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
             }
         }
     }
@@ -193,7 +193,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
         return multimap;
     }
     public double getWeaponSpeed() {
-        return 50.0D;
+        return 50.0d;
     }
 
     public PlayerPoseHandler.WeaponPose getPose() {

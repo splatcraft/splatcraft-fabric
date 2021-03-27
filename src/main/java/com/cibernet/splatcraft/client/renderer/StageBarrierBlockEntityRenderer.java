@@ -32,9 +32,7 @@ import java.util.Objects;
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")
 public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBarrierBlockEntity> {
-    private static final RenderLayer BARRIER_RENDER = RenderLayer.of(new Identifier(Splatcraft.MOD_ID, StageBarrierBlock.id + "s").toString(), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, 7, 131072, true, false, RenderLayer.MultiPhaseParameters.builder()
-        .shadeModel(new RenderPhase.ShadeModel(true)).lightmap(new RenderPhase.Lightmap(true)).texture(new RenderPhase.Texture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, false, true))
-        .alpha(new RenderPhase.Alpha(0.003921569F)).transparency(RendererHandler.TRANSLUCENT_TRANSPARENCY).build(true));
+    private static final RenderLayer BARRIER_RENDER = RenderLayer.of(new Identifier(Splatcraft.MOD_ID, StageBarrierBlock.id + "s").toString(), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, 7, 131072, true, true, RenderLayer.MultiPhaseParameters.builder().shadeModel(new RenderPhase.ShadeModel(true)).lightmap(new RenderPhase.Lightmap(true)).texture(new RenderPhase.Texture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, false, true)).alpha(new RenderPhase.Alpha(0.003921569f)).transparency(RendererHandler.TRANSLUCENT_TRANSPARENCY).build(true));
 
     public StageBarrierBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
@@ -50,7 +48,7 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
     }
 
     @Override
-    public void render(StageBarrierBlockEntity blockEntity, float partialTicks, MatrixStack matrixStack, VertexConsumerProvider buffer, int combinedLight, int combinedOverlay) {
+    public void render(StageBarrierBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
         World world = blockEntity.getWorld();
         if (world != null && world.isClient) {
             PlayerEntity player = MinecraftClient.getInstance().player;
@@ -73,56 +71,56 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
             return;
         }
 
-        Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Splatcraft.MOD_ID, "block/" + Registry.BLOCK.getId(block).getPath() + (MinecraftClient.getInstance().options.graphicsMode.getId() > 0 ? "_fancy" : "")));
-        VertexConsumer builder = buffer.getBuffer(BARRIER_RENDER);
+        Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Splatcraft.MOD_ID, "block/" + Registry.BLOCK.getId(block).getPath()));
+        VertexConsumer builder = vertices.getBuffer(BARRIER_RENDER);
 
         float alpha = activeTime / blockEntity.getMaxActiveTime();
 
-        matrixStack.push();
+        matrices.push();
 
         if (canRenderSide(blockEntity, Direction.NORTH)) {
-            addVertex(builder, matrixStack, 0, 1, 0, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 0, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 0, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 0, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 0, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
         }
 
         if (canRenderSide(blockEntity, Direction.SOUTH)) {
-            addVertex(builder, matrixStack, 0, 0, 1, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 0, 1, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 1, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 1, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 1, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
         }
 
         if (canRenderSide(blockEntity, Direction.WEST)) {
-            addVertex(builder, matrixStack, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
         }
 
         if (canRenderSide(blockEntity, Direction.EAST)) {
-            addVertex(builder, matrixStack, 1, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
         }
 
         if (canRenderSide(blockEntity, Direction.DOWN)) {
-            addVertex(builder, matrixStack, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 0, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 0, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 0, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 0, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
         }
 
         if (canRenderSide(blockEntity, Direction.UP)) {
-            addVertex(builder, matrixStack, 0, 1, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 1, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
-            addVertex(builder, matrixStack, 0, 1, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 1, sprite.getMinU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 1, sprite.getMaxU(), sprite.getMaxV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 1, 1, 0, sprite.getMaxU(), sprite.getMinV(), 1, 1, 1, alpha);
+            addVertex(builder, matrices, 0, 1, 0, sprite.getMinU(), sprite.getMinV(), 1, 1, 1, alpha);
         }
 
-        matrixStack.pop();
+        matrices.pop();
     }
 
     private static boolean canRenderSide(BlockEntity blockEntity, Direction side) {

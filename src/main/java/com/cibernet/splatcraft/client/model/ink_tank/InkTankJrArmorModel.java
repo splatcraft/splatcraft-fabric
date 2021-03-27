@@ -15,41 +15,41 @@ public class InkTankJrArmorModel extends AbstractInkTankArmorModel {
         textureHeight = 128;
 
         top = new ModelPart(this);
-        top.setPivot(0.0F, -0.25F, 0.0F);
-        top.setTextureOffset(0, 0).addCuboid(-4.8056F, -0.25F, -2.5F, 9.0F, 12.0F, 5.0F, 0.0F, false);
-        top.setTextureOffset(31, 0).addCuboid(-1.0F, 3.0F, 2.5F, 2.0F, 1.0F, 1.0F, 0.0F, false);
+        top.setPivot(0.0f, -0.25f, 0.0f);
+        top.setTextureOffset(0, 0).addCuboid(-4.8056f, -0.25f, -2.5f, 9.0f, 12.0f, 5.0f, 0.0f, false);
+        top.setTextureOffset(31, 0).addCuboid(-1.0f, 3.0f, 2.5f, 2.0f, 1.0f, 1.0f, 0.0f, false);
 
         tank = new ModelPart(this);
-        tank.setPivot(0.0F, 0.75F, 0.75F);
+        tank.setPivot(0.0f, 0.75f, 0.75f);
         top.addChild(tank);
-        tank.setTextureOffset(20, 18).addCuboid(-2.0F, 1.5F, 3.75F, 4.0F, 2.0F, 4.0F, 0.0F, false);
-        tank.setTextureOffset(8, 33).addCuboid(-3.5F, 3.15F, 4.25F, 2.0F, 1.0F, 2.0F, 0.0F, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.9875F, 5.25F, 7.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.9875F, 7.25F, 7.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.9875F, 9.25F, 7.25F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(14, 24).addCuboid(-3.0F, 4.25F, 3.25F, 1.0F, 7.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(10, 24).addCuboid(-3.0F, 4.25F, 7.25F, 1.0F, 7.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(6, 24).addCuboid(2.0F, 4.25F, 7.25F, 1.0F, 7.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(0, 24).addCuboid(2.0F, 4.25F, 3.25F, 1.0F, 7.0F, 1.0F, 0.0F, false);
-        tank.setTextureOffset(18, 25).addCuboid(-3.0F, 11.25F, 3.25F, 6.0F, 1.0F, 5.0F, 0.0F, false);
-        tank.setTextureOffset(0, 18).addCuboid(-2.5F, 3.25F, 3.25F, 5.0F, 1.0F, 5.0F, 0.0F, false);
-        tank.setTextureOffset(31, 2).addCuboid(-0.5F, 1.75F, 2.0F, 1.0F, 2.0F, 2.0F, 0.0F, false);
+        tank.setTextureOffset(20, 18).addCuboid(-2.0f, 1.5f, 3.75f, 4.0f, 2.0f, 4.0f, 0.0f, false);
+        tank.setTextureOffset(8, 33).addCuboid(-3.5f, 3.15f, 4.25f, 2.0f, 1.0f, 2.0f, 0.0f, false);
+        tank.setTextureOffset(12, 39).addCuboid(0.9875f, 5.25f, 7.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(12, 39).addCuboid(0.9875f, 7.25f, 7.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(12, 39).addCuboid(0.9875f, 9.25f, 7.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(14, 24).addCuboid(-3.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(10, 24).addCuboid(-3.0f, 4.25f, 7.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(6, 24).addCuboid(2.0f, 4.25f, 7.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(0, 24).addCuboid(2.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
+        tank.setTextureOffset(18, 25).addCuboid(-3.0f, 11.25f, 3.25f, 6.0f, 1.0f, 5.0f, 0.0f, false);
+        tank.setTextureOffset(0, 18).addCuboid(-2.5f, 3.25f, 3.25f, 5.0f, 1.0f, 5.0f, 0.0f, false);
+        tank.setTextureOffset(31, 2).addCuboid(-0.5f, 1.75f, 2.0f, 1.0f, 2.0f, 2.0f, 0.0f, false);
 
         tag = new ModelPart(this);
-        tag.setPivot(-3.1168F, 2.8445F, 8.9821F);
-        setRotationAngle(tag, -0.1309F, -0.3927F, -0.3054F);
-        tag.setTextureOffset(8, 63).addCuboid(-0.8541F, 0.6055F, -2.1381F, 2, 0, 2, 0.0F);
+        tag.setPivot(-3.1168f, 2.8445f, 8.9821f);
+        setRotationAngle(tag, -0.1309f, -0.3927f, -0.3054f);
+        tag.setTextureOffset(8, 63).addCuboid(-0.8541f, 0.6055f, -2.1381f, 2, 0, 2, 0.0f);
         top.addChild(tag);
 
         inkPieces = new ArrayList<>();
-        inkBarY = 23.25F;
+        inkBarY = 23.25f;
 
         for (int i = 0; i < 7; i++) {
             ModelPart ink = new ModelPart(this);
-            ink.setPivot(0.0F, inkBarY, -0.75F);
+            ink.setPivot(0.0f, inkBarY, -0.75f);
             tank.addChild(ink);
 
-            ink.setTextureOffset(110, 0).addCuboid(-2.5F, -12.0F, 4.5F, 5, 1, 4, 0.0F);
+            ink.setTextureOffset(110, 0).addCuboid(-2.5f, -12.0f, 4.5f, 5, 1, 4, 0.0f);
 
             inkPieces.add(ink);
         }

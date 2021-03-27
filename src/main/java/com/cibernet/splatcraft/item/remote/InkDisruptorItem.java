@@ -1,5 +1,6 @@
 package com.cibernet.splatcraft.item.remote;
 
+import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import net.minecraft.block.Block;
@@ -21,23 +22,22 @@ public class InkDisruptorItem extends RemoteItem {
         BlockPos to = new BlockPos(Math.max(posA.getX(), posB.getX()), Math.max(posB.getY(), posA.getY()), Math.max(posA.getZ(), posB.getZ()));
 
         if (!(from.getY() >= 0 && to.getY() < 256)) {
-            return createResult(false, new TranslatableText("status.clear_ink.out_of_world"));
+            return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".clear_ink.out_of_world"));
         }
-
 
         for (int j = from.getZ(); j <= to.getZ(); j += 16) {
             for (int k = from.getX(); k <= to.getX(); k += 16) {
                 if (!world.isChunkLoaded(new BlockPos(k, to.getY() - from.getY(), j))) {
-                    return createResult(false, new TranslatableText("status.clear_ink.out_of_world"));
+                    return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".clear_ink.out_of_world"));
                 }
             }
         }
         int count = 0;
         int blockTotal = 0;
-        for (int x = from.getX(); x <= to.getX(); x++)
-            for (int y = from.getY(); y <= to.getY(); y++)
+        for (int x = from.getX(); x <= to.getX(); x++) {
+            for (int y = from.getY(); y <= to.getY(); y++) {
                 for (int z = from.getZ(); z <= to.getZ(); z++) {
-                    BlockPos pos = new BlockPos(x,y,z);
+                    BlockPos pos = new BlockPos(x, y, z);
                     Block block = world.getBlockState(pos).getBlock();
                     if (block instanceof AbstractInkableBlock) {
                         if (((AbstractInkableBlock) block).remoteInkClear(world, pos)) {
@@ -46,7 +46,9 @@ public class InkDisruptorItem extends RemoteItem {
                     }
                     blockTotal++;
                 }
+            }
+        }
 
-        return createResult(true, new TranslatableText("status.clear_ink."+ (count > 0 ? "success" : "no_ink"), count)).setIntResults(count, (count * 15) / blockTotal);
+        return RemoteItem.createResult(true, new TranslatableText("status." + Splatcraft.MOD_ID + ".clear_ink."+ (count > 0 ? "success" : "no_ink"), count)).setIntResults(count, (count * 15) / blockTotal);
     }
 }

@@ -53,8 +53,5 @@
     "cardinal-components-entity": "*",
     "cloth-config2": "*",
     "chord": "<=1.5.4"
-  },
-  "breaks": {
-    "lithium": "*"
   }
 }

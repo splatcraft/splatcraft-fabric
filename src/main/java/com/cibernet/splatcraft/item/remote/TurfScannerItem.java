@@ -1,5 +1,6 @@
 package com.cibernet.splatcraft.item.remote;
 
+import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
@@ -36,13 +37,13 @@ public class TurfScannerItem extends RemoteItem {
 
 
         if (!(minPos.getY() >= 0 && maxPos.getY() < 256)) {
-            return createResult(false, new TranslatableText("status.scan_turf.out_of_world"));
+            return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".scan_turf.out_of_world"));
         }
 
         for (int j = minPos.getZ(); j <= maxPos.getZ(); j += 16) {
             for (int k = minPos.getX(); k <= maxPos.getX(); k += 16) {
                 if (!world.isChunkLoaded(new BlockPos(k, maxPos.getY() - minPos.getY(), j))) {
-                    return createResult(false, new TranslatableText("status.scan_turf.out_of_world"));
+                    return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".scan_turf.out_of_world"));
                 }
             }
         }
@@ -197,7 +198,7 @@ public class TurfScannerItem extends RemoteItem {
 			*/
 
         if (scores.isEmpty()) {
-            return createResult(false, new TranslatableText("status.scan_turf.no_ink"));
+            return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".scan_turf.no_ink"));
         }/* else {
             SendScanTurfResultsPacket packet = new SendScanTurfResultsPacket(colors, colorScores);
             if(target == null) {

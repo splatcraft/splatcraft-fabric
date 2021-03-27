@@ -23,7 +23,7 @@ public class AbstractInkTankArmorModel extends BipedEntityModel<LivingEntity> {
     );
 
     public AbstractInkTankArmorModel() {
-        super(1.0F);
+        super(1.0f);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AbstractInkTankArmorModel extends BipedEntityModel<LivingEntity> {
                 box.visible = false;
             } else {
                 box.visible = true;
-                box.pivotY = 23.25F - Math.min(i * inkPctg, i);
+                box.pivotY = 23.25f - Math.min(i * inkPctg, i);
             }
         }
     }

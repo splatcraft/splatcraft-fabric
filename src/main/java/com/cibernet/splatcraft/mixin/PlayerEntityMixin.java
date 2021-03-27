@@ -52,7 +52,7 @@ public class PlayerEntityMixin {
 
         if (data.isSquid() && !this.abilities.flying) {
             float movementSpeed = PlayerHandler.getMovementSpeed($this, cir.getReturnValueF());
-            if (movementSpeed != -1.0F) {
+            if (movementSpeed != -1.0f) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
             }
         }
@@ -61,9 +61,9 @@ public class PlayerEntityMixin {
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         if (!$this.world.isClient) {
-            double threshold = 0.13D;
+            double threshold = 0.13d;
             if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
-                ColorUtils.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0F);
+                ColorUtils.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0f);
             }
 
             splatcraft_posLastTick = $this.getPos();
@@ -85,10 +85,10 @@ public class PlayerEntityMixin {
             if (data.isSquid()) {
                 cir.setReturnValue(dimensions.height / (
                         data.isSubmerged()
-                            ? 3.0F
+                            ? 3.0f
                             : $this.isOnGround()
-                                ? 2.6F
-                                : 1.2F
+                                ? 2.6f
+                                : 1.2f
                     )
                 );
             }

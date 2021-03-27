@@ -28,8 +28,8 @@ public class ClientPlayNetworkHandlerMixin {
             InkProjectileEntity entity = new InkProjectileEntity(this.world, x, y, z);
             entity.updateTrackedPosition(x, y, z);
             entity.refreshPositionAfterTeleport(x, y, z);
-            entity.pitch = (float)(packet.getPitch() * 360) / 256.0F;
-            entity.yaw = (float)(packet.getYaw() * 360) / 256.0F;
+            entity.pitch = (float)(packet.getPitch() * 360) / 256.0f;
+            entity.yaw = (float)(packet.getYaw() * 360) / 256.0f;
             entity.setUuid(packet.getUuid());
 
             int entityId = packet.getId();

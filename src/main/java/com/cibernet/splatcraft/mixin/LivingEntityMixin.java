@@ -31,7 +31,7 @@ public class LivingEntityMixin {
     private InkColor splatcraft_lastLandedBlockInkColor = InkColors.NONE;
 
     @SuppressWarnings("ConstantConditions")
-    @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91F, ordinal = 0)) // targets the FIRST place a float is defined as 0.91F, on ground
+    @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91f, ordinal = 0)) // targets the FIRST place a float is defined as 0.91f, on ground
     private float checkLastLandedBlock(float c) {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
@@ -51,7 +51,7 @@ public class LivingEntityMixin {
         return c;
     }
     @SuppressWarnings("ConstantConditions")
-    @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91F, ordinal = 1)) // targets the SECOND place a float is defined as 0.91F, not on ground
+    @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91f, ordinal = 1)) // targets the SECOND place a float is defined as 0.91f, not on ground
     private float fixSquidAirborneVelocity(float c) {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
@@ -62,8 +62,8 @@ public class LivingEntityMixin {
             }
 
             if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())))) {
-                ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335F);
-                return 1.0F;
+                ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335f);
+                return 1.0f;
             }
         }
 
@@ -77,7 +77,7 @@ public class LivingEntityMixin {
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
-                cir.setReturnValue(cir.getReturnValueF() * 1.36F);
+                cir.setReturnValue(cir.getReturnValueF() * 1.36f);
             }
         }
     }

@@ -64,7 +64,7 @@ public class ShooterItem extends AbstractWeaponItem {
             proj.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
             world.spawnEntity(proj);
 
-            world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7F, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1F + 1.0F) * 0.95F);
+            world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
         } else {
             sendNoInkMessage(player);
         }

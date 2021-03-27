@@ -31,7 +31,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
 
     public SquidBumperEntity(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
-        this.pushSpeedReduction = -3.0F;
+        this.pushSpeedReduction = -3.0f;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         dataTracker.startTracking(INK_COLOR, InkColors.NONE.toString());
         dataTracker.startTracking(RESPAWN_TIME, 0);
         dataTracker.startTracking(INKPROOF, false);
-        dataTracker.startTracking(PRE_FLATTEN_DAMAGE, 0.0F);
+        dataTracker.startTracking(PRE_FLATTEN_DAMAGE, 0.0f);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return this.isFlattened() ? super.getDimensions(pose).scaled(1.0F, 0.1F) : super.getDimensions(pose);
+        return this.isFlattened() ? super.getDimensions(pose).scaled(1.0f, 0.1f) : super.getDimensions(pose);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     protected float turnHead(float bodyRotation, float headRotation) {
         this.prevBodyYaw = this.prevYaw;
         this.bodyYaw = this.yaw;
-        return 0.0F;
+        return 0.0f;
     }
 
     @Override
@@ -123,27 +123,27 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
                 double z = entity.getZ() - this.getZ();
                 double xz = MathHelper.absMax(x, z);
 
-                if (xz >= 0.009999999776482582D) {
+                if (xz >= 0.009999999776482582d) {
                     xz = MathHelper.sqrt(xz);
                     x = x / xz;
                     z = z / xz;
-                    double d3 = 1.0D / xz;
+                    double d3 = 1.0d / xz;
 
-                    if (d3 > 1.0D) {
-                        d3 = 1.0D;
+                    if (d3 > 1.0d) {
+                        d3 = 1.0d;
                     }
 
                     x = x * d3;
                     z = z * d3;
-                    x = x * 0.05000000074505806D;
-                    z = z * 0.05000000074505806D;
-                    x = x * (double)(1.0F - this.pushSpeedReduction);
-                    z = z * (double)(1.0F - this.pushSpeedReduction);
+                    x = x * 0.05000000074505806d;
+                    z = z * 0.05000000074505806d;
+                    x = x * (double)(1.0f - this.pushSpeedReduction);
+                    z = z * (double)(1.0f - this.pushSpeedReduction);
                     x *= 3;
                     z *= 3;
 
                     if (!entity.hasPassengers()) {
-                        entity.addVelocity(x, 0.0D, z);
+                        entity.addVelocity(x, 0.0d, z);
                     }
                 }
             }
@@ -166,7 +166,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         this.drop(source);
     }
     public void playBreakSound() {
-        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0F, 1.0F);
+        this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_BREAK, this.getSoundCategory(), 1.0f, 1.0f);
     }
 
     public ItemStack asItem() {
@@ -189,11 +189,11 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         boolean flattening = respawnTime == this.maxRespawnTime;
         if (respawnTime == 0 || flattening) {
             if (flattening) {
-                for (float pitch : new float[]{ 0.0F, 1.0F, 2.0F }) {
-                    this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_HURT_DROWN, this.getSoundCategory(), 1.0F, pitch);
+                for (float pitch : new float[]{ 0.0f, 1.0f, 2.0f }) {
+                    this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_HURT_DROWN, this.getSoundCategory(), 1.0f, pitch);
                 }
             } else {
-                this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, this.getSoundCategory(), 1.0F, 2.0F);
+                this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, this.getSoundCategory(), 1.0f, 2.0f);
             }
         }
 

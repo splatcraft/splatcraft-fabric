@@ -15,15 +15,15 @@ import net.minecraft.util.registry.Registry;
 public class SplatcraftEntities {
     public static final EntityType<InkSquidEntity> INK_SQUID = register(InkSquidEntity.id, FabricEntityTypeBuilder.createLiving()
         .entityFactory(InkSquidEntity::new)
-        .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0D))
-        .dimensions(EntityDimensions.fixed(0.6F, 0.6F))
+        .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0d))
+        .dimensions(EntityDimensions.fixed(0.6f, 0.6f))
         .spawnGroup(SpawnGroup.AMBIENT)
         , createSpawnEggColors(0xe87422, 0xf5d7a6)
     );
     public static final EntityType<SquidBumperEntity> SQUID_BUMPER = register(SquidBumperEntity.id, FabricEntityTypeBuilder.createLiving()
         .entityFactory(SquidBumperEntity::new)
-        .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0D))
-        .dimensions(EntityDimensions.changing(0.8F, 1.575F))
+        .defaultAttributes(() -> LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0d).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0d))
+        .dimensions(EntityDimensions.changing(0.8f, 1.575f))
         .spawnGroup(SpawnGroup.MISC)
         , null
     );
