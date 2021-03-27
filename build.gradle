@@ -57,6 +57,7 @@ dependencies {
     // modRuntime "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
     modRuntime "com.github.jellysquid3:lithium-fabric:${project.lithium_version}"
     modRuntime "com.github.jellysquid3:phosphor-fabric:${project.phosphor_version}"
+    modRuntime "com.github.astei:lazydfu:${project.lazydfu_version}"
 
     modImplementation ("grondag:canvas-mc116:1.0.+") {
         exclude group: "net.fabricmc"
