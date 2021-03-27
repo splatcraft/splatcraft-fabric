@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.client.renderer.entity.ink_squid;
 
-import com.cibernet.splatcraft.client.model.InkSquidEntityModel;
+import com.cibernet.splatcraft.client.model.entity.InkSquidEntityModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

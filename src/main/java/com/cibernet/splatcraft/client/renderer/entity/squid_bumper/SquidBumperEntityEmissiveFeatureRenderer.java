@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.client.renderer.entity.squid_bumper;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.client.model.SquidBumperEntityModel;
+import com.cibernet.splatcraft.client.model.entity.SquidBumperEntityModel;
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import net.fabricmc.api.EnvType;
@@ -26,8 +26,8 @@ public class SquidBumperEntityEmissiveFeatureRenderer<T extends SquidBumperEntit
             .build(false)
     );
 
-    public SquidBumperEntityEmissiveFeatureRenderer(FeatureRendererContext<T, SquidBumperEntityModel<T>> featureRendererContext) {
-        super(featureRendererContext);
+    public SquidBumperEntityEmissiveFeatureRenderer(FeatureRendererContext<T, SquidBumperEntityModel<T>> ctx) {
+        super(ctx);
     }
 
     @Override

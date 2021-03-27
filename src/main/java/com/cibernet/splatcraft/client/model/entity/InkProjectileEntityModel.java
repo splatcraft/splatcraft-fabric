@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.client.model;
+package com.cibernet.splatcraft.client.model.entity;
 
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.google.common.collect.ImmutableList;

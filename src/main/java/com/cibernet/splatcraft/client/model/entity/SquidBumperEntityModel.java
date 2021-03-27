@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.client.model;
+package com.cibernet.splatcraft.client.model.entity;
 
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.google.common.collect.ImmutableList;
@@ -7,13 +7,18 @@ import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class SquidBumperEntityModel<T extends SquidBumperEntity> extends CompositeEntityModel<T> {
-    public final ModelPart bumper;
-    private final ModelPart ears;
     private final ModelPart base;
+    private final ModelPart bumper;
+    private final ModelPart ears;
 
     public SquidBumperEntityModel() {
         textureWidth = 80;
         textureHeight = 64;
+
+        base = new ModelPart(this);
+        base.setPivot(0.0f, 24.0f, 0.0f);
+        base.setTextureOffset(0, 47).addCuboid(-6.0f, -2.0f, -5.0f, 12.0f, 2.0f, 10.0f, 0.0f, false);
+
         bumper = new ModelPart(this);
         bumper.setPivot(0.0f, 24.0f, 0.0f);
         bumper.setTextureOffset(0, 24).addCuboid(-6.0f, -25.0f, -5.0f, 12.0f, 23.0f, 10.0f, 0.0f, false);
@@ -24,10 +29,6 @@ public class SquidBumperEntityModel<T extends SquidBumperEntity> extends Composi
         bumper.addChild(ears);
         setAngles(ears, 0.0f, 0.0f, 0.7854f);
         ears.setTextureOffset(44, 40).addCuboid(-9.0f, -9.0f, -1.0f, 16.0f, 16.0f, 2.0f, 0.0f, false);
-
-        base = new ModelPart(this);
-        base.setPivot(0.0f, 24.0f, 0.0f);
-        base.setTextureOffset(0, 47).addCuboid(-6.0f, -2.0f, -5.0f, 12.0f, 2.0f, 10.0f, 0.0f, false);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class SquidBumperEntityModel<T extends SquidBumperEntity> extends Composi
 
     @Override
     public Iterable<ModelPart> getParts() {
-        return ImmutableList.of(this.bumper, this.base);
+        return ImmutableList.of(this.base, this.bumper);
     }
 
     public void setAngles(ModelPart modelRenderer, float x, float y, float z) {

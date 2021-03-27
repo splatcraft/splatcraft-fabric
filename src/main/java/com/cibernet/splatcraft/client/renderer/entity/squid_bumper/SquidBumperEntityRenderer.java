@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.client.renderer.entity.squid_bumper;
 
-import com.cibernet.splatcraft.client.model.SquidBumperEntityModel;
+import com.cibernet.splatcraft.client.model.entity.SquidBumperEntityModel;
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import net.fabricmc.api.EnvType;
@@ -17,18 +17,18 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public class SquidBumperEntityRenderer extends LivingEntityRenderer<SquidBumperEntity, SquidBumperEntityModel<SquidBumperEntity>> {
+public class SquidBumperEntityRenderer<T extends SquidBumperEntity> extends LivingEntityRenderer<T, SquidBumperEntityModel<T>> {
     public static final Identifier TEXTURE = SplatcraftEntities.texture(SquidBumperEntity.id + "/" + SquidBumperEntity.id);
 
     @SuppressWarnings("unused")
     public SquidBumperEntityRenderer(EntityRenderDispatcher dispatcher, @Nullable EntityRendererRegistry.Context ctx) {
         super(dispatcher, new SquidBumperEntityModel<>(), 0.5f);
-        this.addFeature(new SquidBumperEntityColorFeatureRenderer(this));
+        this.addFeature(new SquidBumperEntityColorFeatureRenderer<>(this));
         this.addFeature(new SquidBumperEntityEmissiveFeatureRenderer<>(this));
     }
 
     @Override
-    protected void renderLabelIfPresent(SquidBumperEntity entity, Text text, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
+    protected void renderLabelIfPresent(T entity, Text text, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
         if (entity == this.dispatcher.targetedEntity || entity.isFlattened()) {
             super.renderLabelIfPresent(
                 entity,
@@ -43,7 +43,7 @@ public class SquidBumperEntityRenderer extends LivingEntityRenderer<SquidBumperE
     }
 
     @Override
-    public Identifier getTexture(SquidBumperEntity entity) {
+    public Identifier getTexture(T entity) {
         return TEXTURE;
     }
 }

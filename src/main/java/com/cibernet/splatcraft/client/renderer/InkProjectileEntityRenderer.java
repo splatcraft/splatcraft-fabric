@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.client.renderer;
 
-import com.cibernet.splatcraft.client.model.InkProjectileEntityModel;
+import com.cibernet.splatcraft.client.model.entity.InkProjectileEntityModel;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;

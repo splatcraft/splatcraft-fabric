@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.client.model;
+package com.cibernet.splatcraft.client.model.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
