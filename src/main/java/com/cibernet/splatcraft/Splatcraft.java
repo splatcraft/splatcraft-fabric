@@ -2,12 +2,11 @@ package com.cibernet.splatcraft;
 
 import com.cibernet.splatcraft.command.InkColorCommand;
 import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import com.cibernet.splatcraft.network.SplatcraftNetworking;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
@@ -20,7 +19,6 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.command.argument.ArgumentTypes;
@@ -128,13 +126,12 @@ public class Splatcraft implements ModInitializer {
             }
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
+        SplatcraftNetworking.registerReceivers();
+        PlayerHandler.registerEvents();
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER_INSTANCE = null);
         ServerPlayConnectionEvents.JOIN.register(InkColors::sync);
-
-        PlayerHandler.registerEvents();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> InkColorCommand.register(dispatcher));
         ArgumentTypes.register(new Identifier(Splatcraft.MOD_ID, "ink_color").toString(), InkColorArgumentType.class, new ConstantArgumentSerializer<>(InkColorArgumentType::inkColor));
