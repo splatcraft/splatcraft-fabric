@@ -14,10 +14,12 @@ import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -160,5 +162,10 @@ public class SplatcraftClientNetworking {
                 Splatcraft.log(Level.ERROR, "Received ink color list was null!");
             }
         });
+    }
+
+    public static void toggleSquidForm(ClientPlayerEntity player) {
+        ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
+        PlayerDataComponent.toggleSquidForm(player);
     }
 }

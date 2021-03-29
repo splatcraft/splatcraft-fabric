@@ -4,8 +4,8 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
+import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -17,8 +17,6 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -297,8 +295,7 @@ public class SplatcraftConfigManager {
                     if (squidFormKeyBehaviorOption.value != value && value == SquidFormKeyBehavior.HOLD) {
                         ClientPlayerEntity player = MinecraftClient.getInstance().player;
                         if (PlayerDataComponent.isSquid(player)) {
-                            ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
-                            PlayerDataComponent.toggleSquidForm(player);
+                            SplatcraftClientNetworking.toggleSquidForm(player);
                         }
                     }
                     squidFormKeyBehaviorOption.value = value;

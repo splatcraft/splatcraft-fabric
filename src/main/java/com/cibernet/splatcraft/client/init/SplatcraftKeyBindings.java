@@ -3,14 +3,11 @@ package com.cibernet.splatcraft.client.init;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -23,8 +20,7 @@ public class SplatcraftKeyBindings {
     public SplatcraftKeyBindings() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.world != null && SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior.value.keyIsPressed(CHANGE_SQUID_FORM.wasPressed(), CHANGE_SQUID_FORM.isPressed())) {
-                ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
-                PlayerDataComponent.toggleSquidForm(client.player);
+                SplatcraftClientNetworking.toggleSquidForm(client.player);
             }
 
             if (OPEN_CONFIG_MENU.wasPressed()) {
