@@ -3,6 +3,9 @@ package com.cibernet.splatcraft.client.config;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
+import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
+import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -14,9 +17,12 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
@@ -73,6 +79,7 @@ public class SplatcraftConfigManager {
                 INK.inkAmountIndicatorExclamationsMin.value = SplatcraftConfigManager.load(jsonObject, INK.inkAmountIndicatorExclamationsMin).getAsInt();
                 INK.inkAmountIndicatorExclamationsMax.value = SplatcraftConfigManager.load(jsonObject, INK.inkAmountIndicatorExclamationsMax).getAsInt();
                 SplatcraftConfig.AccessibilityGroup ACCESSIBILITY = SplatcraftConfig.ACCESSIBILITY;
+                ACCESSIBILITY.squidFormKeyBehavior.value = SquidFormKeyBehavior.valueOf(SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.squidFormKeyBehavior).getAsString());
                 ACCESSIBILITY.colorLock.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLock).getAsBoolean();
                 ACCESSIBILITY.colorLockFriendly.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLockFriendly).getAsInt();
                 ACCESSIBILITY.colorLockHostile.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLockHostile).getAsInt();
@@ -275,6 +282,8 @@ public class SplatcraftConfigManager {
         //
 
         ConfigCategory ACCESSIBILITY = builder.getOrCreateCategory(createAccessibilityText());
+        TranslatableText squidFormKeyBehavior = createAccessibilityText(SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior.getId());
+        EnumOption<SquidFormKeyBehavior> squidFormKeyBehaviorOption = SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior;
         TranslatableText colorLock = createAccessibilityText(SplatcraftConfig.ACCESSIBILITY.colorLock.getId());
         Option<Boolean> colorLockOption = SplatcraftConfig.ACCESSIBILITY.colorLock;
         TranslatableText colorLockFriendly = createAccessibilityText(SplatcraftConfig.ACCESSIBILITY.colorLockFriendly.getId());
@@ -282,6 +291,21 @@ public class SplatcraftConfigManager {
         TranslatableText colorLockHostile = createAccessibilityText(SplatcraftConfig.ACCESSIBILITY.colorLockHostile.getId());
         Option<Integer> colorLockHostileOption = SplatcraftConfig.ACCESSIBILITY.colorLockHostile;
         ACCESSIBILITY.addEntry(
+            entryBuilder.startEnumSelector(squidFormKeyBehavior, squidFormKeyBehaviorOption.getClazz(), squidFormKeyBehaviorOption.value)
+                .setDefaultValue(squidFormKeyBehaviorOption.getDefault())
+                .setSaveConsumer(value -> {
+                    if (squidFormKeyBehaviorOption.value != value && value == SquidFormKeyBehavior.HOLD) {
+                        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+                        if (PlayerDataComponent.isSquid(player)) {
+                            ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
+                            PlayerDataComponent.toggleSquidForm(player);
+                        }
+                    }
+                    squidFormKeyBehaviorOption.value = value;
+                })
+                .setTooltip(createTooltip(squidFormKeyBehavior))
+                .build()
+        ).addEntry(
             entryBuilder.startBooleanToggle(colorLock, colorLockOption.value)
                 .setDefaultValue(colorLockOption.getDefault())
                 .setSaveConsumer(value -> {

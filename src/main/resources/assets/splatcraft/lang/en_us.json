@@ -355,7 +355,7 @@
     "stat.splatcraft.specials_used": "Special Weapons Used",
 
     "key.categories.splatcraft": "Splatcraft",
-    "key.splatcraft.toggle_squid": "Toggle Squid Form",
+    "key.splatcraft.change_squid_form": "Change Squid Form",
     "key.splatcraft.open_config_menu": "Open Configuration Menu",
 
     "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed Bonus",
@@ -397,6 +397,8 @@
     "config.splatcraft.category.ink.ink_amount_exclamations_max": "Amount Indicator Exclamations Maximum",
     "config.splatcraft.category.ink.ink_amount_exclamations_max.tooltip": "When the ink amount indicator full ink warning should display.",
     "config.splatcraft.category.accessibility": "Accessibility",
+    "config.splatcraft.category.accessibility.squid_form_key_behavior": "Squid Form Key Behavior",
+    "config.splatcraft.category.accessibility.squid_form_key_behavior.tooltip": "Decide how the squid form key behaves.",
     "config.splatcraft.category.accessibility.color_lock": "Color Lock",
     "config.splatcraft.category.accessibility.color_lock.tooltip": "Enable or disable color lock.",
     "config.splatcraft.category.accessibility.color_lock_friendly": "Color Lock Friendly",

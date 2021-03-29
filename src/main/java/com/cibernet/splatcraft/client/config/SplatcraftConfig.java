@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.client.config;
 
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
+import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import me.andante.chord.client.config.EnumOption;
 import me.andante.chord.client.config.Option;
@@ -93,6 +94,10 @@ public class SplatcraftConfig {
 
     public static AccessibilityGroup ACCESSIBILITY = new AccessibilityGroup();
     public static class AccessibilityGroup {
+        /**
+         * Decide how the squid form key behaves.
+         */
+        public EnumOption<SquidFormKeyBehavior> squidFormKeyBehavior = register(new EnumOption<>("squid_form_key_behavior", SquidFormKeyBehavior.class, SquidFormKeyBehavior.HOLD));
         /**
          * Enable or disable color lock.
          */
