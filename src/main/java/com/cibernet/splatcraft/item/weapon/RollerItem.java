@@ -93,7 +93,8 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                             zOff = rollDepth - (horizontalFacingIsSouth ? horizontalFacing.getDirection().offset() : 0);
                             xOff = i * (horizontalFacing.equals(Direction.SOUTH) ? -1 : 1);
                         } else {
-                            xOff = rollDepth;
+                            boolean horizontalFacingIsEast = horizontalFacing.equals(Direction.EAST);
+                            xOff = rollDepth + (horizontalFacingIsEast ? -1 : 0);
                         }
 
                         BlockPos inkPos = pos.add(fwd.x * 2 + xOff, -1, fwd.z * 2 + zOff);
