@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -57,6 +58,7 @@ public class PlayerEntityMixin {
             }
         }
     }
+
     @Inject(method = "travel", at = @At("TAIL"))
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
@@ -67,6 +69,17 @@ public class PlayerEntityMixin {
             }
 
             splatcraft_posLastTick = $this.getPos();
+        }
+    }
+
+    @Inject(method = "damage", at = @At("TAIL"))
+    private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity $this = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.getComponent($this);
+        if (data.isSquid()) {
+            for (int i = 0; i < Math.min(amount, 24); ++i) {
+                ColorUtils.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f);
+            }
         }
     }
 
