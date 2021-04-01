@@ -27,7 +27,7 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
 
     @Override
     public void render(InkProjectileEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-        if (this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity.getPos().add(0.0d, entity.getStandingEyeHeight(), 0.0d)) >= 4.0d) {
+        if (entity.age >= 3 || !(this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity) < 12.25d)) {
             matrices.push();
 
             float[] color = ColorUtils.getColorsFromInt(entity.getInkColor().getColorOrLocked());
