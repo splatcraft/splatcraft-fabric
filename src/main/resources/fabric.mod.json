@@ -41,10 +41,12 @@
       "com.cibernet.splatcraft.SplatcraftCardinalComponents"
     ]
   },
+
   "mixins": [
     "splatcraft.mixins.json"
   ],
   "accessWidener": "splatcraft.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.10.5",
     "fabric": ">=0.32.0",
@@ -54,5 +56,11 @@
     "cloth-config2": "*",
     "chord": "<=1.5.4",
     "geckolib3": "*"
+  },
+  "conflicts": {
+    "sodium": "*"
+  },
+  "recommends": {
+    "canvas": "*"
   }
 }
