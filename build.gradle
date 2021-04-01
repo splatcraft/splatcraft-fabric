@@ -22,20 +22,25 @@ if (System.env.CI == "true") {
 minecraft {}
 
 repositories {
-    maven { url = "https://dl.bintray.com/ladysnake/libs/" }
-    maven { url = "https://jitpack.io/" }
-    maven { url = "https://maven.shedaniel.me/" }
-    maven { url = "https://maven.shadew.net/" }
-    maven { url = "https://maven.dblsaiko.net/" }
+    maven { url = "https://dl.bintray.com/ladysnake/libs" }
+    maven { url = "https://jitpack.io" }
+    maven { url = "https://maven.shedaniel.me" }
+    maven { url = "https://maven.shadew.net" }
+    maven { url = "https://maven.dblsaiko.net" }
     maven { url = "https://server.bbkr.space/artifactory/libs-release" }
 }
 
 dependencies {
+    // DEFAULT
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+    // COMPATIBILITY
+    modImplementation "com.github.jellysquid3:lithium-fabric:${project.lithium_version}"
+
+    // LIBS
     modImplementation "com.github.andantedevs:chord:${project.chord_version}"
     include "com.github.andantedevs:chord:${project.chord_version}"
 
@@ -51,20 +56,19 @@ dependencies {
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:${project.cardinal_version}"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 
+    modImplementation ("grondag:canvas-mc116:1.0.+") {
+        exclude group: "net.fabricmc"
+        exclude group: "net.fabricmc.fabric-api"
+        exclude group: "me.shedaniel.cloth"
+    }
+
+    // RUNTIME UTILS
     modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }
     modRuntime "net.shadew:jedt:${project.jedt_version}"
 
     // modRuntime "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
-    modImplementation "com.github.jellysquid3:lithium-fabric:${project.lithium_version}"
     modRuntime "com.github.jellysquid3:phosphor-fabric:${project.phosphor_version}"
     modRuntime "com.github.astei:lazydfu:${project.lazydfu_version}"
-
-    modImplementation ("grondag:canvas-mc116:1.0.+") {
-        exclude group: "net.fabricmc"
-        exclude group: "net.fabricmc.fabric-api"
-        exclude group: "me.shedaniel"
-        exclude group: "me.shedaniel.cloth"
-    }
 }
 
 loom {
