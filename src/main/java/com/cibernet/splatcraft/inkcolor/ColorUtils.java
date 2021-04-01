@@ -4,8 +4,8 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.entity.InkableEntity;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -149,10 +149,10 @@ public class ColorUtils {
         return new float[]{ r, g, b };
     }
 
-    public static Text getFormattedColorName(InkColor color, boolean colorless) {
-        TranslatableText text = new TranslatableText(color.getTranslationKey());
+    public static Text getFormattedColorName(InkColor inkColor, boolean colorless) {
+        TranslatableText text = new TranslatableText(inkColor.getTranslationKey());
         if (!colorless) {
-            text.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color.getColor())));
+            text.setStyle(Style.EMPTY.withColor(TextColor.fromRgb(inkColor.color)));
         }
 
         return text;
@@ -192,14 +192,14 @@ public class ColorUtils {
     }
 
     public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
-        return ColorUtils.getInkColor(player).matches(ColorUtils.getInkColor(stack).getColor());
+        return ColorUtils.getInkColor(player).matches(ColorUtils.getInkColor(stack).color);
     }
 
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {
         if (!world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
 
-            buf.writeString(inkColor.toString());
+            buf.writeIdentifier(inkColor.id);
             buf.writeFloat(scale);
 
             // write spawn pos
@@ -234,7 +234,7 @@ public class ColorUtils {
             buf.writeDouble(entity.getY());
             buf.writeDouble(entity.getZ());
 
-            buf.writeString(inkColor.toString());
+            buf.writeIdentifier(inkColor.id);
             buf.writeFloat(scale);
 
             for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) entity.world, entity.getBlockPos())) {

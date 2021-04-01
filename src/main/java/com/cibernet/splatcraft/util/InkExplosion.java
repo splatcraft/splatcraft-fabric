@@ -35,7 +35,7 @@ public class InkExplosion extends Explosion {
     private final DamageSource damageSource;
     private final List<BlockPos> affectedBlockPositions = Lists.newArrayList();
 
-    private final InkColor color;
+    private final InkColor inkColor;
     private final InkBlockUtils.InkType inkType;
     private final boolean damageMobs;
     private final float damage;
@@ -53,7 +53,7 @@ public class InkExplosion extends Explosion {
         inksplosion.affectBlocks(false);
     }
 
-    public InkExplosion(World world, Entity entity, DamageSource damageSource, double x, double y, double z, float blockDamage, float damage, boolean damageMobs, float size, InkColor color, InkBlockUtils.InkType inkType, ItemStack weapon) {
+    public InkExplosion(World world, Entity entity, DamageSource damageSource, double x, double y, double z, float blockDamage, float damage, boolean damageMobs, float size, InkColor inkColor, InkBlockUtils.InkType inkType, ItemStack weapon) {
         super(world, entity, damageSource, null, x, y, z, blockDamage, false, DestructionType.BREAK);
 
         this.world = world;
@@ -64,7 +64,7 @@ public class InkExplosion extends Explosion {
         this.z = z;
         this.damageSource = damageSource;
 
-        this.color = color;
+        this.inkColor = inkColor;
         this.inkType = inkType;
         this.damageMobs = damageMobs;
         this.damage = damage;
@@ -122,17 +122,17 @@ public class InkExplosion extends Explosion {
         List<Entity> list = this.world.getOtherEntities(this.entity, new Box(k1, i2, j2, l1, i1, j1));
 
         for (Entity entity : list) {
-            InkColor targetColor = InkColors.NONE;
+            InkColor targetInkColor = InkColors.NONE;
             if (entity instanceof LivingEntity) {
-                targetColor = ColorUtils.getInkColor(entity);
+                targetInkColor = ColorUtils.getInkColor(entity);
             }
 
-            if (!this.color.matches(targetColor.getColor()) && !targetColor.equals(InkColors.NONE)) {
-                InkDamageUtils.splatDamage(world, (LivingEntity) entity, damage, this.color, this.entity, damageMobs);
+            if (!this.inkColor.matches(targetInkColor.color) && !targetInkColor.equals(InkColors.NONE)) {
+                InkDamageUtils.splatDamage(world, (LivingEntity) entity, damage, this.inkColor, this.entity, damageMobs);
             }
 
             if (entity instanceof SheepEntity) {
-                DyeColor dyeColor = DyeColor.byName(this.color.getId().getPath(), ((SheepEntity) entity).getColor());
+                DyeColor dyeColor = DyeColor.byName(this.inkColor.id.getPath(), ((SheepEntity) entity).getColor());
                 if (dyeColor != null) {
                     ((SheepEntity) entity).setColor(dyeColor);
                 }
@@ -143,9 +143,9 @@ public class InkExplosion extends Explosion {
     public void affectBlocks(boolean spawnParticles) {
         if (spawnParticles) {
             if (!(this.size < 2.0f)) {
-                this.world.addParticle(new InkSplashParticleEffect(this.color) /* TODO emitter */, this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
+                this.world.addParticle(new InkSplashParticleEffect(this.inkColor) /* TODO emitter */, this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
             } else {
-                this.world.addParticle(new InkSplashParticleEffect(this.color), this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
+                this.world.addParticle(new InkSplashParticleEffect(this.inkColor), this.x, this.y, this.z, 1.0d, 0.0d, 0.0d);
             }
         }
 
@@ -155,9 +155,9 @@ public class InkExplosion extends Explosion {
             BlockState blockstate = this.world.getBlockState(blockpos);
             if (!blockstate.isAir()) {
                 if (entity instanceof PlayerEntity)
-                    InkBlockUtils.inkBlockAsPlayer((PlayerEntity) entity, world, blockpos, color, blockDamage, inkType);
+                    InkBlockUtils.inkBlockAsPlayer((PlayerEntity) entity, world, blockpos, inkColor, blockDamage, inkType);
                 else {
-                    InkBlockUtils.inkBlock(world, blockpos, color, blockDamage, inkType);
+                    InkBlockUtils.inkBlock(world, blockpos, inkColor, blockDamage, inkType);
                 }
             }
         }

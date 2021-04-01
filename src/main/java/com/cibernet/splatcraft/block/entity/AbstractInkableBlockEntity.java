@@ -33,7 +33,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         if (this.world != null) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeBlockPos(this.pos);
-            buf.writeString(this.getInkColor().toString());
+            buf.writeIdentifier(this.getInkColor().id);
 
             for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) this.world, this.pos)) {
                 ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SET_BLOCK_ENTITY_INK_COLOR_PACKET_ID, buf);

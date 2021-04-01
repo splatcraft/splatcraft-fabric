@@ -1,13 +1,16 @@
 package com.cibernet.splatcraft.mixin.client;
 
-import com.cibernet.splatcraft.client.renderer.entity.ink_squid.PlayerEntityInkSquidRenderer;
+import com.cibernet.splatcraft.client.renderer.entity.player.AnimatablePlayerEntityRenderer;
+import com.cibernet.splatcraft.client.renderer.entity.player.PlayerEntityInkSquidRenderer;
+import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.entity.player.signal.AnimatablePlayerEntity;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,24 +18,51 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin {
-    private static PlayerEntityInkSquidRenderer splatcraft_playerInkSquidRenderer;
+    private PlayerEntityInkSquidRenderer splatcraft_playerInkSquidRenderer;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void render(AbstractClientPlayerEntity player, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumers, int light, CallbackInfo ci) {
-        if (splatcraft_playerInkSquidRenderer == null) {
-            splatcraft_playerInkSquidRenderer = new PlayerEntityInkSquidRenderer(PlayerEntityRenderer.class.cast(this).getRenderManager());
-        }
+    private void render(AbstractClientPlayerEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, CallbackInfo ci) {
+        this.splatcraft_validateModelCaches(entity);
 
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-        if (data.isSquid()) {
-            if (!InkBlockUtils.shouldBeSubmerged(player)) {
-                splatcraft_playerInkSquidRenderer.render(player, yaw, tickDelta, matrices, consumers, light);
+        if (PlayerDataComponent.isSquid(entity)) {
+            if (!InkBlockUtils.shouldBeSubmerged(entity)) {
+                splatcraft_playerInkSquidRenderer.render(entity, yaw, tickDelta, matrices, vertices, light);
             }
-
             ci.cancel();
+        } else if (SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS.containsKey(entity)) {
+            AnimatablePlayerEntityRenderer renderer = SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS.get(entity);
+            AnimatablePlayerEntity animation = renderer.getAnimatable();
+            if (animation.isRunning() && animation.canContinue()) {
+                renderer.render(entity, yaw, tickDelta, matrices, vertices, light);
+                ci.cancel();
+            } else {
+                SignalRendererManager.reset(entity);
+            }
         }
+    }
+
+    private void splatcraft_validateModelCaches(AbstractClientPlayerEntity entity) {
+        EntityRenderDispatcher dispatcher = PlayerEntityRenderer.class.cast(this).getRenderManager();
+
+        if (splatcraft_playerInkSquidRenderer == null) {
+            splatcraft_playerInkSquidRenderer = new PlayerEntityInkSquidRenderer(dispatcher);
+        }
+
+        Map<AbstractClientPlayerEntity, AnimatablePlayerEntityRenderer> renderers = SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS;
+        if (!renderers.containsKey(entity) && SignalRendererManager.PLAYER_TO_SIGNAL_MAP.containsKey(entity)) {
+            PlayerEntityRenderer $this = PlayerEntityRenderer.class.cast(this);
+            renderers.put(entity, SignalRendererManager.createRenderer(dispatcher, entity, $this.getModel()));
+        }
+        renderers.entrySet().removeAll(
+            renderers.entrySet()
+                .stream().filter(entry -> entry.getValue().isDead())
+                .collect(Collectors.toSet())
+        );
     }
 }

@@ -68,8 +68,6 @@ public class SplatcraftBlocks {
     );
     public static final Block STAGE_VOID = register("stage_void", new StageBarrierBlock(FabricBlockSettings.copy(STAGE_BARRIER), true));
 
-    public SplatcraftBlocks() {}
-
     private static Block register(String id, Block block, boolean registerItem) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);
 

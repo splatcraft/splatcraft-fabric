@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.handler;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 

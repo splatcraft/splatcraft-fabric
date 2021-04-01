@@ -1,6 +1,5 @@
 package com.cibernet.splatcraft.component;
 
-import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
@@ -22,8 +21,10 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private boolean isSquid = false;
     private InkColor inkColor = InkColors.NONE;
     private boolean isSubmerged = false;
-    private Cooldown cooldown;
-    private Charge charge;
+    private Cooldown cooldown = null;
+    private Charge charge = null;
+
+    private boolean moving = false;
 
     public PlayerDataComponent(Object provider) {
         this.provider = provider;
@@ -37,11 +38,12 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         tag.putBoolean("IsSquid", this.isSquid);
         tag.putString("InkColor", this.inkColor.toString());
         tag.putBoolean("IsSubmerged", this.isSubmerged);
-        if (cooldown != null) {
-            cooldown.toTag(tag);
+        tag.putBoolean("Moving", this.moving);
+        if (this.cooldown != null) {
+            this.cooldown.toTag(tag);
         }
-        if (charge != null) {
-            charge.toTag(tag);
+        if (this.charge != null) {
+            this.charge.toTag(tag);
         }
     }
 
@@ -51,6 +53,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.isSquid = tag.getBoolean("IsSquid");
         this.inkColor = InkColor.getFromId(tag.getString("InkColor"));
         this.isSubmerged = tag.getBoolean("IsSubmerged");
+        this.moving = tag.getBoolean("Moving");
         this.cooldown = Cooldown.fromTag(tag);
         this.charge = Charge.fromTag(tag);
 
@@ -82,11 +85,16 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     public void setIsSquid(boolean isSquid) {
         this.isSquid = isSquid;
         this.sync();
+        ((PlayerEntity) this.provider).calculateDimensions();
     }
-    public static void toggleSquidForm(PlayerEntity player) {
+    public static boolean toggleSquidForm(PlayerEntity player) {
         PlayerDataComponent data = getComponent(player);
-        data.setIsSquid(!data.isSquid());
+        boolean isSquid = !data.isSquid();
+        data.setIsSquid(isSquid);
+
         player.calculateDimensions();
+
+        return isSquid;
     }
 
     public InkColor getInkColor() {
@@ -108,6 +116,18 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
     public void setSubmerged(boolean isSubmerged) {
         this.isSubmerged = isSubmerged;
+        this.sync();
+    }
+
+    public boolean isMoving() {
+        return this.moving;
+    }
+    @SuppressWarnings("unused")
+    public static boolean isMoving(PlayerEntity player) {
+        return getComponent(player).isMoving();
+    }
+    public void setMoving(boolean moving) {
+        this.moving = moving;
         this.sync();
     }
 

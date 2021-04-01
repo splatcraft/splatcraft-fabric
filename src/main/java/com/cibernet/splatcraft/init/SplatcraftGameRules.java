@@ -28,8 +28,6 @@ public class SplatcraftGameRules {
     public static GameRules.Key<GameRules.BooleanRule> DROP_CRATE_LOOT = register("dropCrateLoot", GameRuleFactory.createBooleanRule(false));
     public static GameRules.Key<GameRules.BooleanRule> WATER_DAMAGE = register("waterDamage", GameRuleFactory.createBooleanRule(false));
 
-    public SplatcraftGameRules() {}
-
     public static boolean getBoolean(World world, GameRules.Key<GameRules.BooleanRule> rule) {
         return world.getGameRules().getBoolean(rule);
     }

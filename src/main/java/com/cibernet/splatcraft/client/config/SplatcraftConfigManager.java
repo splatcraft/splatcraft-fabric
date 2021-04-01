@@ -68,6 +68,7 @@ public class SplatcraftConfigManager {
                 UI.renderHeldItemWhenHotbarInvisible.value = SplatcraftConfigManager.load(jsonObject, UI.renderHeldItemWhenHotbarInvisible).getAsBoolean();
                 UI.invisibleHotbarStatusBarsShift.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleHotbarStatusBarsShift).getAsInt();
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
+                UI.renderPaperDollWhenSignalling.value = SplatcraftConfigManager.load(jsonObject, UI.renderPaperDollWhenSignalling).getAsBoolean();
                 SplatcraftConfig.InkGroup INK = SplatcraftConfig.INK;
                 // INK.dynamicInkDurabilityColor.value = SplatcraftConfigManager.load(jsonObject, INK.dynamicInkDurabilityColor).getAsBoolean();
                 INK.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, INK.inkColoredCrosshairWhenSquid).getAsBoolean();
@@ -176,6 +177,8 @@ public class SplatcraftConfigManager {
         Option<Integer> invisibleHotbarStatusBarsShiftOption = SplatcraftConfig.UI.invisibleHotbarStatusBarsShift;
         TranslatableText invisibleCrosshairWhenSquid = createUIText(SplatcraftConfig.UI.invisibleCrosshairWhenSquid.getId());
         Option<Boolean> invisibleCrosshairWhenSquidOption = SplatcraftConfig.UI.invisibleCrosshairWhenSquid;
+        TranslatableText renderPaperDollWhenSignalling = createUIText(SplatcraftConfig.UI.renderPaperDollWhenSignalling.getId());
+        Option<Boolean> renderPaperDollWhenSignallingOption = SplatcraftConfig.UI.renderPaperDollWhenSignalling;
         UI.addEntry(
             entryBuilder.startEnumSelector(preventBobViewWhenSquid, preventBobViewWhenSquidOption.getClazz(), preventBobViewWhenSquidOption.value)
                 .setDefaultValue(preventBobViewWhenSquidOption.getDefault())
@@ -217,6 +220,12 @@ public class SplatcraftConfigManager {
                 .setDefaultValue(invisibleCrosshairWhenSquidOption.getDefault())
                 .setSaveConsumer(value -> invisibleCrosshairWhenSquidOption.value = value)
                 .setTooltip(createTooltip(invisibleCrosshairWhenSquid))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(renderPaperDollWhenSignalling, renderPaperDollWhenSignallingOption.value)
+                .setDefaultValue(renderPaperDollWhenSignallingOption.getDefault())
+                .setSaveConsumer(value -> renderPaperDollWhenSignallingOption.value = value)
+                .setTooltip(createTooltip(renderPaperDollWhenSignalling))
                 .build()
         );
 

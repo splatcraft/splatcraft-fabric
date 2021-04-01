@@ -58,6 +58,10 @@ public class SplatcraftConfig {
          * Enable or disable disabling the crosshair when in squid form.
          */
         public Option<Boolean> invisibleCrosshairWhenSquid = register(new Option<>("invisible_crosshair_when_squid", true));
+        /**
+         * Enable or disable rendering your player's paper doll when signalling.
+         */
+        public Option<Boolean> renderPaperDollWhenSignalling = register(new Option<>("render_paper_doll_when_signalling", true));
     }
 
     public static InkGroup INK = new InkGroup();

@@ -6,7 +6,10 @@ import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.init.*;
+import com.cibernet.splatcraft.init.SplatcraftBlocks;
+import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.init.SplatcraftItems;
+import com.cibernet.splatcraft.init.SplatcraftStats;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.minecraft.block.Block;
@@ -89,7 +92,8 @@ public class InkBlockUtils {
     }
 
     public static boolean canSwim(PlayerEntity player, boolean ignoreOnGround) {
-        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && !PlayerDataComponent.getInkColor(player).equals(InkColors.NONE) && !InkBlockUtils.onEnemyInk(player);
+        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && !PlayerDataComponent.getInkColor(player).equals(
+            InkColors.NONE) && !InkBlockUtils.onEnemyInk(player);
     }
     public static boolean canSwim(PlayerEntity player) {
         return canSwim(player, false);
@@ -105,7 +109,7 @@ public class InkBlockUtils {
                 Block block = blockEntity.getCachedState().getBlock();
                 if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
                     InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-                    return !comparisonColor.equals(InkColors.NONE) && !inkColor.equals(InkColors.NONE) && !comparisonColor.matches(inkColor.getColor());
+                    return !comparisonColor.equals(InkColors.NONE) && !inkColor.equals(InkColors.NONE) && !comparisonColor.matches(inkColor.color);
                 }
             }
         }
@@ -130,7 +134,7 @@ public class InkBlockUtils {
     }
 
     public static boolean entityPassesThroughGaps(Entity entity) {
-        return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && SplatcraftComponents.PLAYER_DATA.get(entity).isSquid();
+        return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && PlayerDataComponent.isSquid((PlayerEntity) entity);
     }
 
     public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
@@ -151,7 +155,7 @@ public class InkBlockUtils {
 
             if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb()) {
                 BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).getColor())) {
+                if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color)) {
                     return pos;
                 }
             }
@@ -168,7 +172,7 @@ public class InkBlockUtils {
             if (pos != null) {
                 BlockEntity blockEntity = player.world.getBlockEntity(pos);
                 if (blockEntity instanceof AbstractInkableBlockEntity) {
-                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).getColor());
+                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color);
                 }
             }
         }

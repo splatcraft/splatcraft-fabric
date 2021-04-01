@@ -30,8 +30,6 @@ public class SplatcraftSoundEvents {
     public static SoundEvent SUB_DETONATE = register("sub_detonate");
     public static SoundEvent REMOTE_USE = register("remote_use");
 
-    public SplatcraftSoundEvents() {}
-
     private static SoundEvent register(String id) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);
         return Registry.register(Registry.SOUND_EVENT, identifier, new SoundEvent(identifier));

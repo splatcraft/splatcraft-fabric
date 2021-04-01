@@ -2,8 +2,12 @@ package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.item.AttackInputDetectable;
+import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +26,10 @@ public class ServerPlayerEntityMixin {
             if (item instanceof AttackInputDetectable) {
                 ((AttackInputDetectable) item).onAttack(player, stack);
             }
+
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeUuid(player.getUuid());
+            ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.RESET_PLAYER_SIGNAL_PACKET_ID, buf);
         }
     }
 }

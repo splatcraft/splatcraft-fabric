@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.mixin.client;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
+import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
@@ -13,7 +14,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.options.AttackIndicator;
+import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -48,10 +51,17 @@ public abstract class InGameHudMixin {
 
     private static final Identifier splatcraft_SQUID_GUI_ICONS_TEXTURE = new Identifier(Splatcraft.MOD_ID, "textures/gui/squid_icons.png");
 
+    @Inject(method = "render", at = @At("TAIL"))
+    private void render(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+        if (this.client.player != null && this.client.options.getPerspective() == Perspective.FIRST_PERSON && SignalRendererManager.PLAYER_TO_SIGNAL_MAP.containsKey(this.client.player)) {
+            InventoryScreen.drawEntity(30, 70, SplatcraftConfig.UI.renderPaperDollWhenSignalling.value ? 25 : 0, 0, 0, this.client.player);
+        }
+    }
+
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
         // render ink tank
-        this.renderInkTank(matrices);
+        this.splatcraft_renderInkTank(matrices);
 
         if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.value && PlayerDataComponent.isSquid(client.player)) {
             // render held item
@@ -100,7 +110,7 @@ public abstract class InGameHudMixin {
         }
     }
 
-    private void renderInkTank(MatrixStack matrices) {
+    private void splatcraft_renderInkTank(MatrixStack matrices) {
         InGameHud $this = InGameHud.class.cast(this);
 
         if (this.client.player != null && SplatcraftGameRules.getBoolean(this.client.player.world, SplatcraftGameRules.REQUIRE_INK_TANK)) {

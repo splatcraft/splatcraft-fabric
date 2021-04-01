@@ -39,7 +39,7 @@ public class GameRendererMixin {
     private float modifyFovForSquidForm(float c) {
         ClientPlayerEntity player = this.client.player;
         if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.value && PlayerDataComponent.isSquid(player)) {
-            return c + (float) SplatcraftConfig.UI.fovForSquidForm.value / 100;
+            return c + (SplatcraftConfig.UI.fovForSquidForm.value / 100f);
         }
 
         return c;

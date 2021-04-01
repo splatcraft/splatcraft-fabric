@@ -1,10 +1,10 @@
 package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.minecraft.entity.Entity;
@@ -110,13 +110,13 @@ public class PlayerEntityMixin {
 
     @Inject(method = "isBlockBreakingRestricted", at = @At("HEAD"), cancellable = true)
     private void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
+        if (PlayerHandler.shouldCancelInteraction(PlayerEntity.class.cast(this))) {
             cir.setReturnValue(true);
         }
     }
     @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     private void attack(Entity target, CallbackInfo ci) {
-        if (PlayerHandler.shouldCancelPlayerToWorldInteraction(PlayerEntity.class.cast(this))) {
+        if (PlayerHandler.shouldCancelInteraction(PlayerEntity.class.cast(this))) {
             ci.cancel();
         }
     }

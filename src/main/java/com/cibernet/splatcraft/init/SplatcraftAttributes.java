@@ -9,8 +9,6 @@ import net.minecraft.util.registry.Registry;
 public class SplatcraftAttributes {
     public static final EntityAttribute INK_SWIM_SPEED = register("ink_swim_speed", new ClampedEntityAttribute(SplatcraftAttributes.createTranslationKey("ink_swim_speed"), 0.7f, 0.0d, 1024.0d).setTracked(true));
 
-    public SplatcraftAttributes() {}
-
     private static EntityAttribute register(String id, EntityAttribute entityAttribute) {
         return Registry.register(Registry.ATTRIBUTE, new Identifier(Splatcraft.MOD_ID, id), entityAttribute);
     }

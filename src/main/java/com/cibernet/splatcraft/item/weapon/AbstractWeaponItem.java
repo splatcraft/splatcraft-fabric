@@ -2,8 +2,12 @@ package com.cibernet.splatcraft.item.weapon;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
-import com.cibernet.splatcraft.init.*;
+import com.cibernet.splatcraft.init.SplatcraftBlocks;
+import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.init.SplatcraftItems;
+import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;

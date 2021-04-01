@@ -1,10 +1,46 @@
 package com.cibernet.splatcraft.network;
 
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.signal.SignalWhitelistManager;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
+
+import java.util.UUID;
 
 public class SplatcraftNetworking {
     public static void registerReceivers() {
-        ServerPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, (server, player, handler, buf, responseSender) -> server.execute(() -> PlayerDataComponent.toggleSquidForm(player)));
+        ServerPlayNetworking.registerGlobalReceiver(
+            SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID,
+            (server, player, handler, buf, responseSender) -> server.execute(
+                () -> PlayerDataComponent.toggleSquidForm(player)
+            )
+        );
+        ServerPlayNetworking.registerGlobalReceiver(
+            SplatcraftNetworkingConstants.PLAY_PLAYER_SIGNAL_PACKET_ID,
+            (server, player, handler, buf, responseSender) -> {
+                UUID uuid = buf.readUuid();
+                Identifier id = buf.readIdentifier();
+
+                PacketByteBuf forwardBuf = PacketByteBufs.create();
+                forwardBuf.writeUuid(uuid);
+                forwardBuf.writeIdentifier(id);
+
+                server.execute(
+                    () -> {
+                        if (SignalWhitelistManager.isAllowed(id)) {
+                            for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking(player.getServerWorld(), player.getBlockPos())) {
+                                ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_PLAYER_SIGNAL_PACKET_ID, forwardBuf);
+                            }
+                        } else {
+                            ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.DISALLOWED_PLAYER_SIGNAL_PACKET_ID, forwardBuf);
+                        }
+                    }
+                );
+            }
+        );
     }
 }

@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin.client;
 
-import com.cibernet.splatcraft.init.SplatcraftComponents;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

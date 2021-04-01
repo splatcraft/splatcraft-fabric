@@ -83,8 +83,6 @@ public class InkColors {
     public static final InkColor DYE_RED = register(DyeColor.RED);
     public static final InkColor DYE_BLACK = register(DyeColor.BLACK);
 
-    public InkColors() {}
-
     private static InkColor register(Identifier id, InkColor inkColor) {
         return Registry.register(SplatcraftRegistries.INK_COLORS, id, inkColor);
     }
@@ -120,14 +118,8 @@ public class InkColors {
         if (ALL.isEmpty() || inputData.isEmpty() || !inputData.equals(CACHED_DATA)) {
             HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
 
-            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> all.put(inkColor.getId(), inkColor));
-            inputData.forEach((id, inkColor) -> {
-                if (all.containsKey(id)) {
-                    all.replace(id, inkColor);
-                } else {
-                    all.put(id, inkColor);
-                }
-            });
+            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> all.put(inkColor.id, inkColor));
+            inputData.forEach(all::put);
 
             ALL = all;
             CACHED_DATA = inputData;

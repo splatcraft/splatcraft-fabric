@@ -38,10 +38,8 @@ public class LivingEntityMixin {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player)) {
                 InkColor inkColor = ColorUtils.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
-                if (inkColor.equals(InkColors.NONE)) {
-                    if (player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
-                        return c;
-                    }
+                if (inkColor.equals(InkColors.NONE) && player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
+                    return c;
                 }
 
                 splatcraft_lastLandedBlockInkColor = inkColor;
@@ -61,9 +59,10 @@ public class LivingEntityMixin {
                 splatcraft_lastLandedBlockInkColor = InkColors.NONE;
             }
 
-            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).getColor())))) {
+            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(
+                InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).color)))) {
                 ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335f);
-                return 1.0f;
+                return 0.9914f;
             }
         }
 
@@ -77,7 +76,7 @@ public class LivingEntityMixin {
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
             if (PlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
-                cir.setReturnValue(cir.getReturnValueF() * 1.36f);
+                cir.setReturnValue(cir.getReturnValueF() * 1.208f);
             }
         }
     }

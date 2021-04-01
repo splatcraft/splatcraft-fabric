@@ -29,8 +29,6 @@ public class SplatcraftEntities {
     );
     public static final EntityType<InkProjectileEntity> INK_PROJECTILE = register(InkProjectileEntity.id, FabricEntityTypeBuilder.create(SpawnGroup.MISC, InkProjectileEntity::new), null);
 
-    public SplatcraftEntities() {}
-
     private static <T extends Entity> EntityType<T> register(String id, FabricEntityTypeBuilder<T> entityType, int[] spawnEggColors) {
         EntityType<T> builtEntityType = entityType.build();
 

@@ -93,8 +93,6 @@ public class SplatcraftItems {
 
     public static final Item INKED_BLOCK = register(InkedBlock.id, new BlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
 
-    public SplatcraftItems() {}
-
     public static Item register(String id, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);
     }

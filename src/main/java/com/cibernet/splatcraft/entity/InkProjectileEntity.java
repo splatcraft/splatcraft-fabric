@@ -169,7 +169,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
                 }
 
                 if (target instanceof SheepEntity) {
-                    DyeColor dyeColor = DyeColor.byName(this.getInkColor().getId().getPath(), ((SheepEntity) target).getColor());
+                    DyeColor dyeColor = DyeColor.byName(this.getInkColor().id.getPath(), ((SheepEntity) target).getColor());
                     if (dyeColor != null) {
                         ((SheepEntity) target).setColor(dyeColor);
                     }

@@ -280,6 +280,10 @@
     "splatcraft.ink_color.minecraft:red": "Organic Red",
     "splatcraft.ink_color.minecraft:black": "Organic Black",
 
+    "splatcraft.signal.splatcraft:come_on": "Come On!",
+    "splatcraft.signal.splatcraft:booyah": "Booyah!",
+    "text.splatcraft.signal.disallowed": "'%s' is not enabled on this server!",
+
     "death.attack.splatcraft.outOfBounds": "%s tried to escape the stage",
     "death.attack.splatcraft.outOfBounds.player": "%s was knocked out of the stage by %s",
     "death.attack.splatcraft.enemyInk": "%s was intoxicated by enemy ink",
@@ -356,6 +360,7 @@
 
     "key.categories.splatcraft": "Splatcraft",
     "key.splatcraft.change_squid_form": "Change Squid Form",
+    "key.splatcraft.open_signal_selection_screen": "Open Signal Selection Screen",
     "key.splatcraft.open_config_menu": "Open Configuration Menu",
 
     "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed Bonus",
@@ -383,6 +388,8 @@
     "config.splatcraft.category.ui.invisible_hotbar_status_bars_shift.tooltip": "How far the status bars should shift when the hotbar is invisible.",
     "config.splatcraft.category.ui.invisible_crosshair_when_squid": "Invisible Crosshair When Squid",
     "config.splatcraft.category.ui.invisible_crosshair_when_squid.tooltip": "Enable or disable disabling the crosshair when in squid form.",
+    "config.splatcraft.category.ui.render_paper_doll_when_signalling": "Render Paper Doll When Signalling",
+    "config.splatcraft.category.ui.render_paper_doll_when_signalling.tooltip": "Enable or disable rendering your player's paper doll when signalling.",
     "config.splatcraft.category.ink": "Ink",
     "config.splatcraft.category.ink.ink_colored_crosshair_when_squid": "Ink-Colored Crosshair When Squid",
     "config.splatcraft.category.ink.ink_colored_crosshair_when_squid.tooltip": "Enable or disable an ink-colored crosshair when in squid form.",

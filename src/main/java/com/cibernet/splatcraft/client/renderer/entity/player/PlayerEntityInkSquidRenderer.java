@@ -1,6 +1,7 @@
-package com.cibernet.splatcraft.client.renderer.entity.ink_squid;
+package com.cibernet.splatcraft.client.renderer.entity.player;
 
 import com.cibernet.splatcraft.client.model.entity.InkSquidEntityModel;
+import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +22,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
     }
 
     @Override
-    public void render(LivingEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumers, int light) {
+    public void render(LivingEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
         matrices.push();
         this.model.handSwingProgress = this.getHandSwingProgress(entity, tickDelta);
 
@@ -83,12 +84,12 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         boolean isTranslucent = entity.isSpectator() || entity.isInvisibleTo(MinecraftClient.getInstance().player);
         RenderLayer renderLayer = isTranslucent ? RenderLayer.getItemEntityTranslucentCull(this.getTexture(entity)) : this.model.getLayer(this.getTexture(entity));
         if (renderLayer != null) {
-            this.model.render(matrices, consumers.getBuffer(renderLayer), light, 900000, 1.0f, 1.0f, 1.0f, isTranslucent ? 0.25f : 1.0f);
+            this.model.render(matrices, vertices.getBuffer(renderLayer), light, 900000, 1.0f, 1.0f, 1.0f, isTranslucent ? 0.25f : 1.0f);
         }
 
         if (!isTranslucent) {
             for (FeatureRenderer<LivingEntity, InkSquidEntityModel> featureRenderer : this.features) {
-                featureRenderer.render(matrices, consumers, light, entity, limbDistanceDelta, limbDistance, tickDelta, animationProgress, headBodyYawDelta, pitch);
+                featureRenderer.render(matrices, vertices, light, entity, limbDistanceDelta, limbDistance, tickDelta, animationProgress, headBodyYawDelta, pitch);
             }
         }
 

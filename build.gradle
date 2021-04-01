@@ -28,6 +28,7 @@ repositories {
     maven { url = "https://maven.shadew.net" }
     maven { url = "https://maven.dblsaiko.net" }
     maven { url = "https://server.bbkr.space/artifactory/libs-release" }
+    maven { url = "https://repo.repsy.io/mvn/gandiber/geckolib" }
 }
 
 dependencies {
@@ -55,6 +56,8 @@ dependencies {
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:${project.cardinal_version}"
     include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
+
+    modImplementation "software.bernie.geckolib:geckolib-fabric-${project.geckolib_version}:dev"
 
     modImplementation ("grondag:canvas-mc116:1.0.+") {
         exclude group: "net.fabricmc"

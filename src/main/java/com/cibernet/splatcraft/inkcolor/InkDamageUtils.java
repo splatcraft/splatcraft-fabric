@@ -26,7 +26,7 @@ public class InkDamageUtils {
 
         if ( damage != 0 && (
             ( damageMobs || SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_MOB_DAMAGE))
-            || (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_FRIENDLY_FIRE) || !targetColor.matches(inkColor.getColor()))
+            || (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_FRIENDLY_FIRE) || !targetColor.matches(inkColor.color))
         )) {
             if (target instanceof InkableEntity && !((InkableEntity) target).onEntityInked(damageSource, damage, inkColor) && !targetColor.equals(InkColors.NONE)) {
                 target.damage(damageSource, damage);

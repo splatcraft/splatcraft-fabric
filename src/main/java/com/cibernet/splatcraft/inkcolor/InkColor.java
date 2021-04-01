@@ -15,8 +15,8 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class InkColor {
-    private final int color;
-    private final Identifier id;
+    public final int color;
+    public final Identifier id;
 
     public InkColor(Identifier id, int color) {
         this.id = id;
@@ -41,25 +41,19 @@ public class InkColor {
         return InkColor.getFromId(Identifier.tryParse(identifier));
     }
 
-    public int getColor() {
-        return this.color;
-    }
     @Environment(EnvType.CLIENT)
     public int getColorOrLocked() {
         PlayerEntity player = MinecraftClient.getInstance().player;
         return !this.equals(InkColors.NONE) && SplatcraftConfig.ACCESSIBILITY.colorLock.value
-            ? player != null && this.matches(PlayerDataComponent.getInkColor(player).getColor())
+            ? player != null && this.matches(PlayerDataComponent.getInkColor(player).color)
                 ? SplatcraftConfig.ACCESSIBILITY.colorLockFriendly.value
                 : SplatcraftConfig.ACCESSIBILITY.colorLockHostile.value
             : this.color;
     }
-    public Identifier getId() {
-        return this.id;
-    }
 
     @Override
     public String toString() {
-        return this.getId().toString();
+        return this.id.toString();
     }
 
     @Override

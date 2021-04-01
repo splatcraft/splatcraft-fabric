@@ -31,7 +31,7 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
     public void sync() {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeInt(Block.getRawIdFromState(savedState));
-        buf.writeString(this.getInkColor().toString());
+        buf.writeIdentifier(this.getInkColor().id);
         buf.writeBlockPos(pos);
         buf.writeEnumConstant(InkBlockUtils.InkType.fromBlock((InkedBlock) this.getCachedState().getBlock()));
 

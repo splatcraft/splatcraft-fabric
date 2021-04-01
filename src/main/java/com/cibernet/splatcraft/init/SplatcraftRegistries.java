@@ -9,11 +9,9 @@ import net.minecraft.util.registry.SimpleRegistry;
 
 public class SplatcraftRegistries {
     /**
-     * Splatcraft's built in ink colors.
+     * Splatcraft's built-in ink colors.
      */
     public static final Registry<InkColor> INK_COLORS = createSimple(InkColor.class, "ink_colors");
-
-    public SplatcraftRegistries() {}
 
     private static <T> SimpleRegistry<T> createSimple(Class<T> type, String id) {
         return FabricRegistryBuilder.createSimple(type, new Identifier(Splatcraft.MOD_ID, id)).buildAndRegister();

@@ -3,16 +3,14 @@ package com.cibernet.splatcraft.handler;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
-import com.cibernet.splatcraft.init.SplatcraftComponents;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftStats;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -20,45 +18,28 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
 public class PlayerHandler {
     public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.fixed(0.5f, 0.5f);
     public static final EntityDimensions SQUID_FORM_AIRBORNE_DIMENSIONS = EntityDimensions.fixed(0.5f, 1.0f);
 
-    public static void registerEvents() {
-        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-            if (data.isSquid()) {
-                return ActionResult.FAIL;
-            }
-
-            return ActionResult.PASS;
-        });
-        UseItemCallback.EVENT.register((player, world, hand) -> {
-            ItemStack stack = player.getStackInHand(hand);
-
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-            if (data.isSquid()) {
-                return TypedActionResult.fail(stack);
-            }
-
-            return TypedActionResult.pass(stack);
-        });
-    }
+    protected static final double MOVING_THRESHOLD = 0.035d;
 
     public static void onPlayerTick(PlayerEntity player) {
         PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
 
+        Vec3d vel = player.getVelocity();
+        data.setMoving(Math.abs(vel.getX()) >= MOVING_THRESHOLD || Math.abs(vel.getZ()) >= MOVING_THRESHOLD);
+
         if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && data.isSquid()) {
             data.setIsSquid(false);
-            player.calculateDimensions();
             return;
         }
 
@@ -73,7 +54,7 @@ public class PlayerHandler {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeUuid(player.getUuid());
                 buf.writeBoolean(shouldBeSubmerged);
-                buf.writeString(ColorUtils.getInkColor(player.world.getBlockEntity(shouldBeSubmerged ? InkBlockUtils.getVelocityAffectingPos(player) : InkBlockUtils.getVelocityAffectingPos(player).down())).toString());
+                buf.writeIdentifier(ColorUtils.getInkColor(player.world.getBlockEntity(shouldBeSubmerged ? InkBlockUtils.getVelocityAffectingPos(player) : InkBlockUtils.getVelocityAffectingPos(player).down())).id);
 
                 for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) player.world, player.getBlockPos())) {
                     ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID, buf);
@@ -117,9 +98,26 @@ public class PlayerHandler {
         return player.hasStatusEffect(StatusEffects.INVISIBILITY);
     }
 
-    public static boolean shouldCancelPlayerToWorldInteraction(PlayerEntity player) {
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-        return data.isSquid();
+    public static boolean canEnterSquidForm(PlayerEntity player) {
+        return !player.hasVehicle();
+    }
+
+    public static boolean shouldCancelInteraction(PlayerEntity player) {
+        return PlayerDataComponent.isSquid(player);
+    }
+    public static ActionResult getEventActionResult(PlayerEntity player) {
+        if (PlayerDataComponent.isSquid(player)) {
+            return ActionResult.FAIL;
+        }
+
+        return ActionResult.PASS;
+    }
+    public static <T> TypedActionResult<T> getEventActionResult(PlayerEntity player, T data) {
+        if (PlayerDataComponent.isSquid(player)) {
+            return TypedActionResult.fail(data);
+        }
+
+        return TypedActionResult.pass(data);
     }
 
     public static float getMovementSpeed(PlayerEntity player, float movementSpeed) {
