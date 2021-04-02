@@ -169,7 +169,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
         reduceInk(player, getInkReductionAmount(player, this, fling));
     }
     public void reduceInk(PlayerEntity player) {
-        reduceInk(player, getInkReductionAmount(player, this, false));
+        reduceInk(player, false);
     }
 
     public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {

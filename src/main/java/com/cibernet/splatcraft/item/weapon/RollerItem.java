@@ -119,7 +119,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                                 double z = inkPos.getZ() + 0.5d + (min + random.nextDouble() * (max - min));
                                 ColorUtils.addInkSplashParticle(world, color, new Vec3d(x, y, z));
                             }
-                            reduceInk(player, false);
+                            reduceInk(player);
 
                             if (player.getVelocity().getX() != 0 || player.getVelocity().getZ() != 0) {
                                 player.setSprinting(true);
@@ -128,7 +128,9 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
                         for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
                             if (!target.equals(player)) {
-                                InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, false);
+                                if (InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, false)) {
+                                    reduceInk(player);
+                                }
                             }
                         }
 

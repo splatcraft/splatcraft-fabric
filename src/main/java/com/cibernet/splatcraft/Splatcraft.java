@@ -85,6 +85,7 @@ public class Splatcraft implements ModInitializer {
         new SplatcraftBlockEntities();
         new SplatcraftBlocks();
         new SplatcraftItems();
+        new SplatcraftTrackedDataHandlers();
         new SplatcraftEntities();
 
         // data

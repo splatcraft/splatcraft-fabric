@@ -4,6 +4,7 @@ accessible    field     net/minecraft/util/DyeColor                             
 accessible    field     net/minecraft/client/render/entity/EntityRenderDispatcher   renderers                   Ljava/util/Map;
 accessible    field     net/minecraft/client/render/entity/model/PlayerEntityModel  thinArms                    Z
 accessible    field     net/minecraft/client/options/KeyBinding                     boundKey                    Lnet/minecraft/client/util/InputUtil$Key;
+accessible    field     net/minecraft/entity/data/TrackedDataHandlerRegistry        field_13328                 Lnet/minecraft/util/collection/Int2ObjectBiMap;
 accessible    method    net/minecraft/client/util/DefaultSkinHelper                 shouldUseSlimModel          (Ljava/util/UUID;)Z
 accessible    method    net/minecraft/entity/Entity                                 getVelocityAffectingPos     ()Lnet/minecraft/util/math/BlockPos;
 accessible    method    net/minecraft/entity/Entity                                 getLandingPos               ()Lnet/minecraft/util/math/BlockPos;

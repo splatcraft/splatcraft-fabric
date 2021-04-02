@@ -47,7 +47,7 @@ public class SplatcraftItems {
     public static final Item TENTATEK_SPLATTERSHOT = register("tentatek_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT));
     public static final Item WASABI_SPLATTERSHOT = register("wasabi_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT));
     public static final Item ANCIENT_SPLATTERSHOT = register("ancient_splattershot", new ShooterItem((ShooterItem) SPLATTERSHOT).setSecret());
-    public static final Item SPLATTERSHOT_JR = register("splattershot_jr", new ShooterItem((ShooterItem) SPLATTERSHOT, new ShooterComponent(0.5f, 1.0f, 6.5f, 4.0f, 0.55f, 13.5f)).setJunior());
+    public static final Item SPLATTERSHOT_JR = register("splattershot_jr", new ShooterItem((ShooterItem) SPLATTERSHOT, new ShooterComponent(0.43f, 1.0f, 5.6f, 4.0f, 0.55f, 13.5f)).setJunior());
     public static final Item AEROSPRAY_MG = register("aerospray_mg", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(0.5f, 1.3f, 4.8f, 2.0f, 0.45f, 26.0f)));
     public static final Item AEROSPRAY_RG = register("aerospray_rg", new ShooterItem((ShooterItem) AEROSPRAY_MG));
     public static final Item GAL_52 = register("52_gal", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(1.3f, 1.2f, 10.4f, 9.0f, 0.78f, 16.0f)));

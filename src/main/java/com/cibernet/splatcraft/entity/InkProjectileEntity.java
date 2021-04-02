@@ -163,9 +163,10 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         Entity target = result.getEntity();
 
         if (!canPierce) {
-            if (target != this.getOwner()) {
+            Entity owner = this.getOwner();
+            if (target != owner) {
                 if (target instanceof LivingEntity) {
-                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), this.getOwner(), damageMobs);
+                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), owner, damageMobs);
                 }
 
                 if (target instanceof SheepEntity) {
