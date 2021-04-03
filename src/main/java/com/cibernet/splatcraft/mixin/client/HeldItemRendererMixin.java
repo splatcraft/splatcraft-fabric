@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin.client;
 
-import com.cibernet.splatcraft.component.SplatcraftComponents;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -27,7 +27,7 @@ public abstract class HeldItemRendererMixin {
      */
     @Inject(method = "renderFirstPersonItem", at = @At("HEAD"), cancellable = true)
     private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack stack, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if (SplatcraftComponents.PLAYER_DATA.get(this.client.player).isSquid()) {
+        if (this.client.player != null && LazyPlayerDataComponent.isSquid(this.client.player)) {
             ci.cancel();
         }
     }

@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.mixin.client;
 
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -25,10 +25,10 @@ public class GameRendererMixin {
     @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
     private void bobView(MatrixStack matrixStack, float f, CallbackInfo ci) {
         if (this.client.player != null) {
-            PlayerDataComponent data = PlayerDataComponent.getComponent(this.client.player);
+            LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(this.client.player);
             PreventBobView preventBobView = SplatcraftConfig.UI.preventBobViewWhenSquid.value;
-            if (preventBobView != PreventBobView.OFF && data.isSquid()) {
-                if (preventBobView != PreventBobView.SUBMERGED || data.isSubmerged()) {
+            if (preventBobView != PreventBobView.OFF && lazyData.isSquid()) {
+                if (preventBobView != PreventBobView.SUBMERGED || lazyData.isSubmerged()) {
                     ci.cancel();
                 }
             }
@@ -38,7 +38,7 @@ public class GameRendererMixin {
     @ModifyVariable(method = "updateMovementFovMultiplier", at = @At(value = "STORE", ordinal = 1))
     private float modifyFovForSquidForm(float c) {
         ClientPlayerEntity player = this.client.player;
-        if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.value && PlayerDataComponent.isSquid(player)) {
+        if (player != null && SplatcraftConfig.UI.modifyFovForSquidForm.value && LazyPlayerDataComponent.isSquid(player)) {
             return c + (SplatcraftConfig.UI.fovForSquidForm.value / 100f);
         }
 

@@ -18,7 +18,7 @@ public class SplatcraftNetworkingConstants {
      */
     public static final Identifier PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_squid_travel_effects"); // S2C
     public static final Identifier PLAY_PLAYER_TOGGLE_SQUID_EFFECTS_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "play_player_toggle_squid_effects"); // S2C
-    public static final Identifier PLAYER_TOGGLE_SQUID_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "player_toggle_squid"); // C2S
+    public static final Identifier SET_SQUID_FORM_PACKET_ID = new Identifier(Splatcraft.MOD_ID, "set_squid_form"); // C2S
 
     /*
         SplatcraftSignals.

@@ -5,8 +5,7 @@ import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.client.signal.Signal;
 import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
@@ -28,6 +27,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
@@ -140,9 +140,9 @@ public class SplatcraftClientNetworking {
                     if (player != null) {
                         Random random = player.getRandom();
                         if (random.nextFloat() <= 0.482f) {
-                            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-                            if (data.isSquid()) {
-                                if (!data.isSubmerged()) {
+                            LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
+                            if (lazyData.isSquid()) {
+                                if (!lazyData.isSubmerged()) {
                                     if (random.nextFloat() <= 0.9f) {
                                         player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15f, 1.0f, false);
                                     }
@@ -210,9 +210,15 @@ public class SplatcraftClientNetworking {
         });
     }
 
-    public static void toggleSquidForm(ClientPlayerEntity player) {
-        ClientPlayNetworking.send(SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID, PacketByteBufs.empty());
-        if (PlayerDataComponent.toggleSquidForm(player)) {
+    public static void setSquidForm(ClientPlayerEntity player, boolean isSquid) {
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBoolean(isSquid);
+        ClientPlayNetworking.send(SplatcraftNetworkingConstants.SET_SQUID_FORM_PACKET_ID, buf);
+
+        lazyData.setIsSquid(isSquid);
+
+        if (isSquid) {
             SignalRendererManager.reset(player);
             player.setSprinting(false);
         }

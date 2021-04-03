@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class SplatcraftComponents {
     public static final ComponentKey<PlayerDataComponent> PLAYER_DATA = register("player_data", PlayerDataComponent.class);
+    public static final ComponentKey<LazyPlayerDataComponent> LAZY_PLAYER_DATA = register("lazy_player_data", LazyPlayerDataComponent.class);
 
     public static <C extends Component> ComponentKey<C> register(String id, Class<C> componentClass) {
         return ComponentRegistry.getOrCreate(new Identifier(Splatcraft.MOD_ID, id), componentClass);

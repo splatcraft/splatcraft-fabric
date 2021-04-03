@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.mixin.client;
 import com.cibernet.splatcraft.client.renderer.entity.player.AnimatablePlayerEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.player.PlayerEntityInkSquidRenderer;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.player.signal.AnimatablePlayerEntity;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.fabricmc.api.EnvType;
@@ -30,7 +30,7 @@ public class PlayerEntityRendererMixin {
     private void render(AbstractClientPlayerEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, CallbackInfo ci) {
         this.splatcraft_validateModelCaches(entity);
 
-        if (PlayerDataComponent.isSquid(entity)) {
+        if (LazyPlayerDataComponent.isSquid(entity)) {
             if (!InkBlockUtils.shouldBeSubmerged(entity)) {
                 splatcraft_playerInkSquidRenderer.render(entity, yaw, tickDelta, matrices, vertices, light);
             }

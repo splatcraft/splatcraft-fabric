@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.mixin;
 
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
@@ -49,9 +49,9 @@ public class PlayerEntityMixin {
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
 
-        if (data.isSquid() && !this.abilities.flying) {
+        if (lazyData.isSquid() && !this.abilities.flying) {
             float movementSpeed = PlayerHandler.getMovementSpeed($this, cir.getReturnValueF());
             if (movementSpeed != -1.0f) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
@@ -76,7 +76,8 @@ public class PlayerEntityMixin {
     private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.getComponent($this);
-        if (data.isSquid()) {
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
+        if (lazyData.isSquid()) {
             for (int i = 0; i < Math.min(amount, 24); ++i) {
                 ColorUtils.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f);
             }
@@ -85,19 +86,19 @@ public class PlayerEntityMixin {
 
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(PlayerEntity.class.cast(this));
-        if (data.isSquid()) {
-            cir.setReturnValue(data.isSubmerged() ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(PlayerEntity.class.cast(this));
+        if (lazyData.isSquid()) {
+            cir.setReturnValue(lazyData.isSubmerged() ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
         }
     }
     @Inject(method = "getActiveEyeHeight", at = @At("RETURN"), cancellable = true)
     private void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         try {
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-            if (data.isSquid()) {
+            LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
+            if (lazyData.isSquid()) {
                 cir.setReturnValue(dimensions.height / (
-                        data.isSubmerged()
+                        lazyData.isSubmerged()
                             ? 3.0f
                             : $this.isOnGround()
                                 ? 2.6f
@@ -124,16 +125,16 @@ public class PlayerEntityMixin {
     @Inject(method = "getDeathSound", at = @At("HEAD"), cancellable = true)
     private void getDeathSound(CallbackInfoReturnable<SoundEvent> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-        if (data.isSquid()) {
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
+        if (lazyData.isSquid()) {
             cir.setReturnValue(SoundEvents.ENTITY_COD_DEATH);
         }
     }
     @Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
     private void getHurtSound(CallbackInfoReturnable<SoundEvent> cir) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get($this);
-        if (data.isSquid()) {
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
+        if (lazyData.isSquid()) {
             cir.setReturnValue(SoundEvents.ENTITY_COD_HURT);
         }
     }

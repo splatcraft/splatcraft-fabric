@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.network;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.signal.SignalWhitelistManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -14,10 +14,11 @@ import java.util.UUID;
 public class SplatcraftNetworking {
     public static void registerReceivers() {
         ServerPlayNetworking.registerGlobalReceiver(
-            SplatcraftNetworkingConstants.PLAYER_TOGGLE_SQUID_PACKET_ID,
-            (server, player, handler, buf, responseSender) -> server.execute(
-                () -> PlayerDataComponent.toggleSquidForm(player)
-            )
+            SplatcraftNetworkingConstants.SET_SQUID_FORM_PACKET_ID,
+            (server, player, handler, buf, responseSender) -> {
+                boolean isSquid = buf.readBoolean();
+                server.execute(() -> LazyPlayerDataComponent.setIsSquid(player, isSquid));
+            }
         );
         ServerPlayNetworking.registerGlobalReceiver(
             SplatcraftNetworkingConstants.PLAY_PLAYER_SIGNAL_PACKET_ID,

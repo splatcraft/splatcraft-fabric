@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.handler;
 
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,8 +15,9 @@ import net.minecraft.util.Hand;
 @Environment(EnvType.CLIENT)
 public class PlayerPoseHandler {
     public static void onPlayerModelSetAngles(PlayerEntityModel<?> $this, PlayerEntity player) {
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
-        if ($this != null && player != null && !data.isSquid()) {
+        PlayerDataComponent data = PlayerDataComponent.getComponent(player);
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
+        if ($this != null && !lazyData.isSquid()) {
             Hand activeHand = player.getActiveHand();
             Arm handSide = player.getMainArm();
 

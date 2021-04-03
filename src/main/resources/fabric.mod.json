@@ -20,7 +20,8 @@
 
   "custom": {
     "cardinal-components": [
-      "splatcraft:player_data"
+      "splatcraft:player_data",
+      "splatcraft:lazy_player_data"
     ]
   },
 

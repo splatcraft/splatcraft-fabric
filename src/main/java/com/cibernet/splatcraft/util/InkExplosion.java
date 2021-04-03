@@ -92,19 +92,27 @@ public class InkExplosion extends Explosion {
                         double d8 = this.z;
 
                         for (; f > 0.0f; f -= 0.22500001f) {
-                            BlockHitResult raytrace = world.raycast(new RaycastContext(new Vec3d(x+0.5f, y+0.5f, z+0.5f), new Vec3d(d4+0.5f, d6+0.5f, d8+0.5f), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this.entity));
-                            BlockPos blockpos = new BlockPos(d4, d6, d8);
-                            f -= 0.3f * 0.3f;
+                            try {
+                                BlockHitResult raytrace = world.raycast(
+                                    new RaycastContext(
+                                        new Vec3d(x + 0.5f, y + 0.5f, z + 0.5f),
+                                        new Vec3d(d4 + 0.5f, d6 + 0.5f, d8 + 0.5f), RaycastContext.ShapeType.COLLIDER,
+                                        RaycastContext.FluidHandling.NONE, this.entity
+                                    )
+                                );
+                                BlockPos blockpos = new BlockPos(d4, d6, d8);
+                                f -= 0.3f * 0.3f;
 
-                            if (raytrace != null) {
-                                blockpos = raytrace.getBlockPos();
-                            }
+                                if (raytrace != null) {
+                                    blockpos = raytrace.getBlockPos();
+                                }
 
-                            set.add(blockpos);
+                                set.add(blockpos);
 
-                            d4 += d0 * (double)0.3f;
-                            d6 += d1 * (double)0.3f;
-                            d8 += d2 * (double)0.3f;
+                                d4 += d0 * (double) 0.3f;
+                                d6 += d1 * (double) 0.3f;
+                                d8 += d2 * (double) 0.3f;
+                            } catch (NullPointerException ignored) {}
                         }
                     }
                 }

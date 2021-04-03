@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.handler;
 
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -32,14 +32,14 @@ public class WeaponHandler {
 
         boolean canUseWeapon = true;
 
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
         if (PlayerDataComponent.Cooldown.shrinkCooldownTime(player, 1) != null) {
             PlayerDataComponent.Cooldown cooldown = PlayerDataComponent.Cooldown.getCooldown(player);
-            data.setIsSquid(false);
+            lazyData.setIsSquid(false);
             canUseWeapon = !cooldown.preventWeaponUse();
         }
 
-        if (!(canUseWeapon && player.getActiveHand() != null && player.getItemUseTimeLeft() > 0) && PlayerDataComponent.Charge.canDischarge(player) || data.isSquid()) {
+        if (!(canUseWeapon && player.getActiveHand() != null && player.getItemUseTimeLeft() > 0) && PlayerDataComponent.Charge.canDischarge(player) || lazyData.isSquid()) {
             PlayerDataComponent.Charge.dischargeWeapon(player);
         }
     }

@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.client.gui.screen.SignalSelectionScreen;
 import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,10 +24,26 @@ public class SplatcraftKeyBindings {
     public SplatcraftKeyBindings() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.world != null && client.player != null) {
-                if (SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior.value.keyIsPressed(CHANGE_SQUID_FORM.wasPressed(), CHANGE_SQUID_FORM.isPressed())) {
-                    if (PlayerHandler.canEnterSquidForm(client.player)) {
-                        SplatcraftClientNetworking.toggleSquidForm(client.player);
-                    }
+                boolean wasSquid = LazyPlayerDataComponent.isSquid(client.player);
+                boolean isSquid = wasSquid;
+
+                switch (SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior.value) {
+                    case HOLD:
+                        isSquid = CHANGE_SQUID_FORM.isPressed();
+                        break;
+                    case TOGGLE:
+                        if (CHANGE_SQUID_FORM.wasPressed()) {
+                            isSquid = !isSquid;
+                        }
+                        break;
+                }
+
+                if (isSquid) {
+                    isSquid = PlayerHandler.canEnterSquidForm(client.player);
+                }
+
+                if (wasSquid != isSquid) {
+                    SplatcraftClientNetworking.setSquidForm(client.player, isSquid);
                 }
             }
 

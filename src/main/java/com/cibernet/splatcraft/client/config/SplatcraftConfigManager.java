@@ -4,8 +4,6 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
-import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -20,7 +18,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
@@ -300,15 +297,7 @@ public class SplatcraftConfigManager {
         ACCESSIBILITY.addEntry(
             entryBuilder.startEnumSelector(squidFormKeyBehavior, squidFormKeyBehaviorOption.getClazz(), squidFormKeyBehaviorOption.value)
                 .setDefaultValue(squidFormKeyBehaviorOption.getDefault())
-                .setSaveConsumer(value -> {
-                    if (squidFormKeyBehaviorOption.value != value && value == SquidFormKeyBehavior.HOLD) {
-                        ClientPlayerEntity player = MinecraftClient.getInstance().player;
-                        if (PlayerDataComponent.isSquid(player)) {
-                            SplatcraftClientNetworking.toggleSquidForm(player);
-                        }
-                    }
-                    squidFormKeyBehaviorOption.value = value;
-                })
+                .setSaveConsumer(value -> squidFormKeyBehaviorOption.value = value)
                 .setTooltip(createTooltip(squidFormKeyBehavior))
                 .build()
         ).addEntry(

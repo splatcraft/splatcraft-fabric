@@ -2,8 +2,8 @@ package com.cibernet.splatcraft.handler;
 
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
@@ -33,13 +33,14 @@ public class PlayerHandler {
     protected static final double MOVING_THRESHOLD = 0.035d;
 
     public static void onPlayerTick(PlayerEntity player) {
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
+        PlayerDataComponent data = PlayerDataComponent.getComponent(player);
+        LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
 
         Vec3d vel = player.getVelocity();
         data.setMoving(Math.abs(vel.getX()) >= MOVING_THRESHOLD || Math.abs(vel.getZ()) >= MOVING_THRESHOLD);
 
-        if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && data.isSquid()) {
-            data.setIsSquid(false);
+        if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && lazyData.isSquid()) {
+            lazyData.setIsSquid(false);
             return;
         }
 
@@ -47,8 +48,8 @@ public class PlayerHandler {
             player.damage(SplatcraftDamageSources.WATER, 8.0f);
         }
 
-        boolean wasSubmerged = data.isSubmerged();
-        boolean shouldBeSubmerged = data.isSquid() ? InkBlockUtils.shouldBeSubmerged(player) : PlayerHandler.shouldBeInvisible(player);
+        boolean wasSubmerged = lazyData.isSubmerged();
+        boolean shouldBeSubmerged = lazyData.isSquid() ? InkBlockUtils.shouldBeSubmerged(player) : PlayerHandler.shouldBeInvisible(player);
         if (shouldBeSubmerged != wasSubmerged) {
             if (!player.world.isClient) {
                 PacketByteBuf buf = PacketByteBufs.create();
@@ -61,11 +62,11 @@ public class PlayerHandler {
                 }
             }
 
-            data.setSubmerged(shouldBeSubmerged);
+            lazyData.setSubmerged(shouldBeSubmerged);
             player.setInvisible(shouldBeSubmerged);
         }
 
-        if (data.isSquid()) {
+        if (lazyData.isSquid()) {
             if (player.isOnGround()) {
                 player.setPose(EntityPose.FALL_FLYING);
             }
@@ -103,17 +104,17 @@ public class PlayerHandler {
     }
 
     public static boolean shouldCancelInteraction(PlayerEntity player) {
-        return PlayerDataComponent.isSquid(player);
+        return LazyPlayerDataComponent.isSquid(player);
     }
     public static ActionResult getEventActionResult(PlayerEntity player) {
-        if (PlayerDataComponent.isSquid(player)) {
+        if (LazyPlayerDataComponent.isSquid(player)) {
             return ActionResult.FAIL;
         }
 
         return ActionResult.PASS;
     }
     public static <T> TypedActionResult<T> getEventActionResult(PlayerEntity player, T data) {
-        if (PlayerDataComponent.isSquid(player)) {
+        if (LazyPlayerDataComponent.isSquid(player)) {
             return TypedActionResult.fail(data);
         }
 

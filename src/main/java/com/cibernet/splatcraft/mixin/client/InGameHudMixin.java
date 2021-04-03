@@ -4,7 +4,7 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
@@ -63,7 +63,7 @@ public abstract class InGameHudMixin {
         // render ink tank
         this.splatcraft_renderInkTank(matrices);
 
-        if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.value && PlayerDataComponent.isSquid(client.player)) {
+        if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.value && LazyPlayerDataComponent.isSquid(client.player)) {
             // render held item
             if (SplatcraftConfig.UI.renderHeldItemWhenHotbarInvisible.value) {
                 if (!this.currentStack.isEmpty()) {
@@ -83,7 +83,7 @@ public abstract class InGameHudMixin {
 
     @Inject(method = "renderStatusBars", at = @At("HEAD"))
     private void renderStatusBars(MatrixStack matrices, CallbackInfo ci) {
-        if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.value && PlayerDataComponent.isSquid(client.player)) {
+        if (SplatcraftConfig.UI.invisibleHotbarWhenSquid.value && LazyPlayerDataComponent.isSquid(client.player)) {
             // shift status bars down when squid (inverted for user-friendliness)
             this.scaledHeight -= SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.value;
         }
@@ -92,7 +92,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V", shift = At.Shift.BEFORE), cancellable = true)
     private void changeCrosshairColor(MatrixStack matrices, CallbackInfo ci) {
         if (this.client.player != null) {
-            if (PlayerDataComponent.isSquid(this.client.player)) {
+            if (LazyPlayerDataComponent.isSquid(this.client.player)) {
                 if (SplatcraftConfig.UI.invisibleCrosshairWhenSquid.value) {
                     ci.cancel();
                 } else if (SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.value) {
@@ -124,7 +124,7 @@ public abstract class InGameHudMixin {
                         RenderSystem.color4f(color[0], color[1], color[2], 1.0f);
 
                         if (SplatcraftConfig.INK.inkAmountIndicator.value == InkAmountIndicator.CROSSHAIR) {
-                            float attackCooldownProgress = PlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0f : this.client.player.getAttackCooldownProgress(0.0f);
+                            float attackCooldownProgress = LazyPlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0f : this.client.player.getAttackCooldownProgress(0.0f);
                             boolean targetingEntity = false;
                             if (this.client.options.attackIndicator == AttackIndicator.CROSSHAIR && this.client.targetedEntity != null && this.client.targetedEntity instanceof LivingEntity && attackCooldownProgress >= 1.0f) {
                                 targetingEntity = this.client.player.getAttackCooldownProgressPerTick() > 5.0f;

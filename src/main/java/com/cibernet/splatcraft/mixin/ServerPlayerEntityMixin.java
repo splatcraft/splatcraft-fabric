@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.item.AttackInputDetectable;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,7 +20,7 @@ public class ServerPlayerEntityMixin {
     @Inject(method = "swingHand", at = @At("TAIL"))
     private void swingHand(Hand hand, CallbackInfo ci) {
         ServerPlayerEntity player = ServerPlayerEntity.class.cast(this);
-        if (!player.isSpectator() && !PlayerDataComponent.isSquid(player)) {
+        if (!player.isSpectator() && !LazyPlayerDataComponent.isSquid(player)) {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (item instanceof AttackInputDetectable) {

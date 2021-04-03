@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin.client;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityRenderDispatcherMixin {
     @Inject(method = "renderShadow", at = @At("HEAD"), cancellable = true)
     private static void renderShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
-        if (entity instanceof PlayerEntity && PlayerDataComponent.isSubmerged((PlayerEntity) entity)) {
+        if (entity instanceof PlayerEntity && LazyPlayerDataComponent.isSubmerged((PlayerEntity) entity)) {
             ci.cancel();
         }
     }

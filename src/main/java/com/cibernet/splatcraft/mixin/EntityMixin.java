@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +17,7 @@ public abstract class EntityMixin {
     private void playStepSound(BlockPos pos, BlockState state, CallbackInfo ci) {
         Entity $this = Entity.class.cast(this);
         if ($this instanceof PlayerEntity) {
-            if (PlayerDataComponent.isSquid((PlayerEntity) $this)) {
+            if (LazyPlayerDataComponent.isSquid((PlayerEntity) $this)) {
                 ci.cancel();
             }
         }

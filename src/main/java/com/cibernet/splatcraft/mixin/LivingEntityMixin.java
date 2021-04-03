@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.mixin;
 
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
@@ -36,7 +36,7 @@ public class LivingEntityMixin {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
-            if (PlayerDataComponent.isSquid(player)) {
+            if (LazyPlayerDataComponent.isSquid(player)) {
                 InkColor inkColor = ColorUtils.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
                 if (inkColor.equals(InkColors.NONE) && player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
                     return c;
@@ -59,7 +59,7 @@ public class LivingEntityMixin {
                 splatcraft_lastLandedBlockInkColor = InkColors.NONE;
             }
 
-            if (PlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(
+            if (LazyPlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(
                 InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).color)))) {
                 ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335f);
                 return 0.9914f;
@@ -75,7 +75,7 @@ public class LivingEntityMixin {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
-            if (PlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
+            if (LazyPlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
                 cir.setReturnValue(cir.getReturnValueF() * 1.208f);
             }
         }

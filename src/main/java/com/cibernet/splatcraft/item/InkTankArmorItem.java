@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.item;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.item.inkable.InkableArmorItem;
 import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
@@ -73,7 +73,7 @@ public class InkTankArmorItem extends InkableArmorItem {
             float ink = getInkAmount(stack);
 
             if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtils.colorEquals(player, stack) && ink < this.capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
-                setInkAmount(stack, Math.min(this.capacity, ink + (PlayerDataComponent.isSubmerged(player) ? 1 : 0.1f)));
+                setInkAmount(stack, Math.min(this.capacity, ink + (LazyPlayerDataComponent.isSubmerged(player) ? 1 : 0.1f)));
             }
         }
     }

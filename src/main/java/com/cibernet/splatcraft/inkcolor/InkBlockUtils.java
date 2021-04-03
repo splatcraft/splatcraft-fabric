@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.block.AbstractPassableBlock;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
@@ -88,7 +89,7 @@ public class InkBlockUtils {
     }
 
     public static boolean shouldBeSubmerged(PlayerEntity player) {
-        return PlayerDataComponent.isSquid(player) && (InkBlockUtils.canSwim(player) || InkBlockUtils.canClimb(player));
+        return LazyPlayerDataComponent.isSquid(player) && (InkBlockUtils.canSwim(player) || InkBlockUtils.canClimb(player));
     }
 
     public static boolean canSwim(PlayerEntity player, boolean ignoreOnGround) {
@@ -134,7 +135,7 @@ public class InkBlockUtils {
     }
 
     public static boolean entityPassesThroughGaps(Entity entity) {
-        return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && PlayerDataComponent.isSquid((PlayerEntity) entity);
+        return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && LazyPlayerDataComponent.isSquid((PlayerEntity) entity);
     }
 
     public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
