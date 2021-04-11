@@ -207,11 +207,6 @@ public class SignalSelectionScreen extends Screen {
             matrices.pop();
         }
 
-        @Override
-        public boolean isHovered() {
-            return super.isHovered();
-        }
-
         public void setSelected(boolean selected) {
             this.selected = selected;
             this.narrate();

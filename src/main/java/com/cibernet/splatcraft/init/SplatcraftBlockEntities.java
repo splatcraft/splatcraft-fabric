@@ -1,9 +1,8 @@
 package com.cibernet.splatcraft.init;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.block.entity.CanvasBlockEntity;
+import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
-import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
 import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
 import com.mojang.datafixers.types.Type;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,9 +13,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 
 public class SplatcraftBlockEntities {
-    public static final BlockEntityType<CanvasBlockEntity> CANVAS = register(CanvasBlockEntity.id, BlockEntityType.Builder.create(CanvasBlockEntity::new, SplatcraftBlocks.CANVAS));
+    public static final BlockEntityType<InkableBlockEntity> INKABLE = register(InkableBlockEntity.id, BlockEntityType.Builder.create(InkableBlockEntity::new, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL));
     public static final BlockEntityType<InkedBlockEntity> INKED_BLOCK = register(InkedBlockEntity.id, BlockEntityType.Builder.create(InkedBlockEntity::new, SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK));
-    public static final BlockEntityType<InkwellBlockEntity> INKWELL = register(InkwellBlockEntity.id, BlockEntityType.Builder.create(InkwellBlockEntity::new, SplatcraftBlocks.INKWELL));
 
     public static final BlockEntityType<StageBarrierBlockEntity> STAGE_BARRIER = register(StageBarrierBlockEntity.id, BlockEntityType.Builder.create(StageBarrierBlockEntity::new, SplatcraftBlocks.STAGE_BARRIER, SplatcraftBlocks.STAGE_VOID));
 

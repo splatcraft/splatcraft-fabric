@@ -1,10 +1,10 @@
 package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
+import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import net.minecraft.entity.LivingEntity;
@@ -61,7 +61,7 @@ public class LivingEntityMixin {
 
             if (LazyPlayerDataComponent.isSquid(player) && !splatcraft_lastLandedBlockInkColor.equals(InkColors.NONE) && (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.UNIVERSAL_INK) || (!splatcraft_lastLandedBlockInkColor.equals(
                 InkColors.NONE) && splatcraft_lastLandedBlockInkColor.matches(ColorUtils.getInkColor(player).color)))) {
-                ColorUtils.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335f);
+                PlayerHandler.playSquidTravelEffects($this, splatcraft_lastLandedBlockInkColor, 0.335f);
                 return 0.9914f;
             }
         }
@@ -75,7 +75,7 @@ public class LivingEntityMixin {
         LivingEntity $this = LivingEntity.class.cast(this);
         if ($this instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) $this;
-            if (LazyPlayerDataComponent.isSquid(player) && InkBlockUtils.canSwim(player)) {
+            if (LazyPlayerDataComponent.isSquid(player) && PlayerHandler.canSwim(player)) {
                 cir.setReturnValue(cir.getReturnValueF() * 1.208f);
             }
         }

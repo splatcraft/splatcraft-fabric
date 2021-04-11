@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "splatcraft:remote_clear",
+  "ingredients": [
+    {
+      "item": "splatcraft:ink_disruptor"
+    }
+  ],
+  "result": {
+    "item": "splatcraft:ink_disruptor"
+  }
+}

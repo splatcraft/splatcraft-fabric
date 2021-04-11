@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.client.gui.screen.SignalSelectionScreen;
 import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
+import com.cibernet.splatcraft.entity.player.signal.AnimatablePlayerEntity;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,14 +44,14 @@ public class SplatcraftKeyBindings {
                 }
 
                 if (wasSquid != isSquid) {
-                    SplatcraftClientNetworking.setSquidForm(client.player, isSquid);
+                    SplatcraftClientNetworking.setAndSendSquidForm(client.player, isSquid);
                 }
             }
 
             if (OPEN_CONFIG_MENU.isPressed()) {
                 client.openScreen(SplatcraftConfigManager.createScreen(client.currentScreen));
             }
-            if (OPEN_SIGNAL_SELECTION_SCREEN.isPressed() && !PlayerHandler.shouldCancelInteraction(client.player)) {
+            if (OPEN_SIGNAL_SELECTION_SCREEN.isPressed() && client.player != null && !PlayerHandler.shouldCancelInteraction(client.player) && AnimatablePlayerEntity.canStart(client.player)) {
                 client.openScreen(new SignalSelectionScreen());
             }
         });

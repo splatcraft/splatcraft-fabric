@@ -1,11 +1,11 @@
 package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
-import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
+import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -52,7 +52,7 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
     } TODO */
 
     @Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType, boolean spawnParticles) {
         return false;
     }
 
@@ -109,7 +109,7 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
 
     @Override
     public BlockEntity createBlockEntity(BlockView world) {
-        return new InkwellBlockEntity();
+        return new InkableBlockEntity();
     }
 
     @Override
@@ -126,12 +126,7 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
     }
 
     @Override
-    public boolean remoteInkClear(World world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean countsTowardsTurf(World world, BlockPos pos) {
+    public boolean massInkClear(World world, BlockPos pos) {
         return false;
     }
 }

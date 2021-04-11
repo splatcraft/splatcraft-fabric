@@ -9,19 +9,19 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.world.World;
 
-public class InkDamageUtils {
-    public static boolean splatDamage(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
-        return InkDamageUtils.attackDamage(world, target, damage, inkColor, source, damageMobs, "splat");
+public class InkDamage {
+    public static boolean splat(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
+        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, "splat");
     }
 
-    public static boolean rollDamage(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
-        return InkDamageUtils.attackDamage(world, target, damage, inkColor, source, damageMobs, "roll");
+    public static boolean roll(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
+        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, "roll");
     }
 
-    public static boolean attackDamage(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs, String damageSourceId) {
-        return InkDamageUtils.attackDamage(world, target, damage, inkColor, damageMobs, new EntityDamageSource(Splatcraft.MOD_ID + "." + damageSourceId, source) {});
+    public static boolean attack(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs, String damageSourceId) {
+        return InkDamage.attack(world, target, damage, inkColor, damageMobs, new EntityDamageSource(Splatcraft.MOD_ID + "." + damageSourceId, source) {});
     }
-    public static boolean attackDamage(World world, LivingEntity target, float damage, InkColor inkColor, boolean damageMobs, DamageSource damageSource) {
+    public static boolean attack(World world, LivingEntity target, float damage, InkColor inkColor, boolean damageMobs, DamageSource damageSource) {
         InkColor targetColor = ColorUtils.getEntityColor(target);
 
         if ( damage != 0 && (

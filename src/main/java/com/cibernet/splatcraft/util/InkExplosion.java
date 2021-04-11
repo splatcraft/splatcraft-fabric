@@ -36,13 +36,13 @@ public class InkExplosion extends Explosion {
     private final List<BlockPos> affectedBlockPositions = Lists.newArrayList();
 
     private final InkColor inkColor;
-    private final InkBlockUtils.InkType inkType;
+    private final InkType inkType;
     private final boolean damageMobs;
     private final float damage;
     private final float blockDamage;
     private final ItemStack weapon;
 
-    public static void createInkExplosion(World world, Entity source, DamageSource damageSource, BlockPos pos, float size, float blockDamage, float damage, boolean damageMobs, InkColor color, InkBlockUtils.InkType type, ItemStack weapon) {
+    public static void createInkExplosion(World world, Entity source, DamageSource damageSource, BlockPos pos, float size, float blockDamage, float damage, boolean damageMobs, InkColor color, InkType type, ItemStack weapon) {
         if (world.isClient) {
             return;
         }
@@ -53,7 +53,7 @@ public class InkExplosion extends Explosion {
         inksplosion.affectBlocks(false);
     }
 
-    public InkExplosion(World world, Entity entity, DamageSource damageSource, double x, double y, double z, float blockDamage, float damage, boolean damageMobs, float size, InkColor inkColor, InkBlockUtils.InkType inkType, ItemStack weapon) {
+    public InkExplosion(World world, Entity entity, DamageSource damageSource, double x, double y, double z, float blockDamage, float damage, boolean damageMobs, float size, InkColor inkColor, InkType inkType, ItemStack weapon) {
         super(world, entity, damageSource, null, x, y, z, blockDamage, false, DestructionType.BREAK);
 
         this.world = world;
@@ -136,7 +136,7 @@ public class InkExplosion extends Explosion {
             }
 
             if (!this.inkColor.matches(targetInkColor.color) && !targetInkColor.equals(InkColors.NONE)) {
-                InkDamageUtils.splatDamage(world, (LivingEntity) entity, damage, this.inkColor, this.entity, damageMobs);
+                InkDamage.splat(world, (LivingEntity) entity, damage, this.inkColor, this.entity, damageMobs);
             }
 
             if (entity instanceof SheepEntity) {

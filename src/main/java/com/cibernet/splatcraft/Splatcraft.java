@@ -1,7 +1,11 @@
 package com.cibernet.splatcraft;
 
-import com.cibernet.splatcraft.command.InkColorCommand;
+import com.cibernet.splatcraft.command.ClearInkColorCommand;
+import com.cibernet.splatcraft.command.FillInkColorCommand;
+import com.cibernet.splatcraft.command.ScanTurfCommand;
+import com.cibernet.splatcraft.command.SetInkColorCommand;
 import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
+import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.InkColor;
@@ -13,8 +17,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import me.andante.chord.client.gui.itemgroup.AbstractTabbedItemGroup;
-import me.andante.chord.client.gui.itemgroup.ItemGroupTab;
+import me.andante.chord.item.item_group.AbstractTabbedItemGroup;
+import me.andante.chord.item.item_group.ItemGroupTab;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -25,11 +31,13 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -60,8 +68,25 @@ public class Splatcraft implements ModInitializer {
         }
 
         @Override
+        @Environment(EnvType.CLIENT)
         public ItemStack createIcon() {
             return new ItemStack(SplatcraftBlocks.CANVAS);
+        }
+
+        @Override
+        protected ItemGroupTab createTab(ItemStack stack, String id, Tag<Item> tag) {
+            return super.createTab(stack, id, tag).setWidgetBackgroundTexture(new Identifier(Splatcraft.MOD_ID, "textures/gui/creative_inventory/item_group/tab_widget.png"));
+        }
+
+        @Override
+        @Environment(EnvType.CLIENT)
+        public String getTexture() {
+            return Splatcraft.MOD_ID + ".png";
+        }
+
+        @Override
+        public Identifier getIconBackgroundTexture() {
+            return new Identifier(Splatcraft.MOD_ID, "textures/gui/creative_inventory_tab.png");
         }
     };
 
@@ -174,10 +199,18 @@ public class Splatcraft implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> SERVER_INSTANCE = null);
         // server connection events
-        ServerPlayConnectionEvents.JOIN.register(InkColors::sync);
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            LazyPlayerDataComponent.markForceSync(handler.player);
+            InkColors.sync(handler, sender, server);
+        });
 
         // commands
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> InkColorCommand.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            SetInkColorCommand.register(dispatcher);
+            ScanTurfCommand.register(dispatcher);
+            FillInkColorCommand.register(dispatcher);
+            ClearInkColorCommand.register(dispatcher);
+        });
         ArgumentTypes.register(new Identifier(Splatcraft.MOD_ID, "ink_color").toString(), InkColorArgumentType.class, new ConstantArgumentSerializer<>(InkColorArgumentType::inkColor));
 
         log("Initialized");

@@ -55,7 +55,7 @@
 
     "cardinal-components-entity": "*",
     "cloth-config2": "*",
-    "chord": "<=1.5.4",
+    "chord": ">=1.5.7",
     "geckolib3": "*"
   },
   "conflicts": {

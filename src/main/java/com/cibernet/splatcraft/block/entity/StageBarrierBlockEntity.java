@@ -9,7 +9,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 
 public class StageBarrierBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     public static final String id = StageBarrierBlock.id;
@@ -83,9 +82,8 @@ public class StageBarrierBlockEntity extends BlockEntity implements Tickable, Bl
         return this.toTag(tag);
     }
 
-    protected static final int rawId = Registry.BLOCK_ENTITY_TYPE.getRawId(SplatcraftBlockEntities.STAGE_BARRIER);
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.getPos(), StageBarrierBlockEntity.rawId, this.toTag(new CompoundTag()));
+        return new BlockEntityUpdateS2CPacket(this.getPos(), 127, this.toClientTag(new CompoundTag()));
     }
 }

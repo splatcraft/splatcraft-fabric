@@ -23,6 +23,7 @@ public class InkSplashParticleEffect implements ParticleEffect {
         Codec.FLOAT.fieldOf("b").forGetter(dustParticleEffect -> dustParticleEffect.blue),
         Codec.FLOAT.fieldOf("scale").forGetter(dustParticleEffect -> dustParticleEffect.scale)
     ).apply(instance, InkSplashParticleEffect::new));
+
     @SuppressWarnings("deprecation")
     public static final ParticleEffect.Factory<InkSplashParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<InkSplashParticleEffect>() {
         @Override
@@ -71,10 +72,9 @@ public class InkSplashParticleEffect implements ParticleEffect {
 
     @Override
     public void write(PacketByteBuf buf) {
-        buf.writeFloat(this.red);
-        buf.writeFloat(this.green);
-        buf.writeFloat(this.blue);
-        buf.writeFloat(this.scale);
+        for (float f : new float[]{ this.red, this.green, this.blue, this.scale }) {
+            buf.writeFloat(f);
+        }
     }
 
     @Override

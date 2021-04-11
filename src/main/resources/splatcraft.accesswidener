@@ -1,13 +1,16 @@
 accessWidener v1        named
 
 accessible    field     net/minecraft/util/DyeColor                                 color                       I
-accessible    field     net/minecraft/client/render/entity/EntityRenderDispatcher   renderers                   Ljava/util/Map;
-accessible    field     net/minecraft/client/render/entity/model/PlayerEntityModel  thinArms                    Z
-accessible    field     net/minecraft/client/options/KeyBinding                     boundKey                    Lnet/minecraft/client/util/InputUtil$Key;
 accessible    field     net/minecraft/entity/data/TrackedDataHandlerRegistry        field_13328                 Lnet/minecraft/util/collection/Int2ObjectBiMap;
-accessible    method    net/minecraft/client/util/DefaultSkinHelper                 shouldUseSlimModel          (Ljava/util/UUID;)Z
+accessible    field     net/minecraft/block/AbstractBlock                           material                    Lnet/minecraft/block/Material;
 accessible    method    net/minecraft/entity/Entity                                 getVelocityAffectingPos     ()Lnet/minecraft/util/math/BlockPos;
 accessible    method    net/minecraft/entity/Entity                                 getLandingPos               ()Lnet/minecraft/util/math/BlockPos;
 accessible    method    net/minecraft/entity/Entity                                 wouldPoseNotCollide         (Lnet/minecraft/entity/EntityPose;)Z
 accessible    method    net/minecraft/item/ItemStack                                <init>                      (Lnet/minecraft/item/ItemConvertible;ILjava/util/Optional;)V
 accessible    method    net/minecraft/item/Item                                     isIn                        (Lnet/minecraft/item/ItemGroup;)Z
+accessible    field     net/minecraft/world/Heightmap                               ALWAYS_TRUE                 Ljava/util/function/Predicate;
+
+accessible    field     net/minecraft/client/render/entity/EntityRenderDispatcher   renderers                   Ljava/util/Map;
+accessible    field     net/minecraft/client/render/entity/model/PlayerEntityModel  thinArms                    Z
+accessible    field     net/minecraft/client/options/KeyBinding                     boundKey                    Lnet/minecraft/client/util/InputUtil$Key;
+accessible    method    net/minecraft/client/util/DefaultSkinHelper                 shouldUseSlimModel          (Ljava/util/UUID;)Z

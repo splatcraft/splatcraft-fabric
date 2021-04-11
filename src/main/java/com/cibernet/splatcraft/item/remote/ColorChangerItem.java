@@ -1,15 +1,12 @@
 package com.cibernet.splatcraft.item.remote;
 
-import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
-import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
-import com.cibernet.splatcraft.block.entity.InkwellBlockEntity;
+import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
+import com.cibernet.splatcraft.game.turf_war.ColorModificationMode;
+import com.cibernet.splatcraft.game.turf_war.ColorModifications;
 import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.item.EntityTickable;
-import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
@@ -17,23 +14,27 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Objects;
 
-public class ColorChangerItem extends RemoteItem implements EntityTickable {
+public class ColorChangerItem extends AbstractWhitelistedRemoteItem implements EntityTickable {
     public ColorChangerItem(Item.Settings settings) {
         super(settings);
         SplatcraftItems.addToInkables(this);
     }
 
     @Override
+    public boolean whitelistedRemoteUse(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockPos pos, ColorModificationMode mode) {
+        return ColorModifications.changeInkColor(world, player, ColorUtils.getInkColor(stack), pos, mode);
+    }
+
+    @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext ctx) {
-        super.appendTooltip(stack, world, tooltip, ctx);
         ColorUtils.appendTooltip(stack, tooltip);
+        super.appendTooltip(stack, world, tooltip, ctx);
     }
 
     @Override
@@ -50,55 +51,12 @@ public class ColorChangerItem extends RemoteItem implements EntityTickable {
         BlockPos pos = entity.getBlockPos().down();
 
         if (entity.world.getBlockState(pos).getBlock() instanceof InkwellBlock) {
-            InkwellBlockEntity blockEntity = (InkwellBlockEntity) entity.world.getBlockEntity(pos);
+            InkableBlockEntity blockEntity = (InkableBlockEntity) entity.world.getBlockEntity(pos);
 
             if (ColorUtils.getInkColor(stack) != ColorUtils.getInkColor(blockEntity)) {
                 ColorUtils.setInkColor(entity.getStack(), ColorUtils.getInkColor(blockEntity));
                 ColorUtils.setColorLocked(entity.getStack(), true);
             }
         }
-    }
-
-    @Override
-    public RemoteResult onRemoteUse(World world, BlockPos from, BlockPos to, ItemStack stack, InkColor color, int mode) {
-        return ColorChangerItem.replaceColor(world, from, to, color, mode, ColorUtils.getInkColor(stack));
-    }
-
-    @SuppressWarnings("deprecation")
-    public static RemoteResult replaceColor(World world, BlockPos from, BlockPos to, InkColor affectedColor, int mode, InkColor color) {
-        BlockPos blockpos2 = new BlockPos(Math.min(from.getX(), to.getX()), Math.min(to.getY(), from.getY()), Math.min(from.getZ(), to.getZ()));
-        BlockPos blockpos3 = new BlockPos(Math.max(from.getX(), to.getX()), Math.max(to.getY(), from.getY()), Math.max(from.getZ(), to.getZ()));
-
-        if (!(blockpos2.getY() >= 0 && blockpos3.getY() < 256))
-            return createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.out_of_world"));
-
-
-        for (int iZ = blockpos2.getZ(); iZ <= blockpos3.getZ(); iZ += 16) {
-            for (int iX = blockpos2.getX(); iX <= blockpos3.getX(); iX += 16) {
-                if (!world.isChunkLoaded(new BlockPos(iX, blockpos3.getY() - blockpos2.getY(), iZ))) {
-                    return ColorChangerItem.createResult(false, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.out_of_world"));
-                }
-            }
-        }
-
-        int count = 0;
-        int blockTotal = 0;
-        for (int x = blockpos2.getX(); x <= blockpos3.getX(); x++)
-            for (int y = blockpos2.getY(); y <= blockpos3.getY(); y++)
-                for (int z = blockpos2.getZ(); z <= blockpos3.getZ(); z++) {
-                    BlockPos pos = new BlockPos(x,y,z);
-                    Block block = world.getBlockState(pos).getBlock();
-                    if (block instanceof AbstractInkableBlock && world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) {
-                        InkColor blockEntityColor = ((AbstractInkableBlockEntity) Objects.requireNonNull(world.getBlockEntity(pos))).getInkColor();
-
-                        if (!blockEntityColor.equals(affectedColor) && (mode == 0 || mode == 1 && blockEntityColor.equals(color) || mode == 2 && !blockEntityColor.equals(color)) && ((AbstractInkableBlock) block).remoteColorChange(world, pos, affectedColor)) {
-                            count++;
-                        }
-                    }
-
-                    blockTotal++;
-                }
-
-        return ColorChangerItem.createResult(true, new TranslatableText("status." + Splatcraft.MOD_ID + ".change_color.success", count, ColorUtils.getFormattedColorName(affectedColor, false))).setIntResults(count, count * 15 / blockTotal);
     }
 }

@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.inkcolor;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
+import com.cibernet.splatcraft.util.TagUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -11,6 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -33,12 +36,27 @@ public class InkColor {
         return Splatcraft.MOD_ID + ".ink_color." + this.id;
     }
 
-    public static InkColor getFromId(Identifier identifier) {
-        InkColor object = InkColors.get(identifier);
-        return object == null ? InkColors.NONE : object;
+    @Nullable
+    public static InkColor from(Identifier identifier) {
+        return InkColors.get(identifier);
     }
-    public static InkColor getFromId(String identifier) {
-        return InkColor.getFromId(Identifier.tryParse(identifier));
+    @Nullable
+    public static InkColor from(String identifier) {
+        return InkColor.from(Identifier.tryParse(identifier));
+    }
+    @NotNull
+    public static InkColor fromNonNull(CompoundTag tag) {
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(TagUtils.getBlockEntityTagOrRoot(tag));
+        return InkColor.fromNonNull(splatcraft.getString("InkColor"));
+    }
+    @NotNull
+    public static InkColor fromNonNull(Identifier identifier) {
+        InkColor inkColor = InkColor.from(identifier);
+        return inkColor == null ? InkColors.NONE : inkColor;
+    }
+    @NotNull
+    public static InkColor fromNonNull(String identifier) {
+        return InkColor.fromNonNull(Identifier.tryParse(identifier));
     }
 
     @Environment(EnvType.CLIENT)

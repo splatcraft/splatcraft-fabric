@@ -2,10 +2,7 @@ package com.cibernet.splatcraft.item.weapon;
 
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
-import com.cibernet.splatcraft.inkcolor.InkColor;
-import com.cibernet.splatcraft.inkcolor.InkDamageUtils;
+import com.cibernet.splatcraft.inkcolor.*;
 import com.cibernet.splatcraft.item.AttackInputDetectable;
 import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
 import com.google.common.collect.ImmutableList;
@@ -68,7 +65,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) user;
-            InkBlockUtils.InkType isGlowing = InkBlockUtils.getInkType(player);
+            InkType isGlowing = InkType.from(player);
 
             if (hasInk(player, stack, false)) {
                 InkColor color = ColorUtils.getInkColor(stack);
@@ -128,7 +125,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
                         for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
                             if (!target.equals(player)) {
-                                if (InkDamageUtils.rollDamage(world, target, this.component.damage, color, player, false)) {
+                                if (InkDamage.roll(world, target, this.component.damage, color, player, false)) {
                                     reduceInk(player);
                                 }
                             }
@@ -151,7 +148,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
             if (hasInk(player, stack, true)) {
                 reduceInk(player, true);
 
-                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkBlockUtils.getInkType(player), this.component.fling.size, this.component.fling.damage);
+                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkType.from(player), this.component.fling.size, this.component.fling.damage);
                 proj.setProperties(player, player.pitch, player.yaw, 0.0f, 1.5f, 1.0f);
                 player.world.spawnEntity(proj);
             } else {

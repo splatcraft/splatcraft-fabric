@@ -51,8 +51,11 @@ public class AnimatablePlayerEntity implements IAnimatable {
     public boolean isRunning() {
         return !this.hasPlayed || this.animationState == AnimationState.Running;
     }
-    public boolean canContinue() {
-        return /*!PlayerDataComponent.isMoving(this.player) && player.isOnGround() &&*/ true;
+    public static boolean canStart(PlayerEntity player) {
+        return /*!PlayerDataComponent.isMoving(this.player) && player.isOnGround() &&*/ !player.isSpectator();
+    }
+    public static boolean shouldContinue(PlayerEntity player) {
+        return AnimatablePlayerEntity.canStart(player);
     }
     @Override
     public AnimationFactory getFactory() {

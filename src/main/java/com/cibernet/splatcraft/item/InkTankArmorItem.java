@@ -64,6 +64,13 @@ public class InkTankArmorItem extends InkableArmorItem {
         return true;
     }
 
+    public static int getDamage(ItemStack stack) {
+        return (int) (((InkTankArmorItem) stack.getItem()).capacity - InkTankArmorItem.getInkAmount(stack));
+    }
+    public static boolean isDamaged(ItemStack stack) {
+        return InkTankArmorItem.getInkAmount(stack) != ((InkTankArmorItem) stack.getItem()).capacity;
+    }
+
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, world, entity, itemSlot, isSelected);

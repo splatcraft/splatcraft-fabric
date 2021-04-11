@@ -42,7 +42,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
     public ItemStack sourceWeapon = ItemStack.EMPTY;
     public float trailSize;
     public float trailCooldown = 0;
-    public InkBlockUtils.InkType inkType;
+    public InkType inkType;
 
     public InkProjectileEntity(EntityType<? extends InkProjectileEntity> entity, World world) {
         super(entity, world);
@@ -51,7 +51,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         super(SplatcraftEntities.INK_PROJECTILE, x, y, z, world);
     }
 
-    public InkProjectileEntity(World world, LivingEntity thrower, InkColor color, InkBlockUtils.InkType inkType, float size, float damage, ItemStack sourceWeapon) {
+    public InkProjectileEntity(World world, LivingEntity thrower, InkColor color, InkType inkType, float size, float damage, ItemStack sourceWeapon) {
         super(SplatcraftEntities.INK_PROJECTILE, thrower, world);
         this.setProjectileSize(size);
         this.setInkColor(color);
@@ -60,7 +60,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         this.sourceWeapon = sourceWeapon;
     }
 
-    public InkProjectileEntity(World world, LivingEntity thrower, ItemStack sourceWeapon, InkBlockUtils.InkType inkType, float size, float damage) {
+    public InkProjectileEntity(World world, LivingEntity thrower, ItemStack sourceWeapon, InkType inkType, float size, float damage) {
         this(world, thrower, ColorUtils.getInkColor(sourceWeapon), inkType, size, damage, sourceWeapon);
     }
 
@@ -166,7 +166,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
             Entity owner = this.getOwner();
             if (target != owner) {
                 if (target instanceof LivingEntity) {
-                    InkDamageUtils.splatDamage(world, (LivingEntity) target, damage, this.getInkColor(), owner, damageMobs);
+                    InkDamage.splat(world, (LivingEntity) target, damage, this.getInkColor(), owner, damageMobs);
                 }
 
                 if (target instanceof SheepEntity) {
@@ -225,7 +225,7 @@ public class InkProjectileEntity extends ThrownItemEntity implements InkableEnti
         canPierce = tag.getBoolean("CanPierce");
         explodes = tag.getBoolean("Explodes");
 
-        inkType = InkBlockUtils.InkType.values().clone()[tag.getInt("InkType")];
+        inkType = InkType.values().clone()[tag.getInt("InkType")];
 
         sourceWeapon = ItemStack.fromTag(tag.getCompound("SourceWeapon"));
     }

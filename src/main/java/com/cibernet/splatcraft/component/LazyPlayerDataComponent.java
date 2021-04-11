@@ -12,6 +12,7 @@ public class LazyPlayerDataComponent implements Component, AutoSyncedComponent {
 
     private boolean isSquid = false;
     private boolean isSubmerged = false;
+    private boolean forceSync = false;
 
     public LazyPlayerDataComponent(Object provider) {
         this.provider = provider;
@@ -19,7 +20,12 @@ public class LazyPlayerDataComponent implements Component, AutoSyncedComponent {
 
     @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
-        return !player.equals(this.provider);
+        boolean shouldSyncAlways = this.forceSync;
+        this.forceSync = false;
+        return shouldSyncAlways || !player.equals(this.provider);
+    }
+    public static void markForceSync(ServerPlayerEntity player) {
+        getComponent(player).forceSync = true;
     }
 
     @Override

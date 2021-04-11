@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.client.renderer;
+package com.cibernet.splatcraft.client.renderer.block.entity;
 
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
@@ -39,16 +40,19 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
             BakedModel model = blockRendererDispatcher.getModel(state);
 
             float[] color = ColorUtils.getColorsFromInt(ColorUtils.getInkColor(blockEntity).getColorOrLocked());
-            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay);
+            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay, blockEntity);
         }
     }
 
-    private static void renderModel(MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
+    private static void renderModel(MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay, BlockEntity blockEntity) {
         Random random = new Random();
 
         for (Direction direction : Direction.values()) {
-            random.setSeed(42L);
-            renderModelBrightnessColorQuads(matrix, buffer, red, green, blue, model.getQuads(state, direction, random), light, overlay);
+            /*World world = MinecraftClient.getInstance().world;
+            if (world != null && Block.shouldDrawSide(state, world, blockEntity.getPos(), direction)) {*/
+                random.setSeed(42L);
+                renderModelBrightnessColorQuads(matrix, buffer, red, green, blue, model.getQuads(state, direction, random), light, overlay);
+            /*}*/
         }
 
         random.setSeed(42L);

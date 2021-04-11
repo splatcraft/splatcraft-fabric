@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.block;
 
-import com.cibernet.splatcraft.block.entity.CanvasBlockEntity;
+import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,7 +18,7 @@ public class CanvasBlock extends AbstractInkableBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockView world) {
-        return new CanvasBlockEntity();
+        return new InkableBlockEntity();
     }
 
     @Override
@@ -37,12 +37,7 @@ public class CanvasBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public boolean remoteInkClear(World world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean countsTowardsTurf(World world, BlockPos pos) {
+    public boolean massInkClear(World world, BlockPos pos) {
         return false;
     }
 }

@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.item.weapon;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.LivingEntity;
@@ -60,9 +60,9 @@ public class ShooterItem extends AbstractWeaponItem {
         if (hasInk(player, stack)) {
             reduceInk(player);
 
-            InkProjectileEntity proj = new InkProjectileEntity(world, player, stack, InkBlockUtils.getInkType(player), this.component.size, this.component.damage).setShooterTrail();
-            proj.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
-            world.spawnEntity(proj);
+            InkProjectileEntity entity = new InkProjectileEntity(world, player, stack, InkType.from(player), this.component.size, this.component.damage).setShooterTrail();
+            entity.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
+            world.spawnEntity(entity);
 
             world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
         } else {

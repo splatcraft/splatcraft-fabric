@@ -5,7 +5,7 @@ import com.cibernet.splatcraft.client.renderer.entity.player.PlayerEntityInkSqui
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.player.signal.AnimatablePlayerEntity;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.handler.PlayerHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -31,14 +31,14 @@ public class PlayerEntityRendererMixin {
         this.splatcraft_validateModelCaches(entity);
 
         if (LazyPlayerDataComponent.isSquid(entity)) {
-            if (!InkBlockUtils.shouldBeSubmerged(entity)) {
+            if (!PlayerHandler.shouldBeSubmerged(entity)) {
                 splatcraft_playerInkSquidRenderer.render(entity, yaw, tickDelta, matrices, vertices, light);
             }
             ci.cancel();
         } else if (SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS.containsKey(entity)) {
             AnimatablePlayerEntityRenderer renderer = SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS.get(entity);
             AnimatablePlayerEntity animation = renderer.getAnimatable();
-            if (animation.isRunning() && animation.canContinue()) {
+            if (animation.isRunning() && AnimatablePlayerEntity.shouldContinue(animation.player)) {
                 renderer.render(entity, yaw, tickDelta, matrices, vertices, light);
                 ci.cancel();
             } else {

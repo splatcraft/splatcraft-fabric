@@ -15,6 +15,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -99,8 +100,14 @@ public class InkColors {
     public static Optional<InkColor> getOrEmpty(Identifier id) {
         return Optional.ofNullable(get(id));
     }
+    @Nullable
     public static InkColor get(Identifier id) {
         return getAll().getOrDefault(id, null);
+    }
+    @NotNull
+    public static InkColor getNonNull(Identifier id) {
+        InkColor inkColor = InkColors.get(id);
+        return inkColor == null ? InkColors.NONE : inkColor;
     }
 
     public static HashMap<Identifier, InkColor> getAll() {

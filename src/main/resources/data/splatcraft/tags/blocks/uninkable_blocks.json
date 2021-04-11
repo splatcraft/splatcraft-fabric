@@ -4,6 +4,9 @@
     "minecraft:soul_sand",
     "minecraft:grass_path",
     "minecraft:wet_sponge",
-    "splatcraft:barrier_bar"
+    "splatcraft:barrier_bar",
+
+    "minecraft:redstone_lamp",
+    "minecraft:redstone_block"
   ]
 }

@@ -7,6 +7,7 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import com.cibernet.splatcraft.util.TagUtils;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -14,7 +15,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -28,6 +28,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -90,7 +91,7 @@ public class ColorUtils {
     }
 
     public static InkColor getInkColor(ItemStack stack) {
-        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
         if (tag == null) {
             return InkColors.NONE;
         } else {
@@ -99,13 +100,13 @@ public class ColorUtils {
                 return InkColors.NONE;
             } else {
                 String inkColor = splatcraft.getString("InkColor");
-                return inkColor == null ? InkColors.NONE : InkColor.getFromId(inkColor);
+                return inkColor == null ? InkColors.NONE : InkColor.fromNonNull(inkColor);
             }
         }
     }
     public static ItemStack setInkColor(ItemStack stack, InkColor color, boolean setColorLocked) {
-        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", color.toString());
         tag.put(Splatcraft.MOD_ID, splatcraft);
 
@@ -128,7 +129,7 @@ public class ColorUtils {
 
         Block block = blockEntity.getCachedState().getBlock();
         if (block instanceof AbstractInkableBlock) {
-            return ((AbstractInkableBlock) block).getColor(Objects.requireNonNull(blockEntity.getWorld()), blockEntity.getPos());
+            return ((AbstractInkableBlock) block).getInkColor(Objects.requireNonNull(blockEntity.getWorld()), blockEntity.getPos());
         }
 
         return InkColors.NONE;
@@ -157,6 +158,9 @@ public class ColorUtils {
 
         return text;
     }
+    public static Text getFormattedColorName(InkColor inkColor) {
+        return getFormattedColorName(inkColor, false);
+    }
     public static TranslatableText getTranslatableTextWithColor(String key, InkColor color, boolean colorless) {
         return new TranslatableText(key, getFormattedColorName(color, colorless));
     }
@@ -174,28 +178,24 @@ public class ColorUtils {
     }
 
     public static ItemStack setColorLocked(ItemStack stack, boolean isLocked) {
-        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putBoolean("ColorLocked", isLocked);
         tag.put(Splatcraft.MOD_ID, splatcraft);
 
         return stack;
     }
     public static boolean isColorLocked(ItemStack stack) {
-        CompoundTag tag = ColorUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         return splatcraft.getBoolean("ColorLocked");
-    }
-
-    public static CompoundTag getBlockEntityTagOrRoot(ItemStack stack) {
-        return stack.getItem() instanceof BlockItem ? stack.getOrCreateSubTag("BlockEntityTag") : stack.getOrCreateTag();
     }
 
     public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
         return ColorUtils.getInkColor(player).matches(ColorUtils.getInkColor(stack).color);
     }
 
-    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale, @Nullable PlayerEntity player) {
         if (!world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
 
@@ -207,10 +207,17 @@ public class ColorUtils {
             buf.writeDouble(pos.getY());
             buf.writeDouble(pos.getZ());
 
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, new BlockPos(pos))) {
-                ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, buf);
+            for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) world, new BlockPos(pos))) {
+                if (!serverPlayer.equals(player)) {
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, buf);
+                }
             }
+        } else if (player != null) {
+            com.cibernet.splatcraft.client.network.SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos); // static import to prevent ClassNotFoundException
         }
+    }
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {
+        addInkSplashParticle(world, inkColor, pos, scale, null);
     }
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos) {
         ColorUtils.addInkSplashParticle(world, inkColor, pos, 1.0f);
@@ -225,36 +232,8 @@ public class ColorUtils {
         ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0f);
     }
 
-    public static void playSquidTravelEffects(Entity entity, InkColor inkColor, float scale) {
-        if (!entity.world.isClient) {
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeUuid(entity.getUuid());
-
-            buf.writeDouble(entity.getX());
-            buf.writeDouble(entity.getY());
-            buf.writeDouble(entity.getZ());
-
-            buf.writeIdentifier(inkColor.id);
-            buf.writeFloat(scale);
-
-            for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) entity.world, entity.getBlockPos())) {
-                ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, buf);
-            }
-        }
-    }
-
     public static InkColor getRandomStarterColor(Random random) {
         return STARTER_COLORS[random.nextInt(STARTER_COLORS.length)];
     }
 
-    public static CompoundTag getOrCreateSplatcraftTag(CompoundTag tag) {
-        if (tag != null) {
-            CompoundTag splatcraft = tag.getCompound(Splatcraft.MOD_ID);
-            if (splatcraft != null) {
-                return splatcraft;
-            }
-        }
-
-        return new CompoundTag();
-    }
 }

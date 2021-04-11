@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.mixin.client;
 
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +27,7 @@ public class ClientPlayerEntityMixin {
         Input input = this.input;
 
         if (LazyPlayerDataComponent.isSquid(player) && !player.abilities.flying) {
-            if (InkBlockUtils.canClimb(player)) {
+            if (PlayerHandler.canClimb(player)) {
                 if (player.getVelocity().getY() < (input.jumping ? 0.46f : 0.4f)) {
                     player.updateVelocity(0.07f * (input.jumping ? 1.9f : 1.7f), new Vec3d(0.0f, player.forwardSpeed * 10, 0.0f));
                 }

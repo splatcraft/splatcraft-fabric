@@ -1,23 +1,29 @@
 package com.cibernet.splatcraft.block;
 
-import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.init.SplatcraftParticles;
+import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
@@ -37,12 +43,13 @@ import java.util.Random;
 public class InkedBlock extends AbstractInkableBlock {
     public static final String id = "inked_block";
 
-    private boolean glowing;
+    protected boolean glowing;
 
     public static final AbstractBlock.Settings DEFAULT_PROPERTIES = FabricBlockSettings.of(Material.ORGANIC_PRODUCT, MaterialColor.BLACK_TERRACOTTA)
-        .breakByTool(FabricToolTags.PICKAXES).requiresTool()
-        .sounds(BlockSoundGroup.SLIME).nonOpaque()
-        .ticksRandomly().suffocates((state, world, pos) -> false);
+        .sounds(BlockSoundGroup.SLIME)
+        .nonOpaque().ticksRandomly()
+        .suffocates((state, world, pos) -> false)
+        .solidBlock((state, world, pos) -> true);
     public static final int GLOWING_LIGHT_LEVEL = 6;
 
     public InkedBlock(AbstractBlock.Settings settings) {
@@ -69,14 +76,74 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            ItemStack stack = player.getStackInHand(hand);
+            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+            Item item = stack.getItem();
+            if (inkedBlockEntity.hasBaseInkColor()) {
+                if (item instanceof AxeItem) {
+                    inkedBlockEntity.setBaseInkColor(null);
+                    InkedBlock.clearInk(world, pos);
+
+                    if (!player.abilities.creativeMode) {
+                        stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(hand));
+                    }
+
+                    spawnParticles(SplatcraftParticles.WAX_INKED_BLOCK_OFF, world, state, pos);
+                    if (!world.isClient) {
+                        world.playSoundFromEntity(null, player, SplatcraftSoundEvents.BLOCK_INKED_BLOCK_WAX_OFF, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                    }
+
+                    return ActionResult.SUCCESS;
+                }
+            } else if (item == Items.HONEYCOMB && inkedBlockEntity.setBaseInkColor((inkedBlockEntity.getInkColor()))) {
+                if (!player.abilities.creativeMode) {
+                    stack.decrement(1);
+                }
+
+                spawnParticles(SplatcraftParticles.WAX_INKED_BLOCK_ON, world, state, pos);
+                if (!world.isClient) {
+                    world.playSoundFromEntity(null, player, SplatcraftSoundEvents.BLOCK_INKED_BLOCK_WAX_ON, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                }
+
+                return ActionResult.SUCCESS;
+            }
+
+            return this.onUseForSavedState(blockEntity, state, world, pos, player, hand, hit);
+        }
+
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    public void spawnParticles(DefaultParticleType particleType, World world, BlockState state, BlockPos pos) {
+        Random random = world.random;
+        for (int i = 0; i < 40; i++) {
+            Direction direction = Direction.random(random);
+            BlockPos blockPos = pos.offset(direction);
+            if (!state.isOpaque() || !state.isSideSolidFullSquare(world, blockPos, direction.getOpposite())) {
+                double x = direction.getOffsetX() == 0 ? random.nextDouble() : 0.5D + (double) direction.getOffsetX() * 0.6D;
+                double y = direction.getOffsetY() == 0 ? random.nextDouble() : 0.5D + (double) direction.getOffsetY() * 0.6D;
+                double z = direction.getOffsetZ() == 0 ? random.nextDouble() : 0.5D + (double) direction.getOffsetZ() * 0.6D;
+                world.addParticle(particleType, (double) pos.getX() + x, (double) pos.getY() + y, (double) pos.getZ() + z, 0.0D, 0.0D, 0.0D);
+            }
+        }
+    }
+
+    @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && world.getBlockEntity(pos) instanceof InkedBlockEntity && random.nextFloat() <= 0.7f) {
-            InkedBlock.clearInk(world, pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+            if (inkedBlockEntity.getSavedState().isAir() || (inkedBlockEntity.isInked() && (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && random.nextFloat() <= 0.7f))) {
+                InkedBlock.clearInk(world, pos);
+            }
         }
     }
 
     public static boolean isTouchingLiquid(BlockView reader, BlockPos pos) {
-        boolean flag = false;
+        boolean isTouchingLiquid = false;
         BlockPos.Mutable mutable = pos.mutableCopy();
 
         BlockState currentState = reader.getBlockState(pos);
@@ -91,38 +158,35 @@ public class InkedBlock extends AbstractInkableBlock {
                 mutable.set(pos, direction);
                 state = reader.getBlockState(mutable);
                 if (causesClear(state) && !state.isSideSolidFullSquare(reader, pos, direction.getOpposite())) {
-                    flag = true;
+                    isTouchingLiquid = true;
                     break;
                 }
             }
         }
 
-        return flag;
+        return isTouchingLiquid;
     }
 
     public static boolean causesClear(BlockState state) {
         return state.getFluidState().isIn(FluidTags.WATER);
     }
 
-    protected static BlockState clearInk(WorldAccess world, BlockPos pos) {
+    protected static boolean clearInk(WorldAccess world, BlockPos pos) {
         InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) world.getBlockEntity(pos);
         if (inkedBlockEntity != null && inkedBlockEntity.hasSavedState()) {
-            world.setBlockState(pos, inkedBlockEntity.getSavedState(), 3);
-
-            if (inkedBlockEntity.isColored() && inkedBlockEntity.getSavedState().getBlock() instanceof AbstractInkableBlock) {
-                ((World)world).setBlockEntity(pos, new InkedBlockEntity());
-                if (world.getBlockEntity(pos) instanceof AbstractInkableBlockEntity) {
-                    AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) world.getBlockEntity(pos);
-                    if (inkableBlockEntity != null) {
-                        inkableBlockEntity.setInkColor(inkedBlockEntity.getInkColor());
-                    }
+            if (inkedBlockEntity.hasBaseInkColor()) {
+                InkColor baseInkColor = inkedBlockEntity.getBaseInkColor();
+                if (baseInkColor != null) {
+                    inkedBlockEntity.setInkColor(baseInkColor);
                 }
+            } else {
+                world.setBlockState(pos, inkedBlockEntity.getSavedState(), 3);
             }
 
-            return inkedBlockEntity.getSavedState();
+            return true;
         }
 
-        return world.getBlockState(pos);
+        return false;
     }
 
     @Override
@@ -146,26 +210,7 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public boolean remoteColorChange(World world, BlockPos pos, InkColor newColor) {
-        return false;
-    }
-
-    @Override
-    public boolean remoteInkClear(World world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof InkedBlockEntity) {
-            return !clearInk(world, pos).equals(world.getBlockState(pos));
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean countsTowardsTurf(World world, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkBlockUtils.InkType inkType, boolean spawnParticles) {
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType, boolean spawnParticles) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
             InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
@@ -214,28 +259,22 @@ public class InkedBlock extends AbstractInkableBlock {
         return super.calcBlockBreakingDelta(state, player, world, pos);
     }
 
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof InkedBlockEntity) {
-            Block block = world.getBlockState(pos).getBlock();
-            InkBlockUtils.InkType inkType = InkBlockUtils.InkType.fromBlock((InkedBlock) block);
-            InkColor inkColor = ColorUtils.getInkColor(blockEntity);
+    protected ActionResult onUseForSavedState(BlockEntity blockEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        Block block = state.getBlock();
+        InkType inkTypePre = InkType.from((InkedBlock) block);
+        InkColor inkColorPre = ColorUtils.getInkColor(blockEntity);
 
-            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
-            ActionResult actionResult = savedState.getBlock().onUse(savedState, world, pos, player, hand, hit);
+        BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
+        ActionResult actionResultForSavedState = savedState.getBlock().onUse(savedState, world, pos, player, hand, hit);
 
-            if (actionResult.isAccepted()) {
-                block = world.getBlockState(pos).getBlock();
-                if (!(block instanceof InkedBlock)) {
-                    InkBlockUtils.inkBlock(world, pos, inkColor, 0.0f, inkType);
-                }
+        if (actionResultForSavedState.isAccepted()) {
+            block = world.getBlockState(pos).getBlock();
+            if (!(block instanceof InkedBlock)) {
+                InkBlockUtils.inkBlock(world, pos, inkColorPre, 0.0f, inkTypePre);
             }
-
-            return actionResult;
         }
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return actionResultForSavedState;
     }
 
     @Override
@@ -264,20 +303,21 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState newState, WorldAccess world, BlockPos blockPos, BlockPos posFrom) {
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
-        if (InkedBlock.isTouchingLiquid(world, blockPos)) {
-            if (blockEntity instanceof InkedBlockEntity) {
-                return clearInk(world, blockPos);
-            }
-        } else if (blockEntity instanceof InkedBlockEntity) {
-            BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
-            if (savedState != null && !savedState.getBlock().equals(this)) {
-                ((InkedBlockEntity) blockEntity).setSavedState(savedState.getBlock().getStateForNeighborUpdate(savedState, direction, newState, world, blockPos, posFrom));
+    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            if (InkedBlock.isTouchingLiquid(world, pos)) {
+                InkedBlock.clearInk(world, pos);
+                return world.getBlockState(pos);
+            } else {
+                BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
+                if (savedState != null && !savedState.getBlock().equals(this)) {
+                    ((InkedBlockEntity) blockEntity).setSavedState(savedState.getBlock().getStateForNeighborUpdate(savedState, direction, newState, world, pos, posFrom));
+                }
             }
         }
 
-        return super.getStateForNeighborUpdate(blockState, direction, newState, world, blockPos, posFrom);
+        return super.getStateForNeighborUpdate(blockState, direction, newState, world, pos, posFrom);
     }
 
     @Override

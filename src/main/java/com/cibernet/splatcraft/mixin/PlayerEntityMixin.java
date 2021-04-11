@@ -6,7 +6,6 @@ import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -62,14 +61,12 @@ public class PlayerEntityMixin {
     @Inject(method = "travel", at = @At("TAIL"))
     private void travel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity $this = PlayerEntity.class.cast(this);
-        if (!$this.world.isClient) {
-            double threshold = 0.13d;
-            if (InkBlockUtils.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
-                ColorUtils.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0f);
-            }
-
-            splatcraft_posLastTick = $this.getPos();
+        double threshold = 0.13d;
+        if (PlayerHandler.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
+            PlayerHandler.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0f);
         }
+
+        splatcraft_posLastTick = $this.getPos();
     }
 
     @Inject(method = "damage", at = @At("TAIL"))
@@ -77,9 +74,10 @@ public class PlayerEntityMixin {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.getComponent($this);
         LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
+
         if (lazyData.isSquid()) {
             for (int i = 0; i < Math.min(amount, 24); ++i) {
-                ColorUtils.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f);
+                ColorUtils.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f, $this);
             }
         }
     }
@@ -88,7 +86,7 @@ public class PlayerEntityMixin {
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(PlayerEntity.class.cast(this));
         if (lazyData.isSquid()) {
-            cir.setReturnValue(lazyData.isSubmerged() ? PlayerHandler.SQUID_FORM_DIMENSIONS : PlayerHandler.SQUID_FORM_AIRBORNE_DIMENSIONS);
+            cir.setReturnValue(lazyData.isSubmerged() ? PlayerHandler.SQUID_FORM_SUBMERGED_DIMENSIONS : PlayerHandler.SQUID_FORM_DIMENSIONS);
         }
     }
     @Inject(method = "getActiveEyeHeight", at = @At("RETURN"), cancellable = true)

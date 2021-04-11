@@ -43,7 +43,7 @@ public class AnimatablePlayerEntityRenderer extends GeoReplacedEntityRenderer<An
 
     @Override
     public void render(Entity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
-        if (animatable.isRunning() && animatable.canContinue()) {
+        if (animatable.isRunning() && AnimatablePlayerEntity.shouldContinue(animatable.player)) {
             // label rendering
             if (labelAnimationTicks <= MAX_LABEL_ANIMATION_TICKS) {
                 labelAnimationTicks++;

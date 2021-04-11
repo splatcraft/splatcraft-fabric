@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.client.renderer;
+package com.cibernet.splatcraft.client.renderer.entity;
 
 import com.cibernet.splatcraft.client.model.entity.InkProjectileEntityModel;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;

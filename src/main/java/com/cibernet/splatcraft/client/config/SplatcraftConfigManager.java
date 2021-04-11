@@ -40,7 +40,7 @@ public class SplatcraftConfigManager {
         OPTIONS.forEach(option -> jsonObject.addProperty(option.getId(), option.getValueForSave()));
 
         try (PrintWriter out = new PrintWriter(FILE)) {
-            out.println(jsonObject.toString());
+            out.println(jsonObject);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -84,9 +84,9 @@ public class SplatcraftConfigManager {
             Splatcraft.log(Level.WARN, "Could not load configuration file! Saving and loading default values.");
             SplatcraftConfigManager.save();
         } catch (NullPointerException e) {
-            Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e.toString() + ". This is probably just a configuration update.");
+            Splatcraft.log(Level.WARN, "Configuration failed to load fully from file due to " + e + ". This is probably just a configuration update.");
         } catch (IllegalArgumentException e) {
-            Splatcraft.log(Level.ERROR, "Configuration option failed to load: " + e.toString());
+            Splatcraft.log(Level.ERROR, "Configuration option failed to load: " + e);
         }
     }
     private static JsonPrimitive load(JsonObject jsonObject, Option<?> option) {
@@ -119,9 +119,9 @@ public class SplatcraftConfigManager {
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        //
-        // RENDER CATEGORY
-        //
+        /*
+            RENDER CATEGORY
+         */
 
         ConfigCategory RENDER = builder.getOrCreateCategory(createRenderText());
         TranslatableText holdStageBarrierToRender = createRenderText(SplatcraftConfig.RENDER.holdStageBarrierToRender.getId());
@@ -155,9 +155,9 @@ public class SplatcraftConfigManager {
                 .build()
         );
 
-        //
-        // UI CATEGORY
-        //
+        /*
+            UI CATEGORY
+        */
 
         ConfigCategory UI = builder.getOrCreateCategory(createUIText());
         TranslatableText preventBobViewWhenSquid = createUIText(SplatcraftConfig.UI.preventBobViewWhenSquid.getId());
@@ -226,9 +226,9 @@ public class SplatcraftConfigManager {
                 .build()
         );
 
-        //
-        // COLORS CATEGORY
-        //
+        /*
+            INK CATEGORY
+        */
 
         ConfigCategory INK = builder.getOrCreateCategory(createInkText());
         EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
@@ -281,9 +281,9 @@ public class SplatcraftConfigManager {
                 .build()
         );
 
-        //
-        // ACCESSIBILITY CATEGORY
-        //
+        /*
+            ACCESSIBILITY CATEGORY
+         */
 
         ConfigCategory ACCESSIBILITY = builder.getOrCreateCategory(createAccessibilityText());
         TranslatableText squidFormKeyBehavior = createAccessibilityText(SplatcraftConfig.ACCESSIBILITY.squidFormKeyBehavior.getId());

@@ -5,9 +5,10 @@ import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
-import com.cibernet.splatcraft.client.renderer.InkProjectileEntityRenderer;
-import com.cibernet.splatcraft.client.renderer.InkedBlockEntityRenderer;
-import com.cibernet.splatcraft.client.renderer.StageBarrierBlockEntityRenderer;
+import com.cibernet.splatcraft.client.particle.WaxInkedBlockParticle;
+import com.cibernet.splatcraft.client.renderer.block.entity.InkedBlockEntityRenderer;
+import com.cibernet.splatcraft.client.renderer.block.entity.StageBarrierBlockEntityRenderer;
+import com.cibernet.splatcraft.client.renderer.entity.InkProjectileEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.ink_squid.InkSquidEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.entity.squid_bumper.SquidBumperEntityRenderer;
 import com.cibernet.splatcraft.client.signal.Signal;
@@ -18,7 +19,7 @@ import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
-import com.cibernet.splatcraft.item.remote.RemoteItem;
+import com.cibernet.splatcraft.item.remote.AbstractRemoteItem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,6 +36,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.item.ModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
+import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -89,9 +91,16 @@ public class SplatcraftClient implements ClientModInitializer {
         );
 
         // model predicates
-        for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER }) {
-            registerModelPredicate(item, "active", (stack, world, entity) -> RemoteItem.hasCoordSet(stack) ? 1.0f : 0.0f);
-            registerModelPredicate(item, "mode", (stack, world, entity) -> RemoteItem.getRemoteMode(stack));
+        for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER, SplatcraftItems.INK_DISRUPTOR, SplatcraftItems.TURF_SCANNER }) {
+            registerModelPredicate(item, "active", (stack, world, entity) -> AbstractRemoteItem.hasCornerPair(stack) ? 1.0f : 0.0f);
+            registerModelPredicate(item, "mode", (stack, world, entity) -> {
+                Item pItem = stack.getItem();
+                if (pItem instanceof AbstractRemoteItem) {
+                    return ((AbstractRemoteItem) pItem).getRemoteModeOrdinal(stack);
+                }
+
+                return 0;
+            });
         }
         registerUnfoldedModelPredicate(SplatcraftItems.SPLAT_ROLLER, SplatcraftItems.KRAK_ON_SPLAT_ROLLER, SplatcraftItems.COROCORO_SPLAT_ROLLER, SplatcraftItems.OCTOBRUSH, SplatcraftItems.CARBON_ROLLER, SplatcraftItems.INKBRUSH);
 
@@ -130,6 +139,9 @@ public class SplatcraftClient implements ClientModInitializer {
         // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
         pfrInstance.register(SplatcraftParticles.INK_SPLASH, InkSplashParticle.Factory::new);
+        for (DefaultParticleType particleType : new DefaultParticleType[]{ SplatcraftParticles.WAX_INKED_BLOCK_ON, SplatcraftParticles.WAX_INKED_BLOCK_OFF }) {
+            pfrInstance.register(particleType, WaxInkedBlockParticle.Factory::new);
+        }
 
         // block render layers
         BlockRenderLayerMap brlmInstance = BlockRenderLayerMap.INSTANCE;

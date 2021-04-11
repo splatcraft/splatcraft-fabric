@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class InkColorArgumentType implements ArgumentType<Identifier> {
-    private static final Collection<String> EXAMPLES = Arrays.asList("splatcraft:hero_yellow", "red");
+    private static final Collection<String> EXAMPLES = Arrays.asList(InkColors.HERO_YELLOW.id.toString(), InkColors.DYE_RED.id.getPath());
     public static final DynamicCommandExceptionType NOT_FOUND_EXCEPTION = new DynamicCommandExceptionType(object -> new TranslatableText("splatcraft.inkColor.notFound", object));
 
     public static InkColorArgumentType inkColor() {

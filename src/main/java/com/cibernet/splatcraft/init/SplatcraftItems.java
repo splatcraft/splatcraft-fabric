@@ -9,6 +9,7 @@ import com.cibernet.splatcraft.item.SplatcraftArmorMaterials;
 import com.cibernet.splatcraft.item.SquidBumperItem;
 import com.cibernet.splatcraft.item.inkable.InkableArmorItem;
 import com.cibernet.splatcraft.item.inkable.InkableBlockItem;
+import com.cibernet.splatcraft.item.inkable.InkedBlockItem;
 import com.cibernet.splatcraft.item.remote.ColorChangerItem;
 import com.cibernet.splatcraft.item.remote.InkDisruptorItem;
 import com.cibernet.splatcraft.item.remote.TurfScannerItem;
@@ -18,7 +19,6 @@ import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
@@ -91,7 +91,7 @@ public class SplatcraftItems {
     public static final Item CANVAS = register(CanvasBlock.id, new InkableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ITEM_GROUP)));
     public static final Item SQUID_BUMPER = register("squid_bumper", new SquidBumperItem(new FabricItemSettings().maxCount(16).group(Splatcraft.ITEM_GROUP)));
 
-    public static final Item INKED_BLOCK = register(InkedBlock.id, new BlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
+    public static final Item INKED_BLOCK = register(InkedBlock.id, new InkedBlockItem(SplatcraftBlocks.INKED_BLOCK, new FabricItemSettings()));
 
     public static Item register(String id, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);

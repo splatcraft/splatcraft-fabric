@@ -46,7 +46,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     @Override
     public void readFromNbt(CompoundTag tag) {
         this.initialized = tag.getBoolean("Initialized");
-        this.inkColor = InkColor.getFromId(tag.getString("InkColor"));
+        this.inkColor = InkColor.fromNonNull(tag.getString("InkColor"));
         this.moving = tag.getBoolean("Moving");
         this.cooldown = Cooldown.fromTag(tag);
         this.charge = Charge.fromTag(tag);

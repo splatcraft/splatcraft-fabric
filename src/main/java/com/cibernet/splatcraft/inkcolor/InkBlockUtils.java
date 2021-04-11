@@ -6,19 +6,13 @@ import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
-import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.init.SplatcraftBlocks;
-import com.cibernet.splatcraft.init.SplatcraftGameRules;
-import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftStats;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -88,118 +82,8 @@ public class InkBlockUtils {
         return state.getBlock() instanceof AbstractPassableBlock || state.getCollisionShape(world, pos).isEmpty();
     }
 
-    public static boolean shouldBeSubmerged(PlayerEntity player) {
-        return LazyPlayerDataComponent.isSquid(player) && (InkBlockUtils.canSwim(player) || InkBlockUtils.canClimb(player));
-    }
-
-    public static boolean canSwim(PlayerEntity player, boolean ignoreOnGround) {
-        return (ignoreOnGround || player.isOnGround()) && InkBlockUtils.isOnInk(player) && !PlayerDataComponent.getInkColor(player).equals(
-            InkColors.NONE) && !InkBlockUtils.onEnemyInk(player);
-    }
-    public static boolean canSwim(PlayerEntity player) {
-        return canSwim(player, false);
-    }
-    public static boolean takeDamage(PlayerEntity player) {
-        return InkBlockUtils.onEnemyInk(player);
-    }
-
-    public static boolean onEnemyInk(World world, BlockPos pos, InkColor comparisonColor) {
-        if (!SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.UNIVERSAL_INK)) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractInkableBlockEntity) {
-                Block block = blockEntity.getCachedState().getBlock();
-                if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
-                    InkColor inkColor = ColorUtils.getInkColor(blockEntity);
-                    return !comparisonColor.equals(InkColors.NONE) && !inkColor.equals(InkColors.NONE) && !comparisonColor.matches(inkColor.color);
-                }
-            }
-        }
-
-        return false;
-    }
-    public static boolean onEnemyInk(PlayerEntity player) {
-        return InkBlockUtils.onEnemyInk(player.world, player.getVelocityAffectingPos(), ColorUtils.getInkColor(player));
-    }
-
-    public static boolean isOnInk(World world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity instanceof AbstractInkableBlockEntity) {
-            return !ColorUtils.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
-        }
-
-        return false;
-    }
-    public static boolean isOnInk(PlayerEntity player) {
-        return InkBlockUtils.isOnInk(player.world, player.getVelocityAffectingPos());
-    }
-
     public static boolean entityPassesThroughGaps(Entity entity) {
         return SplatcraftEntityTypeTags.PASSES_THROUGH_GAPS.contains(entity.getType()) || entity instanceof PlayerEntity && LazyPlayerDataComponent.isSquid((PlayerEntity) entity);
     }
 
-    public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
-        if (!player.hasVehicle()) {
-            BlockPos pos = InkBlockUtils.getClimbingPos(player);
-            if (pos != null) {
-                return pos;
-            }
-        }
-
-        return player.getVelocityAffectingPos();
-    }
-    public static BlockPos getClimbingPos(PlayerEntity player) {
-        for (int i = 0; i < 4; i++) {
-            float xOff = (i < 2 ? 0.32f : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : 0.32f) * (i % 2 == 0 ? 1 : -1);
-            BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
-            Block block = player.world.getBlockState(pos).getBlock();
-
-            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb()) {
-                BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color)) {
-                    return pos;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public static boolean canClimb(PlayerEntity player) {
-        if (InkBlockUtils.onEnemyInk(player) || PlayerDataComponent.getInkColor(player).equals(InkColors.NONE)) {
-            return false;
-        } else {
-            BlockPos pos = InkBlockUtils.getClimbingPos(player);
-            if (pos != null) {
-                BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                if (blockEntity instanceof AbstractInkableBlockEntity) {
-                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color);
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static InkBlockUtils.InkType getInkType(PlayerEntity entity) {
-        return entity != null && entity.inventory.contains(new ItemStack(SplatcraftItems.SPLATFEST_BAND)) ? InkType.GLOWING : InkType.NORMAL;
-    }
-
-    public enum InkType {
-        NORMAL,
-        GLOWING;
-
-        public Block asBlock() {
-            switch (this) {
-                default:
-                case NORMAL:
-                    return SplatcraftBlocks.INKED_BLOCK;
-                case GLOWING:
-                    return SplatcraftBlocks.GLOWING_INKED_BLOCK;
-            }
-        }
-        public static InkType fromBlock(InkedBlock block) {
-            return block.isGlowing() ? GLOWING : NORMAL;
-        }
-    }
 }

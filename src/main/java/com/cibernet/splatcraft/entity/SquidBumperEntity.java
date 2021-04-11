@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.util.TagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -69,7 +70,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         super.writeCustomDataToTag(tag);
 
         this.inkColorToTag(tag);
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         splatcraft.putInt("RespawnTime", this.getRespawnTime());
         splatcraft.putInt("MaxRespawnTime", this.getMaxRespawnTime());
         splatcraft.putInt("HurtDelay", this.getHurtDelay());
@@ -85,7 +86,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         super.readCustomDataFromTag(tag);
 
         this.inkColorFromTag(tag);
-        CompoundTag splatcraft = ColorUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         this.setRespawnTime(splatcraft.getInt("RespawnTime"));
         this.setMaxRespawnTime(splatcraft.getInt("MaxRespawnTime"));
         this.setHurtDelay(splatcraft.getInt("HurtDelay"));

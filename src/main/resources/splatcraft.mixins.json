@@ -4,8 +4,8 @@
   "package": "com.cibernet.splatcraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin", "ItemEntityMixin", "ItemStackMixin", "LivingEntityMixin", "PlayerEntityMixin",
-    "PlayerInventoryMixin", "ServerPlayerEntityMixin", "EntityShapeContextMixin"
+    "BlockMixin", "EntityMixin", "EntityShapeContextMixin", "ItemEntityMixin", "ItemStackMixin", "LivingEntityMixin",
+    "PlayerEntityMixin", "PlayerInventoryMixin", "ServerPlayerEntityMixin", "SquidBlockCollisionMixin"
   ],
   "client": [
     "client.ArmorFeatureRendererMixin", "client.ClientItemStackMixin", "client.ClientPlayerEntityMixin",

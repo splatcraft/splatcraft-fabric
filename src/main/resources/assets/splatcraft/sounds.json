@@ -116,19 +116,38 @@
   "ink_submerge": {
     "subtitle": "subtitle.splatcraft.ink_submerge",
     "sounds": [
-      "splatcraft:ink_submerge"
+      {
+        "name": "splatcraft:ink_submerge",
+        "pitch": 0.6
+      }
     ]
   },
   "ink_unsubmerge": {
     "subtitle": "subtitle.splatcraft.ink_unsubmerge",
     "sounds": [
-      "splatcraft:ink_unsubmerge"
+      {
+        "name": "splatcraft:ink_unsubmerge",
+        "pitch": 0.86
+      }
     ]
   },
   "ink_surface": {
     "subtitle": "subtitle.splatcraft.ink_surface",
     "sounds": [
       "splatcraft:ink_surface"
+    ]
+  },
+
+  "block.inked_block.wax_on": {
+    "subtitle": "subtitle.splatcraft.block.inked_block.wax_on",
+    "sounds": [
+      "splatcraft:block/inked_block/wax_on"
+    ]
+  },
+  "block.inked_block.wax_off": {
+    "subtitle": "subtitle.splatcraft.block.inked_block.wax_off",
+    "sounds": [
+      "splatcraft:block/inked_block/wax_off"
     ]
   }
 }
