@@ -4,6 +4,8 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.util.TagUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -21,6 +23,12 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     public AbstractInkableBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public double getSquaredRenderDistance() {
+        return Integer.MAX_VALUE;
     }
 
     @Override
