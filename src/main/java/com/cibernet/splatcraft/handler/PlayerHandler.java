@@ -173,9 +173,8 @@ public class PlayerHandler {
         return onEnemyInk(player.world, player.getVelocityAffectingPos(), ColorUtils.getInkColor(player));
     }
 
-    public static boolean isOnInk(World world, BlockPos pos) {
+    public static boolean canSwim(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-
         if (blockEntity instanceof AbstractInkableBlockEntity) {
             return !ColorUtils.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
         }
@@ -184,7 +183,7 @@ public class PlayerHandler {
     }
 
     public static boolean isOnInk(PlayerEntity player) {
-        return isOnInk(player.world, player.getVelocityAffectingPos());
+        return canSwim(player.world, player.getVelocityAffectingPos());
     }
 
     public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
@@ -204,7 +203,7 @@ public class PlayerHandler {
             BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
             Block block = player.world.getBlockState(pos).getBlock();
 
-            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb()) {
+            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb() && player.getBlockState().getBlock() != block) {
                 BlockEntity blockEntity = player.world.getBlockEntity(pos);
                 if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color)) {
                     return pos;
@@ -219,7 +218,7 @@ public class PlayerHandler {
         if (onEnemyInk(player) || PlayerDataComponent.getInkColor(player).equals(InkColors.NONE)) {
             return false;
         } else {
-            BlockPos pos = getClimbingPos(player);
+            BlockPos pos = PlayerHandler.getClimbingPos(player);
             if (pos != null) {
                 BlockEntity blockEntity = player.world.getBlockEntity(pos);
                 if (blockEntity instanceof AbstractInkableBlockEntity) {
