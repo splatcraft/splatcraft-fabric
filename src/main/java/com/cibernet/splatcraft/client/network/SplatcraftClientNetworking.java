@@ -43,8 +43,8 @@ import java.util.UUID;
 public class SplatcraftClientNetworking {
     public static void registerReceivers() {
         /*
-            INK COLORS
-        */
+         * INK COLORS
+         */
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
             InkColor color = InkColors.getNonNull(buf.readIdentifier());
@@ -88,7 +88,7 @@ public class SplatcraftClientNetworking {
         });
 
         /*
-            PLAYER SQUID FORM
+         *  PLAYER SQUID FORM
          */
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
@@ -127,7 +127,7 @@ public class SplatcraftClientNetworking {
         });
 
         /*
-            SIGNALS
+         *  SIGNALS
          */
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_PLAYER_SIGNAL_PACKET_ID, (client, handler, buf, responseSender) -> {

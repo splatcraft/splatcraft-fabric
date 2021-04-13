@@ -17,6 +17,9 @@ import com.cibernet.splatcraft.item.weapon.RollerItem;
 import com.cibernet.splatcraft.item.weapon.ShooterItem;
 import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
+import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
+import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatternItem;
+import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatterns;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
@@ -26,13 +29,14 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class SplatcraftItems {
     private static final List<Item> INKABLES = new LinkedList<>();
-    //
-    // WEAPONS
-    //
+    /*
+     * WEAPONS
+     */
 
     public static final Item.Settings WEAPON_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP);
 
@@ -55,9 +59,9 @@ public class SplatcraftItems {
     public static final Item GAL_96 = register("96_gal", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(2.5f, 1.3f, 12.4f, 11.0f, 0.85f, 12.5f)));
     public static final Item GAL_96_DECO = register("96_gal_deco", new ShooterItem((ShooterItem) GAL_96));
 
-    //
-    // WEARABLES
-    //
+    /*
+     * WEARABLES
+     */
 
     public static final Item.Settings WEARABLE_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP);
 
@@ -73,9 +77,9 @@ public class SplatcraftItems {
 
     public static final Item SPLATFEST_BAND = register("splatfest_band", new Item(WEARABLE_SETTINGS));
 
-    //
-    // INK
-    //
+    /*
+     * INK
+     */
 
     public static final Item.Settings REMOTE_SETTINGS = new FabricItemSettings().rarity(Rarity.UNCOMMON).maxCount(1).group(Splatcraft.ITEM_GROUP);
 
@@ -83,9 +87,16 @@ public class SplatcraftItems {
     public static final Item INK_DISRUPTOR = register("ink_disruptor", new InkDisruptorItem(REMOTE_SETTINGS));
     public static final Item TURF_SCANNER = register("turf_scanner", new TurfScannerItem(REMOTE_SETTINGS));
 
-    //
-    // COLORABLES
-    //
+    /*
+     * BANNER PATTERNS
+     */
+
+    public static final Item INK_SQUID_BANNER_PATTERN = register("inkling_banner_pattern", new LoomPatternItem(SplatcraftLoomPatterns.INKLING, new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP)));
+    public static final Item OCTOLING_BANNER_PATTERN = register("octoling_banner_pattern", new LoomPatternItem(SplatcraftLoomPatterns.OCTOLING, new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP)));
+
+    /*
+     * COLORABLES
+     */
 
     public static final Item INKWELL = register(InkwellBlock.id, new InkableBlockItem(SplatcraftBlocks.INKWELL, new FabricItemSettings().group(Splatcraft.ITEM_GROUP)));
     public static final Item CANVAS = register(CanvasBlock.id, new InkableBlockItem(SplatcraftBlocks.CANVAS, new FabricItemSettings().group(Splatcraft.ITEM_GROUP)));
@@ -95,6 +106,9 @@ public class SplatcraftItems {
 
     public static Item register(String id, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);
+    }
+    public static Item register(LoomPattern loomPattern) {
+        return register(Objects.requireNonNull(LoomPatterns.REGISTRY.getId(loomPattern)).getPath() + "_banner_pattern", new LoomPatternItem(loomPattern, new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP)));
     }
 
     public static Item[] getInkables() {

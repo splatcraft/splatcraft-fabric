@@ -6,7 +6,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
@@ -18,7 +17,6 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 import java.util.Random;
@@ -40,11 +38,11 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
             BakedModel model = blockRendererDispatcher.getModel(state);
 
             float[] color = ColorUtils.getColorsFromInt(ColorUtils.getInkColor(blockEntity).getColorOrLocked());
-            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay, blockEntity);
+            renderModel(matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay);
         }
     }
 
-    private static void renderModel(MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay, BlockEntity blockEntity) {
+    private static void renderModel(MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
         Random random = new Random();
 
         for (Direction direction : Direction.values()) {
@@ -61,11 +59,7 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
 
     private static void renderModelBrightnessColorQuads(MatrixStack.Entry matrix, VertexConsumer buffer, float red, float green, float blue, List<BakedQuad> quads, int light, int overlay) {
         for (BakedQuad bakedquad : quads) {
-            float r = MathHelper.clamp(red, 0.0f, 1.0f);
-            float g = MathHelper.clamp(green, 0.0f, 1.0f);
-            float b = MathHelper.clamp(blue, 0.0f, 1.0f);
-
-            buffer.quad(matrix, bakedquad, r, g, b, light, overlay);
+            buffer.quad(matrix, bakedquad, red, green, blue, light, overlay);
         }
     }
 }

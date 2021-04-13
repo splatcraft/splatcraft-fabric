@@ -39,7 +39,11 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // COMPATIBILITY
-    // ---
+    modImplementation ("grondag:canvas-mc116:1.0.+") {
+        exclude group: "net.fabricmc"
+        exclude group: "net.fabricmc.fabric-api"
+        exclude group: "me.shedaniel.cloth"
+    }
 
     // LIBS
     modImplementation "com.github.andantedevs:chord:${project.chord_version}"
@@ -59,11 +63,8 @@ dependencies {
 
     modImplementation "software.bernie.geckolib:geckolib-fabric-${project.geckolib_version}:dev"
 
-    modImplementation ("grondag:canvas-mc116:1.0.+") {
-        exclude group: "net.fabricmc"
-        exclude group: "net.fabricmc.fabric-api"
-        exclude group: "me.shedaniel.cloth"
-    }
+    modImplementation "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
+    include "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
 
     // RUNTIME UTILS
     modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }

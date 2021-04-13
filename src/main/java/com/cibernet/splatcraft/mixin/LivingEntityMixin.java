@@ -24,9 +24,9 @@ public class LivingEntityMixin {
         WeaponHandler.onLivingDamage(LivingEntity.class.cast(this), amount);
     }
 
-    //
-    // Amend momentum when a player jumps in squid form.
-    //
+    /*
+     * Amend momentum when a player jumps in squid form.
+     */
 
     private InkColor splatcraft_lastLandedBlockInkColor = InkColors.NONE;
 

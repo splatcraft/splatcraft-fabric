@@ -86,7 +86,7 @@ public class TurfScanner {
         }
 
         /*
-            GET SCORES
+         * GET SCORES
          */
 
         if (this.scanMode == TurfScanMode.TOP_DOWN) {
@@ -127,7 +127,7 @@ public class TurfScanner {
         }
 
         /*
-            ANNOUNCE SCORES / WINNERS
+         *  ANNOUNCE SCORES / WINNERS
          */
 
         if (!this.world.isClient) {

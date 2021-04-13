@@ -21,9 +21,9 @@ import java.util.List;
 public class SplatcraftBlocks {
     private static final List<Block> INKABLES = new LinkedList<>();
 
-    //
-    // INKABLE BLOCKS
-    //
+    /*
+     * INKABLE BLOCKS
+     */
 
     public static final Block INKWELL = register(InkwellBlock.id, new InkwellBlock(
         FabricBlockSettings.of(Material.GLASS)
@@ -40,9 +40,9 @@ public class SplatcraftBlocks {
     public static final Block INKED_BLOCK = register(InkedBlock.id, new InkedBlock(false), false);
     public static final Block GLOWING_INKED_BLOCK = register("glowing_" + InkedBlock.id, new InkedBlock(true), false);
 
-    //
-    // STAGE BLOCKS
-    //
+    /*
+     * STAGE BLOCKS
+     */
 
     public static final Block GRATE = register(GrateBlock.id, new GrateBlock(
         FabricBlockSettings.of(Material.METAL)

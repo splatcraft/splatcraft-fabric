@@ -225,9 +225,9 @@ public class InkedBlock extends AbstractInkableBlock {
         return false;
     }
 
-    //
-    // BASE MIMICKING
-    //
+    /*
+     * BASE MIMICKING
+     */
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
@@ -247,6 +247,16 @@ public class InkedBlock extends AbstractInkableBlock {
         }
 
         return super.getOutlineShape(state, world, pos, ctx);
+    }
+
+    @Override
+    public VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof InkedBlockEntity) {
+            return ((InkedBlockEntity) blockEntity).getSavedState().getCullingShape(world, pos);
+        }
+
+        return super.getCullingShape(state, world, pos);
     }
 
     @Override

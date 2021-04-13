@@ -45,7 +45,7 @@ public class LazyPlayerDataComponent implements Component, AutoSyncedComponent {
     }
 
     /*
-        GETTERS/SETTERS
+     * GETTERS/SETTERS
      */
 
     public static LazyPlayerDataComponent getComponent(@NotNull PlayerEntity player) {

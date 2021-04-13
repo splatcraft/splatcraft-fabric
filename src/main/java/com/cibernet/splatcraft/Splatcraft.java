@@ -109,9 +109,11 @@ public class Splatcraft implements ModInitializer {
 
         new SplatcraftBlockEntities();
         new SplatcraftBlocks();
+        new SplatcraftLoomPatterns();
         new SplatcraftItems();
-        new SplatcraftTrackedDataHandlers();
+
         new SplatcraftEntities();
+        new SplatcraftTrackedDataHandlers();
 
         // data
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {

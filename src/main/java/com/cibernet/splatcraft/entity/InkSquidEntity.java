@@ -35,7 +35,7 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     @Override
     public void travel(Vec3d movementInput) {
         super.travel(movementInput);
-        if (this.world.isClient && this.isOnGround() && this.getRandom().nextFloat() <= 0.7f && (this.getVelocity().getX() != 0 || this.getVelocity().getZ() != 0) && PlayerHandler.isOnInk(this.world, this.getVelocityAffectingPos())) {
+        if (this.world.isClient && this.isOnGround() && this.getRandom().nextFloat() <= 0.7f && (this.getVelocity().getX() != 0 || this.getVelocity().getZ() != 0) && PlayerHandler.canSwim(this.world, this.getVelocityAffectingPos())) {
             for (int i = 0; i < 2; ++i) {
                 ColorUtils.addInkSplashParticle(this.world, this.getVelocityAffectingPos(), new Vec3d(this.getParticleX(0.5d), this.getRandomBodyY() - 0.25d, this.getParticleZ(0.5d)));
             }

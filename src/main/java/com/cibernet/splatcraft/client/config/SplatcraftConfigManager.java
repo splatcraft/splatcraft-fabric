@@ -120,7 +120,7 @@ public class SplatcraftConfigManager {
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
         /*
-            RENDER CATEGORY
+         *  RENDER CATEGORY
          */
 
         ConfigCategory RENDER = builder.getOrCreateCategory(createRenderText());
@@ -227,8 +227,8 @@ public class SplatcraftConfigManager {
         );
 
         /*
-            INK CATEGORY
-        */
+         *  INK CATEGORY
+         */
 
         ConfigCategory INK = builder.getOrCreateCategory(createInkText());
         EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
@@ -282,7 +282,7 @@ public class SplatcraftConfigManager {
         );
 
         /*
-            ACCESSIBILITY CATEGORY
+         *  ACCESSIBILITY CATEGORY
          */
 
         ConfigCategory ACCESSIBILITY = builder.getOrCreateCategory(createAccessibilityText());
