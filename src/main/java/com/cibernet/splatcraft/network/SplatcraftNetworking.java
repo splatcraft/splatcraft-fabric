@@ -48,16 +48,14 @@ public class SplatcraftNetworking {
     }
 
     public static void sendPlayInkDeathEffects(Entity entity) {
-        if (entity.world != null && !entity.isSpectator()) {
+        if (entity.world != null && !entity.world.isClient && !entity.isSpectator()) {
             MinecraftServer server = entity.world.getServer();
             if (server != null) {
                 for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server)) {
-                    if (!entity.isInvisibleTo(serverPlayer)) {
-                        PacketByteBuf buf = PacketByteBufs.create();
-                        buf.writeInt(entity.getEntityId());
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeInt(entity.getEntityId());
 
-                        ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_INK_DEATH_EFFECTS, buf);
-                    }
+                    ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_INK_DEATH_EFFECTS, buf);
                 }
             }
         }

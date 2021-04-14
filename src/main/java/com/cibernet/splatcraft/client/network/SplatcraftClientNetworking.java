@@ -134,7 +134,7 @@ public class SplatcraftClientNetworking {
 
                 client.execute(() -> {
                     Entity entity = client.world.getEntityById(id);
-                    if (entity instanceof PlayerEntity || entity instanceof InkableEntity) {
+                    if ((entity instanceof PlayerEntity || entity instanceof InkableEntity) && !entity.isInvisibleTo(client.player)) {
                         client.worldRenderer.addParticle(new InkSquidSoulParticleEffect(entity), true, entity.getX(), entity.getEyeY() + 0.5d, entity.getZ(), 0.0d, 1.0d, 0.0d);
                     }
                 });
