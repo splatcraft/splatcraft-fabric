@@ -5,11 +5,13 @@ import com.cibernet.splatcraft.client.signal.Signal;
 import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
+import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
+import com.cibernet.splatcraft.particle.InkSquidSoulParticleEffect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,6 +21,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -88,7 +91,7 @@ public class SplatcraftClientNetworking {
         });
 
         /*
-         *  PLAYER SQUID FORM
+         *  PLAYER
          */
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_SQUID_TRAVEL_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
@@ -121,6 +124,18 @@ public class SplatcraftClientNetworking {
                     InkColor inkColor = InkColors.getNonNull(inkColorId);
                     if (player != null && client.world != null) {
                         SplatcraftClientNetworking.playPlayerToggleSquidEffects(player, client.world, inkColor);
+                    }
+                });
+            }
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_INK_DEATH_EFFECTS, (client, handler, buf, responseSender) -> {
+            if (client.world != null) {
+                int id = buf.readInt();
+
+                client.execute(() -> {
+                    Entity entity = client.world.getEntityById(id);
+                    if (entity instanceof PlayerEntity || entity instanceof InkableEntity) {
+                        client.worldRenderer.addParticle(new InkSquidSoulParticleEffect(entity), true, entity.getX(), entity.getEyeY() + 0.5d, entity.getZ(), 0.0d, 1.0d, 0.0d);
                     }
                 });
             }

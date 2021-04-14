@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.client.particle;
 
 import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
+import com.cibernet.splatcraft.particle.InkedParticleEffect;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
@@ -13,7 +14,7 @@ import net.minecraft.client.world.ClientWorld;
 public class InkSplashParticle extends RainSplashParticle {
     private final SpriteProvider spriteProvider;
 
-    private InkSplashParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, InkSplashParticleEffect particleEffect, SpriteProvider spriteProvider) {
+    private InkSplashParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, InkedParticleEffect particleEffect, SpriteProvider spriteProvider) {
         super(world, x, y, z);
         this.gravityStrength = 0.04f;
 

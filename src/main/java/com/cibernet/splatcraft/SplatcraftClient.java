@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
+import com.cibernet.splatcraft.client.particle.InkSquidSoulParticle;
 import com.cibernet.splatcraft.client.particle.WaxInkedBlockParticle;
 import com.cibernet.splatcraft.client.renderer.block.entity.InkedBlockEntityRenderer;
 import com.cibernet.splatcraft.client.renderer.block.entity.StageBarrierBlockEntityRenderer;
@@ -139,6 +140,7 @@ public class SplatcraftClient implements ClientModInitializer {
         // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
         pfrInstance.register(SplatcraftParticles.INK_SPLASH, InkSplashParticle.Factory::new);
+        pfrInstance.register(SplatcraftParticles.INK_SQUID_SOUL, InkSquidSoulParticle.Factory::new);
         for (DefaultParticleType particleType : new DefaultParticleType[]{ SplatcraftParticles.WAX_INKED_BLOCK_ON, SplatcraftParticles.WAX_INKED_BLOCK_OFF }) {
             pfrInstance.register(particleType, WaxInkedBlockParticle.Factory::new);
         }

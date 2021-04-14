@@ -5,7 +5,9 @@ import com.cibernet.splatcraft.signal.SignalWhitelistManager;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -43,5 +45,21 @@ public class SplatcraftNetworking {
                 );
             }
         );
+    }
+
+    public static void sendPlayInkDeathEffects(Entity entity) {
+        if (entity.world != null && !entity.isSpectator()) {
+            MinecraftServer server = entity.world.getServer();
+            if (server != null) {
+                for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server)) {
+                    if (!entity.isInvisibleTo(serverPlayer)) {
+                        PacketByteBuf buf = PacketByteBufs.create();
+                        buf.writeInt(entity.getEntityId());
+
+                        ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_INK_DEATH_EFFECTS, buf);
+                    }
+                }
+            }
+        }
     }
 }

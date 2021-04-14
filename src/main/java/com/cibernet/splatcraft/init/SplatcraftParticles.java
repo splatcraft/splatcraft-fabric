@@ -2,6 +2,7 @@ package com.cibernet.splatcraft.init;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
+import com.cibernet.splatcraft.particle.InkSquidSoulParticleEffect;
 import com.cibernet.splatcraft.particle.vanilla.PublicDefaultParticleType;
 import com.mojang.serialization.Codec;
 import net.minecraft.particle.DefaultParticleType;
@@ -14,6 +15,8 @@ import java.util.function.Function;
 
 public class SplatcraftParticles {
     public static final ParticleType<InkSplashParticleEffect> INK_SPLASH = register("ink_splash", InkSplashParticleEffect.PARAMETERS_FACTORY, particleType -> InkSplashParticleEffect.CODEC);
+    public static final ParticleType<InkSquidSoulParticleEffect> INK_SQUID_SOUL = register("ink_squid_soul", InkSquidSoulParticleEffect.PARAMETERS_FACTORY, particleType -> InkSquidSoulParticleEffect.CODEC);
+
     public static final DefaultParticleType WAX_INKED_BLOCK_ON = register("wax_inked_block_on", false);
     public static final DefaultParticleType WAX_INKED_BLOCK_OFF = register("wax_inked_block_off", false);
 

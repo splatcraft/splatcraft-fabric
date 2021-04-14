@@ -2,11 +2,11 @@ package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
-import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.network.SplatcraftNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,13 +15,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-    @Inject(method = "damage", at = @At("HEAD"))
-    private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        WeaponHandler.onLivingDamage(LivingEntity.class.cast(this), amount);
+    @Inject(method = "onDeath", at = @At("HEAD"))
+    private void onDeath(DamageSource source, CallbackInfo ci) {
+        LivingEntity $this = LivingEntity.class.cast(this);
+        SplatcraftNetworking.sendPlayInkDeathEffects($this);
     }
 
     /*
