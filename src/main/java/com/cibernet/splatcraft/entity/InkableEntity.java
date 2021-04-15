@@ -36,7 +36,7 @@ public interface InkableEntity {
         tag.put(Splatcraft.MOD_ID, splatcraft);
     }
     default void inkColorFromTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtils.getBlockEntityTagOrRoot(tag);
+        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
         this.setInkColor(InkColor.fromNonNull(splatcraft.getString("InkColor")));
     }
 
