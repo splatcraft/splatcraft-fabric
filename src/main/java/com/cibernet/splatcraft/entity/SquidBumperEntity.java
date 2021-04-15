@@ -6,6 +6,7 @@ import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
 import com.cibernet.splatcraft.inkcolor.ColorUtils;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.util.StringConstants;
 import com.cibernet.splatcraft.util.TagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -134,7 +135,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (!this.world.isClient && !this.removed) {
-            if (!this.isInvulnerableTo(source)) {
+            if (!this.isInvulnerableTo(source) || StringConstants.DAMAGE_SOURCES_ALL.contains(source.getName())) {
                 if (source.isSourceCreativePlayer() || this.getLastHitTime() > 0) {
                     this.breakAndDropItem(source);
                     this.remove();
@@ -152,9 +153,8 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         if (!this.removed && !this.isInkproof()) {
             if (!this.isFlattened()) {
                 this.inkDamage(damage);
+                return true;
             }
-
-            return true;
         }
 
         return false;

@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.inkcolor;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
+import com.cibernet.splatcraft.util.StringConstants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -11,11 +12,11 @@ import net.minecraft.world.World;
 
 public class InkDamage {
     public static boolean splat(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
-        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, "splat");
+        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, StringConstants.DAMAGE_SOURCE_SPLAT);
     }
 
     public static boolean roll(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs) {
-        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, "roll");
+        return InkDamage.attack(world, target, damage, inkColor, source, damageMobs, StringConstants.DAMAGE_SOURCE_ROLL);
     }
 
     public static boolean attack(World world, LivingEntity target, float damage, InkColor inkColor, Entity source, boolean damageMobs, String damageSourceId) {
