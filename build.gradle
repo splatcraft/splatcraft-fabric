@@ -10,11 +10,7 @@ archivesBaseName = project.archives_base_name
 group = project.maven_group
 
 if (System.env.CI == "true") {
-    def branch
-    branch = System.env.GITHUB_REF
-    branch = branch.substring(branch.lastIndexOf("/") + 1)
-
-    version = "${project.mod_version}+a${System.env.GITHUB_RUN_NUMBER}.${branch}-fabric"
+    version = "${project.mod_version}+a${System.env.GITHUB_RUN_NUMBER}.${project.minecraft_version}-fabric"
 } else {
     version = "${project.mod_version}+${project.minecraft_version}-fabric"
 }
