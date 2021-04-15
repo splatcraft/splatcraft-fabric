@@ -34,6 +34,7 @@ import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.ModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
@@ -77,9 +78,14 @@ public class SplatcraftClient implements ClientModInitializer {
         ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
 
         // color providers
-        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> world == null
-            ? InkColors.NONE.color
-            : ColorUtils.getInkColor(world.getBlockEntity(pos)).getColorOrLocked(), SplatcraftBlocks.getInkables()
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+                if (world != null && pos != null) {
+                    BlockEntity blockEntity = world.getBlockEntity(pos);
+                    return ColorUtils.getInkColor(blockEntity != null ? blockEntity : world.getBlockEntity(pos.down())).getColorOrLocked();
+                }
+
+                return InkColors.NONE.color;
+            }, SplatcraftBlocks.getInkables()
         );
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtils.getInkColor(stack).color, SplatcraftBlocks.getInkables());
