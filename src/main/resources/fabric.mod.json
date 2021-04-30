@@ -58,9 +58,6 @@
     "chord": ">=1.5.7",
     "geckolib3": "*"
   },
-  "conflicts": {
-    "sodium": "*"
-  },
   "recommends": {
     "canvas": "*"
   }

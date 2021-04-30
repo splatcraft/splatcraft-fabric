@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
+import com.cibernet.splatcraft.util.ModLoaded;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -67,7 +68,7 @@ public class SplatcraftConfigManager {
                 UI.invisibleCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, UI.invisibleCrosshairWhenSquid).getAsBoolean();
                 UI.renderPaperDollWhenSignalling.value = SplatcraftConfigManager.load(jsonObject, UI.renderPaperDollWhenSignalling).getAsBoolean();
                 SplatcraftConfig.InkGroup INK = SplatcraftConfig.INK;
-                // INK.dynamicInkDurabilityColor.value = SplatcraftConfigManager.load(jsonObject, INK.dynamicInkDurabilityColor).getAsBoolean();
+                INK.inkColoredChargerIndicator.value = SplatcraftConfigManager.load(jsonObject, INK.inkColoredChargerIndicator).getAsBoolean();
                 INK.inkColoredCrosshairWhenSquid.value = SplatcraftConfigManager.load(jsonObject, INK.inkColoredCrosshairWhenSquid).getAsBoolean();
                 INK.inkAmountIndicator.value = InkAmountIndicator.valueOf(SplatcraftConfigManager.load(jsonObject, INK.inkAmountIndicator).getAsString());
                 INK.inkAmountIndicatorAlwaysVisible.value = SplatcraftConfigManager.load(jsonObject, INK.inkAmountIndicatorAlwaysVisible).getAsBoolean();
@@ -79,6 +80,8 @@ public class SplatcraftConfigManager {
                 ACCESSIBILITY.colorLock.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLock).getAsBoolean();
                 ACCESSIBILITY.colorLockFriendly.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLockFriendly).getAsInt();
                 ACCESSIBILITY.colorLockHostile.value = SplatcraftConfigManager.load(jsonObject, ACCESSIBILITY.colorLockHostile).getAsInt();
+                SplatcraftConfig.CompatibilityGroup COMPATIBILITY = SplatcraftConfig.COMPATIBILITY;
+                COMPATIBILITY.sodium_inkBiomeBlendFix.value = SplatcraftConfigManager.load(jsonObject, COMPATIBILITY.sodium_inkBiomeBlendFix).getAsBoolean();
             }
         } catch (IOException ignored) {
             Splatcraft.log(Level.WARN, "Could not load configuration file! Saving and loading default values.");
@@ -107,6 +110,7 @@ public class SplatcraftConfigManager {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public static Screen createScreen(Screen parentScreen) {
         ConfigBuilder builder = ConfigBuilder.create()
             .setParentScreen(parentScreen)
@@ -146,10 +150,12 @@ public class SplatcraftConfigManager {
             entryBuilder.startBooleanToggle(inkedBlocksColorLayerIsTransparent, inkedBlocksColorLayerIsTransparentOption.value)
                 .setDefaultValue(inkedBlocksColorLayerIsTransparentOption.getDefault())
                 .setSaveConsumer(value -> {
-                    if (inkedBlocksColorLayerIsTransparentOption.value != value) {
+                    boolean oldValue = inkedBlocksColorLayerIsTransparentOption.value;
+                    inkedBlocksColorLayerIsTransparentOption.value = value;
+
+                    if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();
                     }
-                    inkedBlocksColorLayerIsTransparentOption.value = value;
                 })
                 .setTooltip(createTooltip(inkedBlocksColorLayerIsTransparent))
                 .build()
@@ -231,10 +237,10 @@ public class SplatcraftConfigManager {
          */
 
         ConfigCategory INK = builder.getOrCreateCategory(createInkText());
-        EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
         TranslatableText inkColoredCrosshairWhenSquid = createInkText(SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getId());
         Option<Boolean> inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
         TranslatableText inkAmountIndicator = createInkText(SplatcraftConfig.INK.inkAmountIndicator.getId());
+        EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
         TranslatableText inkAmountIndicatorAlwaysVisible = createInkText(SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getId());
         Option<Boolean> inkAmountIndicatorAlwaysVisibleOption = SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible;
         TranslatableText inkAmountIndicatorExclamations = createInkText(SplatcraftConfig.INK.inkAmountIndicatorExclamations.getId());
@@ -304,10 +310,12 @@ public class SplatcraftConfigManager {
             entryBuilder.startBooleanToggle(colorLock, colorLockOption.value)
                 .setDefaultValue(colorLockOption.getDefault())
                 .setSaveConsumer(value -> {
-                    if (colorLockOption.value != value) {
+                    boolean oldValue = colorLockOption.value;
+                    colorLockOption.value = value;
+
+                    if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();
                     }
-                    colorLockOption.value = value;
                 })
                 .setTooltip(createTooltip(colorLock))
                 .build()
@@ -315,10 +323,12 @@ public class SplatcraftConfigManager {
             entryBuilder.startColorField(colorLockFriendly, colorLockFriendlyOption.value)
                 .setDefaultValue(colorLockFriendlyOption.getDefault())
                 .setSaveConsumer(value -> {
-                    if (!colorLockFriendlyOption.value.equals(value)) {
+                    int oldValue = colorLockFriendlyOption.value;
+                    colorLockFriendlyOption.value = value;
+
+                    if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();
                     }
-                    colorLockFriendlyOption.value = value;
                 })
                 .setTooltip(createTooltip(colorLockFriendly))
                 .build()
@@ -326,21 +336,56 @@ public class SplatcraftConfigManager {
             entryBuilder.startColorField(colorLockHostile, colorLockHostileOption.value)
                 .setDefaultValue(colorLockHostileOption.getDefault())
                 .setSaveConsumer(value -> {
-                    if (!colorLockHostileOption.value.equals(value)) {
+                    int oldValue = colorLockHostileOption.value;
+                    colorLockHostileOption.value = value;
+
+                    if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();
                     }
-                    colorLockHostileOption.value = value;
                 })
                 .setTooltip(createTooltip(colorLockHostile))
                 .build()
         );
 
+        /*
+         *  COMPATIBILITY CATEGORY
+         */
+
+        ConfigCategory COMPATIBILITY = builder.getOrCreateCategory(createCompatibilityText());
+        if (ModLoaded.SODIUM) {
+            TranslatableText sodium_inkBiomeBlendFix = createCompatibilityText(SplatcraftConfig.COMPATIBILITY.sodium_inkBiomeBlendFix.getId());
+            Option<Boolean> sodium_inkBiomeBlendFixOption = SplatcraftConfig.COMPATIBILITY.sodium_inkBiomeBlendFix;
+            COMPATIBILITY.addEntry(
+                entryBuilder.startBooleanToggle(sodium_inkBiomeBlendFix, sodium_inkBiomeBlendFixOption.value)
+                    .setDefaultValue(sodium_inkBiomeBlendFixOption.getDefault())
+                    .setSaveConsumer(value -> {
+                        boolean oldValue = sodium_inkBiomeBlendFixOption.value;
+                        sodium_inkBiomeBlendFixOption.value = value;
+
+                        if (oldValue != value) {
+                            MinecraftClient.getInstance().worldRenderer.reload();
+                        }
+                    })
+                    .setTooltip(createTooltip(sodium_inkBiomeBlendFix))
+                    .build()
+            );
+        }
+
+        if (COMPATIBILITY.getEntries().isEmpty()) {
+            COMPATIBILITY.removeCategory();
+        }
+
         return builder.build();
     }
+
+    /*
+     *  UTILS
+     */
 
     private static TranslatableText createTooltip(TranslatableText text) {
         return new TranslatableText(text.getKey() + ".tooltip");
     }
+
     private static TranslatableText createRenderText(String label) {
         return createCatText("render" + (label.isEmpty() ? "" : "." + label));
     }
@@ -365,6 +410,13 @@ public class SplatcraftConfigManager {
     private static TranslatableText createAccessibilityText() {
         return createAccessibilityText("");
     }
+    private static TranslatableText createCompatibilityText(String label) {
+        return createCatText("compatibility" + (label.isEmpty() ? "" : "." + label));
+    }
+    private static TranslatableText createCompatibilityText() {
+        return createCompatibilityText("");
+    }
+
     private static TranslatableText createCatText(String group) {
         return createConfigText("category." + group);
     }

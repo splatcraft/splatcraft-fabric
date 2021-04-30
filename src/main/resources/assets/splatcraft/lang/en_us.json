@@ -459,5 +459,8 @@
     "config.splatcraft.category.accessibility.color_lock_friendly": "Color Lock Friendly",
     "config.splatcraft.category.accessibility.color_lock_friendly.tooltip": "Your color when color lock is enabled.",
     "config.splatcraft.category.accessibility.color_lock_hostile": "Color Lock Hostile",
-    "config.splatcraft.category.accessibility.color_lock_hostile.tooltip": "Others' color when color lock is enabled."
+    "config.splatcraft.category.accessibility.color_lock_hostile.tooltip": "Others' color when color lock is enabled.",
+    "config.splatcraft.category.compatibility": "Compatibility",
+    "config.splatcraft.category.compatibility.sodium_ink_biome_blend_fix": "[SODIUM] Ink Biome Blend Fix",
+    "config.splatcraft.category.compatibility.sodium_ink_biome_blend_fix.tooltip": "Enable or disable the ink biome blend compatibility fix."
 }

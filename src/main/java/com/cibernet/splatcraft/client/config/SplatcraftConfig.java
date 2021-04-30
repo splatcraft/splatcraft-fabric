@@ -66,10 +66,6 @@ public class SplatcraftConfig {
 
     public static InkGroup INK = new InkGroup();
     public static class InkGroup {
-        // /**
-        //  * Enable or disable a weapon's durability bar's colour to match the player's ink colour.
-        //  */
-        // public Option dynamicInkDurabilityColor<Boolean> = register(new Option<>("dynamic_ink_durability_color", true));
         /**
          * Enable or disable an ink-colored crosshair when in squid form.
          */
@@ -114,6 +110,14 @@ public class SplatcraftConfig {
          * Others' color when color lock is enabled.
          */
         public Option<Integer> colorLockHostile = register(new Option<>("color_lock_hostile", ColorUtils.DEFAULT_COLOR_LOCK_HOSTILE));
+    }
+
+    public static CompatibilityGroup COMPATIBILITY = new CompatibilityGroup();
+    public static class CompatibilityGroup {
+        /**
+         * Enable or disable the ink biome blend compatibility fix. [SODIUM]
+         */
+        public Option<Boolean> sodium_inkBiomeBlendFix = register(new Option<>("sodium_ink_biome_blend_fix", true));
     }
 
     private static <T extends Option<?>> T register(T option) {

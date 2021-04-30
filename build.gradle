@@ -35,11 +35,12 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     // COMPATIBILITY
-    modImplementation ("grondag:canvas-mc116:1.0.+") {
+    /*modImplementation ("grondag:canvas-mc116:1.0.+") {
         exclude group: "net.fabricmc"
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "me.shedaniel.cloth"
-    }
+    }*/
+    modImplementation "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
 
     // LIBS
     modImplementation "com.github.andantedevs:chord:${project.chord_version}"

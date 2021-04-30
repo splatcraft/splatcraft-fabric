@@ -11,7 +11,7 @@
     "client.ArmorFeatureRendererMixin", "client.ClientItemStackMixin", "client.ClientPlayerEntityMixin",
     "client.ClientPlayNetworkHandlerMixin", "client.EntityRenderDispatcherMixin", "client.GameRendererMixin",
     "client.HeldItemRendererMixin", "client.InGameHudMixin", "client.MinecraftClientMixin",
-    "client.PlayerEntityModelMixin", "client.PlayerEntityRendererMixin"
+    "client.PlayerEntityModelMixin", "client.PlayerEntityRendererMixin", "compat.sodium.RenderContextCommonMixin"
   ],
   "injectors": {
     "defaultRequire": 1
