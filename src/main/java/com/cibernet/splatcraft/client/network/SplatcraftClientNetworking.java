@@ -8,6 +8,7 @@ import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColorSynchroniser;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
@@ -76,7 +77,7 @@ public class SplatcraftClientNetworking {
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, (client, handler, buf, responseSender) -> {
-            InkColors.rebuildIfNeeded(InkColors.getCachedData());
+            InkColorSynchroniser.rebuildIfNeeded(InkColorSynchroniser.getCachedData());
 
             CompoundTag tag = buf.readCompoundTag();
             client.execute(() -> {

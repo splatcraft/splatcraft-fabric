@@ -17,6 +17,7 @@ import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtil;
+import com.cibernet.splatcraft.inkcolor.InkColorSynchroniser;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
@@ -65,7 +66,7 @@ public class SplatcraftClient implements ClientModInitializer {
         SplatcraftConfigManager.load();
 
         // ink colors
-        InkColors.rebuildIfNeeded(new LinkedHashMap<>());
+        InkColorSynchroniser.rebuildIfNeeded(new LinkedHashMap<>());
 
         // block entity renderers
         BlockEntityRendererRegistry berrIntance = BlockEntityRendererRegistry.INSTANCE;

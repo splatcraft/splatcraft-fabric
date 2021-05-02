@@ -9,6 +9,7 @@ import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColorSynchroniser;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworking;
 import com.cibernet.splatcraft.signal.SignalWhitelistManager;
@@ -155,11 +156,11 @@ public class Splatcraft implements ModInitializer {
                     }
                 }
 
-                InkColors.rebuildIfNeeded(loaded);
+                InkColorSynchroniser.rebuildIfNeeded(loaded);
                 log("Loaded " + InkColors.getAll().size() + " ink colors!");
 
                 if (SERVER_INSTANCE != null) {
-                    InkColors.sync(PlayerLookup.all(SERVER_INSTANCE));
+                    InkColorSynchroniser.sync(PlayerLookup.all(SERVER_INSTANCE));
                 }
             }
         });
@@ -207,7 +208,7 @@ public class Splatcraft implements ModInitializer {
         // server connection events
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             LazyPlayerDataComponent.markForceSync(handler.player);
-            InkColors.sync(handler, sender, server);
+            InkColorSynchroniser.sync(handler, sender, server);
         });
 
         // commands

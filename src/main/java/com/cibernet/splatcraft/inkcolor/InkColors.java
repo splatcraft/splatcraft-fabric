@@ -2,23 +2,12 @@ package com.cibernet.splatcraft.inkcolor;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.init.SplatcraftRegistries;
-import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Optional;
@@ -26,7 +15,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class InkColors {
     private static HashMap<Identifier, InkColor> ALL = new LinkedHashMap<>();
-    private static HashMap<Identifier, InkColor> CACHED_DATA = new LinkedHashMap<>();
 
     public static final InkColor NONE = register("none", ColorUtil.DEFAULT);
 
@@ -84,6 +72,10 @@ public class InkColors {
     public static final InkColor DYE_RED = register(DyeColor.RED);
     public static final InkColor DYE_BLACK = register(DyeColor.BLACK);
 
+    static {
+        InkColorSynchroniser.rebuildIfNeeded(new HashMap<>());
+    }
+
     private static InkColor register(Identifier id, InkColor inkColor) {
         return Registry.register(SplatcraftRegistries.INK_COLORS, id, inkColor);
     }
@@ -115,43 +107,5 @@ public class InkColors {
     }
     public static void setAll(HashMap<Identifier, InkColor> all) {
         InkColors.ALL = all;
-    }
-
-    public static HashMap<Identifier, InkColor> getCachedData() {
-        return InkColors.CACHED_DATA;
-    }
-
-    public static void rebuildIfNeeded(HashMap<Identifier, InkColor> inputData) {
-        if (ALL.isEmpty() || inputData.isEmpty() || !inputData.equals(CACHED_DATA)) {
-            HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
-
-            SplatcraftRegistries.INK_COLORS.forEach(inkColor -> all.put(inkColor.id, inkColor));
-            inputData.forEach(all::put);
-
-            ALL = all;
-            CACHED_DATA = inputData;
-        }
-    }
-
-    public static void sync(ServerPlayNetworkHandler handler, @Nullable PacketSender player, @Nullable MinecraftServer server) {
-        InkColors.sync(handler.player);
-        Splatcraft.log("Synchronised ink colors with " + handler.player.getEntityName());
-    }
-    public static void sync(Collection<ServerPlayerEntity> playerLookup) {
-        for (ServerPlayerEntity player : playerLookup) {
-            InkColors.sync(player);
-        }
-        Splatcraft.log("Synchronised ink colors with " + playerLookup.size() + " players");
-    }
-    public static void sync(ServerPlayerEntity player) {
-        PacketByteBuf buf = PacketByteBufs.create();
-
-        CompoundTag tag = new CompoundTag();
-        ListTag inkColors = new ListTag();
-        InkColors.getAll().forEach((identifier, inkColor) -> inkColors.add(inkColor.toTag()));
-        tag.put("InkColors", inkColors);
-        buf.writeCompoundTag(tag);
-
-        ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, buf);
     }
 }

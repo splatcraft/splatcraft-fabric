@@ -14,6 +14,7 @@
     "client.HeldItemRendererMixin", "client.InGameHudMixin", "client.MinecraftClientMixin",
     "client.PlayerEntityModelMixin", "client.PlayerEntityRendererMixin", "compat.sodium.RenderContextCommonMixin"
   ],
+  "server": [],
   "injectors": {
     "defaultRequire": 1
   }
