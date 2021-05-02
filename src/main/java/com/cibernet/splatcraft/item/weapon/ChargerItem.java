@@ -9,6 +9,7 @@ import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.item.DisablesAttack;
 import com.cibernet.splatcraft.item.weapon.component.ChargerComponent;
 import com.cibernet.splatcraft.util.InkItemUtil;
+import com.cibernet.splatcraft.util.Util;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -103,7 +104,7 @@ public class ChargerItem extends AbstractWeaponItem implements DisablesAttack {
                 this.shoot(stack, world, player);
             }
 
-            Charge.resetCharge(player, player.inventory.getSlotWithStack(stack), true);
+            Charge.resetCharge(player, Util.getSlotWithStack(player.inventory, stack), true);
         }
     }
 

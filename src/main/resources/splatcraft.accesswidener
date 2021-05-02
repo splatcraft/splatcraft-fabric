@@ -8,6 +8,7 @@ accessible    method    net/minecraft/entity/Entity                             
 accessible    method    net/minecraft/entity/Entity                                 wouldPoseNotCollide         (Lnet/minecraft/entity/EntityPose;)Z
 accessible    method    net/minecraft/item/ItemStack                                <init>                      (Lnet/minecraft/item/ItemConvertible;ILjava/util/Optional;)V
 accessible    method    net/minecraft/item/Item                                     isIn                        (Lnet/minecraft/item/ItemGroup;)Z
+accessible    method    net/minecraft/entity/player/PlayerInventory                 areItemsEqual               (Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z
 accessible    field     net/minecraft/world/Heightmap                               ALWAYS_TRUE                 Ljava/util/function/Predicate;
 
 accessible    field     net/minecraft/client/render/entity/EntityRenderDispatcher   renderers                   Ljava/util/Map;

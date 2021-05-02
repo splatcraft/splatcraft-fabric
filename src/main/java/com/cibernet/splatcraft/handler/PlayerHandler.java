@@ -16,6 +16,7 @@ import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
+import com.cibernet.splatcraft.util.Util;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -57,7 +58,7 @@ public class PlayerHandler {
                     player.bodyYaw = player.headYaw;
 
                     Charge charge = PlayerDataComponent.getCharge(player);
-                    int currentSlot = player.inventory.getSlotWithStack(stack);
+                    int currentSlot = Util.getSlotWithStack(player.inventory, stack);
                     if (charge.getTime() > 0 && currentSlot != charge.getSlotIndex()) {
                         Charge.resetCharge(player, currentSlot, charge.canDischarge());
                     }

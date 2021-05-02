@@ -1,5 +1,9 @@
-package com.cibernet.splatcraft.util;
+package com.cibernet.splatcraft.client.util;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+@Environment(EnvType.CLIENT)
 public class ClientUtil {
     /*public static boolean canPerformRoll(PlayerEntity entity) {
         Input input = ((ClientPlayerEntity)entity).input;

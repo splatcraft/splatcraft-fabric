@@ -35,17 +35,17 @@ public class MinecraftClientMixin {
             if (this.crosshairTarget.getType() == HitResult.Type.ENTITY) {
                 Entity entity = ((EntityHitResult)this.crosshairTarget).getEntity();
                 if (entity instanceof SquidBumperEntity) {
-                    ItemStack pickedStack = ((SquidBumperEntity) entity).asItem();
-                    PlayerInventory playerInventory = this.player.inventory;
+                    ItemStack stack = ((SquidBumperEntity) entity).asItem();
+                    PlayerInventory inv = this.player.inventory;
 
-                    int slotIndexWithStack = playerInventory.getSlotWithStack(pickedStack);
+                    int slotIndexWithStack = inv.getSlotWithStack(stack);
                     if (this.player.abilities.creativeMode) {
-                        playerInventory.addPickBlock(pickedStack);
+                        inv.addPickBlock(stack);
                         assert this.interactionManager != null;
-                        this.interactionManager.clickCreativeStack(this.player.getStackInHand(Hand.MAIN_HAND), 36 + playerInventory.selectedSlot);
+                        this.interactionManager.clickCreativeStack(this.player.getStackInHand(Hand.MAIN_HAND), 36 + inv.selectedSlot);
                     } else if (slotIndexWithStack != -1) {
                         if (PlayerInventory.isValidHotbarIndex(slotIndexWithStack)) {
-                            playerInventory.selectedSlot = slotIndexWithStack;
+                            inv.selectedSlot = slotIndexWithStack;
                         } else {
                             assert this.interactionManager != null;
                             this.interactionManager.pickFromInventory(slotIndexWithStack);

@@ -6,7 +6,7 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
-import com.cibernet.splatcraft.util.Utils;
+import com.cibernet.splatcraft.util.Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -209,7 +209,7 @@ public class TurfScanner {
             df.format((((float) score) / (this.countOnlyInkable ? this.totalCounted : this.totalValid)) * 100)
         );
 
-        Utils.announceMessageIfNonNull(text, this.player, this.world);
+        Util.announceMessageIfNonNull(text, this.player, this.world);
     }
 
     public static final String TURF_SCAN_TRANSLATION = "text." + Splatcraft.MOD_ID + ".scan_turf";
