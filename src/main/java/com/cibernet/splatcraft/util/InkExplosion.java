@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
@@ -34,7 +35,12 @@ public class InkExplosion extends Explosion {
     protected final InkType inkType;
     protected final float size;
 
-    protected static final ExplosionBehavior BEHAVIOR = new ExplosionBehavior();
+    protected static final ExplosionBehavior BEHAVIOR = new ExplosionBehavior() {
+        @Override
+        public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+            return blockState.isAir() && fluidState.isEmpty() ? Optional.empty() : Optional.of(0.0f);
+        }
+    };
 
     protected final List<BlockPos> affectedBlocks = new ArrayList<>();
     protected final Map<PlayerEntity, Vec3d> affectedPlayers = new HashMap<>();
@@ -118,12 +124,11 @@ public class InkExplosion extends Explosion {
                         x /= sqrtPos;
                         y /= sqrtPos;
                         z /= sqrtPos;
-                        float resistance = this.size * (0.7F + this.world.random.nextFloat() * 0.6F);
                         double iX = startX;
                         double iY = startY;
                         double iZ = startZ;
 
-                        for(; resistance > 0.0F; resistance -= 0.22500001F) {
+                        for (float resistance = this.size * (0.7F + this.world.random.nextFloat() * 0.6F); resistance > 0.0F; resistance -= 0.22500001F) {
                             BlockPos blockPos = new BlockPos(iX, iY, iZ);
                             BlockState blockState = this.world.getBlockState(blockPos);
                             FluidState fluidState = this.world.getFluidState(blockPos);
