@@ -50,13 +50,18 @@ public class SplatcraftClientNetworking {
          */
 
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, (client, handler, buf, responseSender) -> {
-            InkColor color = InkColors.getNonNull(buf.readIdentifier());
+            Identifier inkColorId = buf.readIdentifier();
             float scale = buf.readFloat();
-            Vec3d pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            double posX = buf.readDouble();
+            double posY = buf.readDouble();
+            double posZ = buf.readDouble();
+            double velocityX = buf.readDouble();
+            double velocityY = buf.readDouble();
+            double velocityZ = buf.readDouble();
 
             client.execute(() -> {
                 if (client.world != null) {
-                    SplatcraftClientNetworking.playBlockInkingEffects(client.world, color, scale, pos);
+                    SplatcraftClientNetworking.playBlockInkingEffects(client.world, InkColors.getNonNull(inkColorId), scale, new Vec3d(posX, posY, posZ), new Vec3d(velocityX, velocityY, velocityZ));
                 }
             });
         });
@@ -205,8 +210,8 @@ public class SplatcraftClientNetworking {
         float[] color = ColorUtil.getColorsFromInt(inkColor.getColorOrLocked());
         world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), velocityX, velocityY, velocityZ);
     }
-    public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos) {
-        SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos, 0.0d, 0.0d, 0.0d);
+    public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos, Vec3d velocity) {
+        SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos, velocity.getX(), velocity.getY(), velocity.getZ());
     }
 
     public static void setAndSendSquidForm(ClientPlayerEntity player, boolean isSquid) {

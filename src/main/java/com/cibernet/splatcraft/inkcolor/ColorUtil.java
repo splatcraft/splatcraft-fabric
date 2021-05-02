@@ -194,7 +194,7 @@ public class ColorUtil {
         return ColorUtil.getInkColor(player).matches(ColorUtil.getInkColor(stack).color);
     }
 
-    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale, @Nullable PlayerEntity player) {
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, Vec3d velocity, float scale, @Nullable PlayerEntity player) {
         if (!world.isClient) {
             PacketByteBuf buf = PacketByteBufs.create();
 
@@ -206,14 +206,22 @@ public class ColorUtil {
             buf.writeDouble(pos.getY());
             buf.writeDouble(pos.getZ());
 
+            // write velocity
+            buf.writeDouble(velocity.getX());
+            buf.writeDouble(velocity.getY());
+            buf.writeDouble(velocity.getZ());
+
             for (ServerPlayerEntity serverPlayer : PlayerLookup.tracking((ServerWorld) world, new BlockPos(pos))) {
                 if (!serverPlayer.equals(player)) {
                     ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_BLOCK_INKING_EFFECTS_PACKET_ID, buf);
                 }
             }
         } else if (player != null) {
-            com.cibernet.splatcraft.client.network.SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos); // static import to prevent ClassNotFoundException
+            com.cibernet.splatcraft.client.network.SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos, velocity); // static import to prevent ClassNotFoundException
         }
+    }
+    public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale, @Nullable PlayerEntity player) {
+        addInkSplashParticle(world, inkColor, pos, Vec3d.ZERO, scale, player);
     }
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale) {
         addInkSplashParticle(world, inkColor, pos, scale, null);

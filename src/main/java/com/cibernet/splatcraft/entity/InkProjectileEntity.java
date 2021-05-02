@@ -5,6 +5,7 @@ import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
 import com.cibernet.splatcraft.inkcolor.*;
+import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
 import com.cibernet.splatcraft.util.InkBlockUtil;
 import com.cibernet.splatcraft.util.InkExplosion;
 import net.minecraft.entity.*;
@@ -190,7 +191,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
         InkColor inkColor = this.getInkColor();
         InkType inkType = this.getInkType();
 
-        SplatcraftClientNetworking.playBlockInkingEffects(this.world, inkColor, 0.3f, this.getPos().subtract(0.0d, 0.1d, 0.0d));
+        ColorUtil.addInkSplashParticle(this.world, inkColor, this.getPos().subtract(0.0d, 0.1d, 0.0d), Vec3d.ZERO, 0.3f, null);
 
         int lifetime = this.getLifetime();
         if (lifetime <= 0) {
