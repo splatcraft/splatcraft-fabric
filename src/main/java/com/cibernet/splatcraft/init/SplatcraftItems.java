@@ -13,8 +13,10 @@ import com.cibernet.splatcraft.item.inkable.InkedBlockItem;
 import com.cibernet.splatcraft.item.remote.ColorChangerItem;
 import com.cibernet.splatcraft.item.remote.InkDisruptorItem;
 import com.cibernet.splatcraft.item.remote.TurfScannerItem;
+import com.cibernet.splatcraft.item.weapon.ChargerItem;
 import com.cibernet.splatcraft.item.weapon.RollerItem;
 import com.cibernet.splatcraft.item.weapon.ShooterItem;
+import com.cibernet.splatcraft.item.weapon.component.ChargerComponent;
 import com.cibernet.splatcraft.item.weapon.component.RollerComponent;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
 import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
@@ -40,7 +42,7 @@ public class SplatcraftItems {
 
     public static final Item.Settings WEAPON_SETTINGS = new FabricItemSettings().maxCount(1).group(Splatcraft.ITEM_GROUP);
 
-    public static final Item SPLAT_ROLLER = register("splat_roller", new RollerItem(WEAPON_SETTINGS, new RollerComponent(0.1f, 2, 25.0f, 0.45f, false, new RollerComponent.Fling(9.0f, 0.8f, 8.0f, 0.4f))));
+    public static final Item SPLAT_ROLLER = register("splat_roller", new RollerItem(WEAPON_SETTINGS, 1.08f, new RollerComponent(0.1f, 2, 25.0f, 0.45f, false, new RollerComponent.Fling(9.0f, 0.8f, 8.0f, 0.4f))));
     public static final Item KRAK_ON_SPLAT_ROLLER = register("krak_on_splat_roller", new RollerItem((RollerItem) SPLAT_ROLLER));
     public static final Item COROCORO_SPLAT_ROLLER = register("corocoro_splat_roller", new RollerItem((RollerItem) SPLAT_ROLLER, RollerComponent.copy((RollerItem) SPLAT_ROLLER).setSpeed(0.5f).setRadius(2)));
     public static final Item CARBON_ROLLER = register("carbon_roller", new RollerItem((RollerItem) SPLAT_ROLLER, RollerComponent.copy((RollerItem) SPLAT_ROLLER).setDamage(14.0f).setFlingComponent(new RollerComponent.Fling(4.0f, 0.7f, 8.0f, 0.63f))));
@@ -58,6 +60,13 @@ public class SplatcraftItems {
     public static final Item GAL_52_DECO = register("52_gal_deco", new ShooterItem((ShooterItem) GAL_52));
     public static final Item GAL_96 = register("96_gal", new ShooterItem(WEAPON_SETTINGS, new ShooterComponent(2.5f, 1.3f, 12.4f, 11.0f, 0.85f, 12.5f)));
     public static final Item GAL_96_DECO = register("96_gal_deco", new ShooterItem((ShooterItem) GAL_96));
+
+    public static final Item SPLAT_CHARGER = register("splat_charger", new ChargerItem(WEAPON_SETTINGS, 0.4f, new ChargerComponent(2.25f, 18.0f, 20, 40, 10, false, 1.1f, new ChargerComponent.Projectile(32.0f, 0.87f, 48.0f, 3))));
+    public static final Item BENTO_SPLAT_CHARGER = register("bento_splat_charger", new ChargerItem((ChargerItem) SPLAT_CHARGER));
+    public static final Item KELP_SPLAT_CHARGER = register("kelp_splat_charger", new ChargerItem((ChargerItem) SPLAT_CHARGER));
+    public static final Item E_LITER_4K = register("e_liter_4k", new ChargerItem(WEAPON_SETTINGS, 0.15f, new ChargerComponent(2.25f, 25.0f, 35, 40, 10, false, 1.0f, new ChargerComponent.Projectile(36.0f, 0.95f, 96.0f, 16))));
+    public static final Item BAMBOOZLER_14_MK1 = register("bamboozler_14_mk1", new ChargerItem(WEAPON_SETTINGS, 0.8f, new ChargerComponent(2.8f, 7.0f, 4, 10, 0, true, 1.1f, new ChargerComponent.Projectile(16.0f, 0.86f, 40.0f, 2, false))));
+    public static final Item BAMBOOZLER_14_MK2 = register("bamboozler_14_mk2", new ChargerItem((ChargerItem) BAMBOOZLER_14_MK1));
 
     /*
      * WEARABLES

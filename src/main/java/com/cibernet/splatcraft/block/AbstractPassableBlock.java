@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.entity.EntityAccessShapeContext;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.util.InkBlockUtil;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,7 +21,7 @@ public abstract class AbstractPassableBlock extends Block {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx) {
         Entity entity = ((EntityAccessShapeContext) ctx).splatcraft_getEntity();
-        return entity != null && InkBlockUtils.entityPassesThroughGaps(entity)
+        return entity != null && InkBlockUtil.entityPassesThroughGaps(entity)
             ? VoxelShapes.empty()
             : super.getCollisionShape(state, world, pos, ctx);
     }

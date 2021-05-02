@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.client.gui.screen;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.SplatcraftClient;
 import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
 import com.cibernet.splatcraft.client.signal.Signal;
 import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class SignalSelectionScreen extends Screen {
-    private static final Identifier TEXTURE = new Identifier(Splatcraft.MOD_ID, "textures/gui/signal_selection.png");
+    private static final Identifier TEXTURE = SplatcraftClient.texture("gui/signal_selection");
     private static final int BUTTON_SIZE = 30;
     private static final int BUTTON_TEXTURE_SIZE = BUTTON_SIZE - 2;
     private static final int BUTTON_MARGIN = 3;

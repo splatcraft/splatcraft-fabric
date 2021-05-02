@@ -8,8 +8,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 public enum InkType {
-    NORMAL,
-    GLOWING;
+    NORMAL(false),
+    GLOWING(true);
+
+    protected final boolean glowing;
+
+    InkType(boolean glowing) {
+        this.glowing = glowing;
+    }
+
+    public boolean isGlowing() {
+        return this.glowing;
+    }
 
     public Block asBlock() {
         switch (this) {

@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.block.entity;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -33,7 +33,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", this.getInkColor().toString());
 
         InkColor baseInkColor = this.getBaseInkColor();
@@ -48,7 +48,7 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(TagUtils.getBlockEntityTagOrRoot(tag));
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
         this.setInkColor(InkColor.fromNonNull(splatcraft.getString("InkColor")));
         if (splatcraft.contains("BaseInkColor")) {
             this.setBaseInkColor(InkColor.from(splatcraft.getString("BaseInkColor")));

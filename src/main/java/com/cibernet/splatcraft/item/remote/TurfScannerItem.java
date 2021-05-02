@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.item.remote;
 
 import com.cibernet.splatcraft.game.turf_war.TurfScanMode;
 import com.cibernet.splatcraft.game.turf_war.TurfScanner;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -67,9 +67,9 @@ public class TurfScannerItem extends AbstractRemoteItem {
     }
 
     private static boolean countOnlyInkable(ItemStack stack) {
-        return TagUtils.getOrCreateSplatcraftTag(stack).getBoolean("CountOnlyInkable");
+        return TagUtil.getOrCreateSplatcraftTag(stack).getBoolean("CountOnlyInkable");
     }
     private static boolean debug(ItemStack stack) {
-        return TagUtils.getOrCreateSplatcraftTag(stack).getBoolean("Debug");
+        return TagUtil.getOrCreateSplatcraftTag(stack).getBoolean("Debug");
     }
 }

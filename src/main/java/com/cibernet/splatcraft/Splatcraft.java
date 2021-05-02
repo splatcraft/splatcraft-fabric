@@ -13,6 +13,7 @@ import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworking;
 import com.cibernet.splatcraft.signal.SignalWhitelistManager;
 import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.Reflection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -75,7 +76,7 @@ public class Splatcraft implements ModInitializer {
 
         @Override
         protected ItemGroupTab createTab(ItemStack stack, String id, Tag<Item> tag) {
-            return super.createTab(stack, id, tag).setWidgetBackgroundTexture(new Identifier(Splatcraft.MOD_ID, "textures/gui/creative_inventory/item_group/tab_widget.png"));
+            return super.createTab(stack, id, tag).setWidgetBackgroundTexture(SplatcraftClient.texture("gui/creative_inventory/item_group/tab_widget"));
         }
 
         @Override
@@ -86,10 +87,11 @@ public class Splatcraft implements ModInitializer {
 
         @Override
         public Identifier getIconBackgroundTexture() {
-            return new Identifier(Splatcraft.MOD_ID, "textures/gui/creative_inventory_tab.png");
+            return SplatcraftClient.texture("gui/creative_inventory_tab");
         }
     };
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitialize() {
         log("Initializing");
@@ -98,22 +100,24 @@ public class Splatcraft implements ModInitializer {
         GeckoLib.initialize();
 
         // init
-        new SplatcraftRegistries();
+        Reflection.initialize(
+            SplatcraftRegistries.class,
 
-        new InkColors();
+            InkColors.class,
 
-        new SplatcraftStats();
-        new SplatcraftAttributes();
-        new SplatcraftGameRules();
-        new SplatcraftSoundEvents();
+            SplatcraftStats.class,
+            SplatcraftAttributes.class,
+            SplatcraftGameRules.class,
+            SplatcraftSoundEvents.class,
 
-        new SplatcraftBlockEntities();
-        new SplatcraftBlocks();
-        new SplatcraftLoomPatterns();
-        new SplatcraftItems();
+            SplatcraftBlockEntities.class,
+            SplatcraftBlocks.class,
+            SplatcraftLoomPatterns.class,
+            SplatcraftItems.class,
 
-        new SplatcraftEntities();
-        new SplatcraftTrackedDataHandlers();
+            SplatcraftEntities.class,
+            SplatcraftTrackedDataHandlers.class
+        );
 
         // data
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
@@ -224,9 +228,5 @@ public class Splatcraft implements ModInitializer {
     }
     public static void log(String message) {
         log(Level.INFO, message);
-    }
-
-    public static Identifier texture(String path) {
-        return new Identifier(MOD_ID, "textures/" + path + ".png");
     }
 }

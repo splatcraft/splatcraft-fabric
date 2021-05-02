@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.game.turf_war;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.util.Utils;
@@ -205,7 +205,7 @@ public class TurfScanner {
 
             inkColor == null
                 ? new TranslatableText(TEXT_UNCHECKED)
-                : ColorUtils.getFormattedColorName(inkColor),
+                : ColorUtil.getFormattedColorName(inkColor),
             df.format((((float) score) / (this.countOnlyInkable ? this.totalCounted : this.totalValid)) * 100)
         );
 

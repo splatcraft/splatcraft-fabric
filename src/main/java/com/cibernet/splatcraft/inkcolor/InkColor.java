@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.inkcolor;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,7 +46,7 @@ public class InkColor {
     }
     @NotNull
     public static InkColor fromNonNull(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(TagUtils.getBlockEntityTagOrRoot(tag));
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
         return InkColor.fromNonNull(splatcraft.getString("InkColor"));
     }
     @NotNull

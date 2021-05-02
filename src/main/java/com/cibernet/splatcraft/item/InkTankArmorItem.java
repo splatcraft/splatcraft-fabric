@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.item;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.item.inkable.InkableArmorItem;
 import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.cibernet.splatcraft.tag.SplatcraftItemTags;
@@ -79,8 +79,8 @@ public class InkTankArmorItem extends InkableArmorItem {
             PlayerEntity player = (PlayerEntity) entity;
             float ink = getInkAmount(stack);
 
-            if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtils.colorEquals(player, stack) && ink < this.capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
-                setInkAmount(stack, Math.min(this.capacity, ink + (LazyPlayerDataComponent.isSubmerged(player) ? 1 : 0.1f)));
+            if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtil.colorEquals(player, stack) && ink < this.capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
+                setInkAmount(stack, Math.min(this.capacity, ink + (LazyPlayerDataComponent.isSubmerged(player) ? (100f / (20 * 3.253f)) : 0.1f)));
             }
         }
     }
@@ -88,7 +88,7 @@ public class InkTankArmorItem extends InkableArmorItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
         super.appendTooltip(stack, world, tooltip, ctx);
-        tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, InkTankArmorItem.id)) + ".tooltip.ink" + (ctx.isAdvanced() ? ".advanced" : ""), String.format("%.1f",getInkAmount(stack)), capacity));
+        tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, InkTankArmorItem.id)) + ".tooltip.ink" + (ctx.isAdvanced() ? ".advanced" : ""), String.format("%.1f", getInkAmount(stack)), capacity));
     }
 
     @Environment(EnvType.CLIENT)
@@ -143,11 +143,9 @@ public class InkTankArmorItem extends InkableArmorItem {
     public static float getInkAmount(ItemStack stack) {
         return stack.getOrCreateSubTag(Splatcraft.MOD_ID).getFloat("ContainedInk");
     }
-
     public static float getInkAmount(ItemStack tank, ItemStack weapon) {
         return ((InkTankArmorItem) tank.getItem()).canUse(weapon.getItem()) ? getInkAmount(tank) : 0;
     }
-
     public static void setInkAmount(ItemStack stack, float value) {
         CompoundTag splatcraft = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         if (splatcraft != null) {

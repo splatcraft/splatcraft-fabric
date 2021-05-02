@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.client.renderer.entity;
 import com.cibernet.splatcraft.client.model.entity.InkProjectileEntityModel;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
@@ -13,6 +13,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
@@ -30,7 +31,7 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
         if (entity.age >= 3 || !(this.dispatcher.camera.getFocusedEntity().squaredDistanceTo(entity) < 12.25d)) {
             matrices.push();
 
-            float[] color = ColorUtils.getColorsFromInt(entity.getInkColor().getColorOrLocked());
+            float[] color = ColorUtil.getColorsFromInt(entity.getInkColor().getColorOrLocked());
             float scale = entity.getProjectileSize();
             matrices.scale(scale, scale, scale);
 
@@ -43,5 +44,10 @@ public class InkProjectileEntityRenderer extends EntityRenderer<InkProjectileEnt
     @Override
     public Identifier getTexture(InkProjectileEntity entity) {
         return TEXTURE;
+    }
+
+    @Override
+    protected int getBlockLight(InkProjectileEntity entity, BlockPos blockPos) {
+        return entity.getInkType().isGlowing() ? 15 : super.getBlockLight(entity, blockPos);
     }
 }

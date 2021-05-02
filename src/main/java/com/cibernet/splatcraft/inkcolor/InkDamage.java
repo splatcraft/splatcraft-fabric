@@ -23,7 +23,7 @@ public class InkDamage {
         return InkDamage.attack(world, target, damage, inkColor, damageMobs, new EntityDamageSource(Splatcraft.MOD_ID + "." + damageSourceId, source) {});
     }
     public static boolean attack(World world, LivingEntity target, float damage, InkColor inkColor, boolean damageMobs, DamageSource damageSource) {
-        InkColor targetColor = ColorUtils.getEntityColor(target);
+        InkColor targetColor = ColorUtil.getEntityColor(target);
 
         if ( damage != 0 && (
             ( damageMobs || SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_MOB_DAMAGE))

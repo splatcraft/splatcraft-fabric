@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.block;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkType;
 import net.minecraft.block.*;
@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -29,7 +30,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 @SuppressWarnings("deprecation")
-public class InkwellBlock extends AbstractInkableBlock implements Waterloggable {
+public class InkwellBlock extends AbstractInkableBlock implements Waterloggable, Stainable {
     public static final String id = "inkwell";
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -46,13 +47,13 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
         SplatcraftBlocks.addToInkables(this);
     }
 
-    /*@Override
-    public float[] getBeaconColorMultiplier(BlockState state, WorldView world, BlockPos pos, BlockPos beaconPos) {
-        return ColorUtils.hexToRGB(getColor((World) world, pos));
-    } TODO */
+    @Override
+    public DyeColor getColor() {
+        return DyeColor.WHITE;
+    }
 
     @Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType, boolean spawnParticles) {
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, InkType inkType, boolean spawnParticles) {
         return false;
     }
 
@@ -65,8 +66,8 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable 
             if (blockEntity != null) {
                 ItemStack stack = ((ItemEntity) entity).getStack();
                 Item stackItem = stack.getItem();
-                if (stackItem instanceof BlockItem && ((BlockItem) stackItem).getBlock() instanceof InkedBlock && ColorUtils.getInkColor(stack) != blockEntity.getInkColor() && !ColorUtils.isColorLocked(stack)) {
-                    ((ItemEntity) entity).setStack(ColorUtils.setInkColor(stack, blockEntity.getInkColor()));
+                if (stackItem instanceof BlockItem && ((BlockItem) stackItem).getBlock() instanceof InkedBlock && ColorUtil.getInkColor(stack) != blockEntity.getInkColor() && !ColorUtil.isColorLocked(stack)) {
+                    ((ItemEntity) entity).setStack(ColorUtil.setInkColor(stack, blockEntity.getInkColor()));
                 }
             }
         }

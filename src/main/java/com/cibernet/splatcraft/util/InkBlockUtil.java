@@ -1,4 +1,4 @@
-package com.cibernet.splatcraft.inkcolor;
+package com.cibernet.splatcraft.util;
 
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.AbstractPassableBlock;
@@ -7,6 +7,10 @@ import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.init.SplatcraftStats;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
+import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import com.cibernet.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.minecraft.block.Block;
@@ -17,22 +21,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class InkBlockUtils {
-    public static boolean inkBlock(World world, BlockPos pos, InkColor inkColor, float damage, InkType inkType) {
+public class InkBlockUtil {
+    public static boolean inkBlock(World world, BlockPos pos, InkColor inkColor, InkType inkType) {
         BlockState state = world.getBlockState(pos);
 
         if (!inkColor.equals(InkColors.NONE) && !InkedBlock.isTouchingLiquid(world, pos)) {
             if (state.getBlock() instanceof AbstractInkableBlock) {
-                return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, inkColor, damage, inkType, true);
+                return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, inkColor, inkType, true);
             } else if (canInk(world, pos) && world.getBlockEntity(pos) == null) {
-                if (!world.isClient) {
-                    InkedBlockEntity blockEntity = new InkedBlockEntity();
-                    blockEntity.setSavedState(state);
-                    blockEntity.setInkColor(inkColor);
-                    world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                    world.setBlockEntity(pos, blockEntity);
-                    ColorUtils.addInkSplashParticle(world, inkColor, Vec3d.ofBottomCenter(pos));
+                InkedBlockEntity blockEntity = new InkedBlockEntity();
+                blockEntity.setSavedState(state);
+                blockEntity.setInkColor(inkColor);
+                world.setBlockState(pos, inkType.asBlock().getDefaultState());
+                world.setBlockEntity(pos, blockEntity);
+                ColorUtil.addInkSplashParticle(world, inkColor, Vec3d.ofBottomCenter(pos.up()));
 
+                if (!world.isClient) {
                     // sync
                     blockEntity.sync();
                 }
@@ -43,8 +47,8 @@ public class InkBlockUtils {
 
         return false;
     }
-    public static boolean inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, float damage, InkType inkType) {
-        if (InkBlockUtils.inkBlock(world, pos, color, damage, inkType)) {
+    public static boolean inkBlockAsPlayer(PlayerEntity player, World world, BlockPos pos, InkColor color, InkType inkType) {
+        if (InkBlockUtil.inkBlock(world, pos, color, inkType)) {
             player.incrementStat(SplatcraftStats.BLOCKS_INKED);
             return true;
         }

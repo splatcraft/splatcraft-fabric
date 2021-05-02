@@ -3,11 +3,12 @@ package com.cibernet.splatcraft.entity;
 import com.cibernet.splatcraft.entity.enums.SquidBumperDisplayType;
 import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.util.StringConstants;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -32,7 +33,8 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
 
     protected static final int MAX_LAST_HIT_TIME = 5;
 
-    public static final TrackedData<String> INK_COLOR = DataTracker.registerData(SquidBumperEntity.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(SquidBumperEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);
+    public static final TrackedData<InkType> INK_TYPE = DataTracker.registerData(SquidBumperEntity.class, SplatcraftTrackedDataHandlers.INK_TYPE);
     public static final TrackedData<Integer> RESPAWN_TIME = DataTracker.registerData(SquidBumperEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Integer> MAX_RESPAWN_TIME = DataTracker.registerData(SquidBumperEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Integer> HURT_DELAY = DataTracker.registerData(SquidBumperEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -52,8 +54,8 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
+        this.inkable_initDataTracker();
 
-        dataTracker.startTracking(INK_COLOR, InkColors.NONE.toString());
         dataTracker.startTracking(RESPAWN_TIME, 0);
         dataTracker.startTracking(MAX_RESPAWN_TIME, 30);
         dataTracker.startTracking(HURT_DELAY, 0);
@@ -70,8 +72,8 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
 
-        this.inkColorToTag(tag);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        this.inkable_toTag(tag);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putInt("RespawnTime", this.getRespawnTime());
         splatcraft.putInt("MaxRespawnTime", this.getMaxRespawnTime());
         splatcraft.putInt("HurtDelay", this.getHurtDelay());
@@ -86,8 +88,8 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     public void readCustomDataFromTag(CompoundTag tag) {
         super.readCustomDataFromTag(tag);
 
-        this.inkColorFromTag(tag);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        this.inkable_fromTag(tag);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         this.setRespawnTime(splatcraft.getInt("RespawnTime"));
         this.setMaxRespawnTime(splatcraft.getInt("MaxRespawnTime"));
         this.setHurtDelay(splatcraft.getInt("HurtDelay"));
@@ -129,7 +131,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        DAMAGE & FLATTENING
+     *  DAMAGE & FLATTENING
      */
 
     @Override
@@ -186,7 +188,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        COLLISION
+     *  COLLISION
      */
 
     @Override
@@ -248,11 +250,11 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 1.0f, 1.0f);
     }
     public ItemStack asItem() {
-       return ColorUtils.setInkColor(new ItemStack(SplatcraftItems.SQUID_BUMPER), this.getInkColor(), true);
+       return ColorUtil.setInkColor(new ItemStack(SplatcraftItems.SQUID_BUMPER), this.getInkColor(), true);
     }
 
     /*
-        LAST DEALT DAMAGE
+     *  LAST DEALT DAMAGE
      */
 
     public float getLastDealtDamage() {
@@ -263,7 +265,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        INK HEALTH
+     *  INK HEALTH
      */
 
     public float getInkHealth() {
@@ -282,7 +284,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        MAX INK HEALTH
+     *  MAX INK HEALTH
      */
 
     public float getMaxInkHealth() {
@@ -293,7 +295,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        RESPAWN TIME
+     *  RESPAWN TIME
      */
 
     public int getRespawnTime() {
@@ -335,7 +337,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        MAX RESPAWN TIME
+     *  MAX RESPAWN TIME
      */
 
     public int getMaxRespawnTime() {
@@ -346,7 +348,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        HURT DELAY
+     *  HURT DELAY
      */
 
     public int getHurtDelay() {
@@ -370,7 +372,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        LAST HIT TIME
+     *  LAST HIT TIME
      */
 
     public int getLastHitTime() {
@@ -387,7 +389,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        INKPROOF
+     *  INKPROOF
      */
 
     public boolean isInkproof() {
@@ -398,7 +400,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        DISPLAY TYPE
+     *  DISPLAY TYPE
      */
 
     public SquidBumperDisplayType getDisplayType() {
@@ -409,20 +411,24 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     /*
-        INKABLE ENTITY SUPPORT
+     *  INKABLE ENTITY SUPPORT
      */
 
     @Override
-    public TrackedData<String> getInkColorTrackedData() {
+    public TrackedData<InkColor> inkable_getInkColorTrackedData() {
         return INK_COLOR;
     }
     @Override
-    public DataTracker getIEDataTracker() {
+    public TrackedData<InkType> inkable_getInkTypeTrackedData() {
+        return INK_TYPE;
+    }
+    @Override
+    public DataTracker inkable_getDataTracker() {
         return super.getDataTracker();
     }
 
     /*
-        LIVING ENTITY SUPPORT
+     *  LIVING ENTITY SUPPORT
      */
 
     @Override

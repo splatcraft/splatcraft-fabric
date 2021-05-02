@@ -1,9 +1,12 @@
 package com.cibernet.splatcraft.init;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.SplatcraftClient;
 import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.entity.InkSquidEntity;
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -39,8 +42,9 @@ public class SplatcraftEntities {
         return Registry.register(Registry.ENTITY_TYPE, new Identifier(Splatcraft.MOD_ID, id), builtEntityType);
     }
 
+    @Environment(EnvType.CLIENT)
     public static Identifier texture(String path) {
-        return Splatcraft.texture("entity/" + path);
+        return SplatcraftClient.texture("entity/" + path);
     }
     protected static int[] createSpawnEggColors(int primary, int secondary) {
         return new int[]{ primary, secondary };

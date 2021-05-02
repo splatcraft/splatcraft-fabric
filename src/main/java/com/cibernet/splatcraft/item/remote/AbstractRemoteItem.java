@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.item.remote;
 
 import com.cibernet.splatcraft.Splatcraft;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -87,10 +87,10 @@ public abstract class AbstractRemoteItem extends Item {
         return remoteMode != null && !remoteMode.isEmpty();
     }
     public static String getRemoteMode(ItemStack stack) {
-        return TagUtils.getOrCreateSplatcraftTag(stack).getString("RemoteMode");
+        return TagUtil.getOrCreateSplatcraftTag(stack).getString("RemoteMode");
     }
     protected static void setRemoteMode(ItemStack stack, Enum<?> mode) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(stack);
         splatcraft.putString("RemoteMode", mode.toString());
 
         stack.getOrCreateTag().put(Splatcraft.MOD_ID, splatcraft);
@@ -98,7 +98,7 @@ public abstract class AbstractRemoteItem extends Item {
     protected abstract void setDefaultRemoteMode(ItemStack stack);
 
     public static Pair<Optional<BlockPos>, Optional<BlockPos>> getCornerPair(ItemStack stack) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(stack);
 
         CompoundTag cornerA = splatcraft.getCompound("CornerA");
         CompoundTag cornerB = splatcraft.getCompound("CornerB");
@@ -132,7 +132,7 @@ public abstract class AbstractRemoteItem extends Item {
     }
 
     public static void setCornerPair(ItemStack stack, BlockPos cornerA, BlockPos cornerB) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(stack);
 
         if (cornerA != null) {
             splatcraft.put("CornerA", NbtHelper.fromBlockPos(cornerA));

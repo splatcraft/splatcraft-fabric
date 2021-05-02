@@ -5,10 +5,12 @@ import com.cibernet.splatcraft.block.entity.InkedBlockEntity;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
 import com.cibernet.splatcraft.handler.PlayerHandler;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.inkcolor.InkType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -49,8 +51,8 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
         return false;
     }
 
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType, boolean spawnParticles) {
-        return ColorUtils.setInkColor(world.getBlockEntity(pos), color);
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, InkType inkType, boolean spawnParticles) {
+        return ColorUtil.setInkColor(world.getBlockEntity(pos), color);
     }
 
     public InkColor getInkColor(World world, BlockPos pos) {
@@ -93,12 +95,13 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)  {
         ItemStack stack = super.getPickStack(world, pos, state);
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            ColorUtils.setInkColor(stack, ColorUtils.getInkColor(blockEntity));
+            ColorUtil.setInkColor(stack, ColorUtil.getInkColor(blockEntity));
         }
 
         return stack;
@@ -110,7 +113,7 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
         if (InkedBlock.isTouchingLiquid(world, blockPos)) {
             BlockEntity blockEntity = world.getBlockEntity(blockPos);
             if (blockEntity instanceof AbstractInkableBlockEntity) {
-                ColorUtils.setInkColor(blockEntity, InkColors.NONE);
+                ColorUtil.setInkColor(blockEntity, InkColors.NONE);
             }
         }
 

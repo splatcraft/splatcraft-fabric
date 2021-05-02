@@ -58,7 +58,7 @@ public enum SquidBumperDisplayType {
             case INK_HEALTH_PERCENTAGE:
                 DecimalFormat df = new DecimalFormat("##.##");
                 df.setRoundingMode(RoundingMode.DOWN);
-                return df.format((entity.getInkHealth() / entity.getMaxInkHealth()) * 100) + "%";
+                return df.format((entity.getInkHealth() / entity.getMaxInkHealth()) * 100);
             case RESPAWN_TIME:
                 return entity.getRespawnTime();
             case HURT_DELAY:

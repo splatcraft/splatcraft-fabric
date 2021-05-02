@@ -1,4 +1,4 @@
-![splatcraft_logo](https://raw.githubusercontent.com/splatcraft/splatcraft/fabric/1.16.5/src/main/resources/pack.png)
+![splatcraft_logo](https://raw.githubusercontent.com/splatcraft/splatcraft/fabric/1.16.5/src/main/resources/assets/splatcraft/icon.png)
 
 # Splatcraft (for Fabric)
 [![GitHub License](https://img.shields.io/github/license/splatcraft/splatcraft?style=flat-square)](https://github.com/splatcraft/splatcraft/blob/HEAD/LICENSE)
@@ -13,6 +13,3 @@ Splatoon in Minecraft.
 2. Click on the only package
 3. Download the first `jar` in the assets list to the right
 4. [Download Fabric](https://fabricmc.net/wiki/install) and install the mod
-
-### Notes
-- If you use [Sodium](https://www.curseforge.com/minecraft/mc-mods/sodium), make sure to **disable [Biome Blend](https://minecraft.gamepedia.com/Options#Video_Settings)** to avoid issues with inkable block coloring

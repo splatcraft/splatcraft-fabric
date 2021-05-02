@@ -3,6 +3,7 @@ package com.cibernet.splatcraft.handler;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
+import com.cibernet.splatcraft.component.Charge;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
@@ -10,9 +11,10 @@ import com.cibernet.splatcraft.init.SplatcraftAttributes;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.init.SplatcraftStats;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
+import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -24,6 +26,8 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -45,6 +49,22 @@ public class PlayerHandler {
         PlayerDataComponent data = PlayerDataComponent.getComponent(player);
         LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
 
+        if (player.isUsingItem()) {
+            ItemStack stack = player.getActiveItem();
+            if (stack != null) {
+                Item item = stack.getItem();
+                if (item instanceof AbstractWeaponItem) {
+                    player.bodyYaw = player.headYaw;
+
+                    Charge charge = PlayerDataComponent.getCharge(player);
+                    int currentSlot = player.inventory.getSlotWithStack(stack);
+                    if (charge.getTime() > 0 && currentSlot != charge.getSlotIndex()) {
+                        Charge.resetCharge(player, currentSlot, charge.canDischarge());
+                    }
+                }
+            }
+        }
+
         Vec3d vel = player.getVelocity();
         data.setMoving(Math.abs(vel.getX()) >= MOVING_THRESHOLD || Math.abs(vel.getZ()) >= MOVING_THRESHOLD);
 
@@ -60,10 +80,10 @@ public class PlayerHandler {
         boolean wasSubmerged = lazyData.isSubmerged();
         boolean shouldBeSubmerged = shouldBeSubmerged(player);
         if (shouldBeSubmerged != wasSubmerged) {
-            InkColor inkColor = ColorUtils.getInkColor(player.world.getBlockEntity(shouldBeSubmerged ? getVelocityAffectingPos(player) : getVelocityAffectingPos(player).down()));
+            InkColor inkColor = ColorUtil.getInkColor(player.world.getBlockEntity(shouldBeSubmerged ? getInkColorSourcePos(player) : getInkColorSourcePos(player).down()));
 
             if (!player.world.isClient) {
-                player.world.playSoundFromEntity(null, player, shouldBeSubmerged ? SplatcraftSoundEvents.INK_SUBMERGE : SplatcraftSoundEvents.INK_UNSUBMERGE, SoundCategory.PLAYERS, 0.23f, 0.86f);
+                player.world.playSoundFromEntity(null, player, shouldBeSubmerged ? SplatcraftSoundEvents.ENTITY_INK_SQUID_SUBMERGE : SplatcraftSoundEvents.ENTITY_INK_SQUID_UNSUBMERGE, SoundCategory.PLAYERS, 0.23f, 0.86f);
 
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeUuid(player.getUuid());
@@ -106,7 +126,7 @@ public class PlayerHandler {
             if (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.INKWELL_CHANGES_PLAYER_INK_COLOR) && player.world.getBlockState(player.getBlockPos().down()).getBlock() instanceof InkwellBlock) {
                 AbstractInkableBlockEntity blockEntity = (AbstractInkableBlockEntity) player.world.getBlockEntity(player.getBlockPos().down());
                 if (blockEntity != null) {
-                    ColorUtils.setInkColor(player, blockEntity.getInkColor());
+                    ColorUtil.setInkColor(player, blockEntity.getInkColor());
                 }
             }
         }
@@ -160,7 +180,7 @@ public class PlayerHandler {
             if (blockEntity instanceof AbstractInkableBlockEntity) {
                 Block block = blockEntity.getCachedState().getBlock();
                 if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canDamage()) {
-                    InkColor inkColor = ColorUtils.getInkColor(blockEntity);
+                    InkColor inkColor = ColorUtil.getInkColor(blockEntity);
                     return !comparisonColor.equals(InkColors.NONE) && !inkColor.equals(InkColors.NONE) && !comparisonColor.matches(inkColor.color);
                 }
             }
@@ -170,13 +190,13 @@ public class PlayerHandler {
     }
 
     public static boolean onEnemyInk(PlayerEntity player) {
-        return onEnemyInk(player.world, player.getVelocityAffectingPos(), ColorUtils.getInkColor(player));
+        return onEnemyInk(player.world, player.getVelocityAffectingPos(), ColorUtil.getInkColor(player));
     }
 
     public static boolean canSwim(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            return !ColorUtils.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
+            return !ColorUtil.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
         }
 
         return false;
@@ -186,7 +206,7 @@ public class PlayerHandler {
         return canSwim(player.world, player.getVelocityAffectingPos());
     }
 
-    public static BlockPos getVelocityAffectingPos(PlayerEntity player) {
+    public static BlockPos getInkColorSourcePos(PlayerEntity player) {
         if (!player.hasVehicle()) {
             BlockPos pos = getClimbingPos(player);
             if (pos != null) {
@@ -199,14 +219,18 @@ public class PlayerHandler {
 
     public static BlockPos getClimbingPos(PlayerEntity player) {
         for (int i = 0; i < 4; i++) {
-            float xOff = (i < 2 ? 0.32f : 0) * (i % 2 == 0 ? 1 : -1), zOff = (i < 2 ? 0 : 0.32f) * (i % 2 == 0 ? 1 : -1);
+            float xOff = (i < 2 ? 0.32f : 0) * (i % 2 == 0 ? 1 : -1);
+            float zOff = (i < 2 ? 0 : 0.32f) * (i % 2 == 0 ? 1 : -1);
             BlockPos pos = new BlockPos(player.getX() - xOff, player.getY(), player.getZ() - zOff);
-            Block block = player.world.getBlockState(pos).getBlock();
 
-            if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb() && player.getBlockState().getBlock() != block) {
-                BlockEntity blockEntity = player.world.getBlockEntity(pos);
-                if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color)) {
-                    return pos;
+            if (!pos.equals(player.getBlockPos())) {
+                Block block = player.world.getBlockState(pos).getBlock();
+
+                if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb() && player.getBlockState().getBlock() != block) {
+                    BlockEntity blockEntity = player.world.getBlockEntity(pos);
+                    if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtil.getInkColor(player).color)) {
+                        return pos;
+                    }
                 }
             }
         }
@@ -222,7 +246,7 @@ public class PlayerHandler {
             if (pos != null) {
                 BlockEntity blockEntity = player.world.getBlockEntity(pos);
                 if (blockEntity instanceof AbstractInkableBlockEntity) {
-                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtils.getInkColor(player).color);
+                    return ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtil.getInkColor(player).color);
                 }
             }
         }

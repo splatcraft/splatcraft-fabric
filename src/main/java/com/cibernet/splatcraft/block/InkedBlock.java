@@ -6,10 +6,12 @@ import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftParticles;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkType;
+import com.cibernet.splatcraft.util.InkBlockUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,7 +21,6 @@ import net.minecraft.item.AxeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
@@ -36,7 +37,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import java.util.Optional;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
@@ -133,11 +133,18 @@ public class InkedBlock extends AbstractInkableBlock {
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof InkedBlockEntity) {
-            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
-            if (inkedBlockEntity.getSavedState().isAir() || (inkedBlockEntity.isInked() && (SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY) && random.nextFloat() <= 0.7f))) {
-                InkedBlock.clearInk(world, pos);
+        this.checkAndClearInk(world, pos, random);
+        super.randomTick(state, world, pos, random);
+    }
+
+    public void checkAndClearInk(World world, BlockPos pos, Random random) {
+        if (random.nextFloat() <= 0.7f && SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY)) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof InkedBlockEntity) {
+                InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+                if (inkedBlockEntity.getSavedState().isAir() || inkedBlockEntity.isInked()) {
+                    InkedBlock.clearInk(world, pos);
+                }
             }
         }
     }
@@ -210,7 +217,7 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public boolean inkBlock(World world, BlockPos pos, InkColor color, float damage, InkType inkType, boolean spawnParticles) {
+    public boolean inkBlock(World world, BlockPos pos, InkColor color, InkType inkType, boolean spawnParticles) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
             InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
@@ -272,7 +279,7 @@ public class InkedBlock extends AbstractInkableBlock {
     protected ActionResult onUseForSavedState(BlockEntity blockEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Block block = state.getBlock();
         InkType inkTypePre = InkType.from((InkedBlock) block);
-        InkColor inkColorPre = ColorUtils.getInkColor(blockEntity);
+        InkColor inkColorPre = ColorUtil.getInkColor(blockEntity);
 
         BlockState savedState = ((InkedBlockEntity) blockEntity).getSavedState();
         ActionResult actionResultForSavedState = savedState.getBlock().onUse(savedState, world, pos, player, hand, hit);
@@ -280,7 +287,7 @@ public class InkedBlock extends AbstractInkableBlock {
         if (actionResultForSavedState.isAccepted()) {
             block = world.getBlockState(pos).getBlock();
             if (!(block instanceof InkedBlock)) {
-                InkBlockUtils.inkBlock(world, pos, inkColorPre, 0.0f, inkTypePre);
+                InkBlockUtil.inkBlock(world, pos, inkColorPre, inkTypePre);
             }
         }
 
@@ -288,14 +295,14 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof InkedBlockEntity) {
-            CompoundTag tag = new CompoundTag();
-            CompoundTag blockEntityTag = blockEntity.toTag(new CompoundTag());
-            tag.put("BlockEntityTag", blockEntityTag);
+            ItemStack stack = super.getPickStack(world, pos, state);
+            ((InkedBlockEntity) blockEntity).toClientTag(stack.getOrCreateSubTag("BlockEntityTag"));
 
-            return new ItemStack(this, 1, Optional.of(tag));
+            return stack;
         }
 
         return super.getPickStack(world, pos, state);

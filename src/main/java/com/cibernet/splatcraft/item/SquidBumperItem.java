@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.item;
 
 import com.cibernet.splatcraft.entity.SquidBumperEntity;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.item.inkable.AbstractInkableItem;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.Item;
@@ -41,7 +41,7 @@ public class SquidBumperItem extends AbstractInkableItem {
                         return ActionResult.FAIL;
                     }
 
-                    ColorUtils.setInkColor(entity, ColorUtils.getInkColor(itemStack));
+                    ColorUtil.setInkColor(entity, ColorUtil.getInkColor(itemStack));
                     serverWorld.spawnEntityAndPassengers(entity);
                     float yaw = (float) MathHelper.floor((MathHelper.wrapDegrees(ctx.getPlayerYaw() - 180.0f) + 22.5f) / 45.0f) * 45.0f;
                     entity.refreshPositionAndAngles(entity.getX(), entity.getY(), entity.getZ(), yaw, 0.0f);
@@ -59,6 +59,6 @@ public class SquidBumperItem extends AbstractInkableItem {
 
     @Override
     protected ItemStack filterCreativeStack(ItemStack stack) {
-        return ColorUtils.setColorLocked(super.filterCreativeStack(stack), true);
+        return ColorUtil.setColorLocked(super.filterCreativeStack(stack), true);
     }
 }

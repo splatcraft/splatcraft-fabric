@@ -2,18 +2,17 @@ package com.cibernet.splatcraft.item.weapon;
 
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import com.cibernet.splatcraft.init.SplatcraftGameRules;
 import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
-import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.MatchItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
+import com.cibernet.splatcraft.util.InkItemUtil;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
@@ -43,20 +42,23 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class AbstractWeaponItem extends Item implements EntityTickable, TabbedItemGroupAppendLogic, MatchItem, ColorLockItemColorProvider {
     protected boolean secret;
     protected boolean junior;
+    public final float mobility;
 
-    protected final float consumption;
+    protected final Item.Settings settings;
 
-    public AbstractWeaponItem(Item.Settings settings, float consumption) {
+    public AbstractWeaponItem(Item.Settings settings, float mobility) {
         super(settings);
-        this.consumption = consumption;
 
+        this.mobility = mobility;
+        this.settings = settings;
         SplatcraftItems.addToInkables(this);
     }
 
@@ -72,15 +74,16 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext advanced) {
         super.appendTooltip(stack, world, tooltip, advanced);
-        ColorUtils.appendTooltip(stack, tooltip);
+        ColorUtil.appendTooltip(stack, tooltip);
 
-        ImmutableList<WeaponStat> stats = this.createWeaponStats();
+        LinkedList<WeaponStat> stats = new LinkedList<>(this.createWeaponStats());
+        stats.add(new WeaponStat("mobility", this.getMobility(null) * 100));
         for (int i = 0; i < stats.size(); i++) {
             if (i == 0) {
                 tooltip.add(LiteralText.EMPTY);
             }
 
-            tooltip.add(stats.get(i).getTextComponent(stack, world).formatted(Formatting.DARK_GREEN));
+            tooltip.add(stats.get(i).getTextComponent().formatted(Formatting.DARK_GREEN));
         }
     }
 
@@ -97,11 +100,8 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (ColorUtils.isColorLocked(stack) || !(entity instanceof PlayerEntity)) {
-            return;
-        } else {
-            PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(entity);
-            ColorUtils.setInkColor(stack, data.getInkColor());
+        if (entity instanceof PlayerEntity && !ColorUtil.isColorLocked(stack)) {
+            ColorUtil.setInkColor(stack, PlayerDataComponent.getInkColor((PlayerEntity) entity));
         }
 
         super.inventoryTick(stack, world, entity, slot, selected);
@@ -123,58 +123,34 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
             BlockEntity blockEntity = entity.world.getBlockEntity(floorPos);
             if (blockEntity instanceof AbstractInkableBlockEntity) {
                 AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
-                if (ColorUtils.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtils.isColorLocked(stack)) {
-                    ColorUtils.setInkColor(stack, inkableBlockEntity.getInkColor());
-                    ColorUtils.setColorLocked(stack, true);
+                if (ColorUtil.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtil.isColorLocked(stack)) {
+                    ColorUtil.setInkColor(stack, inkableBlockEntity.getInkColor());
+                    ColorUtil.setColorLocked(stack, true);
                 }
             }
-        } else if (entity.world.getBlockState(floorPos.up()).getMaterial().equals(Material.WATER) && ColorUtils.isColorLocked(stack)) {
-            ColorUtils.setInkColor(stack, InkColors.NONE);
-            ColorUtils.setColorLocked(stack, false);
+        } else if (entity.world.getBlockState(floorPos.up()).getMaterial().equals(Material.WATER) && ColorUtil.isColorLocked(stack)) {
+            ColorUtil.setInkColor(stack, InkColors.NONE);
+            ColorUtil.setColorLocked(stack, false);
         }
     }
 
     @Override
     public int getMaxUseTime(ItemStack stack) {
-        return 72000;
+        return Integer.MAX_VALUE;
     }
 
-    public static float getInkAmount(LivingEntity player, ItemStack weapon) {
-        if (!SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK)) {
-            return Float.MAX_VALUE;
-        } else {
-            ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
-            if (tank.getItem() instanceof InkTankArmorItem) {
-                return InkTankArmorItem.getInkAmount(tank, weapon);
-            }
-        }
-
-        return 0.0f;
+    public boolean hasInk(PlayerEntity player, ItemStack weapon, float data) {
+        return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || InkItemUtil.getInkAmount(player, weapon) > InkItemUtil.getInkReductionAmount(player, (AbstractWeaponItem) weapon.getItem(), data);
+    }
+    public boolean hasInk(PlayerEntity player, ItemStack weapon) {
+        return this.hasInk(player, weapon, -1);
     }
 
-    public static boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
-        return !SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) || getInkAmount(player, weapon) > getInkReductionAmount(player, (AbstractWeaponItem) weapon.getItem(), fling);
-    }
-    public static boolean hasInk(PlayerEntity player, ItemStack weapon) {
-        return AbstractWeaponItem.hasInk(player, weapon, false);
+    public void reduceInk(PlayerEntity player, float data) {
+        InkItemUtil.reduceInk(player, this.getInkConsumption(data));
     }
 
-    public static void reduceInk(PlayerEntity player, float amount) {
-        ItemStack tank = player.getEquippedStack(EquipmentSlot.CHEST);
-        if (SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.REQUIRE_INK_TANK) && tank.getItem() instanceof InkTankArmorItem) {
-            InkTankArmorItem.setInkAmount(tank, InkTankArmorItem.getInkAmount(tank) - amount);
-        }
-    }
-    public void reduceInk(PlayerEntity player, boolean fling) {
-        reduceInk(player, getInkReductionAmount(player, this, fling));
-    }
-    public void reduceInk(PlayerEntity player) {
-        reduceInk(player, false);
-    }
-
-    public static float getInkReductionAmount(PlayerEntity player, AbstractWeaponItem weapon, boolean fling) {
-        return player.getEquippedStack(EquipmentSlot.CHEST).getMaxDamage() * ((fling ? Objects.requireNonNull(((RollerItem) weapon).component.fling).consumption : weapon.consumption) / 25);
-    }
+    public abstract float getInkConsumption(float data);
 
     public static void sendNoInkMessage(LivingEntity entity) {
         sendNoInkMessage(entity, SplatcraftSoundEvents.NO_INK);
@@ -198,6 +174,10 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
     }
     public double getWeaponSpeed() {
         return 50.0d;
+    }
+
+    public float getMobility(@Nullable PlayerEntity player) {
+        return player != null && PlayerDataComponent.hasCooldown(player) ? 1.0f : mobility;
     }
 
     public PlayerPoseHandler.WeaponPose getPose() {

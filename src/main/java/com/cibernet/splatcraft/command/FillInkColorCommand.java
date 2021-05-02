@@ -4,7 +4,7 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
 import com.cibernet.splatcraft.game.turf_war.ColorModificationMode;
 import com.cibernet.splatcraft.game.turf_war.ColorModifications;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.util.StringConstants;
 import com.mojang.brigadier.CommandDispatcher;
@@ -51,7 +51,7 @@ public class FillInkColorCommand {
         if (affected == 0) {
             throw SplatcraftCommandExceptions.NO_INK.create();
         } else {
-            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_FILLINKCOLOR_SUCCESS, affected, ColorUtils.getFormattedColorName(color)), true);
+            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_FILLINKCOLOR_SUCCESS, affected, ColorUtil.getFormattedColorName(color)), true);
         }
 
         return affected;

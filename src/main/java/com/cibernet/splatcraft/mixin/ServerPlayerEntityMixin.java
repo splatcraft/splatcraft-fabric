@@ -25,14 +25,16 @@ public class ServerPlayerEntityMixin {
         SplatcraftNetworking.sendPlayInkDeathEffects($this);
     }
 
-    @Inject(method = "swingHand", at = @At("TAIL"))
+    @Inject(method = "swingHand", at = @At("HEAD"), cancellable = true)
     private void swingHand(Hand hand, CallbackInfo ci) {
         ServerPlayerEntity player = ServerPlayerEntity.class.cast(this);
         if (!player.isSpectator() && !LazyPlayerDataComponent.isSquid(player)) {
             ItemStack stack = player.getStackInHand(hand);
             Item item = stack.getItem();
             if (item instanceof AttackInputDetectable) {
-                ((AttackInputDetectable) item).onAttack(player, stack);
+                if (((AttackInputDetectable) item).onAttack(player, stack)) {
+                    ci.cancel();
+                }
             }
 
             PacketByteBuf buf = PacketByteBufs.create();

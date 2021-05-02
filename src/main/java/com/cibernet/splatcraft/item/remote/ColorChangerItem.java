@@ -5,7 +5,7 @@ import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.game.turf_war.ColorModificationMode;
 import com.cibernet.splatcraft.game.turf_war.ColorModifications;
 import com.cibernet.splatcraft.init.SplatcraftItems;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.item.EntityTickable;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -28,12 +28,12 @@ public class ColorChangerItem extends AbstractWhitelistedRemoteItem implements E
 
     @Override
     public boolean whitelistedRemoteUse(World world, PlayerEntity player, Hand hand, ItemStack stack, BlockPos pos, ColorModificationMode mode) {
-        return ColorModifications.changeInkColor(world, player, ColorUtils.getInkColor(stack), pos, mode);
+        return ColorModifications.changeInkColor(world, player, ColorUtil.getInkColor(stack), pos, mode);
     }
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext ctx) {
-        ColorUtils.appendTooltip(stack, tooltip);
+        ColorUtil.appendTooltip(stack, tooltip);
         super.appendTooltip(stack, world, tooltip, ctx);
     }
 
@@ -41,8 +41,8 @@ public class ColorChangerItem extends AbstractWhitelistedRemoteItem implements E
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (entity instanceof PlayerEntity && !ColorUtils.isColorLocked(stack) && ColorUtils.getInkColor(stack) != ColorUtils.getInkColor((PlayerEntity) entity)) {
-            ColorUtils.setInkColor(stack, ColorUtils.getInkColor((PlayerEntity) entity));
+        if (entity instanceof PlayerEntity && !ColorUtil.isColorLocked(stack) && ColorUtil.getInkColor(stack) != ColorUtil.getInkColor((PlayerEntity) entity)) {
+            ColorUtil.setInkColor(stack, ColorUtil.getInkColor((PlayerEntity) entity));
         }
     }
 
@@ -53,9 +53,9 @@ public class ColorChangerItem extends AbstractWhitelistedRemoteItem implements E
         if (entity.world.getBlockState(pos).getBlock() instanceof InkwellBlock) {
             InkableBlockEntity blockEntity = (InkableBlockEntity) entity.world.getBlockEntity(pos);
 
-            if (ColorUtils.getInkColor(stack) != ColorUtils.getInkColor(blockEntity)) {
-                ColorUtils.setInkColor(entity.getStack(), ColorUtils.getInkColor(blockEntity));
-                ColorUtils.setColorLocked(entity.getStack(), true);
+            if (ColorUtil.getInkColor(stack) != ColorUtil.getInkColor(blockEntity)) {
+                ColorUtil.setInkColor(entity.getStack(), ColorUtil.getInkColor(blockEntity));
+                ColorUtil.setColorLocked(entity.getStack(), true);
             }
         }
     }

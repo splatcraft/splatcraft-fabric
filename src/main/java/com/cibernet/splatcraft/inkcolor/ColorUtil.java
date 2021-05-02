@@ -4,10 +4,9 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.AbstractInkableBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
-import com.cibernet.splatcraft.component.SplatcraftComponents;
 import com.cibernet.splatcraft.entity.InkableEntity;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class ColorUtils {
+public class ColorUtil {
     public static final int DEFAULT = 0x00FFFFFF;
     public static final int DEFAULT_COLOR_LOCK_FRIENDLY = 0xDEA801;
     public static final int DEFAULT_COLOR_LOCK_HOSTILE = 0x4717A9;
@@ -59,7 +58,7 @@ public class ColorUtils {
         }
     }
     public static boolean setInkColor(PlayerEntity player, InkColor color) {
-        PlayerDataComponent data = SplatcraftComponents.PLAYER_DATA.get(player);
+        PlayerDataComponent data = PlayerDataComponent.getComponent(player);
         if (!data.getInkColor().equals(color)) {
             data.setInkColor(color);
 
@@ -84,14 +83,14 @@ public class ColorUtils {
         if (entity instanceof InkableEntity) {
             return ((InkableEntity) entity).setInkColor(color);
         } else if (entity instanceof PlayerEntity) {
-            return ColorUtils.setInkColor((PlayerEntity) entity, color);
+            return ColorUtil.setInkColor((PlayerEntity) entity, color);
         }
 
         return false;
     }
 
     public static InkColor getInkColor(ItemStack stack) {
-        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
+        CompoundTag tag = TagUtil.getBlockEntityTagOrRoot(stack);
         if (tag == null) {
             return InkColors.NONE;
         } else {
@@ -105,19 +104,19 @@ public class ColorUtils {
         }
     }
     public static ItemStack setInkColor(ItemStack stack, InkColor color, boolean setColorLocked) {
-        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtil.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", color.toString());
         tag.put(Splatcraft.MOD_ID, splatcraft);
 
         if (setColorLocked) {
-            ColorUtils.setColorLocked(stack, true);
+            ColorUtil.setColorLocked(stack, true);
         }
 
         return stack;
     }
     public static ItemStack setInkColor(ItemStack stack, InkColor color) {
-        return ColorUtils.setInkColor(stack, color, false);
+        return ColorUtil.setInkColor(stack, color, false);
     }
 
     public static InkColor getInkColor(BlockEntity blockEntity) {
@@ -165,34 +164,34 @@ public class ColorUtils {
         return new TranslatableText(key, getFormattedColorName(color, colorless));
     }
     public static TranslatableText getTranslatableTextWithColor(ItemStack stack, boolean colorless) {
-        return getTranslatableTextWithColor(((TranslatableText)stack.getItem().getName()).getKey(), ColorUtils.getInkColor(stack), colorless);
+        return getTranslatableTextWithColor(((TranslatableText)stack.getItem().getName()).getKey(), ColorUtil.getInkColor(stack), colorless);
     }
 
     public static void appendTooltip(ItemStack stack, List<Text> tooltip) {
-        InkColor inkColor = ColorUtils.getInkColor(stack);
-        if (!inkColor.equals(InkColors.NONE) || ColorUtils.isColorLocked(stack)) {
-            tooltip.add(ColorUtils.getFormattedColorName(ColorUtils.getInkColor(stack), false));
+        InkColor inkColor = ColorUtil.getInkColor(stack);
+        if (!inkColor.equals(InkColors.NONE) || ColorUtil.isColorLocked(stack)) {
+            tooltip.add(ColorUtil.getFormattedColorName(ColorUtil.getInkColor(stack), false));
         } else {
             tooltip.add(new TranslatableText("item." + Splatcraft.MOD_ID + ".tooltip.colorless").formatted(Formatting.GRAY));
         }
     }
 
     public static ItemStack setColorLocked(ItemStack stack, boolean isLocked) {
-        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtil.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putBoolean("ColorLocked", isLocked);
         tag.put(Splatcraft.MOD_ID, splatcraft);
 
         return stack;
     }
     public static boolean isColorLocked(ItemStack stack) {
-        CompoundTag tag = TagUtils.getBlockEntityTagOrRoot(stack);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag tag = TagUtil.getBlockEntityTagOrRoot(stack);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         return splatcraft.getBoolean("ColorLocked");
     }
 
     public static boolean colorEquals(PlayerEntity player, ItemStack stack) {
-        return ColorUtils.getInkColor(player).matches(ColorUtils.getInkColor(stack).color);
+        return ColorUtil.getInkColor(player).matches(ColorUtil.getInkColor(stack).color);
     }
 
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos, float scale, @Nullable PlayerEntity player) {
@@ -220,16 +219,16 @@ public class ColorUtils {
         addInkSplashParticle(world, inkColor, pos, scale, null);
     }
     public static void addInkSplashParticle(World world, InkColor inkColor, Vec3d pos) {
-        ColorUtils.addInkSplashParticle(world, inkColor, pos, 1.0f);
+        ColorUtil.addInkSplashParticle(world, inkColor, pos, 1.0f);
     }
     public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos, float scale) {
         BlockEntity blockEntity = world.getBlockEntity(sourcePos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            ColorUtils.addInkSplashParticle(world, ((AbstractInkableBlockEntity) blockEntity).getInkColor(), spawnPos, scale);
+            ColorUtil.addInkSplashParticle(world, ((AbstractInkableBlockEntity) blockEntity).getInkColor(), spawnPos, scale);
         }
     }
     public static void addInkSplashParticle(World world, BlockPos sourcePos, Vec3d spawnPos) {
-        ColorUtils.addInkSplashParticle(world, sourcePos, spawnPos, 1.0f);
+        ColorUtil.addInkSplashParticle(world, sourcePos, spawnPos, 1.0f);
     }
 
     public static InkColor getRandomStarterColor(Random random) {

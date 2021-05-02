@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.block.entity;
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.InkedBlock;
 import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.NbtHelper;
 public class InkedBlockEntity extends AbstractInkableBlockEntity {
     public static final String id = InkedBlock.id;
 
-    private BlockState savedState = Blocks.AIR.getDefaultState();
+    protected BlockState savedState = Blocks.AIR.getDefaultState();
 
     public InkedBlockEntity() {
         super(SplatcraftBlockEntities.INKED_BLOCK);
@@ -20,7 +20,7 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(tag);
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.put("SavedState", NbtHelper.fromBlockState(savedState));
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
@@ -30,8 +30,8 @@ public class InkedBlockEntity extends AbstractInkableBlockEntity {
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        CompoundTag splatcraft = TagUtils.getOrCreateSplatcraftTag(TagUtils.getBlockEntityTagOrRoot(tag));
 
+        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
         this.savedState = NbtHelper.toBlockState(splatcraft.getCompound("SavedState"));
     }
 

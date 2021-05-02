@@ -1,8 +1,8 @@
 package com.cibernet.splatcraft.mixin;
 
 import com.cibernet.splatcraft.entity.EntityAccessShapeContext;
-import com.cibernet.splatcraft.inkcolor.InkBlockUtils;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
+import com.cibernet.splatcraft.util.InkBlockUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +21,7 @@ public class SquidBlockCollisionMixin {
         Block $this = Block.class.cast(this);
         if (SplatcraftBlockTags.INK_SQUID_PASSTHROUGHABLES.contains($this)) {
             Entity entity = ((EntityAccessShapeContext) ctx).splatcraft_getEntity();
-            if (entity != null && InkBlockUtils.entityPassesThroughGaps(entity)) {
+            if (entity != null && InkBlockUtil.entityPassesThroughGaps(entity)) {
                 cir.setReturnValue(VoxelShapes.empty());
             }
         }

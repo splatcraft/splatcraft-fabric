@@ -5,8 +5,8 @@
   "version": "${version}",
 
   "name": "Splatcraft",
-  "description": "Description",
-  "icon": "pack.png",
+  "description": "Splatoon in Minecraft.",
+  "icon": "assets/splatcraft/icon.png",
 
   "authors": [
     "Cibernet",

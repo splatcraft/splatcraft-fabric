@@ -6,7 +6,7 @@ import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.InkableEntity;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
@@ -74,20 +74,22 @@ public class SplatcraftClientNetworking {
             InkColors.rebuildIfNeeded(InkColors.getCachedData());
 
             CompoundTag tag = buf.readCompoundTag();
-            if (tag != null) {
-                ListTag inkColors = tag.getList("InkColors", 10);
-                HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
-                inkColors.forEach(inkColor -> {
-                    CompoundTag inkColorTag = (CompoundTag) inkColor;
-                    Identifier id = Identifier.tryParse(inkColorTag.getString("id"));
-                    all.put(id, new InkColor(id, inkColorTag.getInt("Color")));
-                });
+            client.execute(() -> {
+                if (tag != null) {
+                    ListTag inkColors = tag.getList("InkColors", 10);
+                    HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
+                    inkColors.forEach(inkColor -> {
+                        CompoundTag inkColorTag = (CompoundTag) inkColor;
+                        Identifier id = Identifier.tryParse(inkColorTag.getString("id"));
+                        all.put(id, new InkColor(id, inkColorTag.getInt("Color")));
+                    });
 
-                Splatcraft.log("Synchronised ink colors with server");
-                client.execute(() -> InkColors.setAll(all));
-            } else {
-                Splatcraft.log(Level.ERROR, "Received ink color list was null!");
-            }
+                    InkColors.setAll(all);
+                    Splatcraft.log("Synchronised ink colors with server");
+                } else {
+                    Splatcraft.log(Level.ERROR, "Received ink color list was null!");
+                }
+            });
         });
 
         /*
@@ -188,20 +190,23 @@ public class SplatcraftClientNetworking {
             }
         }
 
-        player.world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked()), scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d);
+        player.world.addParticle(new InkSplashParticleEffect(ColorUtil.getColorsFromInt(inkColor.getColorOrLocked()), scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d);
     }
 
     public static void playPlayerToggleSquidEffects(PlayerEntity player, World world, InkColor inkColor) {
-        if (inkColor.matches(ColorUtils.getInkColor(player).color)) {
+        if (inkColor.matches(ColorUtil.getInkColor(player).color)) {
             for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
-                world.addParticle(new InkSplashParticleEffect(ColorUtils.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5d), player.getRandomBodyY() - 0.25d, player.getParticleZ(0.5d), 0.0d, 0.0d, 0.0d);
+                world.addParticle(new InkSplashParticleEffect(ColorUtil.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5d), player.getRandomBodyY() - 0.25d, player.getParticleZ(0.5d), 0.0d, 0.0d, 0.0d);
             }
         }
     }
 
+    public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos, double velocityX, double velocityY, double velocityZ) {
+        float[] color = ColorUtil.getColorsFromInt(inkColor.getColorOrLocked());
+        world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), velocityX, velocityY, velocityZ);
+    }
     public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos) {
-        float[] color = ColorUtils.getColorsFromInt(inkColor.getColorOrLocked());
-        world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d);
+        SplatcraftClientNetworking.playBlockInkingEffects(world, inkColor, scale, pos, 0.0d, 0.0d, 0.0d);
     }
 
     public static void setAndSendSquidForm(ClientPlayerEntity player, boolean isSquid) {

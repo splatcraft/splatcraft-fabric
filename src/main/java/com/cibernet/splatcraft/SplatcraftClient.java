@@ -16,11 +16,12 @@ import com.cibernet.splatcraft.client.signal.Signal;
 import com.cibernet.splatcraft.client.signal.SignalRegistryManager;
 import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.init.*;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
 import com.cibernet.splatcraft.item.remote.AbstractRemoteItem;
+import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,12 +51,15 @@ import java.util.LinkedHashMap;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitializeClient() {
         Splatcraft.log("Initializing client");
 
         // init
-        new SplatcraftKeyBindings();
+        Reflection.initialize(
+            SplatcraftKeyBindings.class
+        );
 
         // config
         SplatcraftConfigManager.load();
@@ -81,19 +85,19 @@ public class SplatcraftClient implements ClientModInitializer {
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
                 if (world != null && pos != null) {
                     BlockEntity blockEntity = world.getBlockEntity(pos);
-                    return ColorUtils.getInkColor(blockEntity != null ? blockEntity : world.getBlockEntity(pos.down())).getColorOrLocked();
+                    return ColorUtil.getInkColor(blockEntity != null ? blockEntity : world.getBlockEntity(pos.down())).getColorOrLocked();
                 }
 
                 return InkColors.NONE.color;
             }, SplatcraftBlocks.getInkables()
         );
 
-        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtils.getInkColor(stack).color, SplatcraftBlocks.getInkables());
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ColorUtil.getInkColor(stack).color, SplatcraftBlocks.getInkables());
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex > 0
             ? -1
             : stack.getItem() instanceof ColorLockItemColorProvider
-                ? ColorUtils.getInkColor(stack).getColorOrLocked()
-                : ColorUtils.getInkColor(stack).color,
+                ? ColorUtil.getInkColor(stack).getColorOrLocked()
+                : ColorUtil.getInkColor(stack).color,
             SplatcraftItems.getInkables()
         );
 
@@ -176,5 +180,9 @@ public class SplatcraftClient implements ClientModInitializer {
         for (Item item : items) {
             registerModelPredicate(item, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
         }
+    }
+
+    public static Identifier texture(String path) {
+        return new Identifier(Splatcraft.MOD_ID, "textures/" + path + ".png");
     }
 }

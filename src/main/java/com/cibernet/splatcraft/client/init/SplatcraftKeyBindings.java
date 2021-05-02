@@ -22,7 +22,7 @@ public class SplatcraftKeyBindings {
     public static final KeyBinding OPEN_SIGNAL_SELECTION_SCREEN = register("open_signal_selection_screen", GLFW.GLFW_KEY_GRAVE_ACCENT);
     public static final KeyBinding OPEN_CONFIG_MENU = register("open_config_menu", GLFW.GLFW_KEY_UNKNOWN);
 
-    public SplatcraftKeyBindings() {
+    static {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.world != null && client.player != null) {
                 boolean wasSquid = LazyPlayerDataComponent.isSquid(client.player);

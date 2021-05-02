@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.util;
 
-public class ClientUtils {
+public class ClientUtil {
     /*public static boolean canPerformRoll(PlayerEntity entity) {
         Input input = ((ClientPlayerEntity)entity).input;
         return !PlayerDataComponent.Cooldown.hasCooldown(entity) && input.jumping && (input.movementSideways != 0 || input.movementForward != 0);

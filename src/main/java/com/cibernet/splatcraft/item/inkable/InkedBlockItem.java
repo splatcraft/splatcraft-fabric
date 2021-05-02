@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.item.inkable;
 
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
-import com.cibernet.splatcraft.util.TagUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
+import com.cibernet.splatcraft.util.TagUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.BlockItem;
@@ -21,11 +21,11 @@ public class InkedBlockItem extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        ColorUtils.appendTooltip(stack, tooltip);
+        ColorUtil.appendTooltip(stack, tooltip);
     }
 
     @Override
     public Text getName(ItemStack stack) {
-        return new TranslatableText(this.getTranslationKey(stack), TagUtils.getBlockStateFromInkedBlockItem(stack).getBlock().getName());
+        return new TranslatableText(this.getTranslationKey(stack), TagUtil.getBlockStateFromInkedBlockItem(stack).getBlock().getName());
     }
 }

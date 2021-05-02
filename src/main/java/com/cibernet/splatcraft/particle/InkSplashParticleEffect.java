@@ -45,7 +45,6 @@ public class InkSplashParticleEffect extends InkedParticleEffect {
     public InkSplashParticleEffect(float[] color, float scale) {
         super(color, scale);
     }
-
     public InkSplashParticleEffect(float[] color) {
         super(color);
     }

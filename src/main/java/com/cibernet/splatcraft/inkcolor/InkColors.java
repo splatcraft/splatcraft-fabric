@@ -28,7 +28,7 @@ public class InkColors {
     private static HashMap<Identifier, InkColor> ALL = new LinkedHashMap<>();
     private static HashMap<Identifier, InkColor> CACHED_DATA = new LinkedHashMap<>();
 
-    public static final InkColor NONE = register("none", ColorUtils.DEFAULT);
+    public static final InkColor NONE = register("none", ColorUtil.DEFAULT);
 
     // starter Colors
     public static final InkColor ORANGE = register("orange", 0xDF641A);

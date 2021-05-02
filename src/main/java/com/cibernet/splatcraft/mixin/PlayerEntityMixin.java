@@ -5,7 +5,7 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.handler.PlayerHandler;
 import com.cibernet.splatcraft.handler.WeaponHandler;
 import com.cibernet.splatcraft.init.SplatcraftAttributes;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -63,7 +63,7 @@ public class PlayerEntityMixin {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         double threshold = 0.13d;
         if (PlayerHandler.shouldBeSubmerged($this) && (Math.abs(splatcraft_posLastTick.getX() - $this.getX()) >= threshold || Math.abs(splatcraft_posLastTick.getY() - $this.getY()) >= threshold || Math.abs(splatcraft_posLastTick.getZ() - $this.getZ()) >= threshold)) {
-            PlayerHandler.playSquidTravelEffects($this, ColorUtils.getInkColor($this), 1.0f);
+            PlayerHandler.playSquidTravelEffects($this, ColorUtil.getInkColor($this), 1.0f);
         }
 
         splatcraft_posLastTick = $this.getPos();
@@ -77,7 +77,7 @@ public class PlayerEntityMixin {
 
         if (lazyData.isSquid()) {
             for (int i = 0; i < Math.min(amount, 24); ++i) {
-                ColorUtils.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f, $this);
+                ColorUtil.addInkSplashParticle($this.world, data.getInkColor(), new Vec3d($this.getParticleX(0.5d), $this.getRandomBodyY() - 0.25d, $this.getParticleZ(0.5d)), 0.4f, $this);
             }
         }
     }

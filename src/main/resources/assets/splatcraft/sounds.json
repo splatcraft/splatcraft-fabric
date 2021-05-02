@@ -113,28 +113,22 @@
       "splatcraft:squid_revert"
     ]
   },
-  "ink_submerge": {
-    "subtitle": "subtitle.splatcraft.ink_submerge",
+  "entity.ink_squid.submerge": {
+    "subtitle": "subtitle.splatcraft.entity.ink_squid.submerge",
     "sounds": [
       {
-        "name": "splatcraft:ink_submerge",
+        "name": "splatcraft:entity/ink_squid/submerge",
         "pitch": 0.6
       }
     ]
   },
-  "ink_unsubmerge": {
-    "subtitle": "subtitle.splatcraft.ink_unsubmerge",
+  "entity.ink_squid.unsubmerge": {
+    "subtitle": "subtitle.splatcraft.entity.ink_squid.unsubmerge",
     "sounds": [
       {
-        "name": "splatcraft:ink_unsubmerge",
+        "name": "splatcraft:entity/ink_squid/unsubmerge",
         "pitch": 0.86
       }
-    ]
-  },
-  "ink_surface": {
-    "subtitle": "subtitle.splatcraft.ink_surface",
-    "sounds": [
-      "splatcraft:ink_surface"
     ]
   },
 

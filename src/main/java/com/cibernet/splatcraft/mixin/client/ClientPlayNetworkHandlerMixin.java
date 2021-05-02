@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,16 +26,19 @@ public class ClientPlayNetworkHandlerMixin {
         double z = packet.getZ();
 
         if (packet.getEntityTypeId() == SplatcraftEntities.INK_PROJECTILE) {
-            InkProjectileEntity entity = new InkProjectileEntity(this.world, x, y, z);
-            entity.updateTrackedPosition(x, y, z);
-            entity.refreshPositionAfterTeleport(x, y, z);
-            entity.pitch = (float)(packet.getPitch() * 360) / 256.0f;
-            entity.yaw = (float)(packet.getYaw() * 360) / 256.0f;
-            entity.setUuid(packet.getUuid());
-
-            int entityId = packet.getId();
-            entity.setEntityId(entityId);
-            this.world.addEntity(entityId, entity);
+            splatcraft_onProjectileEntitySpawn(packet, new InkProjectileEntity(this.world, x, y, z), x, y, z);
         }
+    }
+
+    private void splatcraft_onProjectileEntitySpawn(EntitySpawnS2CPacket packet, ProjectileEntity entity, double x, double y, double z) {
+        entity.updateTrackedPosition(x, y, z);
+        entity.refreshPositionAfterTeleport(x, y, z);
+        entity.pitch = (float)(packet.getPitch() * 360) / 256.0f;
+        entity.yaw = (float)(packet.getYaw() * 360) / 256.0f;
+        entity.setUuid(packet.getUuid());
+
+        int entityId = packet.getId();
+        entity.setEntityId(entityId);
+        this.world.addEntity(entityId, entity);
     }
 }

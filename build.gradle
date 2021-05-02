@@ -67,7 +67,6 @@ dependencies {
     modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }
     modRuntime "net.shadew:jedt:${project.jedt_version}"
 
-    // modRuntime "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
     modRuntime "com.github.jellysquid3:lithium-fabric:${project.lithium_version}"
     modRuntime "com.github.jellysquid3:phosphor-fabric:${project.phosphor_version}"
     modRuntime "com.github.astei:lazydfu:${project.lazydfu_version}"

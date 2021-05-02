@@ -5,12 +5,11 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-@SuppressWarnings("unused")
 public class SplatcraftSoundEvents {
     public static SoundEvent SQUID_TRANSFORM = register("squid_transform");
     public static SoundEvent SQUID_REVERT = register("squid_revert");
-    public static SoundEvent INK_SUBMERGE = register("ink_submerge");
-    public static SoundEvent INK_UNSUBMERGE = register("ink_unsubmerge");
+    public static SoundEvent ENTITY_INK_SQUID_SUBMERGE = register("entity.ink_squid.submerge");
+    public static SoundEvent ENTITY_INK_SQUID_UNSUBMERGE = register("entity.ink_squid.unsubmerge");
     public static SoundEvent INK_SURFACE = register("ink_surface");
     public static SoundEvent NO_INK = register("no_ink");
     public static SoundEvent NO_INK_SUB = register("no_ink_sub");

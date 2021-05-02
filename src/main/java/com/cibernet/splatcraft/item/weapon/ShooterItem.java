@@ -4,6 +4,7 @@ import com.cibernet.splatcraft.entity.InkProjectileEntity;
 import com.cibernet.splatcraft.handler.PlayerPoseHandler;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.inkcolor.InkType;
+import com.cibernet.splatcraft.item.DisablesAttack;
 import com.cibernet.splatcraft.item.weapon.component.ShooterComponent;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.LivingEntity;
@@ -15,29 +16,26 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class ShooterItem extends AbstractWeaponItem {
-    protected final Item.Settings settings;
+public class ShooterItem extends AbstractWeaponItem implements DisablesAttack {
     public final ShooterComponent component;
 
     public ShooterItem(Item.Settings settings, ShooterComponent component) {
-        super(settings, component.consumption);
-
-        this.settings = settings;
+        super(settings, 1.0f);
         this.component = component;
     }
-    public ShooterItem(ShooterItem shooterItem) {
-        this(shooterItem.settings, shooterItem.component);
+    public ShooterItem(ShooterItem parent) {
+        this(parent.settings, parent.component);
     }
-    public ShooterItem(ShooterItem rollerItem, ShooterComponent rollerComponent) {
-        this(rollerItem.settings, rollerComponent);
+    public ShooterItem(ShooterItem parent, ShooterComponent rollerComponent) {
+        this(parent.settings, rollerComponent);
     }
 
     @Override
     protected ImmutableList<WeaponStat> createWeaponStats() {
         return ImmutableList.of(
-            new WeaponStat("range", (stack, world) -> (int) (this.component.projectileSpeed / 1.2f * 100)),
-            new WeaponStat("damage", (stack, world) -> (int) (this.component.damage / 20 * 100)),
-            new WeaponStat("fire_rate", (stack, world) -> (int) ((11 - this.component.firingSpeed) * 10))
+            new WeaponStat("range", (int) (this.component.projectileSpeed / 1.2f * 100)),
+            new WeaponStat("damage", (int) (this.component.damage / 20 * 100)),
+            new WeaponStat("fire_rate", (int) ((11 - this.component.firingSpeed) * 10))
         );
     }
 
@@ -45,6 +43,11 @@ public class ShooterItem extends AbstractWeaponItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         this.shoot(world, user, hand);
         return super.use(world, user, hand);
+    }
+
+    @Override
+    public float getInkConsumption(float data) {
+        return this.component.consumption;
     }
 
     @Override
@@ -57,8 +60,8 @@ public class ShooterItem extends AbstractWeaponItem {
 
     public void shoot(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (hasInk(player, stack)) {
-            reduceInk(player);
+        if (this.hasInk(player, stack)) {
+            this.reduceInk(player, -1);
 
             InkProjectileEntity entity = new InkProjectileEntity(world, player, stack, InkType.from(player), this.component.size, this.component.damage).setShooterTrail();
             entity.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);

@@ -1,6 +1,7 @@
 package com.cibernet.splatcraft.client.config;
 
 import com.cibernet.splatcraft.Splatcraft;
+import com.cibernet.splatcraft.SplatcraftClient;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
@@ -8,6 +9,8 @@ import com.cibernet.splatcraft.util.ModLoaded;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import me.andante.chord.client.config.EnumOption;
 import me.andante.chord.client.config.Option;
 import me.andante.chord.client.config.RangedOption;
@@ -20,13 +23,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,8 +43,15 @@ public class SplatcraftConfigManager {
         OPTIONS.forEach(option -> jsonObject.addProperty(option.getId(), option.getValueForSave()));
 
         try (PrintWriter out = new PrintWriter(FILE)) {
-            out.println(jsonObject);
-        } catch (FileNotFoundException e) {
+            StringWriter stringWriter = new StringWriter();
+
+            JsonWriter jsonWriter = new JsonWriter(stringWriter);
+            jsonWriter.setLenient(true);
+            jsonWriter.setIndent("  ");
+
+            Streams.write(jsonObject, jsonWriter);
+            out.println(stringWriter);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -114,7 +123,7 @@ public class SplatcraftConfigManager {
     public static Screen createScreen(Screen parentScreen) {
         ConfigBuilder builder = ConfigBuilder.create()
             .setParentScreen(parentScreen)
-            .setDefaultBackgroundTexture(new Identifier(Splatcraft.MOD_ID, "textures/block/inked_block.png"))
+            .setDefaultBackgroundTexture(SplatcraftClient.texture("block/inked_block"))
             .setTitle(createConfigText("title"))
             .setSavingRunnable(SplatcraftConfigManager::save);
 
@@ -239,6 +248,8 @@ public class SplatcraftConfigManager {
         ConfigCategory INK = builder.getOrCreateCategory(createInkText());
         TranslatableText inkColoredCrosshairWhenSquid = createInkText(SplatcraftConfig.INK.inkColoredCrosshairWhenSquid.getId());
         Option<Boolean> inkColoredCrosshairWhenSquidOption = SplatcraftConfig.INK.inkColoredCrosshairWhenSquid;
+        TranslatableText inkColoredChargerIndicator = createInkText(SplatcraftConfig.INK.inkColoredChargerIndicator.getId());
+        Option<Boolean> inkColoredChargerIndicatorOption = SplatcraftConfig.INK.inkColoredChargerIndicator;
         TranslatableText inkAmountIndicator = createInkText(SplatcraftConfig.INK.inkAmountIndicator.getId());
         EnumOption<InkAmountIndicator> inkAmountIndicatorOption = SplatcraftConfig.INK.inkAmountIndicator;
         TranslatableText inkAmountIndicatorAlwaysVisible = createInkText(SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.getId());
@@ -254,6 +265,12 @@ public class SplatcraftConfigManager {
                 .setDefaultValue(inkColoredCrosshairWhenSquidOption.getDefault())
                 .setSaveConsumer(value -> inkColoredCrosshairWhenSquidOption.value = value)
                 .setTooltip(createTooltip(inkColoredCrosshairWhenSquid))
+                .build()
+        ).addEntry(
+            entryBuilder.startBooleanToggle(inkColoredChargerIndicator, inkColoredChargerIndicatorOption.value)
+                .setDefaultValue(inkColoredChargerIndicatorOption.getDefault())
+                .setSaveConsumer(value -> inkColoredChargerIndicatorOption.value = value)
+                .setTooltip(createTooltip(inkColoredChargerIndicator))
                 .build()
         ).addEntry(
             entryBuilder.startEnumSelector(inkAmountIndicator, inkAmountIndicatorOption.getClazz(), inkAmountIndicatorOption.value)

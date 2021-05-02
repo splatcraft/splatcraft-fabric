@@ -40,7 +40,10 @@ public class RollerComponent {
     }
 
     public static RollerComponent copy(RollerItem item) {
-        return item.component;
+        return item.component.copy();
+    }
+    public RollerComponent copy() {
+        return new RollerComponent(this.consumption, this.radius, this.damage, this.speed, this.brush, this.fling.copy());
     }
 
     public static class Fling {
@@ -57,7 +60,10 @@ public class RollerComponent {
         }
 
         public static Fling copy(RollerItem item) {
-            return item.component.fling;
+            return item.component.fling.copy();
+        }
+        public Fling copy() {
+            return new Fling(this.consumption, this.size, this.damage, this.speed);
         }
     }
 }

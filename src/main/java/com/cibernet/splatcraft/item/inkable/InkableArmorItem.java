@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.item.inkable;
 import com.cibernet.splatcraft.block.InkwellBlock;
 import com.cibernet.splatcraft.block.entity.AbstractInkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftItems;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.item.EntityTickable;
@@ -37,15 +37,15 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        ColorUtils.appendTooltip(stack, tooltip);
+        ColorUtil.appendTooltip(stack, tooltip);
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof PlayerEntity) {
-            InkColor inkColor = ColorUtils.getInkColor((PlayerEntity) entity);
-            if (!ColorUtils.isColorLocked(stack) && !inkColor.equals(ColorUtils.getInkColor(stack))) {
-                ColorUtils.setInkColor(stack, inkColor);
+            InkColor inkColor = ColorUtil.getInkColor((PlayerEntity) entity);
+            if (!ColorUtil.isColorLocked(stack) && !inkColor.equals(ColorUtil.getInkColor(stack))) {
+                ColorUtil.setInkColor(stack, inkColor);
             }
         }
 
@@ -61,14 +61,14 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
             if (blockEntity instanceof AbstractInkableBlockEntity) {
                 AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
 
-                if (ColorUtils.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtils.isColorLocked(stack)) {
-                    ColorUtils.setInkColor(stack, inkableBlockEntity.getInkColor());
-                    ColorUtils.setColorLocked(stack, true);
+                if (ColorUtil.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtil.isColorLocked(stack)) {
+                    ColorUtil.setInkColor(stack, inkableBlockEntity.getInkColor());
+                    ColorUtil.setColorLocked(stack, true);
                 }
             }
-        } else if (entity.world.getFluidState(pos.up()).isIn(FluidTags.WATER) && ColorUtils.isColorLocked(stack)) {
-            ColorUtils.setInkColor(stack, InkColors.NONE);
-            ColorUtils.setColorLocked(stack, false);
+        } else if (entity.world.getFluidState(pos.up()).isIn(FluidTags.WATER) && ColorUtil.isColorLocked(stack)) {
+            ColorUtil.setInkColor(stack, InkColors.NONE);
+            ColorUtil.setColorLocked(stack, false);
         }
     }
 
@@ -80,6 +80,6 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
     @Environment(EnvType.CLIENT)
     @Override
     public int getColor(ItemStack stack) {
-        return ColorUtils.getInkColor(stack).getColorOrLocked();
+        return ColorUtil.getInkColor(stack).getColorOrLocked();
     }
 }

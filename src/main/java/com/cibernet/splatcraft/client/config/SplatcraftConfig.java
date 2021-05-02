@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.client.config;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import me.andante.chord.client.config.EnumOption;
 import me.andante.chord.client.config.Option;
 import me.andante.chord.client.config.RangedOption;
@@ -71,6 +71,10 @@ public class SplatcraftConfig {
          */
         public Option<Boolean> inkColoredCrosshairWhenSquid = register(new Option<>("ink_colored_crosshair_when_squid", true));
         /**
+         * Enable or disable an ink-colored charger indicator.
+         */
+        public Option<Boolean> inkColoredChargerIndicator = register(new Option<>("ink_colored_charger_indicator", false));
+        /**
          * Choose where the ink amount indicator is displayed, if at all.
          */
         public EnumOption<InkAmountIndicator> inkAmountIndicator = register(new EnumOption<>("ink_amount_indicator", InkAmountIndicator.class, InkAmountIndicator.HOTBAR));
@@ -105,11 +109,11 @@ public class SplatcraftConfig {
         /**
          * Your color when color lock is enabled.
          */
-        public Option<Integer> colorLockFriendly = register(new Option<>("color_lock_friendly", ColorUtils.DEFAULT_COLOR_LOCK_FRIENDLY));
+        public Option<Integer> colorLockFriendly = register(new Option<>("color_lock_friendly", ColorUtil.DEFAULT_COLOR_LOCK_FRIENDLY));
         /**
          * Others' color when color lock is enabled.
          */
-        public Option<Integer> colorLockHostile = register(new Option<>("color_lock_hostile", ColorUtils.DEFAULT_COLOR_LOCK_HOSTILE));
+        public Option<Integer> colorLockHostile = register(new Option<>("color_lock_hostile", ColorUtil.DEFAULT_COLOR_LOCK_HOSTILE));
     }
 
     public static CompatibilityGroup COMPATIBILITY = new CompatibilityGroup();

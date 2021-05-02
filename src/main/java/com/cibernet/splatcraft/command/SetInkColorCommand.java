@@ -2,7 +2,7 @@ package com.cibernet.splatcraft.command;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.command.argument.InkColorArgumentType;
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.util.StringConstants;
@@ -37,8 +37,8 @@ public class SetInkColorCommand {
         Entity self = source.getEntity();
 
         if (self != null) {
-            if (ColorUtils.setInkColor(self, inkColor)) {
-                source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_SELF, self.getDisplayName(), ColorUtils.getFormattedColorName(inkColor, false)), true);
+            if (ColorUtil.setInkColor(self, inkColor)) {
+                source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_SELF, self.getDisplayName(), ColorUtil.getFormattedColorName(inkColor, false)), true);
             } else {
                 throw SplatcraftCommandExceptions.NO_INK_SET.create();
             }
@@ -53,16 +53,16 @@ public class SetInkColorCommand {
         int affected = 0;
         Entity lastAffected = null;
         for (Entity entity : entities) {
-            if (ColorUtils.setInkColor(entity, inkColor)) {
+            if (ColorUtil.setInkColor(entity, inkColor)) {
                 affected++;
                 lastAffected = entity;
             }
         }
 
         if (affected == 1) {
-            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_SELF, lastAffected.getDisplayName(), ColorUtils.getFormattedColorName(inkColor, false)), true);
+            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_SELF, lastAffected.getDisplayName(), ColorUtil.getFormattedColorName(inkColor, false)), true);
         } else if (affected > 0) {
-            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_OTHER, affected, ColorUtils.getFormattedColorName(inkColor, false)), true);
+            source.sendFeedback(new TranslatableText(StringConstants.COMMAND_SETINKCOLOR_SUCCESS_OTHER, affected, ColorUtil.getFormattedColorName(inkColor, false)), true);
         } else {
             throw SplatcraftCommandExceptions.NO_INK_SET.create();
         }

@@ -1,6 +1,6 @@
 package com.cibernet.splatcraft.item.inkable;
 
-import com.cibernet.splatcraft.inkcolor.ColorUtils;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import me.andante.chord.item.TabbedItemGroupAppendLogic;
 import net.minecraft.block.Block;
@@ -21,12 +21,12 @@ public class InkableBlockItem extends BlockItem implements TabbedItemGroupAppend
     @Override
     public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
-            InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtils.setInkColor(new ItemStack(this, 1, Optional.of(new CompoundTag())), inkColor)));
+            InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtil.setInkColor(new ItemStack(this, 1, Optional.of(new CompoundTag())), inkColor)));
         }
     }
 
     @Override
     public Text getName(ItemStack stack) {
-        return ColorUtils.getTranslatableTextWithColor(stack, true);
+        return ColorUtil.getTranslatableTextWithColor(stack, true);
     }
 }
