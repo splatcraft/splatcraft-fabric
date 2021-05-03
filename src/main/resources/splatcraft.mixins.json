@@ -6,7 +6,7 @@
   "mixins": [
     "BlockMixin", "EntityMixin", "EntityShapeContextMixin", "ItemEntityMixin", "ItemStackMixin",
     "LivingEntityMixin", "PlayerEntityMixin", "PlayerInventoryMixin", "ServerPlayerEntityMixin",
-    "SquidBlockCollisionMixin"
+    "SquidBlockCollisionMixin", "TextSerializerMixin"
   ],
   "client": [
     "client.ArmorFeatureRendererMixin", "client.ClientItemStackMixin", "client.ClientPlayerEntityMixin",
