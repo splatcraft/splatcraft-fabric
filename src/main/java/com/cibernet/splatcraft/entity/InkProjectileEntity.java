@@ -197,7 +197,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
         if (lifetime <= 0) {
             InkExplosion.create(this.world, this.getOwner(), this.getBlockPos(), inkColor, inkType, this.getProjectileSize() * 0.85f, this.playsEffects());
 
-            world.playSound(null, this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
+            world.playSoundFromEntity(null, this, SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
 
             this.remove();
         } else {

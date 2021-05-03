@@ -188,10 +188,10 @@ public class SplatcraftClientNetworking {
             if (lazyData.isSquid()) {
                 if (!lazyData.isSubmerged()) {
                     if (random.nextFloat() <= 0.9f) {
-                        player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15f, 1.0f, false);
+                        player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.BLOCK_HONEY_BLOCK_FALL, SoundCategory.PLAYERS, 0.15f, 1.0f, true);
                     }
                 } else {
-                    player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05f, 2.0f, false);
+                    player.world.playSound(player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_SWIM, SoundCategory.PLAYERS, 0.05f, 2.0f, true);
                 }
             }
         }

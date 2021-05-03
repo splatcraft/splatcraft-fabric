@@ -71,7 +71,7 @@ public class InkExplosion extends Explosion {
     @Override
     public void affectWorld(boolean spawnEffects) {
         if (spawnEffects && this.world.isClient) {
-            this.world.playSound(this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.ENTITY_INK_SQUID_SUBMERGE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, false);
+            this.world.playSound(this.getX(), this.getY(), this.getZ(), SplatcraftSoundEvents.ENTITY_INK_SQUID_SUBMERGE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.random.nextFloat() - this.world.random.nextFloat()) * 0.2F) * 0.7F, true);
 
             double sizeReciprocal = 3.0d / this.size;
             for (int i = 0; i < this.size * 17; i++) {
