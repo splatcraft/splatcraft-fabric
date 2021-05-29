@@ -59,11 +59,9 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // init
         Reflection.initialize(
-            SplatcraftKeyBindings.class
+            SplatcraftKeyBindings.class,
+            SplatcraftConfigManager.class
         );
-
-        // config
-        SplatcraftConfigManager.load();
 
         // ink colors
         InkColorSynchroniser.rebuildIfNeeded(new LinkedHashMap<>());

@@ -38,6 +38,10 @@ public class SplatcraftConfigManager {
     private static final File FILE = FabricLoader.getInstance().getConfigDir().toFile().toPath().resolve(Splatcraft.MOD_ID + ".json").toFile();
     public static final List<Option<?>> OPTIONS = new LinkedList<>();
 
+    static {
+        SplatcraftConfigManager.load();
+    }
+
     public static void save() {
         JsonObject jsonObject = new JsonObject();
         OPTIONS.forEach(option -> jsonObject.addProperty(option.getId(), option.getValueForSave()));
