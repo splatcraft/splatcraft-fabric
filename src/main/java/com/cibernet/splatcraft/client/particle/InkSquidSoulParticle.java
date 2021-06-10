@@ -97,7 +97,7 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
             float minV = this.getMinV();
             float maxV = this.getMaxV();
             int light = 15728880;
-            //this.getBrightnessForRender(tickDelta);
+            // this.getColorMultiplier(tickDelta);
 
             vertexConsumer.vertex(vector3fs[0].getX(), vector3fs[0].getY(), vector3fs[0].getZ()).texture(maxU, maxV).color(r, g, b, a).light(light).next();
             vertexConsumer.vertex(vector3fs[1].getX(), vector3fs[1].getY(), vector3fs[1].getZ()).texture(maxU, minV).color(r, g, b, a).light(light).next();
