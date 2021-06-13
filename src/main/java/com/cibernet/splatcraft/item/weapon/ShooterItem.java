@@ -64,7 +64,7 @@ public class ShooterItem extends AbstractWeaponItem implements DisablesAttack {
             this.reduceInk(player, -1);
 
             InkProjectileEntity entity = new InkProjectileEntity(world, player, stack, InkType.from(player), this.component.size, this.component.damage).setShooterTrail();
-            entity.setProperties(player, player.pitch, player.yaw, 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
+            entity.setProperties(player, player.getPitch(), player.getYaw(), 0.0f, this.component.projectileSpeed, this.component.inaccuracy);
             world.spawnEntity(entity);
 
             world.playSound(null, player.getX(), player.getY() + 1, player.getZ(), SplatcraftSoundEvents.SHOOTER_FIRING, SoundCategory.PLAYERS, 0.7f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);

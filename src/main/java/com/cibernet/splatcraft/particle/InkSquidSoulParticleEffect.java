@@ -23,7 +23,7 @@ public class InkSquidSoulParticleEffect extends InkedParticleEffect {
     ).apply(instance, InkSquidSoulParticleEffect::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleEffect.Factory<InkSquidSoulParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<InkSquidSoulParticleEffect>() {
+    public static final ParticleEffect.Factory<InkSquidSoulParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<>() {
         @Override
         public InkSquidSoulParticleEffect read(ParticleType<InkSquidSoulParticleEffect> particleType, StringReader stringReader) throws CommandSyntaxException {
             stringReader.expect(' ');

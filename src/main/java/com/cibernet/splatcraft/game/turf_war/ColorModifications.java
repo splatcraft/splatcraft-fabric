@@ -13,10 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public class ColorModifications {
     public static boolean changeInkColor(World world, @Nullable PlayerEntity player, InkColor inkColor, BlockPos pos, ColorModificationMode mode) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractInkableBlockEntity) {
-            AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
+        if (blockEntity instanceof AbstractInkableBlockEntity inkableBlockEntity) {
             InkColor blockInkColor = inkableBlockEntity.getInkColor();
-
             if (mode == ColorModificationMode.ALL) {
                 if (inkableBlockEntity.hasBaseInkColor()) {
                     inkableBlockEntity.setBaseInkColor(inkColor);
@@ -44,8 +42,7 @@ public class ColorModifications {
 
     public static boolean clearInk(World world, @Nullable PlayerEntity player, BlockPos pos, ColorModificationMode mode) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractInkableBlockEntity) {
-            AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
+        if (blockEntity instanceof AbstractInkableBlockEntity inkableBlockEntity) {
             AbstractInkableBlock inkableBlock = (AbstractInkableBlock) world.getBlockState(pos).getBlock();
             InkColor blockInkColor = inkableBlockEntity.getInkColor();
 

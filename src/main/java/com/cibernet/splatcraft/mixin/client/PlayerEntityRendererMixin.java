@@ -6,11 +6,11 @@ import com.cibernet.splatcraft.client.signal.SignalRendererManager;
 import com.cibernet.splatcraft.component.LazyPlayerDataComponent;
 import com.cibernet.splatcraft.entity.player.signal.AnimatablePlayerEntity;
 import com.cibernet.splatcraft.handler.PlayerHandler;
+import com.cibernet.splatcraft.util.Util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,16 +48,14 @@ public class PlayerEntityRendererMixin {
     }
 
     private void splatcraft_validateModelCaches(AbstractClientPlayerEntity entity) {
-        EntityRenderDispatcher dispatcher = PlayerEntityRenderer.class.cast(this).getRenderManager();
-
         if (splatcraft_playerInkSquidRenderer == null) {
-            splatcraft_playerInkSquidRenderer = new PlayerEntityInkSquidRenderer(dispatcher);
+            splatcraft_playerInkSquidRenderer = new PlayerEntityInkSquidRenderer(Util.createEntityRendererFactoryContext());
         }
 
         Map<AbstractClientPlayerEntity, AnimatablePlayerEntityRenderer> renderers = SignalRendererManager.PLAYER_SIGNAL_ENTITY_RENDERERS;
         if (!renderers.containsKey(entity) && SignalRendererManager.PLAYER_TO_SIGNAL_MAP.containsKey(entity)) {
             PlayerEntityRenderer $this = PlayerEntityRenderer.class.cast(this);
-            renderers.put(entity, SignalRendererManager.createRenderer(dispatcher, entity, $this.getModel()));
+            renderers.put(entity, SignalRendererManager.createRenderer(Util.createEntityRendererFactoryContext(), entity, $this.getModel()));
         }
         renderers.entrySet().removeAll(
             renderers.entrySet()

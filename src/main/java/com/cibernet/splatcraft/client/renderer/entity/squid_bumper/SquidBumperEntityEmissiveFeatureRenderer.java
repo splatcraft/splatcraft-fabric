@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
@@ -18,11 +19,14 @@ public class SquidBumperEntityEmissiveFeatureRenderer<T extends SquidBumperEntit
     public static final Identifier TEXTURE = SplatcraftEntities.texture(SquidBumperEntity.id + "/" + SquidBumperEntity.id + "_overlay");
 
     private static final RenderLayer RENDER_LAYER = RenderLayer.of(
-        new Identifier(Splatcraft.MOD_ID, SquidBumperEntity.id + "_emissive").toString(), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
-        7, 256, false, true,
+        new Identifier(Splatcraft.MOD_ID, SquidBumperEntity.id + "_emissive").toString(),
+        VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
+        VertexFormat.DrawMode.QUADS, 256, false, true,
         RenderLayer.MultiPhaseParameters.builder()
+            .shader(RenderLayer.EYES_SHADER)
             .texture(new RenderPhase.Texture(TEXTURE, false, false))
-            .alpha(new RenderPhase.Alpha(0.0001f))
+            .transparency(RenderLayer.ADDITIVE_TRANSPARENCY)
+            .writeMaskState(RenderLayer.COLOR_MASK)
             .build(false)
     );
 

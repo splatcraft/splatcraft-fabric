@@ -15,7 +15,7 @@ public class SquidBumperEntityColorFeatureRenderer<T extends SquidBumperEntity> 
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        float[] color = ColorUtil.getColorsFromInt(ColorUtil.getInkColor(entity).getColorOrLocked());
+        float[] color = ColorUtil.getInkColor(entity).getColorOrLockedComponents();
         renderModel(this.getContextModel(), SquidBumperEntityRenderer.TEXTURE, matrices, vertices, light, entity, color[0], color[1], color[2]);
     }
 }

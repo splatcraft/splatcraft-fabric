@@ -3,10 +3,11 @@ package com.cibernet.splatcraft.block;
 import com.cibernet.splatcraft.block.entity.InkableBlockEntity;
 import com.cibernet.splatcraft.init.SplatcraftBlocks;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class CanvasBlock extends AbstractInkableBlock {
     public static final String id = "canvas";
@@ -17,8 +18,8 @@ public class CanvasBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new InkableBlockEntity();
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new InkableBlockEntity(pos, state);
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.cibernet.splatcraft;
 
 import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
+import com.cibernet.splatcraft.client.init.SplatcraftEntityModelLayers;
 import com.cibernet.splatcraft.client.init.SplatcraftKeyBindings;
-import com.cibernet.splatcraft.client.model.ink_tank.AbstractInkTankArmorModel;
+import com.cibernet.splatcraft.client.model.entity.InkProjectileEntityModel;
+import com.cibernet.splatcraft.client.model.entity.InkSquidEntityModel;
+import com.cibernet.splatcraft.client.model.entity.SquidBumperEntityModel;
 import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.client.particle.InkSplashParticle;
 import com.cibernet.splatcraft.client.particle.InkSquidSoulParticle;
@@ -19,9 +22,9 @@ import com.cibernet.splatcraft.init.*;
 import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColorSynchroniser;
 import com.cibernet.splatcraft.inkcolor.InkColors;
-import com.cibernet.splatcraft.item.InkTankArmorItem;
 import com.cibernet.splatcraft.item.inkable.ColorLockItemColorProvider;
 import com.cibernet.splatcraft.item.remote.AbstractRemoteItem;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -29,16 +32,17 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.ModelPredicateProvider;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.item.Item;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.resource.ResourceManager;
@@ -52,7 +56,7 @@ import java.util.LinkedHashMap;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings({"UnstableApiUsage","deprecation"})
     @Override
     public void onInitializeClient() {
         Splatcraft.log("Initializing client");
@@ -77,8 +81,14 @@ public class SplatcraftClient implements ClientModInitializer {
         errInstance.register(SplatcraftEntities.SQUID_BUMPER, SquidBumperEntityRenderer::new);
         errInstance.register(SplatcraftEntities.INK_PROJECTILE, InkProjectileEntityRenderer::new);
 
+        ImmutableMap.<EntityModelLayer, EntityModelLayerRegistry.TexturedModelDataProvider>of(
+            SplatcraftEntityModelLayers.INK_PROJECTILE, InkProjectileEntityModel::getTexturedModelData,
+            SplatcraftEntityModelLayers.INK_SQUID, InkSquidEntityModel::getTexturedModelData,
+            SplatcraftEntityModelLayers.SQUID_BUMPER, SquidBumperEntityModel::getTexturedModelData
+        ).forEach(EntityModelLayerRegistry::registerModelLayer);
+
         // custom armor models
-        ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
+        // ArmorRenderingRegistry.registerModel((entity, stack, slot, defaultModel) -> ((InkTankArmorItem) stack.getItem()).getArmorModel(entity, stack, slot, defaultModel), AbstractInkTankArmorModel.ITEM_TO_MODEL_MAP.keySet());
 
         // color providers
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
@@ -102,8 +112,8 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // model predicates
         for (Item item : new Item[] { SplatcraftItems.COLOR_CHANGER, SplatcraftItems.INK_DISRUPTOR, SplatcraftItems.TURF_SCANNER }) {
-            registerModelPredicate(item, "active", (stack, world, entity) -> AbstractRemoteItem.hasCornerPair(stack) ? 1.0f : 0.0f);
-            registerModelPredicate(item, "mode", (stack, world, entity) -> {
+            registerModelPredicate(item, "active", (stack, world, entity, seed) -> AbstractRemoteItem.hasCornerPair(stack) ? 1.0f : 0.0f);
+            registerModelPredicate(item, "mode", (stack, world, entity, seed) -> {
                 Item pItem = stack.getItem();
                 if (pItem instanceof AbstractRemoteItem) {
                     return ((AbstractRemoteItem) pItem).getRemoteModeOrdinal(stack);
@@ -122,7 +132,7 @@ public class SplatcraftClient implements ClientModInitializer {
             }
 
             @Override
-            public void apply(ResourceManager manager) {
+            public void reload(ResourceManager manager) {
                 Collection<Identifier> signals = manager.findResources("animations/" + Splatcraft.MOD_ID + "/signals", (r) -> r.endsWith(".json") || r.endsWith(".json5"));
                 HashMap<Identifier, Signal> loaded = new LinkedHashMap<>();
 
@@ -172,12 +182,12 @@ public class SplatcraftClient implements ClientModInitializer {
         Splatcraft.log("Initialized client");
     }
 
-    private static void registerModelPredicate(Item item, String id, ModelPredicateProvider provider) {
+    private static void registerModelPredicate(Item item, String id, UnclampedModelPredicateProvider provider) {
         FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
     }
     private static void registerUnfoldedModelPredicate(Item... items) {
         for (Item item : items) {
-            registerModelPredicate(item, "unfolded", (stack, world, entity) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
+            registerModelPredicate(item, "unfolded", (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0f : 0.0f);
         }
     }
 

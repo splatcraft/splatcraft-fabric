@@ -2,34 +2,46 @@ package com.cibernet.splatcraft.inkcolor;
 
 import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
+import com.cibernet.splatcraft.client.config.SplatcraftConfigManager;
 import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.util.TagUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class InkColor {
     public final int color;
+    public final float[] colorComponents;
     public final Identifier id;
+    public final String idStr;
 
     public InkColor(Identifier id, int color) {
         this.id = id;
         this.color = color;
+        this.colorComponents = ColorUtil.getRgbFromDecimal(color);
+        this.idStr = this.id.toString();
+    }
+    public InkColor(Identifier id, float[] colorComponents) {
+        this.id = id;
+        this.color = ColorUtil.getDecimalFromRgb(colorComponents);
+        this.colorComponents = colorComponents;
+        this.idStr = this.id.toString();
     }
     public InkColor(String id, int color) {
         this(Identifier.tryParse(id), color);
     }
     public InkColor(DyeColor dyeColor) {
-        this(new Identifier(dyeColor.getName()), dyeColor.color);
+        this(new Identifier(dyeColor.getName()), dyeColor.getColorComponents());
     }
 
     public String getTranslationKey() {
@@ -45,8 +57,8 @@ public class InkColor {
         return InkColor.from(Identifier.tryParse(identifier));
     }
     @NotNull
-    public static InkColor fromNonNull(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
+    public static InkColor fromNonNull(NbtCompound tag) {
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
         return InkColor.fromNonNull(splatcraft.getString("InkColor"));
     }
     @NotNull
@@ -68,18 +80,31 @@ public class InkColor {
                 : SplatcraftConfig.ACCESSIBILITY.colorLockHostile.value
             : this.color;
     }
+    @Environment(EnvType.CLIENT)
+    public float[] getColorOrLockedComponents() {
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        return !this.equals(InkColors.NONE) && SplatcraftConfig.ACCESSIBILITY.colorLock.value
+            ? player != null && this.matches(PlayerDataComponent.getInkColor(player).color)
+                ? SplatcraftConfigManager.getLockedColorComponentsCacheFriendly()
+                : SplatcraftConfigManager.getLockedColorComponentsCacheHostile()
+            : this.colorComponents;
+    }
 
     @Override
     public String toString() {
-        return this.id.toString();
+        return this.idStr;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         InkColor inkColor = (InkColor) o;
-        return color == inkColor.color && Objects.equals(id, inkColor.id);
+        return color == inkColor.color && Arrays.equals(colorComponents, inkColor.colorComponents) && Objects.equals(id, inkColor.id) && Objects.equals(idStr, inkColor.idStr);
     }
 
     /**
@@ -89,10 +114,15 @@ public class InkColor {
         return this.color == color;
     }
 
-    public Tag toTag() {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", id.toString());
-        tag.putInt("Color", color);
+    public NbtElement writeNbt() {
+        NbtCompound tag = new NbtCompound();
+        tag.putString("id", this.toString());
+
+        NbtCompound colorTag = new NbtCompound();
+        colorTag.putFloat("r", this.colorComponents[0]);
+        colorTag.putFloat("g", this.colorComponents[1]);
+        colorTag.putFloat("b", this.colorComponents[2]);
+        tag.put("Color", colorTag);
 
         return tag;
     }

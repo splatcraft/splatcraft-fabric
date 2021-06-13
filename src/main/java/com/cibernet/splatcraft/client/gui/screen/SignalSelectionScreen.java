@@ -12,7 +12,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.NarratorManager;
@@ -97,9 +99,10 @@ public class SignalSelectionScreen extends Screen {
             }
 
             // render background texture(s)
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             matrices.push();
             RenderSystem.enableBlend();
-            this.client.getTextureManager().bindTexture(TEXTURE);
+            RenderSystem.setShaderTexture(0, TEXTURE);
             int x = this.width / 2 - 62;
             int y = this.height / 2 - (HEADER_SIZE + BUTTON_SIZE);
             drawTexture(matrices, x, y, 0.0f, 0.0f, 125, 75, 128, 128);
@@ -173,7 +176,7 @@ public class SignalSelectionScreen extends Screen {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class ButtonWidget extends AbstractButtonWidget {
+    public static class ButtonWidget extends ClickableWidget {
         private final Signal signal;
         private boolean selected;
 
@@ -201,7 +204,8 @@ public class SignalSelectionScreen extends Screen {
         }
 
         private void renderIcon(MatrixStack matrices, TextureManager textureManager) {
-            textureManager.bindTexture(this.selected ? selectedTexture : texture);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, this.selected ? selectedTexture : texture);
             matrices.push();
             matrices.translate(this.x, this.y, 0.0d);
             drawTexture(matrices, 0, 0, BUTTON_TEXTURE_SIZE, 0.0f, BUTTON_TEXTURE_SIZE, BUTTON_TEXTURE_SIZE, 28, 28);
@@ -210,11 +214,11 @@ public class SignalSelectionScreen extends Screen {
 
         public void setSelected(boolean selected) {
             this.selected = selected;
-            this.narrate();
         }
 
         private void drawBackground(MatrixStack matrices, TextureManager textureManager) {
-            textureManager.bindTexture(SignalSelectionScreen.TEXTURE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, TEXTURE);
             matrices.push();
             matrices.translate(this.x, this.y, 0.0d);
             drawTexture(matrices, 0, 0, 0.0f, 75.0f, BUTTON_TEXTURE_SIZE, BUTTON_TEXTURE_SIZE, 128, 128);
@@ -222,11 +226,17 @@ public class SignalSelectionScreen extends Screen {
         }
 
         private void drawSelectionBox(MatrixStack matrices, TextureManager textureManager) {
-            textureManager.bindTexture(SignalSelectionScreen.TEXTURE);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, TEXTURE);
             matrices.push();
             matrices.translate(this.x, this.y, 0.0d);
             drawTexture(matrices, 0, 0, BUTTON_TEXTURE_SIZE, 75.0f, BUTTON_TEXTURE_SIZE, BUTTON_TEXTURE_SIZE, 128, 128);
             matrices.pop();
+        }
+
+        @Override
+        public void appendNarrations(NarrationMessageBuilder builder) {
+            this.method_37021(builder);
         }
     }
 }

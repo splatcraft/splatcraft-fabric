@@ -58,7 +58,7 @@ public class ChargerItem extends AbstractWeaponItem implements DisablesAttack {
 
         float projectileSpeed = 0.5f + ((this.component.projectile.speed / 10) * (InkItemUtil.getInkAmount(player, stack) / InkItemUtil.getInkTankCapacity(player)));
         proj.setProperties(
-            player, player.pitch, player.yaw, 0.0f,
+            player, player.getPitch(), player.getYaw(), 0.0f,
             this.component.projectile.chargeAffectsSpeed
                 ? ((float) chargeTime / this.component.maxCharge) * projectileSpeed
                 : projectileSpeed,
@@ -72,14 +72,12 @@ public class ChargerItem extends AbstractWeaponItem implements DisablesAttack {
         // reduce ink
         this.reduceInk(player, chargeTime);
         // cooldown
-        PlayerDataComponent.setCooldown(player, this.component.cooldownTime, player.inventory.selectedSlot, true);
+        PlayerDataComponent.setCooldown(player, this.component.cooldownTime, player.getInventory().selectedSlot, true);
     }
 
     @Override
     public void usageTick(World world, LivingEntity entity, ItemStack stack, int remainingUseTicks) {
-        if (!world.isClient && entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-
+        if (!world.isClient && entity instanceof PlayerEntity player) {
             Charge charge = Charge.getCharge(player);
             int chargeTime = charge.getTime();
 
@@ -97,14 +95,12 @@ public class ChargerItem extends AbstractWeaponItem implements DisablesAttack {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity entity, int remainingUseTicks) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-
+        if (entity instanceof PlayerEntity player) {
             if (this.canUse(player)) {
                 this.shoot(stack, world, player);
             }
 
-            Charge.resetCharge(player, Util.getSlotWithStack(player.inventory, stack), true);
+            Charge.resetCharge(player, Util.getSlotWithStack(player.getInventory(), stack), true);
         }
     }
 

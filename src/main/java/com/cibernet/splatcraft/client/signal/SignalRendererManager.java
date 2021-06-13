@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -34,8 +34,8 @@ public class SignalRendererManager {
         PLAYER_SIGNAL_ENTITY_RENDERERS.remove(player);
     }
 
-    public static AnimatablePlayerEntityRenderer createRenderer(EntityRenderDispatcher dispatcher, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> model) {
-        return new AnimatablePlayerEntityRenderer(dispatcher, player, SignalRendererManager.PLAYER_TO_SIGNAL_MAP.get(player), model.thinArms);
+    public static AnimatablePlayerEntityRenderer createRenderer(EntityRendererFactory.Context ctx, AbstractClientPlayerEntity player, PlayerEntityModel<AbstractClientPlayerEntity> model) {
+        return new AnimatablePlayerEntityRenderer(ctx, player, SignalRendererManager.PLAYER_TO_SIGNAL_MAP.get(player), model.thinArms);
     }
 
     public static ActionResult reset(PlayerEntity player) {

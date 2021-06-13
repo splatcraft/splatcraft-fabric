@@ -19,17 +19,17 @@ public class InkSplashParticleEffect extends InkedParticleEffect {
     ).apply(instance, InkSplashParticleEffect::new));
 
     @SuppressWarnings("deprecation")
-    public static final ParticleEffect.Factory<InkSplashParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<InkSplashParticleEffect>() {
+    public static final ParticleEffect.Factory<InkSplashParticleEffect> PARAMETERS_FACTORY = new ParticleEffect.Factory<>() {
         @Override
         public InkSplashParticleEffect read(ParticleType<InkSplashParticleEffect> particleType, StringReader stringReader) throws CommandSyntaxException {
             stringReader.expect(' ');
-            float r = (float)stringReader.readDouble();
+            float r = (float) stringReader.readDouble();
             stringReader.expect(' ');
-            float g = (float)stringReader.readDouble();
+            float g = (float) stringReader.readDouble();
             stringReader.expect(' ');
-            float b = (float)stringReader.readDouble();
+            float b = (float) stringReader.readDouble();
             stringReader.expect(' ');
-            float scale = (float)stringReader.readDouble();
+            float scale = (float) stringReader.readDouble();
             return new InkSplashParticleEffect(r, g, b, scale);
         }
 

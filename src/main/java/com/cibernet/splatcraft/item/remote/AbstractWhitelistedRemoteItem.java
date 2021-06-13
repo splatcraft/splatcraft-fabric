@@ -27,7 +27,7 @@ public abstract class AbstractWhitelistedRemoteItem extends AbstractRemoteItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (!player.isSneaking() || player.abilities.flying) {
+        if (!player.isSneaking() || player.getAbilities().flying) {
             if (AbstractRemoteItem.hasCornerPair(stack)) {
                 try {
                     int affected = 0;
@@ -42,7 +42,7 @@ public abstract class AbstractWhitelistedRemoteItem extends AbstractRemoteItem {
                     int maxZ = Math.max(cornerA.getZ(), cornerB.getZ());
 
                     for (BlockPos pos : BlockPos.iterate(cornerA, cornerB)) {
-                        if (minY < 0 || maxY > (player.world.getDimensionHeight() - 1)) {
+                        if (minY < 0 || maxY > (player.world.getHeight() - 1)) {
                             throw new IllegalArgumentException("out_of_world");
                         } else {
                             ChunkManager chunkManager = player.world.getChunkManager();
@@ -83,7 +83,8 @@ public abstract class AbstractWhitelistedRemoteItem extends AbstractRemoteItem {
 
     @Override
     public float getRemoteModeOrdinal(ItemStack stack) {
-        return ColorModificationMode.valueOf(AbstractRemoteItem.getRemoteMode(stack)).ordinal();
+        String remoteMode = AbstractRemoteItem.getRemoteMode(stack);
+        return (remoteMode.isEmpty() ? ColorModificationMode.getDefault() : ColorModificationMode.valueOf(remoteMode)).ordinal();
     }
 
     @Override

@@ -5,6 +5,8 @@ import com.cibernet.splatcraft.SplatcraftClient;
 import com.cibernet.splatcraft.client.config.enums.InkAmountIndicator;
 import com.cibernet.splatcraft.client.config.enums.PreventBobView;
 import com.cibernet.splatcraft.client.config.enums.SquidFormKeyBehavior;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
+import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.util.ModLoaded;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -37,6 +39,15 @@ import java.util.List;
 public class SplatcraftConfigManager {
     private static final File FILE = FabricLoader.getInstance().getConfigDir().toFile().toPath().resolve(Splatcraft.MOD_ID + ".json").toFile();
     public static final List<Option<?>> OPTIONS = new LinkedList<>();
+
+    private static float[] lockedColorComponentsCacheFriendly = InkColors.NONE.colorComponents;
+    private static float[] lockedColorComponentsCacheHostile  = InkColors.NONE.colorComponents;
+    public static float[] getLockedColorComponentsCacheFriendly() {
+        return lockedColorComponentsCacheFriendly;
+    }
+    public static float[] getLockedColorComponentsCacheHostile() {
+        return lockedColorComponentsCacheHostile;
+    }
 
     static {
         SplatcraftConfigManager.load();
@@ -346,6 +357,9 @@ public class SplatcraftConfigManager {
                 .setSaveConsumer(value -> {
                     int oldValue = colorLockFriendlyOption.value;
                     colorLockFriendlyOption.value = value;
+                    colorLockHostileOption.value = value;
+
+                    lockedColorComponentsCacheFriendly = ColorUtil.getRgbFromDecimal(colorLockFriendlyOption.value);
 
                     if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();
@@ -359,6 +373,8 @@ public class SplatcraftConfigManager {
                 .setSaveConsumer(value -> {
                     int oldValue = colorLockHostileOption.value;
                     colorLockHostileOption.value = value;
+
+                    lockedColorComponentsCacheHostile = ColorUtil.getRgbFromDecimal(colorLockHostileOption.value);
 
                     if (oldValue != value) {
                         MinecraftClient.getInstance().worldRenderer.reload();

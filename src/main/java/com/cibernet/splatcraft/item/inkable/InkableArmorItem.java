@@ -58,9 +58,7 @@ public class InkableArmorItem extends DyeableArmorItem implements MatchItem, Ent
 
         if (entity.world.getBlockState(pos).getBlock() instanceof InkwellBlock) {
             BlockEntity blockEntity = entity.world.getBlockEntity(pos);
-            if (blockEntity instanceof AbstractInkableBlockEntity) {
-                AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
-
+            if (blockEntity instanceof AbstractInkableBlockEntity inkableBlockEntity) {
                 if (ColorUtil.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtil.isColorLocked(stack)) {
                     ColorUtil.setInkColor(stack, inkableBlockEntity.getInkColor());
                     ColorUtil.setColorLocked(stack, true);

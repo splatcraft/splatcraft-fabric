@@ -17,22 +17,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -69,23 +67,23 @@ public class SplatcraftClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLOR_CHANGE_FOR_COLOR_LOCK_PACKET_ID, (client, handler, buf, responseSender) -> {
             if (client.world != null) {
                 client.execute(() -> {
-                    for (BlockEntity blockEntity : client.world.blockEntities) {
+                    /*TODO for (BlockEntity blockEntity : client.world.blockEntities) {
                         BlockPos pos = blockEntity.getPos();
                         client.world.addSyncedBlockEvent(pos, client.world.getBlockState(pos).getBlock(), 0, 0);
-                    }
+                    }*/
                 });
             }
         });
         ClientPlayNetworking.registerGlobalReceiver(SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, (client, handler, buf, responseSender) -> {
             InkColorSynchroniser.rebuildIfNeeded(InkColorSynchroniser.getCachedData());
 
-            CompoundTag tag = buf.readCompoundTag();
+            NbtCompound tag = buf.readNbt();
             client.execute(() -> {
                 if (tag != null) {
-                    ListTag inkColors = tag.getList("InkColors", 10);
+                    NbtList inkColors = tag.getList("InkColors", 10);
                     HashMap<Identifier, InkColor> all = new LinkedHashMap<>();
                     inkColors.forEach(inkColor -> {
-                        CompoundTag inkColorTag = (CompoundTag) inkColor;
+                        NbtCompound inkColorTag = (NbtCompound) inkColor;
                         Identifier id = Identifier.tryParse(inkColorTag.getString("id"));
                         all.put(id, new InkColor(id, inkColorTag.getInt("Color")));
                     });
@@ -196,19 +194,19 @@ public class SplatcraftClientNetworking {
             }
         }
 
-        player.world.addParticle(new InkSplashParticleEffect(ColorUtil.getColorsFromInt(inkColor.getColorOrLocked()), scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d);
+        player.world.addParticle(new InkSplashParticleEffect(inkColor.getColorOrLockedComponents(), scale), pos.getX(), pos.getY(), pos.getZ(), 0.0d, 0.0d, 0.0d);
     }
 
     public static void playPlayerToggleSquidEffects(PlayerEntity player, World world, InkColor inkColor) {
         if (inkColor.matches(ColorUtil.getInkColor(player).color)) {
             for (int i = 0; i < MathHelper.nextInt(player.getRandom(), 5, 7); ++i) {
-                world.addParticle(new InkSplashParticleEffect(ColorUtil.getColorsFromInt(inkColor.getColorOrLocked())), player.getParticleX(0.5d), player.getRandomBodyY() - 0.25d, player.getParticleZ(0.5d), 0.0d, 0.0d, 0.0d);
+                world.addParticle(new InkSplashParticleEffect(inkColor.getColorOrLockedComponents()), player.getParticleX(0.5d), player.getRandomBodyY() - 0.25d, player.getParticleZ(0.5d), 0.0d, 0.0d, 0.0d);
             }
         }
     }
 
     public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos, double velocityX, double velocityY, double velocityZ) {
-        float[] color = ColorUtil.getColorsFromInt(inkColor.getColorOrLocked());
+        float[] color = inkColor.getColorOrLockedComponents();
         world.addParticle(new InkSplashParticleEffect(color[0], color[1], color[2], scale), pos.getX(), pos.getY(), pos.getZ(), velocityX, velocityY, velocityZ);
     }
     public static void playBlockInkingEffects(World world, InkColor inkColor, float scale, Vec3d pos, Vec3d velocity) {

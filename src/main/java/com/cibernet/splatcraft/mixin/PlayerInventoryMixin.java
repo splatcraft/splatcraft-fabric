@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(PlayerInventory.class)
 public class PlayerInventoryMixin {
     @Inject(method = "damageArmor", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private void preventInkTankDamage(DamageSource damageSource, float amount, CallbackInfo ci, int i, ItemStack itemStack) {
+    private void preventInkTankDamage(DamageSource damageSource, float amount, int[] slots, CallbackInfo ci, int[] slotIds, int slotsLength, int i, int slotId, ItemStack itemStack) {
         if (itemStack.getItem() instanceof InkTankArmorItem) {
             ci.cancel();
         }

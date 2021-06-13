@@ -49,14 +49,15 @@
   "accessWidener": "splatcraft.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.10.5",
-    "fabric": ">=0.32.0",
-    "minecraft": ">=1.16.2",
+    "fabricloader": ">=0.11",
+    "fabric": ">=0.35.0",
+    "minecraft": ">=1.17",
+    "java": ">=16",
 
     "cardinal-components-entity": "*",
-    "cloth-config2": "*",
-    "chord": ">=1.5.7",
-    "geckolib3": "*"
+    "cloth-config2": ">=5.0.0",
+    "chord": ">=1.8.0",
+    "geckolib3": ">=3.0.0"
   },
   "recommends": {
     "canvas": "*"

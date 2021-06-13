@@ -25,7 +25,7 @@ public class ClientPlayerEntityMixin {
     private void tickMovement(CallbackInfo ci) {
         ClientPlayerEntity $this = ClientPlayerEntity.class.cast(this);
 
-        if (LazyPlayerDataComponent.isSquid($this) && !$this.abilities.flying) {
+        if (LazyPlayerDataComponent.isSquid($this) && !$this.getAbilities().flying) {
             if (PlayerHandler.canClimb($this)) {
                 if ($this.getVelocity().getY() < (input.jumping ? 0.46f : 0.4f)) {
                     $this.updateVelocity(0.07f * (input.jumping ? 1.9f : 1.7f), new Vec3d(0.0f, $this.forwardSpeed * 10, 0.0f));

@@ -5,28 +5,30 @@ import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 
-public class StageBarrierBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
+public class StageBarrierBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final String id = StageBarrierBlock.id;
 
     private int activeTime = 0;
     private final int maxActiveTime = 20;
     private boolean activeTimeIncrementedLastTick = false;
 
-    public StageBarrierBlockEntity() {
-        super(SplatcraftBlockEntities.STAGE_BARRIER);
+    public StageBarrierBlockEntity(BlockPos pos, BlockState state) {
+        super(SplatcraftBlockEntities.STAGE_BARRIER, pos, state);
     }
 
-    @Override
-    public void tick() {
-        if (!activeTimeIncrementedLastTick && this.isActive()) {
-            activeTime--;
+    public static <E extends BlockEntity> void serverTick(World world, BlockPos blockPos, BlockState blockState, E e) {
+        if (e instanceof StageBarrierBlockEntity blockEntity) {
+            if (!blockEntity.activeTimeIncrementedLastTick && blockEntity.isActive()) {
+                blockEntity.activeTime--;
+            }
+            blockEntity.activeTimeIncrementedLastTick = false;
         }
-        this.activeTimeIncrementedLastTick = false;
     }
 
     public void incrementActiveTime() {
@@ -53,8 +55,8 @@ public class StageBarrierBlockEntity extends BlockEntity implements Tickable, Bl
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
         if (tag.contains("ActiveTime")) {
             activeTime = tag.getInt("ActiveTime");
@@ -62,28 +64,28 @@ public class StageBarrierBlockEntity extends BlockEntity implements Tickable, Bl
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         tag.putInt("ActiveTime", activeTime);
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public CompoundTag toInitialChunkDataTag() {
-        return this.toTag(new CompoundTag());
+    public NbtCompound toInitialChunkDataNbt() {
+        return this.writeNbt(new NbtCompound());
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
+    public void fromClientTag(NbtCompound tag) {
+        this.readNbt(tag);
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return this.writeNbt(tag);
     }
 
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.getPos(), 127, this.toClientTag(new CompoundTag()));
+        return new BlockEntityUpdateS2CPacket(this.getPos(), 127, this.toClientTag(new NbtCompound()));
     }
 }

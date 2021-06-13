@@ -29,7 +29,8 @@ public class TurfScannerItem extends AbstractRemoteItem {
 
     @Override
     public float getRemoteModeOrdinal(ItemStack stack) {
-        return TurfScanMode.valueOf(AbstractRemoteItem.getRemoteMode(stack)).ordinal();
+        String remoteMode = AbstractRemoteItem.getRemoteMode(stack);
+        return (remoteMode.isEmpty() ? TurfScanMode.getDefault() : TurfScanMode.valueOf(remoteMode)).ordinal();
     }
 
     @Override
@@ -40,7 +41,7 @@ public class TurfScannerItem extends AbstractRemoteItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (!player.isSneaking() || player.abilities.flying) {
+        if (!player.isSneaking() || player.getAbilities().flying) {
             if (AbstractRemoteItem.hasCornerPair(stack)) {
                 try {
                     TurfScanner.scanArea(

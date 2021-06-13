@@ -1,16 +1,14 @@
 package com.cibernet.splatcraft.component;
 
-import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private final Object provider;
@@ -30,33 +28,33 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(NbtCompound tag) {
         this.checkForInitialization();
         tag.putBoolean("Initialized", this.initialized);
 
         tag.putString("InkColor", this.inkColor.toString());
 
-        this.cooldown.toTag(tag);
-        this.charge.toTag(tag);
+        this.cooldown.writeNbt(tag);
+        this.charge.writeNbt(tag);
 
         tag.putBoolean("Moving", this.moving);
     }
 
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(NbtCompound tag) {
         this.initialized = tag.getBoolean("Initialized");
 
         this.inkColor = InkColor.fromNonNull(tag.getString("InkColor"));
 
-        this.cooldown = Cooldown.fromTag(tag);
-        this.charge = Charge.fromTag(tag);
+        this.cooldown = Cooldown.readNbt(tag);
+        this.charge = Charge.readNbt(tag);
 
         this.moving = tag.getBoolean("Moving");
     }
 
     protected void checkForInitialization() {
         if (!this.initialized) {
-            this.inkColor = ColorUtil.getRandomStarterColor(new Random());
+            // this.inkColor = ColorUtil.getRandomStarterColor(new Random());
             this.initialized = true;
         }
     }

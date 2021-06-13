@@ -2,8 +2,11 @@ package com.cibernet.splatcraft.block;
 
 import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
 import com.cibernet.splatcraft.entity.damage.SplatcraftDamageSources;
+import com.cibernet.splatcraft.init.SplatcraftBlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,9 +34,15 @@ public class StageBarrierBlock extends BlockWithEntity {
         this.damagesEntity = damagesEntity;
     }
 
+    @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new StageBarrierBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new StageBarrierBlockEntity(pos, state);
+    }
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return world.isClient ? null : checkType(type, SplatcraftBlockEntities.STAGE_BARRIER, StageBarrierBlockEntity::serverTick);
     }
 
     @Override

@@ -19,8 +19,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import me.andante.chord.client.gui.item_group.ItemGroupTab;
 import me.andante.chord.item.item_group.AbstractTabbedItemGroup;
-import me.andante.chord.item.item_group.ItemGroupTab;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -128,7 +128,7 @@ public class Splatcraft implements ModInitializer {
             }
 
             @Override
-            public void apply(ResourceManager manager) {
+            public void reload(ResourceManager manager) {
                 Collection<Identifier> inkColors = manager.findResources(Splatcraft.MOD_ID + "/ink_colors", (r) -> r.endsWith(".json") || r.endsWith(".json5"));
                 HashMap<Identifier, InkColor> loaded = new LinkedHashMap<>();
 
@@ -171,7 +171,7 @@ public class Splatcraft implements ModInitializer {
             }
 
             @Override
-            public void apply(ResourceManager manager) {
+            public void reload(ResourceManager manager) {
                 Collection<Identifier> whitelists = manager.findResources(Splatcraft.MOD_ID, (r) -> r.equals("signal_whitelist.json") || r.equals("signal_whitelist.json5"));
                 LinkedList<Identifier> loaded = new LinkedList<>();
 

@@ -121,8 +121,7 @@ public abstract class AbstractWeaponItem extends Item implements EntityTickable,
 
         if (entity.world.getBlockState(floorPos).getBlock().equals(SplatcraftBlocks.INKWELL)) {
             BlockEntity blockEntity = entity.world.getBlockEntity(floorPos);
-            if (blockEntity instanceof AbstractInkableBlockEntity) {
-                AbstractInkableBlockEntity inkableBlockEntity = (AbstractInkableBlockEntity) blockEntity;
+            if (blockEntity instanceof AbstractInkableBlockEntity inkableBlockEntity) {
                 if (ColorUtil.getInkColor(stack) != inkableBlockEntity.getInkColor() || !ColorUtil.isColorLocked(stack)) {
                     ColorUtil.setInkColor(stack, inkableBlockEntity.getInkColor());
                     ColorUtil.setColorLocked(stack, true);

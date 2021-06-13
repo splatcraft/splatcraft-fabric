@@ -74,7 +74,7 @@ public class TurfScanner {
         int minZ = Math.min(this.from.getZ(), this.to.getZ());
         int maxZ = Math.max(this.from.getZ(), this.to.getZ());
 
-        if (minY < 0 || maxY > (this.world.getDimensionHeight() - 1)) {
+        if (minY < 0 || maxY > (this.world.getHeight() - 1)) {
             throw new IllegalArgumentException("out_of_world");
         } else {
             ChunkManager chunkManager = this.world.getChunkManager();
@@ -100,7 +100,7 @@ public class TurfScanner {
                     } else if (topY > maxY) {
                         BlockPos.Mutable mutable = new BlockPos.Mutable(x, maxY, z);
                         while (mutable.getY() >= minY) {
-                            if (Heightmap.ALWAYS_TRUE.test(this.world.getBlockState(mutable))) {
+                            if (Heightmap.NOT_AIR.test(this.world.getBlockState(mutable))) {
                                 this.scanPos(mutable);
                                 break;
                             }
@@ -112,7 +112,7 @@ public class TurfScanner {
             }
         } else if (this.scanMode == TurfScanMode.MULTI_LAYERED) {
             for (BlockPos pos : BlockPos.iterate(this.from, this.to)) {
-                if (this.world.getBlockState(pos.up()).isAir()) {
+                if (!Heightmap.NOT_AIR.test(this.world.getBlockState(pos.up()))) {
                     this.scanPos(pos);
                 }
             }

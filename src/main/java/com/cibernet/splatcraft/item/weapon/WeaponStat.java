@@ -7,15 +7,7 @@ import net.minecraft.text.TranslatableText;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-public class WeaponStat {
-    private final String name;
-    private final Object value;
-
-    public WeaponStat(String name, Object value) {
-        this.name = name;
-        this.value = value;
-    }
-
+public record WeaponStat(String name, Object value) {
     public BaseText getTextComponent() {
         Object arg = this.value;
 

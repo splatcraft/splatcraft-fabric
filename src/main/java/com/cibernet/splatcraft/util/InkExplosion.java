@@ -76,7 +76,7 @@ public class InkExplosion extends Explosion {
             double sizeReciprocal = 3.0d / this.size;
             for (int i = 0; i < this.size * 17; i++) {
                 this.world.addParticle(
-                    new InkSplashParticleEffect(ColorUtil.getColorsFromInt(this.inkColor.getColorOrLocked()), 0.4f),
+                    new InkSplashParticleEffect(this.inkColor.getColorOrLockedComponents(), 0.4f),
                     this.getX(), this.getY(), this.getZ(),
                     (Math.random() / sizeReciprocal) * (this.world.random.nextBoolean() ? -1.0f : 1.0f),
                     0.0D,
@@ -164,12 +164,12 @@ public class InkExplosion extends Explosion {
 
         for (Entity entity : list) {
             if (!entity.isImmuneToExplosion()) {
-                double sqrt = MathHelper.sqrt(entity.squaredDistanceTo(vec3d)) / size;
+                double sqrt = MathHelper.sqrt((float) entity.squaredDistanceTo(vec3d)) / size;
                 if (sqrt <= 1.0D) {
                     double x = entity.getX() - startX;
                     double y = (entity instanceof TntEntity ? entity.getY() : entity.getEyeY()) - startY;
                     double z = entity.getZ() - startZ;
-                    double sqrtPos = MathHelper.sqrt(x * x + y * y + z * z);
+                    double sqrtPos = MathHelper.sqrt((float) (x * x + y * y + z * z));
                     if (sqrtPos != 0.0D) {
                         InkColor targetInkColor = InkColors.NONE;
                         if (entity instanceof LivingEntity) {

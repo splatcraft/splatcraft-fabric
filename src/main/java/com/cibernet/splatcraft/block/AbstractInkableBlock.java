@@ -20,13 +20,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractInkableBlock extends BlockWithEntity {
     protected AbstractInkableBlock(Settings settings) {
@@ -71,9 +72,8 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onLandedUpon(World world, BlockPos pos, Entity entity, float distance) {
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
+    public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float distance) {
+        if (entity instanceof PlayerEntity player) {
             LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent(player);
             if (lazyData.isSquid() && PlayerHandler.onEnemyInk(player) && player.world.getDifficulty() != Difficulty.PEACEFUL) {
                 player.damage(SplatcraftDamageSources.ENEMY_INK, 2.0f);
@@ -87,7 +87,7 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            CompoundTag tag = stack.getTag();
+            NbtCompound tag = stack.getTag();
             if (tag != null) {
                 ((AbstractInkableBlockEntity) blockEntity).setInkColor(InkColor.fromNonNull(tag));
             }
@@ -120,8 +120,9 @@ public abstract class AbstractInkableBlock extends BlockWithEntity {
         return super.getStateForNeighborUpdate(blockState, direction, newState, world, blockPos, posFrom);
     }
 
+    @Nullable
     @Override
-    public abstract BlockEntity createBlockEntity(BlockView world);
+    public abstract BlockEntity createBlockEntity(BlockPos pos, BlockState state);
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {

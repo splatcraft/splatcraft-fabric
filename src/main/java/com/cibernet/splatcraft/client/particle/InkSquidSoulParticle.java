@@ -7,11 +7,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidSoulParticle extends SpriteBillboardParticle {
@@ -60,21 +60,21 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
         } else {
             rotation = new Quaternion(camera.getRotation());
             float angle = MathHelper.lerp(tickDelta, this.prevAngle, this.angle);
-            rotation.hamiltonProduct(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
+            rotation.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(angle));
         }
 
-        Vector3f negXYVec = new Vector3f(-1.0F, -1.0F, 0.0F);
+        Vec3f negXYVec = new Vec3f(-1.0F, -1.0F, 0.0F);
         negXYVec.rotate(rotation);
-        Vector3f[] vector3fs = new Vector3f[]{
-            new Vector3f(-1.0F, -1.0F, 0.0F),
-            new Vector3f(-1.0F, 1.0F, 0.0F),
-            new Vector3f(1.0F, 1.0F, 0.0F),
-            new Vector3f(1.0F, -1.0F, 0.0F)
+        Vec3f[] vector3fs = new Vec3f[]{
+            new Vec3f(-1.0F, -1.0F, 0.0F),
+            new Vec3f(-1.0F, 1.0F, 0.0F),
+            new Vec3f(1.0F, 1.0F, 0.0F),
+            new Vec3f(1.0F, -1.0F, 0.0F)
         };
         float size = this.getSize(tickDelta);
 
         for (int i = 0; i < 4; ++i) {
-            Vector3f vec3f = vector3fs[i];
+            Vec3f vec3f = vector3fs[i];
             vec3f.rotate(rotation);
             vec3f.scale(size);
             vec3f.add(x, y, z);
@@ -112,13 +112,7 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleFactory<InkSquidSoulParticleEffect> {
-        private final SpriteProvider spriteProvider;
-
-        public Factory(SpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
-        }
-
+    public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<InkSquidSoulParticleEffect> {
         @Override
         public Particle createParticle(InkSquidSoulParticleEffect particleEffect, ClientWorld clientWorld, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             return new InkSquidSoulParticle(clientWorld, x, y, z, velocityX, velocityY, velocityZ, particleEffect, this.spriteProvider);

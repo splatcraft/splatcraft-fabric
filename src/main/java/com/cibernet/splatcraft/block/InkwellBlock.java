@@ -28,6 +28,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public class InkwellBlock extends AbstractInkableBlock implements Waterloggable, Stainable {
@@ -109,8 +110,8 @@ public class InkwellBlock extends AbstractInkableBlock implements Waterloggable,
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new InkableBlockEntity();
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new InkableBlockEntity(pos, state);
     }
 
     @Override

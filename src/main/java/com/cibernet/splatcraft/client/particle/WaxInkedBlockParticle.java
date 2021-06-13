@@ -23,13 +23,7 @@ public class WaxInkedBlockParticle extends SpriteBillboardParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
-
-        public Factory(SpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
-        }
-
+    public record Factory(SpriteProvider spriteProvider) implements ParticleFactory<DefaultParticleType> {
         @Override
         public Particle createParticle(DefaultParticleType particleType, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             WaxInkedBlockParticle particle = new WaxInkedBlockParticle(world, x, y, z, velocityX, velocityY, velocityZ);

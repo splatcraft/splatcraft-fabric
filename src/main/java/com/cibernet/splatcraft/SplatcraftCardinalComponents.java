@@ -5,7 +5,7 @@ import com.cibernet.splatcraft.component.PlayerDataComponent;
 import com.cibernet.splatcraft.component.SplatcraftComponents;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
+import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 
 public class SplatcraftCardinalComponents implements EntityComponentInitializer {
     @Override

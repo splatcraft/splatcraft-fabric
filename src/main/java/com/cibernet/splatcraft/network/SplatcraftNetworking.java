@@ -53,7 +53,7 @@ public class SplatcraftNetworking {
             if (server != null) {
                 for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server)) {
                     PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeInt(entity.getEntityId());
+                    buf.writeInt(entity.getId());
 
                     ServerPlayNetworking.send(serverPlayer, SplatcraftNetworkingConstants.PLAY_INK_DEATH_EFFECTS, buf);
                 }

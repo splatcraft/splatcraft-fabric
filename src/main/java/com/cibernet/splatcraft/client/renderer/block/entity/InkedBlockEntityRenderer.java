@@ -7,13 +7,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,14 +25,19 @@ import java.util.List;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
-public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEntity> {
-    public InkedBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+public class InkedBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+    public InkedBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
+
+    @Override
+    public int getRenderDistance() {
+        return Integer.MAX_VALUE;
     }
 
     @Override
-    public void render(InkedBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        renderBlock(blockEntity, MinecraftClient.getInstance().getBlockRenderManager(), matrices, vertexConsumers, light, overlay);
+    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        if (blockEntity instanceof InkedBlockEntity inkedBlockEntity) {
+            renderBlock(inkedBlockEntity, MinecraftClient.getInstance().getBlockRenderManager(), matrices, vertexConsumers, light, overlay);
+        }
     }
 
     private static void renderBlock(InkedBlockEntity blockEntity, BlockRenderManager blockRendererDispatcher, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
@@ -39,7 +45,7 @@ public class InkedBlockEntityRenderer extends BlockEntityRenderer<InkedBlockEnti
         if (blockEntity.getCachedState().getRenderType().equals(BlockRenderType.INVISIBLE)) {
             BakedModel model = blockRendererDispatcher.getModel(state);
 
-            float[] color = ColorUtil.getColorsFromInt(ColorUtil.getInkColor(blockEntity).getColorOrLocked());
+            float[] color = ColorUtil.getInkColor(blockEntity).getColorOrLockedComponents();
             renderModel(blockEntity, matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color[0], color[1], color[2], light, overlay);
         }
     }

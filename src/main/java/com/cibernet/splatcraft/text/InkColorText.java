@@ -47,10 +47,9 @@ public class InkColorText extends BaseText implements ParsableText {
     public boolean equals(Object object) {
         if (this == object) {
             return true;
-        } else if (!(object instanceof InkColorText)) {
+        } else if (!(object instanceof InkColorText text)) {
             return false;
         } else {
-            InkColorText text = (InkColorText)object;
             return this.input.equals(text.input) && super.equals(object);
         }
     }

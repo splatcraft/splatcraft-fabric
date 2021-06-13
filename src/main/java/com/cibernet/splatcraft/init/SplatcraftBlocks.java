@@ -7,8 +7,8 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
-import net.minecraft.block.MaterialColor;
 import net.minecraft.item.BlockItem;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -54,13 +54,13 @@ public class SplatcraftBlocks {
     public static final Block GRATE_RAMP = register(GrateRampBlock.id, new GrateRampBlock(FabricBlockSettings.copy(GRATE)));
 
     public static final Block BARRIER_BAR = register(BarrierBarBlock.id, new BarrierBarBlock(
-        FabricBlockSettings.of(Material.METAL, MaterialColor.CLEAR)
+        FabricBlockSettings.of(Material.METAL, MapColor.CLEAR)
             .strength(3.0f).breakByTool(FabricToolTags.PICKAXES)
             .requiresTool().nonOpaque()
     ));
 
     public static final Block STAGE_BARRIER = register(StageBarrierBlock.id, new StageBarrierBlock(
-            FabricBlockSettings.of(Material.BARRIER, MaterialColor.CLEAR)
+            FabricBlockSettings.of(Material.BARRIER, MapColor.CLEAR)
                 .strength(-1.0f, 3600000.8f).dropsNothing()
                 .nonOpaque(),
             false

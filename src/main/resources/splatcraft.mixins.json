@@ -2,17 +2,34 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.cibernet.splatcraft.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "BlockMixin", "EntityMixin", "EntityShapeContextMixin", "ItemEntityMixin", "ItemStackMixin",
-    "LivingEntityMixin", "PlayerEntityMixin", "PlayerInventoryMixin", "ServerPlayerEntityMixin",
-    "SquidBlockCollisionMixin", "TextSerializerMixin"
+    "BlockMixin",
+    "EntityMixin",
+    "EntityShapeContextMixin",
+    "ItemEntityMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "PlayerInventoryMixin",
+    "ServerPlayerEntityMixin",
+    "SquidBlockCollisionMixin",
+    "TextSerializerMixin"
   ],
   "client": [
-    "client.ArmorFeatureRendererMixin", "client.ClientItemStackMixin", "client.ClientPlayerEntityMixin",
-    "client.ClientPlayNetworkHandlerMixin", "client.EntityRenderDispatcherMixin", "client.GameRendererMixin",
-    "client.HeldItemRendererMixin", "client.InGameHudMixin", "client.MinecraftClientMixin",
-    "client.PlayerEntityModelMixin", "client.PlayerEntityRendererMixin", "compat.sodium.RenderContextCommonMixin"
+    "client.ArmorFeatureRendererMixin",
+    "client.ClientItemStackMixin",
+    "client.ClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.EntityModelLayersInvoker",
+    "client.EntityModelLayersMixin",
+    "client.EntityRenderDispatcherMixin",
+    "client.GameRendererMixin",
+    "client.HeldItemRendererMixin",
+    "client.InGameHudMixin",
+    "client.MinecraftClientMixin",
+    "client.PlayerEntityModelMixin",
+    "client.PlayerEntityRendererMixin"
   ],
   "server": [],
   "injectors": {

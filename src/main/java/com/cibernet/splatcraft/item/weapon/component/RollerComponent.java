@@ -46,22 +46,11 @@ public class RollerComponent {
         return new RollerComponent(this.consumption, this.radius, this.damage, this.speed, this.brush, this.fling.copy());
     }
 
-    public static class Fling {
-        public final float consumption;
-        public final float size;
-        public final float damage;
-        public final float speed;
-
-        public Fling(float consumption, float size, float damage, float speed) {
-            this.consumption = consumption;
-            this.size = size;
-            this.damage = damage;
-            this.speed = speed;
-        }
-
+    public record Fling(float consumption, float size, float damage, float speed) {
         public static Fling copy(RollerItem item) {
             return item.component.fling.copy();
         }
+
         public Fling copy() {
             return new Fling(this.consumption, this.size, this.damage, this.speed);
         }

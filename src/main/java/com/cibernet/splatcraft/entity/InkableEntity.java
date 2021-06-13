@@ -12,7 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -40,15 +40,15 @@ public interface InkableEntity {
     }
     DataTracker inkable_getDataTracker();
 
-    default void inkable_toTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
+    default void inkable_writeNbt(NbtCompound tag) {
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", this.getInkColor().toString());
         splatcraft.putString("InkType", this.getInkType().toString());
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
     }
-    default void inkable_fromTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
+    default void inkable_readNbt(NbtCompound tag) {
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         this.setInkColor(InkColor.fromNonNull(splatcraft.getString("InkColor")));
 
         InkType inkType = null;

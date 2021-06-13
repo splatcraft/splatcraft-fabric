@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
@@ -17,8 +17,8 @@ import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
-    public PlayerEntityInkSquidRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher, null);
+    public PlayerEntityInkSquidRenderer(EntityRendererFactory.Context ctx) {
+        super(ctx);
     }
 
     @Override
@@ -30,8 +30,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         float bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevBodyYaw, entity.bodyYaw);
         float headYaw = MathHelper.lerpAngleDegrees(tickDelta, entity.prevHeadYaw, entity.headYaw);
         float headBodyYawDelta = headYaw - bodyYaw;
-        if (entity.getVehicle() instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) entity.getVehicle();
+        if (entity.getVehicle() instanceof LivingEntity livingEntity) {
             bodyYaw = MathHelper.lerpAngleDegrees(tickDelta, livingEntity.prevBodyYaw, livingEntity.bodyYaw);
             headBodyYawDelta = headYaw - bodyYaw;
             float rotationWrapped = MathHelper.wrapDegrees(headBodyYawDelta);
@@ -51,7 +50,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
             headBodyYawDelta = headYaw - bodyYaw;
         }
 
-        float pitch = MathHelper.lerp(tickDelta, entity.prevPitch, entity.pitch);
+        float pitch = MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch());
         if (entity.getPose() == EntityPose.SLEEPING) {
             Direction direction = entity.getSleepingDirection();
             if (direction != null) {
@@ -82,7 +81,7 @@ public class PlayerEntityInkSquidRenderer extends InkSquidEntityRenderer {
         this.model.animateModel(entity, limbDistanceDelta, limbDistance, tickDelta);
         this.model.setAngles(entity, limbDistanceDelta, limbDistance, animationProgress, headBodyYawDelta, pitch);
         boolean isTranslucent = entity.isSpectator() || entity.isInvisibleTo(MinecraftClient.getInstance().player);
-        RenderLayer renderLayer = isTranslucent ? RenderLayer.getItemEntityTranslucentCull(this.getTexture(entity)) : this.model.getLayer(this.getTexture(entity));
+        RenderLayer renderLayer = isTranslucent ? RenderLayer.getEntityTranslucentCull(this.getTexture(entity)) : this.model.getLayer(this.getTexture(entity));
         if (renderLayer != null) {
             this.model.render(matrices, vertices.getBuffer(renderLayer), light, 900000, 1.0f, 1.0f, 1.0f, isTranslucent ? 0.25f : 1.0f);
         }

@@ -5,7 +5,6 @@ import com.cibernet.splatcraft.init.SplatcraftItems;
 import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
 import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
-import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.util.StringConstants;
 import com.cibernet.splatcraft.util.TagUtil;
@@ -16,7 +15,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -32,6 +31,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     public static final String id = "squid_bumper";
 
     protected static final int MAX_LAST_HIT_TIME = 5;
+    private final float pushSpeedReduction;
 
     public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(SquidBumperEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);
     public static final TrackedData<InkType> INK_TYPE = DataTracker.registerData(SquidBumperEntity.class, SplatcraftTrackedDataHandlers.INK_TYPE);
@@ -69,11 +69,9 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
 
     @Override
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
-
-        this.inkable_toTag(tag);
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        this.inkable_writeNbt(tag);
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putInt("RespawnTime", this.getRespawnTime());
         splatcraft.putInt("MaxRespawnTime", this.getMaxRespawnTime());
         splatcraft.putInt("HurtDelay", this.getHurtDelay());
@@ -83,13 +81,15 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
         splatcraft.putFloat("InkHealth", this.getInkHealth());
         splatcraft.putFloat("MaxInkHealth", this.getMaxInkHealth());
         splatcraft.putString("DisplayType", this.getDisplayType().toString());
+
+        return super.writeNbt(tag);
     }
     @Override
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
-        this.inkable_fromTag(tag);
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
+        this.inkable_readNbt(tag);
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         this.setRespawnTime(splatcraft.getInt("RespawnTime"));
         this.setMaxRespawnTime(splatcraft.getInt("MaxRespawnTime"));
         this.setHurtDelay(splatcraft.getInt("HurtDelay"));
@@ -118,7 +118,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     @Override
     protected float turnHead(float bodyRotation, float headRotation) {
         this.prevBodyYaw = this.prevYaw;
-        this.bodyYaw = this.yaw;
+        this.bodyYaw = this.getYaw();
         return 0.0f;
     }
 
@@ -136,11 +136,11 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (!this.world.isClient && !this.removed) {
+        if (!this.world.isClient && !this.isRemoved()) {
             if (!this.isInvulnerableTo(source) || StringConstants.DAMAGE_SOURCES_ALL.contains(source.getName())) {
                 if (source.isSourceCreativePlayer() || this.getLastHitTime() > 0) {
                     this.breakAndDropItem(source);
-                    this.remove();
+                    this.discard();
                 } else {
                     this.playHitSound();
                     this.setLastHitTime(MAX_LAST_HIT_TIME);
@@ -152,7 +152,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
     }
     @Override
     public boolean onEntityInked(DamageSource source, float damage, InkColor color) {
-        if (!this.removed && !this.isInkproof()) {
+        if (!this.isRemoved() && !this.isInkproof()) {
             if (!this.isFlattened()) {
                 this.inkDamage(damage);
                 return true;
@@ -207,7 +207,7 @@ public class SquidBumperEntity extends LivingEntity implements InkableEntity {
                 double xz = MathHelper.absMax(x, z);
 
                 if (xz >= 0.009999999776482582d) {
-                    xz = MathHelper.sqrt(xz);
+                    xz = MathHelper.sqrt((float) xz);
                     x = x / xz;
                     z = z / xz;
                     double d3 = 1.0d / xz;

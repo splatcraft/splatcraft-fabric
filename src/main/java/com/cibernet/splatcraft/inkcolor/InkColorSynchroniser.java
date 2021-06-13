@@ -6,8 +6,8 @@ import com.cibernet.splatcraft.network.SplatcraftNetworkingConstants;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -53,13 +53,13 @@ public class InkColorSynchroniser {
     public static void sync(ServerPlayerEntity player) {
         PacketByteBuf buf = PacketByteBufs.create();
 
-        ListTag inkColors = new ListTag();
-        InkColors.getAll().forEach((identifier, inkColor) -> inkColors.add(inkColor.toTag()));
+        NbtList inkColors = new NbtList();
+        InkColors.getAll().forEach((identifier, inkColor) -> inkColors.add(inkColor.writeNbt()));
 
-        CompoundTag tag = new CompoundTag();
+        NbtCompound tag = new NbtCompound();
         tag.put("InkColors", inkColors);
 
-        buf.writeCompoundTag(tag);
+        buf.writeNbt(tag);
 
         ServerPlayNetworking.send(player, SplatcraftNetworkingConstants.SYNC_INK_COLORS_REGISTRY_PACKET_ID, buf);
     }

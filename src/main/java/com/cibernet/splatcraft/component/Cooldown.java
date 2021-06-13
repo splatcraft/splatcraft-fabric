@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.component;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -74,8 +74,8 @@ public class Cooldown {
      * NBT utilities.
      */
 
-    public void toTag(CompoundTag tag) {
-        CompoundTag cooldown = new CompoundTag();
+    public void writeNbt(NbtCompound tag) {
+        NbtCompound cooldown = new NbtCompound();
         cooldown.putInt("Time", this.time);
         cooldown.putInt("MaxTime", this.maxTime);
         cooldown.putInt("SlotIndex", this.slotIndex);
@@ -83,8 +83,8 @@ public class Cooldown {
 
         tag.put("Cooldown", cooldown);
     }
-    public static Cooldown fromTag(CompoundTag tag) {
-        CompoundTag cooldown = tag.getCompound("Cooldown");
+    public static Cooldown readNbt(NbtCompound tag) {
+        NbtCompound cooldown = tag.getCompound("Cooldown");
 
         return new Cooldown(
             cooldown.getInt("Time"),

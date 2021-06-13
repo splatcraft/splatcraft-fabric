@@ -4,14 +4,13 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import com.cibernet.splatcraft.inkcolor.InkColors;
 import com.cibernet.splatcraft.util.TagUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,19 +20,14 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
     private InkColor inkColor = InkColors.NONE;
     @Nullable private InkColor baseInkColor = null;
 
-    public AbstractInkableBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
+    protected AbstractInkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    public double getSquaredRenderDistance() {
-        return Integer.MAX_VALUE;
-    }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(tag);
         splatcraft.putString("InkColor", this.getInkColor().toString());
 
         InkColor baseInkColor = this.getBaseInkColor();
@@ -42,13 +36,13 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
         }
 
         tag.put(Splatcraft.MOD_ID, splatcraft);
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        CompoundTag splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        NbtCompound splatcraft = TagUtil.getOrCreateSplatcraftTag(TagUtil.getBlockEntityTagOrRoot(tag));
         this.setInkColor(InkColor.fromNonNull(splatcraft.getString("InkColor")));
         if (splatcraft.contains("BaseInkColor")) {
             this.setBaseInkColor(InkColor.from(splatcraft.getString("BaseInkColor")));
@@ -107,16 +101,15 @@ public abstract class AbstractInkableBlockEntity extends BlockEntity implements 
 
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.getPos(), 127 /* annoying fapi constant */, this.toClientTag(new CompoundTag()));
+        return new BlockEntityUpdateS2CPacket(this.getPos(), 127 /* annoying fapi constant */, this.toClientTag(new NbtCompound()));
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
+    public void fromClientTag(NbtCompound tag) {
+        this.readNbt(tag);
     }
-
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return this.writeNbt(tag);
     }
 }

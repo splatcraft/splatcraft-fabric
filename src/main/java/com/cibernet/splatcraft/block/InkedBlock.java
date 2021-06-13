@@ -36,6 +36,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -45,7 +46,7 @@ public class InkedBlock extends AbstractInkableBlock {
 
     protected boolean glowing;
 
-    public static final AbstractBlock.Settings DEFAULT_PROPERTIES = FabricBlockSettings.of(Material.ORGANIC_PRODUCT, MaterialColor.BLACK_TERRACOTTA)
+    public static final AbstractBlock.Settings DEFAULT_PROPERTIES = FabricBlockSettings.of(Material.ORGANIC_PRODUCT, MapColor.TERRACOTTA_BLACK)
         .sounds(BlockSoundGroup.SLIME)
         .nonOpaque().ticksRandomly()
         .suffocates((state, world, pos) -> false)
@@ -78,16 +79,15 @@ public class InkedBlock extends AbstractInkableBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof InkedBlockEntity) {
+        if (blockEntity instanceof InkedBlockEntity inkedBlockEntity) {
             ItemStack stack = player.getStackInHand(hand);
-            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
             Item item = stack.getItem();
             if (inkedBlockEntity.hasBaseInkColor()) {
                 if (item instanceof AxeItem) {
                     inkedBlockEntity.setBaseInkColor(null);
                     InkedBlock.clearInk(world, pos);
 
-                    if (!player.abilities.creativeMode) {
+                    if (!player.getAbilities().creativeMode) {
                         stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(hand));
                     }
 
@@ -99,7 +99,7 @@ public class InkedBlock extends AbstractInkableBlock {
                     return ActionResult.SUCCESS;
                 }
             } else if (item == Items.HONEYCOMB && inkedBlockEntity.setBaseInkColor((inkedBlockEntity.getInkColor()))) {
-                if (!player.abilities.creativeMode) {
+                if (!player.getAbilities().creativeMode) {
                     stack.decrement(1);
                 }
 
@@ -140,8 +140,7 @@ public class InkedBlock extends AbstractInkableBlock {
     public void checkAndClearInk(World world, BlockPos pos, Random random) {
         if (random.nextFloat() <= 0.7f && SplatcraftGameRules.getBoolean(world, SplatcraftGameRules.INK_DECAY)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof InkedBlockEntity) {
-                InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+            if (blockEntity instanceof InkedBlockEntity inkedBlockEntity) {
                 if (inkedBlockEntity.getSavedState().isAir() || inkedBlockEntity.isInked()) {
                     InkedBlock.clearInk(world, pos);
                 }
@@ -197,8 +196,8 @@ public class InkedBlock extends AbstractInkableBlock {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new InkedBlockEntity();
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new InkedBlockEntity(pos, state);
     }
 
     @Override
@@ -219,8 +218,7 @@ public class InkedBlock extends AbstractInkableBlock {
     @Override
     public boolean inkBlock(World world, BlockPos pos, InkColor color, InkType inkType, boolean spawnParticles) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof InkedBlockEntity) {
-            InkedBlockEntity inkedBlockEntity = (InkedBlockEntity) blockEntity;
+        if (blockEntity instanceof InkedBlockEntity inkedBlockEntity) {
             if (!inkedBlockEntity.getInkColor().equals(color)) {
                 inkedBlockEntity.setInkColor(color);
                 return true;

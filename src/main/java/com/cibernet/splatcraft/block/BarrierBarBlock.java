@@ -65,15 +65,13 @@ public class BarrierBarBlock extends Block implements Waterloggable {
         int rotatedDirIndex = state.get(FACING).rotateYClockwise().ordinal()-2;
         int rotatedCCWDirIndex = state.get(FACING).rotateYCounterclockwise().ordinal()-2;
 
-        switch(state.get(SHAPE)) {
-            case STRAIGHT: return shapeArray[dirIndex];
-            case OUTER_LEFT: return shapeArray[dirIndex+4];
-            case OUTER_RIGHT: return shapeArray[rotatedDirIndex+4];
-            case INNER_LEFT: return VoxelShapes.union(shapeArray[dirIndex], shapeArray[rotatedCCWDirIndex]);
-            case INNER_RIGHT: return VoxelShapes.union(shapeArray[dirIndex], shapeArray[rotatedDirIndex]);
-        }
-
-        return Block.createCuboidShape(1, 1, 1, 15, 15, 15);
+        return switch (state.get(SHAPE)) {
+            case STRAIGHT -> shapeArray[dirIndex];
+            case OUTER_LEFT -> shapeArray[dirIndex + 4];
+            case OUTER_RIGHT -> shapeArray[rotatedDirIndex + 4];
+            case INNER_LEFT -> VoxelShapes.union(shapeArray[dirIndex], shapeArray[rotatedCCWDirIndex]);
+            case INNER_RIGHT -> VoxelShapes.union(shapeArray[dirIndex], shapeArray[rotatedDirIndex]);
+        };
     }
 
     @Override
@@ -83,16 +81,12 @@ public class BarrierBarBlock extends Block implements Waterloggable {
 
     protected static VoxelShape modifyShapeForDirection(Direction facing, VoxelShape shape) {
         Box box = shape.getBoundingBox();
-
-        switch (facing) {
-            case EAST:
-                return VoxelShapes.cuboid(new Box(1 - box.maxZ, box.minY, box.minX, 1 - box.minZ, box.maxY, box.maxX));
-            case SOUTH:
-                return VoxelShapes.cuboid(new Box(1 - box.maxX, box.minY, 1- box.maxZ, 1 - box.minX, box.maxY, 1 - box.minZ));
-            case WEST:
-                return VoxelShapes.cuboid(new Box(box.minZ, box.minY, 1 - box.maxX, box.maxZ, box.maxY, 1 - box.minX));
-        }
-        return shape;
+        return switch (facing) {
+            case EAST -> VoxelShapes.cuboid(new Box(1 - box.maxZ, box.minY, box.minX, 1 - box.minZ, box.maxY, box.maxX));
+            case SOUTH -> VoxelShapes.cuboid(new Box(1 - box.maxX, box.minY, 1 - box.maxZ, 1 - box.minX, box.maxY, 1 - box.minZ));
+            case WEST -> VoxelShapes.cuboid(new Box(box.minZ, box.minY, 1 - box.maxX, box.maxZ, box.maxY, 1 - box.minX));
+            default -> shape;
+        };
     }
 
     public static VoxelShape mirrorShapeY(VoxelShape shape) {
@@ -171,34 +165,24 @@ public class BarrierBarBlock extends Block implements Waterloggable {
         switch(mirror) {
             case LEFT_RIGHT:
                 if (direction.getAxis() == Direction.Axis.Z) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
-                        case INNER_RIGHT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
-                        case OUTER_LEFT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
-                        default:
-                            return state.rotate(BlockRotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
+                        case INNER_RIGHT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
+                        case OUTER_LEFT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
+                        case OUTER_RIGHT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
+                        default -> state.rotate(BlockRotation.CLOCKWISE_180);
+                    };
                 }
                 break;
             case FRONT_BACK:
                 if (direction.getAxis() == Direction.Axis.X) {
-                    switch(stairsshape) {
-                        case INNER_LEFT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
-                        case INNER_RIGHT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
-                        case OUTER_LEFT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
-                        case OUTER_RIGHT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
-                        case STRAIGHT:
-                            return state.rotate(BlockRotation.CLOCKWISE_180);
-                    }
+                    return switch (stairsshape) {
+                        case INNER_LEFT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
+                        case INNER_RIGHT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
+                        case OUTER_LEFT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
+                        case OUTER_RIGHT -> state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
+                        case STRAIGHT -> state.rotate(BlockRotation.CLOCKWISE_180);
+                    };
                 }
         }
 

@@ -36,8 +36,7 @@ public class LivingEntityMixin {
     @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91f, ordinal = 0)) // targets the FIRST place a float is defined as 0.91f, on ground
     private float checkLastLandedBlock(float c) {
         LivingEntity $this = LivingEntity.class.cast(this);
-        if ($this instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) $this;
+        if ($this instanceof PlayerEntity player) {
             if (LazyPlayerDataComponent.isSquid(player)) {
                 InkColor inkColor = ColorUtil.getInkColor(player.world.getBlockEntity(player.getVelocityAffectingPos()));
                 if (inkColor.equals(InkColors.NONE) && player.world.getBlockState(player.getVelocityAffectingPos()).isAir()) {
@@ -54,10 +53,8 @@ public class LivingEntityMixin {
     @ModifyConstant(method = "travel", constant = @Constant(floatValue = 0.91f, ordinal = 1)) // targets the SECOND place a float is defined as 0.91f, not on ground
     private float fixSquidAirborneVelocity(float c) {
         LivingEntity $this = LivingEntity.class.cast(this);
-        if ($this instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) $this;
-
-            if (player.abilities.flying) {
+        if ($this instanceof PlayerEntity player) {
+            if (player.getAbilities().flying) {
                 splatcraft_lastLandedBlockInkColor = InkColors.NONE;
             }
 
@@ -75,8 +72,7 @@ public class LivingEntityMixin {
     @Inject(method = "getJumpVelocity", at = @At("RETURN"), cancellable = true)
     private void modifySquidJumpVelocity(CallbackInfoReturnable<Float> cir) {
         LivingEntity $this = LivingEntity.class.cast(this);
-        if ($this instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) $this;
+        if ($this instanceof PlayerEntity player) {
             if (LazyPlayerDataComponent.isSquid(player) && PlayerHandler.canSwim(player)) {
                 cir.setReturnValue(cir.getReturnValueF() * 1.208f);
             }

@@ -1,58 +1,85 @@
 package com.cibernet.splatcraft.client.model.ink_tank;
 
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 
-import java.util.ArrayList;
-
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal","unused"})
 public class InkTankArmorModel extends AbstractInkTankArmorModel {
     private final ModelPart top;
     private final ModelPart middle;
     private final ModelPart tank;
 
-    public InkTankArmorModel() {
-        textureWidth = 128;
-        textureHeight = 128;
+    public InkTankArmorModel(ModelPart root) {
+        super(root);
 
-        top = new ModelPart(this);
-        top.setPivot(0.0f, 0.0f, 0.0f);
-        top.setTextureOffset(0, 112).addCuboid(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f, 0.0f, false);
+        this.top = root.getChild("top");
+        this.middle = root.getChild("middle");
+        this.tank = this.middle.getChild("tank");
+    }
 
-        middle = new ModelPart(this);
-        middle.setPivot(0.0f, -0.25f, 0.0f);
-        middle.setTextureOffset(0, 0).addCuboid(-4.75f, -0.25f, -2.5f, 9.0f, 12.0f, 5.0f, 0.0f, false);
-        middle.setTextureOffset(31, 0).addCuboid(-1.0f, 3.0f, 2.5f, 2.0f, 1.0f, 1.0f, 0.0f, false);
+    public static TexturedModelData getTexturedModelData() {
+        ModelData data = new ModelData();
+        ModelPartData root = data.getRoot();
 
-        tank = new ModelPart(this);
-        tank.setPivot(0.0f, 0.75f, 0.75f);
-        middle.addChild(tank);
-        tank.setTextureOffset(31, 2).addCuboid(-0.5f, 1.75f, 2.0f, 1.0f, 2.0f, 2.0f, 0.0f, false);
-        tank.setTextureOffset(0, 19).addCuboid(-2.0f, 3.25f, 3.25f, 4.0f, 1.0f, 4.0f, 0.0f, false);
-        tank.setTextureOffset(16, 19).addCuboid(-2.0f, 11.25f, 3.25f, 4.0f, 1.0f, 4.0f, 0.0f, false);
-        tank.setTextureOffset(0, 24).addCuboid(1.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(6, 24).addCuboid(1.0f, 4.25f, 6.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(10, 24).addCuboid(-2.0f, 4.25f, 6.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(14, 24).addCuboid(-2.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.0f, 9.25f, 6.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.0f, 7.25f, 6.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(12, 39).addCuboid(0.0f, 5.25f, 6.25f, 1.0f, 1.0f, 1.0f, 0.0f, false);
-        tank.setTextureOffset(0, 33).addCuboid(-1.0f, 2.25f, 4.25f, 2.0f, 1.0f, 2.0f, 0.0f, false);
-        tank.setTextureOffset(8, 33).addCuboid(-3.5f, 2.5f, 4.25f, 2.0f, 1.0f, 2.0f, 0.0f, false);
+        root.addChild(
+            "top",
+            ModelPartBuilder.create()
+                 .uv(0, 112)
+                .cuboid(-4.0f, -8.0f, -4.0f, 8.0f, 8.0f, 8.0f),
+            ModelTransform.NONE
+        );
 
-        inkPieces = new ArrayList<>();
-        inkBarY = 23.25f;
+        ModelPartData middle = root.getChild(EntityModelPartNames.BODY).addChild(
+            "middle",
+            ModelPartBuilder.create()
+                 .uv(0, 0)
+                 .cuboid(-4.75f, -0.25f, -2.5f, 9.0f, 12.0f, 5.0f)
+                 .uv(31, 0)
+                 .cuboid(-1.0f, 3.0f, 2.5f, 2.0f, 1.0f, 1.0f),
+            ModelTransform.pivot(0.0f, -0.25f, 0.0f)
+        );
 
+        ModelPartData tank = middle.addChild(
+            "tank",
+            ModelPartBuilder.create()
+                .uv(31, 2)
+                .cuboid(-0.5f, 1.75f, 2.0f, 1.0f, 2.0f, 2.0f)
+                .uv(0, 19)
+                .cuboid(-2.0f, 3.25f, 3.25f, 4.0f, 1.0f, 4.0f)
+                .uv(16, 19)
+                .cuboid(-2.0f, 11.25f, 3.25f, 4.0f, 1.0f, 4.0f)
+                .uv(0, 24)
+                .cuboid(1.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f)
+                .uv(6, 24)
+                .cuboid(1.0f, 4.25f, 6.25f, 1.0f, 7.0f, 1.0f)
+                .uv(10, 24)
+                .cuboid(-2.0f, 4.25f, 6.25f, 1.0f, 7.0f, 1.0f)
+                .uv(14, 24)
+                .cuboid(-2.0f, 4.25f, 3.25f, 1.0f, 7.0f, 1.0f)
+                .uv(12, 39)
+                .cuboid(0.0f, 9.25f, 6.25f, 1.0f, 1.0f, 1.0f)
+                .uv(12, 39)
+                .cuboid(0.0f, 7.25f, 6.25f, 1.0f, 1.0f, 1.0f)
+                .uv(12, 39)
+                .cuboid(0.0f, 5.25f, 6.25f, 1.0f, 1.0f, 1.0f)
+                .uv(0, 33)
+                .cuboid(-1.0f, 2.25f, 4.25f, 2.0f, 1.0f, 2.0f)
+                .uv(8, 33)
+                .cuboid(-3.5f, 2.5f, 4.25f, 2.0f, 1.0f, 2.0f),
+            ModelTransform.pivot(0.0f, 0.75f, 0.75f)
+        );
         for (int i = 0; i < 7; i++) {
-            ModelPart ink = new ModelPart(this);
-            ink.setPivot(0.0f, inkBarY, -0.75f);
-            tank.addChild(ink);
+            tank.addChild(
+                "ink_" + i,
+                ModelPartBuilder.create()
+                    .uv(116, 30)
+                    .cuboid(-1.5f, -12.0f, 4.5f, 3.0f, 1.0f, 3.0f),
+                ModelTransform.pivot(0.0f, inkBarY, -0.75f)
+            );
 
-            ink.setTextureOffset(116, 30).addCuboid(-1.5f, -12.0f, 4.5f, 3, 1, 3, 0);
-
-            inkPieces.add(ink);
+            // TODO inkPieces.add(ink);
         }
 
-        torso = new ModelPart(this);
-        torso.addChild(middle);
+        return TexturedModelData.of(data, 128, 128);
     }
 }

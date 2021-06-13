@@ -58,7 +58,7 @@ public class PlayerHandler {
                     player.bodyYaw = player.headYaw;
 
                     Charge charge = PlayerDataComponent.getCharge(player);
-                    int currentSlot = Util.getSlotWithStack(player.inventory, stack);
+                    int currentSlot = Util.getSlotWithStack(player.getInventory(), stack);
                     if (charge.getTime() > 0 && currentSlot != charge.getSlotIndex()) {
                         Charge.resetCharge(player, currentSlot, charge.canDischarge());
                     }
@@ -69,7 +69,7 @@ public class PlayerHandler {
         Vec3d vel = player.getVelocity();
         data.setMoving(Math.abs(vel.getX()) >= MOVING_THRESHOLD || Math.abs(vel.getZ()) >= MOVING_THRESHOLD);
 
-        if (player.abilities.flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && lazyData.isSquid()) {
+        if (player.getAbilities().flying && SplatcraftGameRules.getBoolean(player.world, SplatcraftGameRules.FLYING_DISABLES_SQUID_FORM) && lazyData.isSquid()) {
             lazyData.setIsSquid(false);
             return;
         }
@@ -197,7 +197,7 @@ public class PlayerHandler {
     public static boolean canSwim(World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AbstractInkableBlockEntity) {
-            return !ColorUtil.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock) blockEntity.getCachedState().getBlock()).canSwim();
+            return !ColorUtil.getInkColor(blockEntity).equals(InkColors.NONE) && ((AbstractInkableBlock)  blockEntity.getCachedState().getBlock()).canSwim();
         }
 
         return false;
@@ -227,7 +227,7 @@ public class PlayerHandler {
             if (!pos.equals(player.getBlockPos())) {
                 Block block = player.world.getBlockState(pos).getBlock();
 
-                if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb() && player.getBlockState().getBlock() != block) {
+                if (block instanceof AbstractInkableBlock && ((AbstractInkableBlock) block).canClimb() && player.world.getBlockState(player.getBlockPos()).getBlock() != block) {
                     BlockEntity blockEntity = player.world.getBlockEntity(pos);
                     if (blockEntity instanceof AbstractInkableBlockEntity && ((AbstractInkableBlockEntity) blockEntity).getInkColor().matches(ColorUtil.getInkColor(player).color)) {
                         return pos;

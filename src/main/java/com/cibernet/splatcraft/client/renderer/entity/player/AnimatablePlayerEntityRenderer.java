@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import software.bernie.geckolib3.renderer.geo.GeoReplacedEntityRenderer;
+import software.bernie.geckolib3.renderers.geo.GeoReplacedEntityRenderer;
 
 /**
  * One-time animatable player entity renderer.
@@ -31,14 +31,14 @@ public class AnimatablePlayerEntityRenderer extends GeoReplacedEntityRenderer<An
     protected static final int BASE_LABEL_ANIMATION_TICKS = (int) (MAX_LABEL_ANIMATION_TICKS * 0.8f);
     protected int labelAnimationTicks = BASE_LABEL_ANIMATION_TICKS;
 
-    public AnimatablePlayerEntityRenderer(EntityRenderDispatcher dispatcher, AnimatablePlayerEntity animatable, boolean thin) {
-        super(dispatcher, new SignalPlayerModel(thin), animatable);
+    public AnimatablePlayerEntityRenderer(EntityRendererFactory.Context ctx, AnimatablePlayerEntity animatable, boolean thin) {
+        super(ctx, new SignalPlayerModel(thin), animatable);
         this.animatable = animatable;
         this.shadowRadius = 0.5f;
         GeoReplacedEntityRenderer.registerReplacedEntity(AnimatablePlayerEntity.class, this);
     }
-    public AnimatablePlayerEntityRenderer(EntityRenderDispatcher dispatcher, PlayerEntity animatable, Signal signal, boolean thin) {
-        this(dispatcher, new AnimatablePlayerEntity(animatable, signal), thin);
+    public AnimatablePlayerEntityRenderer(EntityRendererFactory.Context ctx, PlayerEntity animatable, Signal signal, boolean thin) {
+        this(ctx, new AnimatablePlayerEntity(animatable, signal), thin);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class AnimatablePlayerEntityRenderer extends GeoReplacedEntityRenderer<An
             Matrix4f model = matrices.peek().getModel();
             float backgroundOpacity = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.27f);
             int backgroundColor = (int) (backgroundOpacity * 255.0f) << 24;
-            TextRenderer textRenderer = this.getFontRenderer();
+            TextRenderer textRenderer = this.getTextRenderer();
             Text displayText = animatable.signal.text;
             float x = (float) (-textRenderer.getWidth(displayText) / 2);
             textRenderer.draw(displayText, x, 0, COLOR, false, model, vertices, false, backgroundColor, light);

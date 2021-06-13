@@ -29,15 +29,15 @@ public class InkBlockUtil {
             if (state.getBlock() instanceof AbstractInkableBlock) {
                 return ((AbstractInkableBlock) state.getBlock()).inkBlock(world, pos, inkColor, inkType, true);
             } else if (canInk(world, pos) && world.getBlockEntity(pos) == null) {
-                InkedBlockEntity blockEntity = new InkedBlockEntity();
+                BlockState inkedState = inkType.asBlock().getDefaultState();
+                InkedBlockEntity blockEntity = new InkedBlockEntity(pos, inkedState);
                 blockEntity.setSavedState(state);
                 blockEntity.setInkColor(inkColor);
-                world.setBlockState(pos, inkType.asBlock().getDefaultState());
-                world.setBlockEntity(pos, blockEntity);
+                world.setBlockState(pos, inkedState);
+                world.addBlockEntity(blockEntity);
                 ColorUtil.addInkSplashParticle(world, inkColor, Vec3d.ofBottomCenter(pos.up()));
 
                 if (!world.isClient) {
-                    // sync
                     blockEntity.sync();
                 }
 

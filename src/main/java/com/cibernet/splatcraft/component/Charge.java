@@ -1,7 +1,7 @@
 package com.cibernet.splatcraft.component;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.jetbrains.annotations.NotNull;
@@ -68,16 +68,16 @@ public class Charge {
      * NBT utilities.
      */
 
-    public void toTag(CompoundTag tag) {
-        CompoundTag charge = new CompoundTag();
+    public void writeNbt(NbtCompound tag) {
+        NbtCompound charge = new NbtCompound();
         charge.putInt("Time", this.time);
         charge.putInt("SlotIndex", this.slotIndex);
         charge.putBoolean("CanDischarge", this.canDischarge);
 
         tag.put("Charge", charge);
     }
-    public static Charge fromTag(CompoundTag tag) {
-        CompoundTag charge = tag.getCompound("Charge");
+    public static Charge readNbt(NbtCompound tag) {
+        NbtCompound charge = tag.getCompound("Charge");
 
         return new Charge(
             charge.getInt("Time"),

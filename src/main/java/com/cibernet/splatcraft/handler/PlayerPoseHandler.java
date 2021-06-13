@@ -57,8 +57,8 @@ public class PlayerPoseHandler {
                         break;*/
                     }
 
-                    $this.leftSleeve.copyPositionAndRotation($this.leftArm);
-                    $this.rightSleeve.copyPositionAndRotation($this.rightArm);
+                    $this.leftSleeve.copyTransform($this.leftArm);
+                    $this.rightSleeve.copyTransform($this.rightArm);
                 }
             }
         }

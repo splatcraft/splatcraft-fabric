@@ -36,10 +36,10 @@ public class MinecraftClientMixin {
                 Entity entity = ((EntityHitResult)this.crosshairTarget).getEntity();
                 if (entity instanceof SquidBumperEntity) {
                     ItemStack stack = ((SquidBumperEntity) entity).asItem();
-                    PlayerInventory inv = this.player.inventory;
+                    PlayerInventory inv = this.player.getInventory();
 
                     int slotIndexWithStack = inv.getSlotWithStack(stack);
-                    if (this.player.abilities.creativeMode) {
+                    if (this.player.getAbilities().creativeMode) {
                         inv.addPickBlock(stack);
                         assert this.interactionManager != null;
                         this.interactionManager.clickCreativeStack(this.player.getStackInHand(Hand.MAIN_HAND), 36 + inv.selectedSlot);

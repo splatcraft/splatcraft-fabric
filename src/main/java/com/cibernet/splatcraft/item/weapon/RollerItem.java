@@ -41,7 +41,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
     @Override
     protected ImmutableList<WeaponStat> createWeaponStats() {
         return ImmutableList.of(
-            new WeaponStat("range", (int) ((this.component.fling.speed /*+ this.component.swing.speed*/) * 50)),
+            new WeaponStat("range", (int) ((this.component.fling.speed() /*+ this.component.swing.speed*/) * 50)),
             new WeaponStat("ink_speed", (int) (/*this.component.dash.speed /*/ 2f * 100)),
             new WeaponStat("handling", (int) ((20/* - (this.component.fling.time + this.component.swing.time)*/ / 2f) * 5))
         );
@@ -63,7 +63,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
     @Override
     public float getInkConsumption(float fling) {
-        return fling == 0 ? this.component.consumption : this.component.fling.consumption;
+        return fling == 0 ? this.component.consumption : this.component.fling.consumption();
     }
 
     public boolean hasInk(PlayerEntity player, ItemStack weapon, boolean fling) {
@@ -76,14 +76,13 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
 
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-        if (user instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) user;
+        if (user instanceof PlayerEntity player) {
             InkType isGlowing = InkType.from(player);
 
             if (this.hasInk(player, stack, false)) {
                 InkColor color = ColorUtil.getInkColor(stack);
                 int downReach = player.getY() % 1 < 0.5 ? 1 : 0;
-                Vec3d fwd = getFwd(0, player.yaw).normalize();
+                Vec3d fwd = getFwd(0, player.getYaw()).normalize();
                 fwd = new Vec3d(Math.round(fwd.x), Math.round(fwd.y), Math.round(fwd.z));
 
                 BlockPos pos = new BlockPos(Math.floor(player.getX()) + 0.5, player.getY() - downReach, Math.floor(player.getZ()) + 0.5);
@@ -136,7 +135,7 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
                             }
                         }
 
-                        for (LivingEntity target : world.getEntitiesIncludingUngeneratedChunks(LivingEntity.class, new Box(inkPos.up()))) {
+                        for (LivingEntity target : world.getNonSpectatingEntities(LivingEntity.class, new Box(inkPos.up()))) {
                             if (!target.equals(player)) {
                                 if (InkDamage.roll(world, target, this.component.damage, color, player, false)) {
                                     this.reduceInk(player, false);
@@ -161,8 +160,8 @@ public class RollerItem extends AbstractWeaponItem implements AttackInputDetecta
             if (this.hasInk(player, stack, true)) {
                 this.reduceInk(player, true);
 
-                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkType.from(player), this.component.fling.size, this.component.fling.damage);
-                proj.setProperties(player, player.pitch, player.yaw, 0.0f, 1.5f, 1.0f);
+                InkProjectileEntity proj = new InkProjectileEntity(player.world, player, stack, InkType.from(player), this.component.fling.size(), this.component.fling.damage());
+                proj.setProperties(player, player.getPitch(), player.getYaw(), 0.0f, 1.5f, 1.0f);
                 player.world.spawnEntity(proj);
             } else {
                 sendNoInkMessage(player);

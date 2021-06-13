@@ -1,10 +1,10 @@
 plugins {
-    id 'fabric-loom' version '0.7-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 group = project.maven_group
@@ -18,38 +18,39 @@ if (System.env.CI == "true") {
 minecraft {}
 
 repositories {
-    maven { url = "https://dl.bintray.com/ladysnake/libs" }
-    maven { url = "https://jitpack.io" }
-    maven { url = "https://maven.shedaniel.me" }
-    maven { url = "https://maven.shadew.net" }
-    maven { url = "https://maven.dblsaiko.net" }
-    maven { url = "https://server.bbkr.space/artifactory/libs-release" }
-    maven { url = "https://repo.repsy.io/mvn/gandiber/geckolib" }
+    maven { url = "https://jitpack.io/" }
+    maven { url = "https://maven.shedaniel.me/" }
+    maven { url = "https://maven.shadew.net/" }
+    maven { url = "https://maven.dblsaiko.net/" }
+    maven { url = "https://maven.terraformersmc.com/releases/" }
+    maven { url = "https://server.bbkr.space/artifactory/libs-release/" }
+    maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
+    maven { url = "https://ladysnake.jfrog.io/artifactory/mods/" }
 }
 
 dependencies {
-    // DEFAULT
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // COMPATIBILITY
+    /*
+     * COMPATIBILITY
+     */
+
     /*modImplementation ("grondag:canvas-mc116:1.0.+") {
         exclude group: "net.fabricmc"
         exclude group: "net.fabricmc.fabric-api"
         exclude group: "me.shedaniel.cloth"
     }*/
-    modImplementation "com.github.jellysquid3:sodium-fabric:${project.sodium_version}"
+    // modImplementation "com.github.CaffeineMC:sodium-fabric:${project.sodium_version}"
 
-    // LIBS
+    /*
+     * LIBRARIES
+     */
+
     modImplementation "com.github.andantedevs:chord:${project.chord_version}"
     include "com.github.andantedevs:chord:${project.chord_version}"
-
-    modImplementation "io.github.prospector:modmenu:${project.mod_menu_version}"
-
-    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-    include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
     modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-util:${project.cardinal_version}"
@@ -63,13 +64,21 @@ dependencies {
     modImplementation "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
     include "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
 
-    // RUNTIME UTILS
-    modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }
-    modRuntime "net.shadew:jedt:${project.jedt_version}"
+    modImplementation "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+    include "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
 
-    modRuntime "com.github.jellysquid3:lithium-fabric:${project.lithium_version}"
-    modRuntime "com.github.jellysquid3:phosphor-fabric:${project.phosphor_version}"
-    modRuntime "com.github.astei:lazydfu:${project.lazydfu_version}"
+    modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+    /*
+     * RUNTIME UTILITIES
+     */
+
+    // modRuntime ("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude ( group: "me.shedaniel.cloth" ) }
+    // modRuntime "net.shadew:jedt:${project.jedt_version}"
+
+    // modRuntime "com.github.CaffeineMC:lithium-fabric:${project.lithium_version}"
+    // modRuntime "com.github.CaffeineMC:phosphor-fabric:${project.phosphor_version}"
+    // modRuntime "com.github.astei:lazydfu:${project.lazydfu_version}"
 }
 
 loom {
@@ -86,7 +95,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    def targetVersion = 8
+    it.options.release = 16
 }
 
 jar {

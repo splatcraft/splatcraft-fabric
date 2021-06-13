@@ -1,11 +1,12 @@
 package com.cibernet.splatcraft.entity;
 
-import com.cibernet.splatcraft.client.network.SplatcraftClientNetworking;
 import com.cibernet.splatcraft.init.SplatcraftEntities;
 import com.cibernet.splatcraft.init.SplatcraftSoundEvents;
 import com.cibernet.splatcraft.init.SplatcraftTrackedDataHandlers;
-import com.cibernet.splatcraft.inkcolor.*;
-import com.cibernet.splatcraft.particle.InkSplashParticleEffect;
+import com.cibernet.splatcraft.inkcolor.ColorUtil;
+import com.cibernet.splatcraft.inkcolor.InkColor;
+import com.cibernet.splatcraft.inkcolor.InkDamage;
+import com.cibernet.splatcraft.inkcolor.InkType;
 import com.cibernet.splatcraft.util.InkBlockUtil;
 import com.cibernet.splatcraft.util.InkExplosion;
 import net.minecraft.entity.*;
@@ -15,7 +16,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.hit.BlockHitResult;
@@ -115,9 +116,9 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
-        this.inkable_fromTag(tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        this.inkable_readNbt(tag);
 
         this.setProjectileSize(tag.getFloat("Size"));
 
@@ -129,11 +130,11 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
         this.canPierce = tag.getBoolean("CanPierce");
         this.setPlaysEffects(tag.getBoolean("PlaysEffects"));
 
-        this.sourceWeapon = ItemStack.fromTag(tag.getCompound("SourceWeapon"));
+        this.sourceWeapon = ItemStack.fromNbt(tag.getCompound("SourceWeapon"));
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         tag.putFloat("Size", this.getProjectileSize());
 
         tag.putFloat("Gravity", this.gravity);
@@ -144,10 +145,10 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
         tag.putBoolean("CanPierce", this.canPierce);
         tag.putBoolean("PlaysEffects", this.playsEffects());
 
-        tag.put("SourceWeapon", this.sourceWeapon.toTag(new CompoundTag()));
+        tag.put("SourceWeapon", this.sourceWeapon.writeNbt(new NbtCompound()));
 
-        this.inkable_toTag(tag);
-        return super.toTag(tag);
+        this.inkable_writeNbt(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
@@ -199,7 +200,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
 
             world.playSoundFromEntity(null, this, SplatcraftSoundEvents.BLASTER_EXPLOSION, SoundCategory.PLAYERS, 0.8f, ((world.random.nextFloat() - world.random.nextFloat()) * 0.1f + 1.0f) * 0.95f);
 
-            this.remove();
+            this.discard();
         } else {
             this.setProjectileSize(this.getProjectileSize() - 0.0001f);
             this.setLifetime(lifetime - 1);
@@ -231,7 +232,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
         Entity target = result.getEntity();
         if (!canPierce) {
             Entity owner = this.getOwner();
-            if (owner != null && target.getEntityId() != owner.getEntityId()) {
+            if (owner != null && target.getId() != owner.getId()) {
                 if (target instanceof LivingEntity) {
                     InkDamage.splat(world, (LivingEntity) target, damage, inkColor, owner, damageMobs);
                 }
@@ -243,7 +244,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
                     }
                 }
 
-                this.remove();
+                this.discard();
             }
         }
     }
@@ -256,7 +257,7 @@ public class InkProjectileEntity extends ThrownEntity implements InkableEntity {
             ColorUtil.addInkSplashParticle(this.world, inkColor, this.getPos());
             InkExplosion.create(world, this.getOwner(), this.getBlockPos(), inkColor, this.getInkType(), this.getProjectileSize() * 1.75f, this.playsEffects());
 
-            this.remove();
+            this.discard();
         }
     }
 

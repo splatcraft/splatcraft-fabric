@@ -1,17 +1,29 @@
-accessWidener v1        named
+accessWidener v1       named
 
-accessible    field     net/minecraft/util/DyeColor                                 color                       I
-accessible    field     net/minecraft/entity/data/TrackedDataHandlerRegistry        field_13328                 Lnet/minecraft/util/collection/Int2ObjectBiMap;
+accessible    field     net/minecraft/util/DyeColor                                 colorComponents             [F
+accessible    field     net/minecraft/entity/data/TrackedDataHandlerRegistry        DATA_HANDLERS               Lnet/minecraft/util/collection/Int2ObjectBiMap;
 accessible    field     net/minecraft/block/AbstractBlock                           material                    Lnet/minecraft/block/Material;
-accessible    method    net/minecraft/entity/Entity                                 getVelocityAffectingPos     ()Lnet/minecraft/util/math/BlockPos;
-accessible    method    net/minecraft/entity/Entity                                 getLandingPos               ()Lnet/minecraft/util/math/BlockPos;
-accessible    method    net/minecraft/entity/Entity                                 wouldPoseNotCollide         (Lnet/minecraft/entity/EntityPose;)Z
 accessible    method    net/minecraft/item/ItemStack                                <init>                      (Lnet/minecraft/item/ItemConvertible;ILjava/util/Optional;)V
 accessible    method    net/minecraft/item/Item                                     isIn                        (Lnet/minecraft/item/ItemGroup;)Z
 accessible    method    net/minecraft/entity/player/PlayerInventory                 areItemsEqual               (Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z
-accessible    field     net/minecraft/world/Heightmap                               ALWAYS_TRUE                 Ljava/util/function/Predicate;
+accessible    field     net/minecraft/world/Heightmap                               NOT_AIR                     Ljava/util/function/Predicate;
 
+# entity
+accessible    method    net/minecraft/entity/Entity                                 getVelocityAffectingPos     ()Lnet/minecraft/util/math/BlockPos;
+accessible    method    net/minecraft/entity/Entity                                 getLandingPos               ()Lnet/minecraft/util/math/BlockPos;
+accessible    method    net/minecraft/entity/Entity                                 wouldPoseNotCollide         (Lnet/minecraft/entity/EntityPose;)Z
+
+## client
+accessible    field     net/minecraft/client/option/KeyBinding                      boundKey                    Lnet/minecraft/client/util/InputUtil$Key;
+accessible    method    net/minecraft/client/util/DefaultSkinHelper                 shouldUseSlimModel          (Ljava/util/UUID;)Z
+
+# rendering
 accessible    field     net/minecraft/client/render/entity/EntityRenderDispatcher   renderers                   Ljava/util/Map;
 accessible    field     net/minecraft/client/render/entity/model/PlayerEntityModel  thinArms                    Z
-accessible    field     net/minecraft/client/options/KeyBinding                     boundKey                    Lnet/minecraft/client/util/InputUtil$Key;
-accessible    method    net/minecraft/client/util/DefaultSkinHelper                 shouldUseSlimModel          (Ljava/util/UUID;)Z
+
+accessible    class    net/minecraft/client/render/RenderLayer$MultiPhaseParameters
+accessible    class    net/minecraft/client/render/RenderPhase$Texture
+accessible    method   net/minecraft/client/render/RenderLayer                      of                          (Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;IZZLnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
+accessible    field    net/minecraft/client/render/RenderPhase                      EYES_SHADER                 Lnet/minecraft/client/render/RenderPhase$Shader;
+accessible    field    net/minecraft/client/render/RenderPhase                      COLOR_MASK                  Lnet/minecraft/client/render/RenderPhase$WriteMaskState;
+accessible    field    net/minecraft/client/render/RenderPhase                      ADDITIVE_TRANSPARENCY       Lnet/minecraft/client/render/RenderPhase$Transparency;

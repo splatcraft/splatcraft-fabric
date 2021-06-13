@@ -19,11 +19,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.options.AttackIndicator;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -42,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings("SuspiciousNameCombination")
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
@@ -53,7 +50,7 @@ public abstract class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
 
     @Shadow protected abstract PlayerEntity getCameraPlayer();
-    @Shadow protected abstract void renderHotbarItem(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack);
+    @Shadow protected abstract void renderHotbarItem(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack, int seed);
 
     private static final Identifier splatcraft_WIDGETS = SplatcraftClient.texture("gui/widgets");
     private static final Identifier splatcraft_SQUID_GUI_ICONS_TEXTURE = SplatcraftClient.texture("gui/squid_icons");
@@ -82,11 +79,12 @@ public abstract class InGameHudMixin {
                         if (item instanceof ChargerItem) {
                             matrices.push();
 
-                            client.getTextureManager().bindTexture(splatcraft_WIDGETS);
+                            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                            RenderSystem.setShaderTexture(0, splatcraft_WIDGETS);
                             RenderSystem.enableBlend();
-                            float[] color = ColorUtil.getColorsFromInt(ColorUtil.getInkColor(player).getColorOrLocked());
+                            float[] color = ColorUtil.getInkColor(player).getColorOrLockedComponents();
                             if (SplatcraftConfig.INK.inkColoredChargerIndicator.value) {
-                                RenderSystem.color4f(color[0], color[1], color[2], 1.0f);
+                                RenderSystem.clearColor(color[0], color[1], color[2], 1.0f);
                             }
 
                             boolean firstPerson = this.client.options.getPerspective().isFirstPerson();
@@ -132,7 +130,7 @@ public abstract class InGameHudMixin {
 
                             int x = (this.scaledWidth / 2) - 90 + 4 * 20 + 2;
                             int y = this.scaledHeight - 16 - 70 + (isCreative ? +0 : +8);
-                            this.renderHotbarItem(x, y + (((Math.min((int) ((float) this.heldItemTooltipFade * 256.0f / 10.0f), 255) > 0) ? 0 : +(isCreative ? +46 : +21))) - SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.value, tickDelta, player, this.currentStack);
+                            this.renderHotbarItem(x, y + (((Math.min((int) ((float) this.heldItemTooltipFade * 256.0f / 10.0f), 255) > 0) ? 0 : +(isCreative ? +46 : +21))) - SplatcraftConfig.UI.invisibleHotbarStatusBarsShift.value, tickDelta, player, this.currentStack, 1);
                         }
                     }
 
@@ -161,8 +159,8 @@ public abstract class InGameHudMixin {
                     ci.cancel();
 
                     // set color
-                    float[] color = ColorUtil.getColorsFromInt(ColorUtil.getInkColor(client.player).getColorOrLocked());
-                    RenderSystem.color4f(color[0], color[1], color[2], 1.0f);
+                    float[] color = ColorUtil.getInkColor(client.player).getColorOrLockedComponents();
+                    RenderSystem.clearColor(color[0], color[1], color[2], 1.0f);
 
                     // render crosshair
                     InGameHud $this = InGameHud.class.cast(this);
@@ -181,9 +179,12 @@ public abstract class InGameHudMixin {
                 float inkAmount = InkTankArmorItem.getInkAmount(chestStack) / InkItemUtil.getInkTankCapacity(chestStack);
                 if (inkAmount < 1.0f || SplatcraftConfig.INK.inkAmountIndicatorAlwaysVisible.value) {
                     if (SplatcraftConfig.INK.inkAmountIndicator.value != InkAmountIndicator.OFF) {
-                        this.client.getTextureManager().bindTexture(splatcraft_SQUID_GUI_ICONS_TEXTURE);
-                        float[] color = ColorUtil.getColorsFromInt(ColorUtil.getInkColor(client.player).getColorOrLocked());
-                        RenderSystem.color4f(color[0], color[1], color[2], 1.0f);
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                        RenderSystem.setShaderTexture(0, splatcraft_SQUID_GUI_ICONS_TEXTURE);
+                        RenderSystem.enableBlend();
+                        float[] color = ColorUtil.getInkColor(client.player).getColorOrLockedComponents();
+                        RenderSystem.clearColor(color[0], color[1], color[2], 1.0f);
 
                         if (SplatcraftConfig.INK.inkAmountIndicator.value == InkAmountIndicator.CROSSHAIR) {
                             float attackCooldownProgress = LazyPlayerDataComponent.isSquid(this.client.player) || this.client.options.attackIndicator != AttackIndicator.CROSSHAIR ? 1.0f : this.client.player.getAttackCooldownProgress(0.0f);
@@ -200,7 +201,7 @@ public abstract class InGameHudMixin {
                             // draw foreground (colored)
                             splatcraft_drawTexture(matrices, x, y, 52, 94, width, 4);
                             // draw background (uncolored)
-                            RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+                            RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
                             $this.drawTexture(matrices, x, y, 36, 94, 16, 4);
                         } else if (SplatcraftConfig.INK.inkAmountIndicator.value == InkAmountIndicator.HOTBAR) {
                             int halfScaledWidth = this.scaledWidth / 2;
@@ -210,7 +211,7 @@ public abstract class InGameHudMixin {
                             float offset = inkAmount * 19.0f;
                             // draw foreground (colored)
                             splatcraft_drawTexture(matrices, x, y + 18 - offset, 18, 112 - offset, 18, offset);
-                            RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+                            RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
                             // draw background (uncolored)
                             $this.drawTexture(matrices, x, y, 0, 94, 18, 18);
 
@@ -227,8 +228,9 @@ public abstract class InGameHudMixin {
             }
         }
 
-        this.client.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
-        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, DrawableHelper.GUI_ICONS_TEXTURE);
+        RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private void splatcraft_drawTexture(MatrixStack matrices, float x, float y, float u, float v, float width, float height) {
@@ -248,14 +250,14 @@ public abstract class InGameHudMixin {
         splatcraft_drawTexturedQuad(matrices.peek().getModel(), x0, y0, x1, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight);
     }
     private static void splatcraft_drawTexturedQuad(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder.vertex(matrices, x0, y1, z).texture(u0, v1).next();
         bufferBuilder.vertex(matrices, x1, y1, z).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, x1, y0, z).texture(u1, v0).next();
         bufferBuilder.vertex(matrices, x0, y0, z).texture(u0, v0).next();
         bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
         BufferRenderer.draw(bufferBuilder);
     }
 

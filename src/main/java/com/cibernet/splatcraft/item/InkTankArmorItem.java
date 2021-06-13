@@ -9,17 +9,14 @@ import com.cibernet.splatcraft.item.weapon.AbstractWeaponItem;
 import com.cibernet.splatcraft.tag.SplatcraftItemTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -75,10 +72,8 @@ public class InkTankArmorItem extends InkableArmorItem {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, world, entity, itemSlot, isSelected);
 
-        if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
+        if (entity instanceof PlayerEntity player) {
             float ink = getInkAmount(stack);
-
             if (player.getEquippedStack(EquipmentSlot.CHEST).equals(stack) && ColorUtil.colorEquals(player, stack) && ink < this.capacity && !(player.getActiveItem().getItem() instanceof AbstractWeaponItem)) {
                 setInkAmount(stack, Math.min(this.capacity, ink + (LazyPlayerDataComponent.isSubmerged(player) ? (100f / (20 * 3.253f)) : 0.1f)));
             }
@@ -91,7 +86,7 @@ public class InkTankArmorItem extends InkableArmorItem {
         tooltip.add(new TranslatableText(Util.createTranslationKey("item", new Identifier(Splatcraft.MOD_ID, InkTankArmorItem.id)) + ".tooltip.ink" + (ctx.isAdvanced() ? ".advanced" : ""), String.format("%.1f", getInkAmount(stack)), capacity));
     }
 
-    @Environment(EnvType.CLIENT)
+    /*TODO @Environment(EnvType.CLIENT)
     public BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel) {
         if (entity.getEntityWorld().isClient) {
             BipedEntityModel<LivingEntity> model = createInkTankModel(stack, slot, defaultModel);
@@ -133,7 +128,7 @@ public class InkTankArmorItem extends InkableArmorItem {
         }
 
         return null;
-    }
+    }*/
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
@@ -147,7 +142,7 @@ public class InkTankArmorItem extends InkableArmorItem {
         return ((InkTankArmorItem) tank.getItem()).canUse(weapon.getItem()) ? getInkAmount(tank) : 0;
     }
     public static void setInkAmount(ItemStack stack, float value) {
-        CompoundTag splatcraft = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
+        NbtCompound splatcraft = stack.getOrCreateSubTag(Splatcraft.MOD_ID);
         if (splatcraft != null) {
             splatcraft.putFloat("ContainedInk", Math.max(0, value));
         }

@@ -4,7 +4,6 @@ import com.cibernet.splatcraft.Splatcraft;
 import com.cibernet.splatcraft.block.StageBarrierBlock;
 import com.cibernet.splatcraft.block.entity.StageBarrierBlockEntity;
 import com.cibernet.splatcraft.client.config.SplatcraftConfig;
-import com.cibernet.splatcraft.handler.RendererHandler;
 import com.cibernet.splatcraft.tag.SplatcraftBlockTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,9 +11,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
@@ -31,12 +32,8 @@ import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")
-public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBarrierBlockEntity> {
-    private static final RenderLayer BARRIER_RENDER = RenderLayer.of(new Identifier(Splatcraft.MOD_ID, StageBarrierBlock.id + "s").toString(), VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, 7, 131072, true, true, RenderLayer.MultiPhaseParameters.builder().shadeModel(new RenderPhase.ShadeModel(true)).lightmap(new RenderPhase.Lightmap(true)).texture(new RenderPhase.Texture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, false, true)).alpha(new RenderPhase.Alpha(0.003921569f)).transparency(RendererHandler.TRANSLUCENT_TRANSPARENCY).build(true));
-
-    public StageBarrierBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-    }
+public class StageBarrierBlockEntityRenderer<T extends StageBarrierBlockEntity> implements BlockEntityRenderer<T> {
+    public StageBarrierBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     private static void addVertex(VertexConsumer builder, MatrixStack matrixStack, float x, float y, float z, float textureX, float textureY, float r, float g, float b, float a) {
         builder.vertex(matrixStack.peek().getModel(), x, y, z)
@@ -48,7 +45,7 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
     }
 
     @Override
-    public void render(StageBarrierBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
+    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
         World world = blockEntity.getWorld();
         if (world != null && world.isClient) {
             PlayerEntity player = MinecraftClient.getInstance().player;
@@ -72,7 +69,7 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
         }
 
         Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Splatcraft.MOD_ID, "block/" + Registry.BLOCK.getId(block).getPath()));
-        VertexConsumer builder = vertices.getBuffer(BARRIER_RENDER);
+        VertexConsumer builder = vertices.getBuffer(RenderLayer.getTranslucent());
 
         float alpha = activeTime / blockEntity.getMaxActiveTime();
 
@@ -128,7 +125,7 @@ public class StageBarrierBlockEntityRenderer extends BlockEntityRenderer<StageBa
         if (world != null) {
             BlockPos pos = blockEntity.getPos().offset(side);
             BlockState state = world.getBlockState(pos);
-            boolean blockIsStageBarrier = state.getBlock().isIn(SplatcraftBlockTags.STAGE_BARRIERS);
+            boolean blockIsStageBarrier = SplatcraftBlockTags.STAGE_BARRIERS.contains(state.getBlock());
             if (!blockIsStageBarrier) {
                 return true;
             } else {

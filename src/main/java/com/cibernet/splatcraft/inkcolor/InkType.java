@@ -22,19 +22,16 @@ public enum InkType {
     }
 
     public Block asBlock() {
-        switch (this) {
-            default:
-            case NORMAL:
-                return SplatcraftBlocks.INKED_BLOCK;
-            case GLOWING:
-                return SplatcraftBlocks.GLOWING_INKED_BLOCK;
-        }
+        return switch (this) {
+            case NORMAL -> SplatcraftBlocks.INKED_BLOCK;
+            case GLOWING -> SplatcraftBlocks.GLOWING_INKED_BLOCK;
+        };
     }
 
     public static InkType from(InkedBlock block) {
         return block.isGlowing() ? GLOWING : NORMAL;
     }
     public static InkType from(PlayerEntity entity) {
-        return entity != null && entity.inventory.contains(new ItemStack(SplatcraftItems.SPLATFEST_BAND)) ? GLOWING : NORMAL;
+        return entity != null && entity.getInventory().contains(new ItemStack(SplatcraftItems.SPLATFEST_BAND)) ? GLOWING : NORMAL;
     }
 }

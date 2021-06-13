@@ -1,6 +1,5 @@
 package com.cibernet.splatcraft.particle;
 
-import com.cibernet.splatcraft.inkcolor.ColorUtil;
 import com.cibernet.splatcraft.inkcolor.InkColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +25,7 @@ public abstract class InkedParticleEffect implements ParticleEffect {
         this(color[0], color[1], color[2], scale);
     }
     public InkedParticleEffect(InkColor inkColor, float scale) {
-        this(ColorUtil.getColorsFromInt(inkColor.getColorOrLocked()), scale);
+        this(inkColor.getColorOrLockedComponents(), scale);
     }
 
     public InkedParticleEffect(float[] color) {

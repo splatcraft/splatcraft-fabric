@@ -3,7 +3,7 @@ package com.cibernet.splatcraft.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,13 +29,13 @@ public class LazyPlayerDataComponent implements Component, AutoSyncedComponent {
     }
 
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(NbtCompound tag) {
         tag.putBoolean("IsSquid", this.isSquid);
         tag.putBoolean("IsSubmerged", this.isSubmerged);
     }
 
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(NbtCompound tag) {
         this.isSquid = tag.getBoolean("IsSquid");
         this.isSubmerged = tag.getBoolean("IsSubmerged");
     }

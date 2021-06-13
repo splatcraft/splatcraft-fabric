@@ -13,7 +13,7 @@ public class SplatcraftTrackedDataHandlers {
     private static final HashMap<Integer, TrackedDataHandler<?>> HANDLERS = new HashMap<>();
     private static int prevId = 0;
 
-    public static final TrackedDataHandler<InkColor> INK_COLOR = register(new TrackedDataHandler<InkColor>() {
+    public static final TrackedDataHandler<InkColor> INK_COLOR = register(new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf packetByteBuf, InkColor inkColor) {
             packetByteBuf.writeString(inkColor.toString());
@@ -29,7 +29,7 @@ public class SplatcraftTrackedDataHandlers {
             return inkColor;
         }
     });
-    public static final TrackedDataHandler<InkType> INK_TYPE = register(new TrackedDataHandler<InkType>() {
+    public static final TrackedDataHandler<InkType> INK_TYPE = register(new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf packetByteBuf, InkType inkType) {
             packetByteBuf.writeString(inkType.toString());
@@ -46,7 +46,7 @@ public class SplatcraftTrackedDataHandlers {
             return inkColor;
         }
     });
-    public static final TrackedDataHandler<SquidBumperDisplayType> SQUID_BUMPER_DISPLAY_TYPE = register(new TrackedDataHandler<SquidBumperDisplayType>() {
+    public static final TrackedDataHandler<SquidBumperDisplayType> SQUID_BUMPER_DISPLAY_TYPE = register(new TrackedDataHandler<>() {
         @Override
         public void write(PacketByteBuf packetByteBuf, SquidBumperDisplayType displayType) {
             packetByteBuf.writeEnumConstant(displayType);
@@ -64,7 +64,7 @@ public class SplatcraftTrackedDataHandlers {
     });
 
     static {
-        HANDLERS.forEach((id, trackedDataHandler) -> TrackedDataHandlerRegistry.field_13328.put(trackedDataHandler, id));
+        HANDLERS.forEach((id, trackedDataHandler) -> TrackedDataHandlerRegistry.DATA_HANDLERS.put(trackedDataHandler, id));
     }
 
     public static <T> TrackedDataHandler<T> register(TrackedDataHandler<T> trackedDataHandler) {

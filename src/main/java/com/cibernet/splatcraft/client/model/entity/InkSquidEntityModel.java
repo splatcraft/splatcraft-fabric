@@ -1,36 +1,64 @@
 package com.cibernet.splatcraft.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 
-public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
+public class InkSquidEntityModel extends SinglePartEntityModel<LivingEntity> {
+    private final ModelPart root;
     private final ModelPart body;
     private final ModelPart leftTentacle;
     private final ModelPart rightTentacle;
 
-    public InkSquidEntityModel() {
-        textureWidth = 48;
-        textureHeight = 32;
+    public InkSquidEntityModel(ModelPart root) {
+        this.root = root;
+        this.body = root.getChild("body");
+        this.leftTentacle = root.getChild("left_tentacle");
+        this.rightTentacle = root.getChild("right_tentacle");
+    }
 
-        body = new ModelPart(this);
-        body.setPivot(0.0f, 22.5f, 3.0f);
-        body.setTextureOffset(0, 16).addCuboid(-4.0f, -1.5f, -12.0f, 8.0f, 3.0f, 3.0f, 0.0f, false);
-        body.setTextureOffset(0, 0).addCuboid(-5.5f, -2.0f, -9.0f, 11.0f, 4.0f, 5.0f, 0.0f, false);
-        body.setTextureOffset(0, 9).addCuboid(-3.5f, -1.5f, -4.0f, 7.0f, 3.0f, 4.0f, 0.0f, false);
-        body.setTextureOffset(20, 20).addCuboid(-3.0f, -1.5f, 0.0f, 6.0f, 3.0f, 2.0f, 0.0f, false);
+    public static TexturedModelData getTexturedModelData() {
+        ModelData data = new ModelData();
 
-        leftTentacle = new ModelPart(this);
-        leftTentacle.setPivot(2.5f, 22.5f, 2.0f);
-        leftTentacle.setTextureOffset(10, 24).addCuboid(-1.0f, -1.0f, 1.0f, 2.0f, 2.0f, 4.0f, 0.0f, true);
-        leftTentacle.setTextureOffset(0, 22).addCuboid(-2.0f, -1.0f, 5.0f, 3.0f, 2.0f, 4.0f, 0.0f, true);
+        ModelPartData root = data.getRoot();
 
-        rightTentacle = new ModelPart(this);
-        rightTentacle.setPivot(-2.5f, 22.5f, 2.0f);
-        rightTentacle.setTextureOffset(10, 24).addCuboid(-1.0f, -1.0f, 1.0f, 2.0f, 2.0f, 4.0f, 0.0f, false);
-        rightTentacle.setTextureOffset(0, 22).addCuboid(-1.0f, -1.0f, 5.0f, 3.0f, 2.0f, 4.0f, 0.0f, false);
+        root.addChild(
+            "body",
+            ModelPartBuilder.create()
+                .uv(0, 16)
+                .cuboid(-4.0f, -1.5f, -12.0f, 8.0f, 3.0f, 3.0f)
+                .uv(0, 0)
+                .cuboid(-5.5f, -2.0f, -9.0f, 11.0f, 4.0f, 5.0f)
+                .uv(0, 9)
+                .cuboid(-3.5f, -1.5f, -4.0f, 7.0f, 3.0f, 4.0f)
+                .uv(20, 20)
+                .cuboid(-3.0f, -1.5f, 0.0f, 6.0f, 3.0f, 2.0f),
+            ModelTransform.pivot(0.0f, 22.5f, 3.0f)
+        );
+
+        root.addChild(
+            "left_tentacle",
+            ModelPartBuilder.create()
+                .mirrored()
+                .uv(10, 24)
+                .cuboid(-1.0f, -1.0f, 1.0f, 2.0f, 2.0f, 4.0f)
+                .mirrored()
+                .uv(0, 22)
+                .cuboid(-2.0f, -1.0f, 5.0f, 3.0f, 2.0f, 4.0f),
+            ModelTransform.pivot(2.5f, 22.5f, 2.0f)
+        );
+        root.addChild(
+            "right_tentacle",
+            ModelPartBuilder.create()
+                .uv(10, 24)
+                .cuboid(-1.0f, -1.0f, 1.0f, 2.0f, 2.0f, 4.0f)
+                .uv(0, 22)
+                .cuboid(-1.0f, -1.0f, 5.0f, 3.0f, 2.0f, 4.0f),
+            ModelTransform.pivot(-2.5f, 22.5f, 2.0f)
+        );
+
+        return TexturedModelData.of(data, 48, 32);
     }
 
     @Override
@@ -41,7 +69,7 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
         boolean isSwimming = entity.isSwimming();
 
         if (!entity.hasVehicle()) {
-            float angle = isSwimming ? (float) -((entity.pitch * Math.PI) / 180F) : (float) (entity.getY() - entity.prevY) * 1.1f;
+            float angle = isSwimming ? (float) -((entity.getPitch() * Math.PI) / 180F) : (float) (entity.getY() - entity.prevY) * 1.1f;
             this.body.pitch = (float) -Math.min(Math.PI / 2, Math.max(-Math.PI / 2, angle));
 
             this.leftTentacle.pitch = this.body.pitch / 2;
@@ -53,7 +81,7 @@ public class InkSquidEntityModel extends CompositeEntityModel<LivingEntity> {
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
-        return ImmutableList.of(body, leftTentacle, rightTentacle);
+    public ModelPart getPart() {
+        return this.root;
     }
 }

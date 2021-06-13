@@ -12,7 +12,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -70,14 +70,14 @@ public class InkSquidEntity extends PathAwareEntity implements InkableEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        this.inkable_toTag(tag);
-        return super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        this.inkable_writeNbt(tag);
+        return super.writeNbt(tag);
     }
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
-        this.inkable_fromTag(tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        this.inkable_readNbt(tag);
     }
 
     @Override

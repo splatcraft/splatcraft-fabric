@@ -71,17 +71,13 @@ public class GrateRampBlock extends AbstractPassableBlock implements Waterloggab
     }
 
     protected static VoxelShape modifyShapeForDirection(Direction facing, VoxelShape shape) {
-        Box bb = shape.getBoundingBox();
-
-        switch(facing) {
-            case SOUTH:
-                return VoxelShapes.cuboid(new Box(1 - bb.maxZ, bb.minY, bb.minX, 1 - bb.minZ, bb.maxY, bb.maxX));
-            case EAST:
-                return VoxelShapes.cuboid(new Box(1 - bb.maxX, bb.minY, 1- bb.maxZ, 1 - bb.minX, bb.maxY, 1 - bb.minZ));
-            case WEST:
-                return VoxelShapes.cuboid(new Box(bb.minZ, bb.minY, 1 - bb.maxX, bb.maxZ, bb.maxY, 1 - bb.minX));
-        }
-        return shape;
+        Box box = shape.getBoundingBox();
+        return switch (facing) {
+            case SOUTH -> VoxelShapes.cuboid(new Box(1 - box.maxZ, box.minY, box.minX, 1 - box.minZ, box.maxY, box.maxX));
+            case EAST -> VoxelShapes.cuboid(new Box(1 - box.maxX, box.minY, 1 - box.maxZ, 1 - box.minX, box.maxY, 1 - box.minZ));
+            case WEST -> VoxelShapes.cuboid(new Box(box.minZ, box.minY, 1 - box.maxX, box.maxZ, box.maxY, 1 - box.minX));
+            default -> shape;
+        };
     }
 
     protected static VoxelShape[] createVoxelShapes(VoxelShape... shapes) {

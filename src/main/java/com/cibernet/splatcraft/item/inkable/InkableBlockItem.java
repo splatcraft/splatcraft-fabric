@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -21,7 +21,7 @@ public class InkableBlockItem extends BlockItem implements TabbedItemGroupAppend
     @Override
     public void appendStacksToTab(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
-            InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtil.setInkColor(new ItemStack(this, 1, Optional.of(new CompoundTag())), inkColor)));
+            InkColors.getAll().forEach((id, inkColor) -> stacks.add(ColorUtil.setInkColor(new ItemStack(this, 1, Optional.of(new NbtCompound())), inkColor)));
         }
     }
 

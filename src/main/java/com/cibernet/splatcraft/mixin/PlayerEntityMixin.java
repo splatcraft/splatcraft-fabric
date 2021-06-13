@@ -19,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,8 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin {
-    @Shadow @Final public PlayerAbilities abilities;
+public abstract class PlayerEntityMixin {
+    @Shadow public abstract PlayerAbilities getAbilities();
 
     private Vec3d splatcraft_posLastTick = Vec3d.ZERO;
 
@@ -50,7 +49,7 @@ public class PlayerEntityMixin {
         PlayerEntity $this = PlayerEntity.class.cast(this);
         LazyPlayerDataComponent lazyData = LazyPlayerDataComponent.getComponent($this);
 
-        if (lazyData.isSquid() && !this.abilities.flying) {
+        if (lazyData.isSquid() && !this.getAbilities().flying) {
             float movementSpeed = PlayerHandler.getMovementSpeed($this, cir.getReturnValueF());
             if (movementSpeed != -1.0f) {
                 cir.setReturnValue(cir.getReturnValueF() * movementSpeed);
