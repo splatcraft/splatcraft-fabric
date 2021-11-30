@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "package": "net.splatcraft.datagen.impl.mixin",
+  "plugin": "net.splatcraft.datagen.impl.mixin.DataGenMixinPlugin",
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

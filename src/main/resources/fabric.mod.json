@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+
+  "id": "splatcraft",
+  "version": "${version}",
+  "license": "MIT",
+
+  "name": "Splatcraft",
+  "icon": "assets/splatcraft/icon.png",
+  "description": "A Minecraft Splatoon Mod!",
+
+  "authors": [
+    "andante."
+  ],
+
+  "contact": {
+    "homepage": "https://splatcraft.net",
+    "sources": "https://github.com/splatcraft/splatcraft-fabric",
+    "issues": "https://github.com/splatcraft/splatcraft-fabric/issues"
+  },
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.splatcraft.Splatcraft"
+    ]
+  },
+  "mixins": [
+    "splatcraft.mixins.json",
+    "datagen.mixins.json"
+  ],
+  "accessWidener": "splatcraft.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.12.6",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+
+  "custom": {
+    "modmenu": {
+      "badges": [],
+      "links": {
+        "mod.splatcraft.contact.discord": "https://discord.splatcraft.net"
+      }
+    }
+  }
+}
