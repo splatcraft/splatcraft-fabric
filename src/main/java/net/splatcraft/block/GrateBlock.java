@@ -30,13 +30,8 @@ public class GrateBlock extends Block implements Waterloggable, InkPassableBlock
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(HALF) == BlockHalf.TOP ? SHAPE_TOP : SHAPE_BOTTOM;
-    }
-
-    @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return !(type == NavigationType.WATER && state.get(WATERLOGGED));
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder.add(HALF, WATERLOGGED));
     }
 
     @Override
@@ -54,9 +49,9 @@ public class GrateBlock extends Block implements Waterloggable, InkPassableBlock
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(HALF, WATERLOGGED);
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+        if (state.get(WATERLOGGED)) world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        return super.getStateForNeighborUpdate(state, facing, newState, world, pos, posFrom);
     }
 
     @Override
@@ -65,11 +60,28 @@ public class GrateBlock extends Block implements Waterloggable, InkPassableBlock
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (state.get(WATERLOGGED)) {
-            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return state.get(HALF) == BlockHalf.TOP ? SHAPE_TOP : SHAPE_BOTTOM;
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return !(type == NavigationType.WATER && state.get(WATERLOGGED));
+    }
+
+    @Override
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.isOf(this)) {
+            if (direction.getAxis() == Direction.Axis.Y) {
+                BlockHalf fromHalf = stateFrom.get(HALF);
+                BlockHalf half = state.get(HALF);
+                return (direction == Direction.UP && half.equals(BlockHalf.TOP) && fromHalf.equals(BlockHalf.BOTTOM))
+                    || (direction == Direction.DOWN && half.equals(BlockHalf.BOTTOM) && fromHalf.equals(BlockHalf.TOP));
+            } else {
+                return stateFrom.get(HALF).equals(state.get(HALF));
+            }
         }
 
-        return super.getStateForNeighborUpdate(state, facing, newState, world, pos, posFrom);
+        return false;
     }
 }

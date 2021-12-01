@@ -90,6 +90,17 @@ public abstract class AbstractRecipeGenerator extends AbstractGenerator<Identifi
                                       .criterion("has_ingredient", hasItem(from));
     }
 
+    public ShapedRecipeJsonFactory ringSurroundng(ItemConvertible outside, ItemConvertible inside, ItemConvertible to, int count) {
+        return ShapedRecipeJsonFactory.create(to, count)
+                                      .input('#', outside)
+                                      .input('X', inside)
+                                      .pattern("###")
+                                      .pattern("#X#")
+                                      .pattern("###")
+                                      .criterion("has_outside", hasItem(outside))
+                                      .criterion("has_inside", hasItem(inside));
+    }
+
     public ShapelessRecipeJsonFactory shapeless(ItemConvertible from, ItemConvertible to, int count) {
         return ShapelessRecipeJsonFactory.create(to, count)
                                          .input(from)

@@ -1,0 +1,47 @@
+{
+  "parent": "splatcraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "splatcraft:grate"
+    ]
+  },
+  "criteria": {
+    "has_outside": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_ingot"
+            ]
+          }
+        ]
+      }
+    },
+    "has_inside": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_bars"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "splatcraft:grate"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_outside",
+      "has_inside",
+      "has_the_recipe"
+    ]
+  ]
+}

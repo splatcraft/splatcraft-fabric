@@ -3,6 +3,7 @@ package net.splatcraft.datagen.impl.provider;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.splatcraft.datagen.RecipeGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.recipe.AbstractRecipeGenerator;
 import net.minecraft.advancement.Advancement;
@@ -37,7 +38,7 @@ public class RecipeProvider extends AbstractDataProvider<Supplier<AbstractRecipe
 
     @Override
     public List<Supplier<AbstractRecipeGenerator>> getGenerators() {
-        return List.of();
+        return List.of(RecipeGenerator::new);
     }
 
     @Override
