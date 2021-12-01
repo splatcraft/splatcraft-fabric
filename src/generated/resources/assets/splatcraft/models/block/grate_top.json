@@ -1,0 +1,7 @@
+{
+  "parent": "splatcraft:block/template_sided_trapdoor_top",
+  "textures": {
+    "texture": "splatcraft:block/grate",
+    "side": "splatcraft:block/grate_side"
+  }
+}

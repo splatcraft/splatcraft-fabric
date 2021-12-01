@@ -2,6 +2,7 @@ package net.splatcraft.datagen.impl.provider;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import net.splatcraft.datagen.ItemModelGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
 import net.minecraft.data.DataGenerator;
@@ -34,7 +35,7 @@ public class ItemModelProvider extends AbstractDataProvider<Supplier<AbstractIte
 
     @Override
     public List<Supplier<AbstractItemModelGenerator>> getGenerators() {
-        return List.of();
+        return List.of(ItemModelGenerator::new);
     }
 
     @Override

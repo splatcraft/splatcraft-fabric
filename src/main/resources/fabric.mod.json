@@ -23,6 +23,16 @@
   "entrypoints": {
     "main": [
       "net.splatcraft.Splatcraft"
+    ],
+    "client": [
+      "net.splatcraft.SplatcraftClient"
+    ],
+
+    "modmenu": [
+      "net.splatcraft.SplatcraftModMenu"
+    ],
+    "cardinal-components-entity": [
+      "net.splatcraft.SplatcraftCardinalComponents"
     ]
   },
   "mixins": [
@@ -44,6 +54,9 @@
       "links": {
         "mod.splatcraft.contact.discord": "https://discord.splatcraft.net"
       }
-    }
+    },
+    "cardinal-components": [
+      "splatcraft:player_data"
+    ]
   }
 }

@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 
 public abstract class AbstractDataProvider<T> implements DataProvider {
     protected static final Logger LOGGER = LogManager.getLogger();
-    protected static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    protected static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
     protected final DataGenerator root;
 

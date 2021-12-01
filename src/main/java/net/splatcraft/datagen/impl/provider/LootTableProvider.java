@@ -3,6 +3,8 @@ package net.splatcraft.datagen.impl.provider;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.loot.context.LootContextTypes;
+import net.splatcraft.datagen.BlockLootTableGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.loot.AbstractLootTableGenerator;
 import net.minecraft.data.DataGenerator;
@@ -37,7 +39,9 @@ public class LootTableProvider extends AbstractDataProvider<Pair<Supplier<Abstra
 
     @Override
     public List<Pair<Supplier<AbstractLootTableGenerator<?>>, LootContextType>> getGenerators() {
-        return List.of();
+        return List.of(
+            Pair.of(BlockLootTableGenerator::new, LootContextTypes.BLOCK)
+        );
     }
 
     @Override

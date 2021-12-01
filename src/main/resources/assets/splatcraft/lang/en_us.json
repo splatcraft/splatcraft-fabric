@@ -1,4 +1,7 @@
 {
   "mod.splatcraft.name": "Splatcraft",
-  "mod.splatcraft.contact.discord": "Discord"
+  "mod.splatcraft.contact.discord": "Discord",
+  "itemGroup.splatcraft.item_group": "Splatcraft",
+
+  "block.splatcraft.grate": "Grate"
 }

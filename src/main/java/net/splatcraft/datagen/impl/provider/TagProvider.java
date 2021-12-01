@@ -2,6 +2,8 @@ package net.splatcraft.datagen.impl.provider;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import net.splatcraft.datagen.BlockTagGenerator;
+import net.splatcraft.datagen.EntityTagGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
 import net.minecraft.data.DataGenerator;
@@ -33,7 +35,7 @@ public class TagProvider extends AbstractDataProvider<Supplier<AbstractTagGenera
 
     @Override
     public List<Supplier<AbstractTagGenerator<?>>> getGenerators() {
-        return List.of();
+        return List.of(BlockTagGenerator::new, EntityTagGenerator::new);
     }
 
     @Override
