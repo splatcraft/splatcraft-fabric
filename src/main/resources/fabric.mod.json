@@ -25,11 +25,11 @@
       "net.splatcraft.Splatcraft"
     ],
     "client": [
-      "net.splatcraft.SplatcraftClient"
+      "net.splatcraft.client.SplatcraftClient"
     ],
 
     "modmenu": [
-      "net.splatcraft.SplatcraftModMenu"
+      "net.splatcraft.client.SplatcraftModMenu"
     ],
     "cardinal-components-entity": [
       "net.splatcraft.SplatcraftCardinalComponents"
