@@ -7,6 +7,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.splatcraft.block.SplatcraftBlocks;
+import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +25,7 @@ public class Splatcraft implements ModInitializer {
         LOGGER.info("Initializing {}", MOD_NAME);
 
         Reflection.initialize(
+            CommonConfig.class,
             SplatcraftBlocks.class,
             SplatcraftComponents.class
         );

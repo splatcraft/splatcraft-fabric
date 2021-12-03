@@ -16,4 +16,8 @@ public class Util {
 
         return false;
     }
+
+    public static boolean canSquid(PlayerEntity player) {
+        return !player.hasVehicle();
+    }
 }

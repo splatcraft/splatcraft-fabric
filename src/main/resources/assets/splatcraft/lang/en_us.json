@@ -3,5 +3,8 @@
   "mod.splatcraft.contact.discord": "Discord",
   "itemGroup.splatcraft.item_group": "Splatcraft",
 
+  "key.categories.splatcraft": "Splatcraft",
+  "key.splatcraft.change_squid_form": "Change Squid Form",
+
   "block.splatcraft.grate": "Grate"
 }
