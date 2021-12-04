@@ -65,7 +65,7 @@ dependencies {
   modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 
   // utilities
-  modRuntimeOnly("com.github.joaoh1:OkZoomer:${project.okzoomer_version}") { exclude group: "net.fabricmc.fabric-api" }
+  modRuntimeOnly("com.github.EnnuiL:OkZoomer:${project.okzoomer_version}") { exclude group: "net.fabricmc.fabric-api" }
 }
 
 loom {
