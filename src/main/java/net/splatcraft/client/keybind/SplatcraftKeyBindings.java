@@ -14,9 +14,9 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.network.CommonNetworking;
+import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.network.PacketIdentifiers;
-import net.splatcraft.util.Util;
+import net.splatcraft.util.SplatcraftUtil;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
@@ -45,7 +45,7 @@ public class SplatcraftKeyBindings {
                         case HOLD -> isSquid = CHANGE_SQUID_FORM.isPressed();
                     }
 
-                    if (isSquid) isSquid = Util.canSquid(player);
+                    if (isSquid) isSquid = SplatcraftUtil.canSquid(player);
                     if (wasSquid != isSquid) setSquid(player, isSquid);
                 }
 
@@ -62,7 +62,7 @@ public class SplatcraftKeyBindings {
     }
 
     private static void setSquid(ClientPlayerEntity player, boolean squid) {
-        CommonNetworking.setSquidForm(player, squid);
+        NetworkingCommon.setSquidForm(player, squid);
 
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBoolean(squid);

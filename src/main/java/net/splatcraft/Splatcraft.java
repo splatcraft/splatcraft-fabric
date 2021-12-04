@@ -3,12 +3,18 @@ package net.splatcraft;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
+import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.server.command.InkColorCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,10 +32,33 @@ public class Splatcraft implements ModInitializer {
 
         Reflection.initialize(
             CommonConfig.class,
+
+            SplatcraftRegistries.class,
+            InkColors.class,
+
             SplatcraftBlocks.class,
             SplatcraftComponents.class
         );
 
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            InkColorCommand.register(dispatcher);
+        });
+
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
+
         LOGGER.info("Initialized {}", MOD_NAME);
+    }
+
+    private void initDev() {
+        LOGGER.info("Initializing {}-dev", Splatcraft.MOD_NAME);
+
+        for (Registry<?> registry : Registry.REGISTRIES) {
+            Identifier registryId = registry.getKey().getValue();
+            if (registryId.getNamespace().equals(MOD_ID)) {
+                LOGGER.info("registry {}: {}", registryId.getPath(), registry.getEntries().size());
+            }
+        }
+
+        LOGGER.info("Initialized {}-dev", Splatcraft.MOD_NAME);
     }
 }

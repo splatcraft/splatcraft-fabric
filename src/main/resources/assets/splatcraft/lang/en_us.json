@@ -6,5 +6,14 @@
   "key.categories.splatcraft": "Splatcraft",
   "key.splatcraft.change_squid_form": "Change Squid Form",
 
+  "command.splatcraft.argument.ink_color.notFound": "Unknown ink color '%s'",
+  "command.splatcraft.argument.entity.notAffected": "No entities were affected",
+  "command.splatcraft:inkcolor.single.success": "Changed the ink color of %s to %s",
+  "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s entities to %s",
+
+  "text.splatcraft.reloaded_config": "Reloaded config: %s",
+  "text.splatcraft.ink_color_display": "%s %s",
+  "text.splatcraft.ink_color_display.icon": "⬛",
+
   "block.splatcraft.grate": "Grate"
 }
