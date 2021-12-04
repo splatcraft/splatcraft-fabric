@@ -7,6 +7,7 @@ public class CommonNetworking {
     public static void setSquidForm(PlayerEntity player, boolean squid) {
         PlayerDataComponent data = PlayerDataComponent.get(player);
         data.setSquid(squid);
+        player.calculateDimensions();
         if (squid) player.setSprinting(false);
     }
 }
