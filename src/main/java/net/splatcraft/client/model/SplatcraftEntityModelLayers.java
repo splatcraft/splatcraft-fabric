@@ -15,9 +15,9 @@ public class SplatcraftEntityModelLayers {
     public static final EntityModelLayer INK_SQUID = registerMain("ink_squid");
 
     static {
-        ImmutableMap.<EntityModelLayer, EntityModelLayerRegistry.TexturedModelDataProvider>of(
-            SplatcraftEntityModelLayers.INK_SQUID, InkSquidEntityModel::getTexturedModelData
-        ).forEach(EntityModelLayerRegistry::registerModelLayer);
+        new ImmutableMap.Builder<EntityModelLayer, EntityModelLayerRegistry.TexturedModelDataProvider>()
+            .put(SplatcraftEntityModelLayers.INK_SQUID, InkSquidEntityModel::getTexturedModelData)
+        .build().forEach(EntityModelLayerRegistry::registerModelLayer);
     }
 
     private static EntityModelLayer registerMain(String id) {

@@ -5,6 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class Config {
     private final File file;
@@ -39,6 +44,23 @@ public class Config {
 
     protected <T, O extends Option<T>> O add(String id, O option) {
         return this.add(new Identifier(Splatcraft.MOD_ID, id), option);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void addConfigListEntries(ConfigEntryBuilder entryBuilder, Supplier<ConfigCategory> categoryCreator) {
+        if (this.canDisplayInMenu()) {
+            ConfigCategory category = categoryCreator.get();
+            for (Map.Entry<Identifier, Option<?>> entry : this.map.entrySet()) {
+                Identifier id = entry.getKey();
+                Option<?> option = entry.getValue();
+                category.addEntry(option.createConfigListEntry(id, entryBuilder));
+            }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public boolean canDisplayInMenu() {
+        return !this.map.isEmpty();
     }
 
     public void save() {

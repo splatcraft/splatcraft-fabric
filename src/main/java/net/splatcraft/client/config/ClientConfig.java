@@ -17,8 +17,14 @@ public class ClientConfig extends Config {
         INSTANCE.load();
     }
 
-    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add("change_squid_form_key_behavior", new EnumOption<>(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD));
-    public final BooleanOption instantSquidFormChangeClient = add("instant_squid_form_change_client", new BooleanOption(false));
+    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add(
+        "change_squid_form_key_behavior",
+        EnumOption.of(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD)
+    );
+    public final BooleanOption instantSquidFormChangeClient = add(
+        "instant_squid_form_change_client",
+        BooleanOption.of(false)
+    );
 
     private ClientConfig(File file) {
         super(file);
