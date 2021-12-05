@@ -66,15 +66,11 @@ dependencies {
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
   modImplementation("com.terraformersmc:modmenu:${project.mod_menu_version}") { exclude group: "net.fabricmc.fabric-api" }
-  // modImplementation("net.shadew:jedt:${project.jedt_version}") { exclude group: "net.fabricmc.fabric-api" }
 
   modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}"
   modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}"
 
   modApi("me.shedaniel.cloth:basic-math:+")
-
-  // utilities
-  modRuntimeOnly("com.github.EnnuiL:OkZoomer:${project.okzoomer_version}") { exclude group: "net.fabricmc.fabric-api" }
 }
 
 loom {
