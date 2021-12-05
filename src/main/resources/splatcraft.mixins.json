@@ -11,6 +11,7 @@
     "client.AbstractClientPlayerEntityInvoker",
     "client.EntityModelLayersInvoker",
     "client.EntityModelLayersMixin",
+    "client.HeldItemRendererMixin",
     "client.PlayerEntityRendererMixin"
   ],
   "injectors": {
