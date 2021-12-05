@@ -20,8 +20,6 @@ public class EnumOption<T extends Enum<T>> extends Option<T> {
     public void fromJson(JsonElement json) {
         if (json instanceof JsonPrimitive primitive && primitive.isString()) {
             this.value = T.valueOf(this.clazz, primitive.getAsString());
-        } else {
-            throw new RuntimeException("Invalid config for %s: %s".formatted(this, json));
-        }
+        } else invalidConfig(json);
     }
 }

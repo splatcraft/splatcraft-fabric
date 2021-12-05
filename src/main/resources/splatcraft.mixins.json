@@ -5,10 +5,14 @@
   "package": "net.splatcraft.mixin",
   "mixins": [
     "AbstractBlockMixin",
-    "PlayerEntityMixin",
-    "SplashOverlayAccessor"
+    "PlayerEntityMixin"
   ],
-  "client": [],
+  "client": [
+    "client.AbstractClientPlayerEntityInvoker",
+    "client.EntityModelLayersInvoker",
+    "client.EntityModelLayersMixin",
+    "client.PlayerEntityRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

@@ -22,6 +22,10 @@ public abstract class Option<T> {
     public abstract JsonElement toJson();
     public abstract void fromJson(JsonElement json);
 
+    protected void invalidConfig(JsonElement json) {
+        throw new RuntimeException("Invalid config for %s: %s".formatted(this, json));
+    }
+
     @Override
     public String toString() {
         return "Option{" + "value=" + value + '}';

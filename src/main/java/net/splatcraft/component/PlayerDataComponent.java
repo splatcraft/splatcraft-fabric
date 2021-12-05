@@ -2,15 +2,22 @@ package net.splatcraft.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.splatcraft.block.InkPassableBlock;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
+    private final PlayerEntity player;
+
     /**
      * Defines a player's ink color.
      */
@@ -22,7 +29,9 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private boolean squid = false;
 
     @SuppressWarnings("unused")
-    public PlayerDataComponent(PlayerEntity player) {}
+    public PlayerDataComponent(PlayerEntity player) {
+        this.player = player;
+    }
 
     public static PlayerDataComponent get(PlayerEntity player) {
         return SplatcraftComponents.PLAYER_DATA.get(player);
@@ -33,13 +42,18 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return true;
     }
 
+    public void sync() {
+        SplatcraftComponents.PLAYER_DATA.sync(this.player);
+    }
+
     public InkColor getInkColor() {
         return this.inkColor;
     }
 
     public boolean setInkColor(InkColor inkColor) {
-        if (this.inkColor == inkColor) return false;
+        if (this.inkColor.equals(inkColor)) return false;
         this.inkColor = inkColor;
+        this.sync();
         return true;
     }
 
@@ -50,6 +64,26 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     public boolean setSquid(boolean squid) {
         if (this.squid == squid) return false;
         this.squid = squid;
+
+        this.player.calculateDimensions();
+
+        if (squid) {
+            this.player.setSprinting(false);
+        } else {
+            // teleport up if inside block
+            BlockPos pos = this.player.getBlockPos();
+            BlockState state = this.player.world.getBlockState(pos);
+            if (state.getBlock() instanceof InkPassableBlock) {
+                VoxelShape shape = state.getCollisionShape(this.player.world, pos);
+                double maxY = shape.getMax(Direction.Axis.Y);
+                if (maxY < 1.0d) {
+                    double y = pos.getY() + maxY;
+                    if (y > this.player.getY()) this.player.setPosition(this.player.getX(), y, this.player.getZ());
+                }
+            }
+        }
+
+        this.sync();
         return true;
     }
 
@@ -63,7 +97,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.squid = tag.getBoolean(NBT_IS_SQUID);
-        this.inkColor = InkColor.fromString(tag.getString(NBT_INK_COLOR));
+        this.setSquid(tag.getBoolean(NBT_IS_SQUID));
+        this.setInkColor(InkColor.fromString(tag.getString(NBT_INK_COLOR)));
     }
 }

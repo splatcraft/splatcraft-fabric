@@ -13,6 +13,7 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.server.command.InkColorCommand;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,9 @@ public class Splatcraft implements ModInitializer {
             InkColors.class,
 
             SplatcraftBlocks.class,
-            SplatcraftComponents.class
+            SplatcraftComponents.class,
+
+            NetworkingCommon.class
         );
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {

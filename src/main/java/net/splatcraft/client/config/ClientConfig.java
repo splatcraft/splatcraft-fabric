@@ -2,11 +2,11 @@ package net.splatcraft.client.config;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
 import net.splatcraft.config.Config;
 import net.splatcraft.config.option.EnumOption;
-import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
+import net.splatcraft.config.option.IntOption;
 
 import java.io.File;
 
@@ -17,13 +17,10 @@ public class ClientConfig extends Config {
         INSTANCE.load();
     }
 
-    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add("change_squid_form_key_behavior", ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD);
+    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add("change_squid_form_key_behavior", new EnumOption<>(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD));
+    public final IntOption latencyForInstantSquidFormChange = add("instant_squid_form_change_latency", new IntOption(150));
 
     private ClientConfig(File file) {
         super(file);
-    }
-
-    public <T extends Enum<T>> EnumOption<T> add(String id, Class<T> clazz, T defaultValue) {
-        return this.add(new Identifier(Splatcraft.MOD_ID, id), new EnumOption<>(clazz, defaultValue));
     }
 }

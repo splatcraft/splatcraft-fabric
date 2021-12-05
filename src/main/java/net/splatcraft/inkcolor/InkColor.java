@@ -38,6 +38,10 @@ public class InkColor {
         return FROM_STRING.apply(id);
     }
 
+    public boolean equals(InkColor inkColor) {
+        return inkColor.getId().equals(this.getId());
+    }
+
     @Override
     public String toString() {
         return this.getId().toString();

@@ -12,7 +12,8 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.keybind.SplatcraftDevelopmentKeyBindings;
 import net.splatcraft.client.keybind.SplatcraftKeyBindings;
-import net.splatcraft.client.network.ClientNetworking;
+import net.splatcraft.client.model.SplatcraftEntityModelLayers;
+import net.splatcraft.client.network.NetworkingClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,8 +33,9 @@ public class SplatcraftClient implements ClientModInitializer {
 
         Reflection.initialize(
             ClientConfig.class,
+            SplatcraftEntityModelLayers.class,
             SplatcraftKeyBindings.class,
-            ClientNetworking.class
+            NetworkingClient.class
         );
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();

@@ -1,11 +1,11 @@
 package net.splatcraft.inkcolor;
 
 import me.shedaniel.math.Color;
+import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.mixin.SplashOverlayAccessor;
 import net.splatcraft.registry.SplatcraftRegistries;
 
 @SuppressWarnings("unused")
@@ -29,7 +29,7 @@ public class InkColors {
     public static final InkColor DYE_BLACK = dye(DyeColor.BLACK);
 
     // splatcraft colors
-    public static final InkColor MOJANG = vanilla("mojang", SplashOverlayAccessor.getMojangRed()); // mojang logo background color
+    public static final InkColor MOJANG = vanilla("mojang", BackgroundHelper.ColorMixer.getArgb(255, 239, 50, 61)); // mojang logo background color
     public static final InkColor COBALT = splatcraft("cobalt", 0x005682); // Cibernet
     public static final InkColor ICE = splatcraft("ice", 0x88FFC1); // icearstorm
     public static final InkColor FLORAL = splatcraft("floral", 0xFF9BEE); // floralQuaFloral

@@ -7,6 +7,7 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import net.splatcraft.Splatcraft;
 import net.splatcraft.config.option.Option;
 
 import java.io.*;
@@ -15,31 +16,38 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Config {
     private final File file;
-    private final File oldFile;
+    private final File backupFile;
     private final HashMap<Identifier, Option<?>> map = new HashMap<>();
+
+    private JsonObject oldJson;
 
     public Config(File file) {
         this.file = file;
-        this.oldFile = new File(this.file.getAbsolutePath() + "_old");
+        this.backupFile = new File(this.file.getAbsolutePath() + "_old");
     }
 
-    public <T, O extends Option<T>> O add(Identifier id, O option) {
+    protected <T, O extends Option<T>> O add(Identifier id, O option) {
         this.map.put(id, option);
         return option;
     }
 
+    protected <T, O extends Option<T>> O add(String id, O option) {
+        return this.add(new Identifier(Splatcraft.MOD_ID, id), option);
+    }
+
     public void save() {
-        JsonObject jsonObject = new JsonObject();
-
-        this.map.forEach((id, option) -> jsonObject.add(String.valueOf(id), option.toJson()));
-
         File folder = this.file.getParentFile();
         if (folder.exists() || folder.mkdirs()) {
             try (PrintWriter out = new PrintWriter(this.file)) {
+                JsonObject jsonObject = this.oldJson == null ? new JsonObject() : this.oldJson.deepCopy();
+                this.map.forEach((id, option) -> jsonObject.add(String.valueOf(id), option.toJson()));
+
                 StringWriter writer = new StringWriter();
                 Streams.write(jsonObject, createJsonWriter(writer));
                 out.println(writer);
@@ -53,7 +61,9 @@ public class Config {
 
     public void load() {
         try {
-            Files.copy(this.file.toPath(), this.oldFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(this.file.toPath(), this.backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (NoSuchFileException | FileNotFoundException e) {
+            save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,18 +72,28 @@ public class Config {
             String json = new String(Files.readAllBytes(this.file.toPath()));
             if (!json.isEmpty()) {
                 JsonObject jsonObject = (JsonObject) JsonParser.parseString(json);
+
+                this.oldJson = jsonObject;
+                Set<Identifier> loadedConfigs = new HashSet<>();
+
                 for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                     String id = entry.getKey();
                     JsonElement jsonElement = entry.getValue();
 
                     Identifier identifier = Identifier.tryParse(id);
                     Option<?> option = this.map.get(identifier);
-                    if (option != null) option.fromJson(jsonElement);
+                    if (option != null) {
+                        option.fromJson(jsonElement);
+                        loadedConfigs.add(identifier);
+                    }
                 }
+
+                if (!loadedConfigs.equals(this.map.keySet())) save();
+            } else {
+                save();
             }
         } catch (NoSuchFileException | FileNotFoundException e) {
             save();
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
