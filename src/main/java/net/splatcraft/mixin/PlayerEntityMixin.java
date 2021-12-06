@@ -9,12 +9,13 @@ import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.util.SplatcraftConstants;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable {
@@ -53,11 +54,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
         if (data.isSquid()) {
-            boolean submerged = false;
-            cir.setReturnValue(submerged
-                ? SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS
-                : SplatcraftConstants.SQUID_FORM_DIMENSIONS
-            );
+            cir.setReturnValue(data.isSubmerged() ? SQUID_FORM_SUBMERGED_DIMENSIONS : SQUID_FORM_DIMENSIONS);
         }
     }
 
@@ -68,8 +65,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         try {
             PlayerDataComponent data = PlayerDataComponent.get(that);
             if (data.isSquid()) {
-                boolean submerged = false;
-                float factor = submerged ? 3.0f : that.isOnGround() ? 2.6f : 1.2f;
+                float factor = data.isSubmerged() ? EYE_HEIGHT_SUBMERGED : that.isOnGround() ? EYE_HEIGHT_ON_GROUND : EYE_HEIGHT;
                 cir.setReturnValue(dimensions.height / factor);
             }
         } catch (NullPointerException ignored) {}

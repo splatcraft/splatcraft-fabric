@@ -28,6 +28,11 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      */
     private boolean squid = false;
 
+    /**
+     * Defines whether the player is submerged in ink.
+     */
+    private boolean submerged = false;
+
     @SuppressWarnings("unused")
     public PlayerDataComponent(PlayerEntity player) {
         this.player = player;
@@ -87,17 +92,30 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return true;
     }
 
+    public boolean isSubmerged() {
+        return this.submerged;
+    }
+
+    public boolean setSubmerged(boolean submerged) {
+        if (this.submerged == submerged) return false;
+        this.submerged = submerged;
+        this.sync();
+        return true;
+    }
+
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putBoolean(NBT_IS_SQUID, this.squid);
-
         if (this.inkColor == null) this.inkColor = InkColors.DYE_WHITE;
         tag.putString(NBT_INK_COLOR, this.inkColor.toString());
+
+        tag.putBoolean(NBT_IS_SQUID, this.squid);
+        tag.putBoolean(NBT_IS_SUBMERGED, this.submerged);
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.setSquid(tag.getBoolean(NBT_IS_SQUID));
         this.setInkColor(InkColor.fromString(tag.getString(NBT_INK_COLOR)));
+        this.setSquid(tag.getBoolean(NBT_IS_SQUID));
+        this.setSubmerged(tag.getBoolean(NBT_IS_SUBMERGED));
     }
 }
