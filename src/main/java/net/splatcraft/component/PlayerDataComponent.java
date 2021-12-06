@@ -99,6 +99,9 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     public boolean setSubmerged(boolean submerged) {
         if (this.submerged == submerged) return false;
         this.submerged = submerged;
+
+        this.player.calculateDimensions();
+
         this.sync();
         return true;
     }

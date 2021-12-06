@@ -9,8 +9,8 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 
 public class SplatcraftConstants {
-    public static final EntityDimensions SQUID_FORM_SUBMERGED_DIMENSIONS = EntityDimensions.fixed(0.5f, 0.5f);
-    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.fixed(0.5f, 1.0f);
+    public static final EntityDimensions SQUID_FORM_SUBMERGED_DIMENSIONS = EntityDimensions.changing(0.5f, 0.5f);
+    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.changing(0.5f, 0.6f);
 
     public static final float EYE_HEIGHT           = 1.2f;
     public static final float EYE_HEIGHT_ON_GROUND = 2.6f;
