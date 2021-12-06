@@ -7,7 +7,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.*;
-import net.splatcraft.entity.Inkable;
+import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.server.argument.InkColorArgumentType;
 
@@ -66,7 +66,7 @@ public class InkColorCommand {
 
         int affected = affectedEntities.size();
 
-        
+
         MutableText iconText = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(inkColor.getDecimalColor()));
         MutableText text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, iconText, inkColor);
         if (affected == 1) {

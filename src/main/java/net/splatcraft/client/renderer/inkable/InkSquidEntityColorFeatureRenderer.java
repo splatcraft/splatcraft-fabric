@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.splatcraft.client.model.inkable.InkSquidEntityModel;
-import net.splatcraft.entity.Inkable;
+import net.splatcraft.inkcolor.Inkable;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidEntityColorFeatureRenderer<T extends LivingEntity> extends FeatureRenderer<T, InkSquidEntityModel<T>> {

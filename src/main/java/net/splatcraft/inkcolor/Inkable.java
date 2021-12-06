@@ -1,6 +1,4 @@
-package net.splatcraft.entity;
-
-import net.splatcraft.inkcolor.InkColor;
+package net.splatcraft.inkcolor;
 
 public interface Inkable {
     InkColor getInkColor();
