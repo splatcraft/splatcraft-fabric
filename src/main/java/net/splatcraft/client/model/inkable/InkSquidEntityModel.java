@@ -65,14 +65,13 @@ public class InkSquidEntityModel<T extends LivingEntity> extends SinglePartEntit
     }
 
     @Override
-    public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {}
-
-    @Override
-    public void animateModel(T entity, float limbAngle, float limbDistance, float tickDelta) {
+    public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
         boolean isSwimming = entity.isSwimming();
 
         if (!entity.hasVehicle()) {
-            float angle = isSwimming ? (float) -((entity.getPitch() * Math.PI) / 180F) : (float) (entity.getY() - entity.prevY) * 1.1f;
+            float angle = isSwimming
+                ? (float) -((entity.getPitch() * Math.PI) / 180F)
+                : (float) (entity.getY() - entity.prevY) * 1.1f;
             this.body.pitch = (float) -Math.min(Math.PI / 2, Math.max(-Math.PI / 2, angle));
 
             this.leftTentacle.pitch = this.body.pitch / 2;

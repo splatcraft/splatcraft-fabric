@@ -5,6 +5,7 @@
 
   "key.categories.splatcraft": "Splatcraft",
   "key.splatcraft.change_squid_form": "Change Squid Form",
+  "key.splatcraft.open_config": "Open Configuration Menu",
 
   "config.splatcraft.title": "Splatcraft",
   "config.splatcraft.category.client": "Client",
