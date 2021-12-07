@@ -21,6 +21,7 @@
   "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s entities to %s",
 
   "text.splatcraft.reloaded_config": "Reloaded config: %s",
+  "text.splatcraft.reloaded_config.failed": "Could not reload config",
   "text.splatcraft.ink_color_display": "%s %s",
   "text.splatcraft.ink_color_display.icon": "⬛",
 

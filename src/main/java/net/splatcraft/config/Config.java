@@ -68,7 +68,7 @@ public class Config {
         if (folder.exists() || folder.mkdirs()) {
             try (PrintWriter out = new PrintWriter(this.file)) {
                 JsonObject jsonObject = this.oldJson == null ? new JsonObject() : this.oldJson.deepCopy();
-                this.map.forEach((id, option) -> jsonObject.add(String.valueOf(id), option.toJson()));
+                this.map.forEach((id, option) -> jsonObject.add(id.toString(), option.toJson()));
 
                 StringWriter writer = new StringWriter();
                 Streams.write(jsonObject, createJsonWriter(writer));

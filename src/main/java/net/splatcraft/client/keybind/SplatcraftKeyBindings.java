@@ -20,7 +20,7 @@ import org.lwjgl.glfw.GLFW;
 public class SplatcraftKeyBindings {
     public static final String KEY_CATEGORY = "key.categories.%s".formatted(Splatcraft.MOD_ID);
 
-    public static final ToggleKeyBinding CHANGE_SQUID_FORM = register("change_squid_form", GLFW.GLFW_KEY_Z, ToggleKeyBinding::new);
+    public static final SinglePressKeyBinding CHANGE_SQUID_FORM = register("change_squid_form", GLFW.GLFW_KEY_Z, SinglePressKeyBinding::new);
     public static final KeyBinding OPEN_CONFIG = register("open_config", GLFW.GLFW_KEY_UNKNOWN);
 
     static {
@@ -53,7 +53,7 @@ public class SplatcraftKeyBindings {
         });
     }
 
-    private static <K extends KeyBinding> K register(String id, int code, KeyBindingFactory<K> factory) {
+    public static <K extends KeyBinding> K register(String id, int code, KeyBindingFactory<K> factory) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);
         String dottedIdentifier = "%s.%s".formatted(identifier.getNamespace(), identifier.getPath());
         K key = factory.create("key.%s".formatted(dottedIdentifier), InputUtil.Type.KEYSYM, code, KEY_CATEGORY);
@@ -62,7 +62,7 @@ public class SplatcraftKeyBindings {
     }
 
     @SuppressWarnings("unchecked")
-    private static <K extends KeyBinding> K register(String id, int code) {
+    public static <K extends KeyBinding> K register(String id, int code) {
         return (K) register(id, code, KeyBinding::new);
     }
 

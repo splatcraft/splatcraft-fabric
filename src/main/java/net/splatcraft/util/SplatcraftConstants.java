@@ -9,12 +9,12 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 
 public class SplatcraftConstants {
-    public static final EntityDimensions SQUID_FORM_SUBMERGED_DIMENSIONS = EntityDimensions.changing(0.5f, 0.5f);
-    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.changing(0.5f, 0.6f);
+    public static final EntityDimensions SQUID_FORM_DIMENSIONS = EntityDimensions.changing(0.6f, 0.6f);
+    public static final EntityDimensions SQUID_FORM_SUBMERGED_DIMENSIONS = EntityDimensions.changing(0.6f, 0.5f);
 
-    public static final float EYE_HEIGHT           = 1.2f;
-    public static final float EYE_HEIGHT_ON_GROUND = 2.6f;
-    public static final float EYE_HEIGHT_SUBMERGED = 3.0f;
+    public static float getEyeHeight(boolean submerged) {
+        return submerged ? SQUID_FORM_SUBMERGED_DIMENSIONS.height / 2.0f : SQUID_FORM_DIMENSIONS.height / 1.5f;
+    }
 
     public static final String NBT_INK_COLOR = "InkColor";
     public static final String NBT_IS_SQUID = "Squid";
@@ -27,6 +27,7 @@ public class SplatcraftConstants {
     public static final String STRING_DEFAULT_INK_COLOR = DyeColor.WHITE.getName();
 
     public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
+    public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);
     public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color_display".formatted(Splatcraft.MOD_ID);
     public static final String T_INK_COLOR_TEXT_DISPLAY_ICON = "%s.icon".formatted(T_INK_COLOR_TEXT_DISPLAY);
     public static final String T_COMMAND_ERROR_INK_COLOR_NOT_FOUND = cmdInkColor("notFound");

@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.inkcolor.InkColor;
+import net.splatcraft.util.SplatcraftConstants;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -65,8 +66,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         try {
             PlayerDataComponent data = PlayerDataComponent.get(that);
             if (data.isSquid()) {
-                float factor = data.isSubmerged() ? EYE_HEIGHT_SUBMERGED : that.isOnGround() ? EYE_HEIGHT_ON_GROUND : EYE_HEIGHT;
-                cir.setReturnValue(dimensions.height / factor);
+                cir.setReturnValue(SplatcraftConstants.getEyeHeight(data.isSubmerged()));
             }
         } catch (NullPointerException ignored) {}
     }
