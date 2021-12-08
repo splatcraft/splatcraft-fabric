@@ -28,5 +28,9 @@
   "text.splatcraft.block_entity_description": "%s [%s, %s]",
 
   "block.splatcraft.canvas": "Canvas",
-  "block.splatcraft.grate": "Grate"
+  "block.splatcraft.grate": "Grate",
+
+  "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
+
+  "entity.splatcraft.ink_squid": "Ink Squid"
 }

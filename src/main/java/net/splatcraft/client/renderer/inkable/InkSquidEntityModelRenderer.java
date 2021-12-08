@@ -8,13 +8,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.model.inkable.InkSquidEntityModel;
-import net.splatcraft.util.SplatcraftUtil;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidEntityModelRenderer<T extends LivingEntity> extends LivingEntityRenderer<T, InkSquidEntityModel<T>> {
     public InkSquidEntityModelRenderer(EntityRendererFactory.Context ctx) {
-        super(ctx, new InkSquidEntityModel<>(ctx.getPart(SplatcraftEntityModelLayers.INK_SQUID)), 0.2f);
-        this.addFeature(new InkSquidEntityColorFeatureRenderer<>(this, new InkSquidEntityModel<>(ctx.getPart(SplatcraftEntityModelLayers.INK_SQUID)), SplatcraftUtil.entityTexture("ink_squid/ink_squid")));
+        super(ctx, createModel(ctx), 0.2f);
+        this.addFeature(new InkSquidEntityColorFeatureRenderer<>(this, createModel(ctx), entityTexture("ink_squid/ink_squid")));
     }
 
     @Override
@@ -24,6 +25,10 @@ public class InkSquidEntityModelRenderer<T extends LivingEntity> extends LivingE
 
     @Override
     public Identifier getTexture(T entity) {
-        return SplatcraftUtil.entityTexture("ink_squid/ink_squid_overlay");
+        return entityTexture("ink_squid/ink_squid_overlay");
+    }
+
+    public static <T extends LivingEntity> InkSquidEntityModel<T> createModel(EntityRendererFactory.Context ctx) {
+        return new InkSquidEntityModel<>(ctx.getPart(SplatcraftEntityModelLayers.INK_SQUID));
     }
 }

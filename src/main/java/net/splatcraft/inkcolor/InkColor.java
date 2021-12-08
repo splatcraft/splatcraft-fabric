@@ -1,20 +1,19 @@
 package net.splatcraft.inkcolor;
 
 import me.shedaniel.math.Color;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.util.Identifiable;
 
 import java.util.function.Function;
 
-import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY;
-import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY_ICON;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
-public class InkColor {
+public class InkColor implements Identifiable {
     public static final Function<InkColor, Identifier> TO_IDENTIFIER = Util.memoize(SplatcraftRegistries.INK_COLOR::getId);
     public static final Function<String, InkColor> FROM_STRING = Util.memoize(s -> SplatcraftRegistries.INK_COLOR.get(Identifier.tryParse(s)));
 
@@ -32,6 +31,11 @@ public class InkColor {
         return this.color.getColor();
     }
 
+    public Text getDisplayText() {
+        Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
+        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, this);
+    }
+
     /**
      * @return the {@link Identifier} of this {@link InkColor}.
      *         If not registered, it will return the
@@ -41,13 +45,8 @@ public class InkColor {
         return TO_IDENTIFIER.apply(this);
     }
 
-    public Text getDisplayText() {
-        Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
-        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, this);
-    }
-
-    public static String toString(InkColor inkColor) {
-        return (inkColor == null ? InkColors._DEFAULT : inkColor).toString();
+    public static InkColor fromId(Identifier id) {
+        return fromString(id.toString());
     }
 
     public static InkColor fromString(String id) {
@@ -56,6 +55,10 @@ public class InkColor {
 
     public boolean equals(InkColor inkColor) {
         return inkColor != null && inkColor.getId().equals(this.getId());
+    }
+
+    public static String toString(InkColor inkColor) {
+        return (inkColor == null ? InkColors._DEFAULT : inkColor).toString();
     }
 
     @Override

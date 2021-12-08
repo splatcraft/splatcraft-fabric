@@ -17,6 +17,7 @@ import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
+import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.registry.SplatcraftRegistries;
@@ -30,7 +31,7 @@ public class Splatcraft implements ModInitializer {
     public static final String    MOD_NAME   = "Splatcraft";
 
     public static final Logger    LOGGER     = LogManager.getLogger(MOD_ID);
-    public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "item_group"), () -> new ItemStack(SplatcraftBlocks.GRATE));
+    public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "item_group"), () -> new ItemStack(SplatcraftBlocks.CANVAS));
 
     @SuppressWarnings("UnstableApiUsage")
     @Override
@@ -46,6 +47,7 @@ public class Splatcraft implements ModInitializer {
             SplatcraftBlockEntities.class,
             SplatcraftBlocks.class,
             SplatcraftComponents.class,
+            SplatcraftEntities.class,
 
             NetworkingCommon.class
         );

@@ -5,7 +5,8 @@
   "package": "net.splatcraft.mixin",
   "mixins": [
     "AbstractBlockMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "TrackedDataHandlerRegistryAccessor"
   ],
   "client": [
     "client.AbstractClientPlayerEntityInvoker",
