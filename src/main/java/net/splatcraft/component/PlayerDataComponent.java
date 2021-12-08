@@ -21,7 +21,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     /**
      * Defines a player's ink color.
      */
-    private InkColor inkColor = InkColors.DYE_WHITE;
+    private InkColor inkColor = InkColors._DEFAULT;
 
     /**
      * Defines whether the player is in squid form.
@@ -107,18 +107,16 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        if (this.inkColor == null) this.inkColor = InkColors.DYE_WHITE;
-        tag.putString(NBT_INK_COLOR, this.inkColor.toString());
-
-        tag.putBoolean(NBT_IS_SQUID, this.squid);
-        tag.putBoolean(NBT_IS_SUBMERGED, this.submerged);
+    public void writeToNbt(NbtCompound nbt) {
+        nbt.putString(NBT_INK_COLOR, InkColor.toString(this.inkColor));
+        nbt.putBoolean(NBT_IS_SQUID, this.squid);
+        nbt.putBoolean(NBT_IS_SUBMERGED, this.submerged);
     }
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
-        this.setInkColor(InkColor.fromString(tag.getString(NBT_INK_COLOR)));
-        this.setSquid(tag.getBoolean(NBT_IS_SQUID));
-        this.setSubmerged(tag.getBoolean(NBT_IS_SUBMERGED));
+    public void readFromNbt(NbtCompound nbt) {
+        this.setInkColor(InkColor.fromString(nbt.getString(NBT_INK_COLOR)));
+        this.setSquid(nbt.getBoolean(NBT_IS_SQUID));
+        this.setSubmerged(nbt.getBoolean(NBT_IS_SUBMERGED));
     }
 }

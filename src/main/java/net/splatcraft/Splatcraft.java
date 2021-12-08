@@ -4,18 +4,24 @@ import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
+import net.splatcraft.block.entity.SplatcraftBlockEntities;
+import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.server.command.InkColorCommand;
+import net.splatcraft.util.SplatcraftUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,6 +43,7 @@ public class Splatcraft implements ModInitializer {
             SplatcraftRegistries.class,
             InkColors.class,
 
+            SplatcraftBlockEntities.class,
             SplatcraftBlocks.class,
             SplatcraftComponents.class,
 
@@ -45,6 +52,12 @@ public class Splatcraft implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             InkColorCommand.register(dispatcher);
+        });
+        ServerTickEvents.START_SERVER_TICK.register(server -> {
+            for (ServerPlayerEntity player : PlayerLookup.all(server)) {
+                PlayerDataComponent data = PlayerDataComponent.get(player);
+                data.setSubmerged(SplatcraftUtil.canSubmergeInInk(player));
+            }
         });
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();

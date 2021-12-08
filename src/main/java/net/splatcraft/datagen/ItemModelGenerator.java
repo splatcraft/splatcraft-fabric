@@ -12,6 +12,7 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
 
     @Override
     public void generate() {
+        this.add(SplatcraftBlocks.CANVAS);
         this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
     }
 }

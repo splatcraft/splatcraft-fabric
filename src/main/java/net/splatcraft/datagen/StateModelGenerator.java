@@ -20,6 +20,7 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
 
     @Override
     public void generate() {
+        this.add(SplatcraftBlocks.CANVAS, block -> this.simple(name(block), cubeAllTinted(name(block))));
         this.add(SplatcraftBlocks.GRATE, this::grate);
     }
 
@@ -41,5 +42,10 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
         return new InheritingModelGen(new Identifier(Splatcraft.MOD_ID, "block/template_sided_trapdoor_" + half.asString()))
             .texture("texture", texture)
             .texture("side", side);
+    }
+
+    public static InheritingModelGen cubeAllTinted(Identifier texture) {
+        return new InheritingModelGen(new Identifier(Splatcraft.MOD_ID, "block/cube_all_tinted"))
+            .texture("all", texture);
     }
 }

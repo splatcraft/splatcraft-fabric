@@ -17,13 +17,16 @@
 
   "command.splatcraft.argument.ink_color.notFound": "Unknown ink color '%s'",
   "command.splatcraft.argument.entity.notAffected": "No entities were affected",
+  "command.splatcraft:inkcolor.get": "The ink color of %s is %s",
   "command.splatcraft:inkcolor.single.success": "Changed the ink color of %s to %s",
-  "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s entities to %s",
+  "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s inkables to %s",
 
   "text.splatcraft.reloaded_config": "Reloaded config: %s",
   "text.splatcraft.reloaded_config.failed": "Could not reload config",
   "text.splatcraft.ink_color_display": "%s %s",
   "text.splatcraft.ink_color_display.icon": "⬛",
+  "text.splatcraft.block_entity_description": "%s [%s, %s]",
 
+  "block.splatcraft.canvas": "Canvas",
   "block.splatcraft.grate": "Grate"
 }

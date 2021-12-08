@@ -21,7 +21,7 @@ public class AbstractBlockMixin {
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     private void onGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx, CallbackInfoReturnable<VoxelShape> cir) {
         if (state.getBlock() instanceof InkPassableBlock) {
-            if (ctx instanceof EntityShapeContext entityCtx && SplatcraftUtil.inkPassesBlock(entityCtx.getEntity())) {
+            if (ctx instanceof EntityShapeContext entityCtx && SplatcraftUtil.doesInkPassBlock(entityCtx.getEntity())) {
                 cir.setReturnValue(VoxelShapes.empty());
             }
         }

@@ -1,5 +1,6 @@
 package net.splatcraft.datagen;
 
+import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.block.Block;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.registry.Registry;
@@ -14,6 +15,10 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
 
     @Override
     public void generate() {
+        this.add(FabricMineableTags.SHEARS_MINEABLE,
+            SplatcraftBlocks.CANVAS
+        );
+
         this.add(BlockTags.PICKAXE_MINEABLE,
             SplatcraftBlocks.GRATE
         );

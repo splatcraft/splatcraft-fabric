@@ -23,15 +23,19 @@ public class SplatcraftConstants {
     public static final Identifier COMMAND_INK_COLOR = new Identifier(Splatcraft.MOD_ID, "inkcolor");
     public static final String COMMAND_ARGUMENT_INK_COLOR = "ink_color";
     public static final String COMMAND_ARGUMENT_TARGETS = "targets";
+    public static final String COMMAND_ARGUMENT_FROM = "from";
+    public static final String COMMAND_ARGUMENT_TO = "to";
 
-    public static final String STRING_DEFAULT_INK_COLOR = DyeColor.WHITE.getName();
+    public static final Identifier IDENTIFIER_DEFAULT_INK_COLOR = new Identifier(DyeColor.WHITE.getName());
 
     public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);
     public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color_display".formatted(Splatcraft.MOD_ID);
     public static final String T_INK_COLOR_TEXT_DISPLAY_ICON = "%s.icon".formatted(T_INK_COLOR_TEXT_DISPLAY);
+    public static final String T_BLOCK_ENTITY_DESCRIPTION = "text.%s.block_entity_description".formatted(Splatcraft.MOD_ID);
     public static final String T_COMMAND_ERROR_INK_COLOR_NOT_FOUND = cmdInkColor("notFound");
     public static final String T_COMMAND_ERROR_NO_ENTITIES_AFFECTED = cmdEntity("notAffected");
+    public static final String T_COMMAND_INK_COLOR_GET = cmd("%s.get".formatted(COMMAND_INK_COLOR));
     public static final String T_COMMAND_INK_COLOR_SUCCESS_SINGLE = cmdSuc("%s.single".formatted(COMMAND_INK_COLOR));
     public static final String T_COMMAND_INK_COLOR_SUCCESS_MULTIPLE = cmdSuc("%s.multiple".formatted(COMMAND_INK_COLOR));
 

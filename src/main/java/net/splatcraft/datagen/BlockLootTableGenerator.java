@@ -11,6 +11,7 @@ public class BlockLootTableGenerator extends AbstractBlockLootTableGenerator {
 
     @Override
     public void generate() {
+        this.add(SplatcraftBlocks.CANVAS);
         this.add(SplatcraftBlocks.GRATE);
     }
 }

@@ -23,7 +23,7 @@ public class PlayerEntityRendererMixin {
     private void render(AbstractClientPlayerEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, CallbackInfo ci) {
         PlayerDataComponent data = PlayerDataComponent.get(entity);
         if (data.isSquid()) {
-            if (!SplatcraftUtil.canSubmerge(entity)) this.inkSquidRenderer.render(entity, yaw, tickDelta, matrices, vertices, light);
+            if (!data.isSubmerged()) this.inkSquidRenderer.render(entity, yaw, tickDelta, matrices, vertices, light);
             ci.cancel();
         }
     }

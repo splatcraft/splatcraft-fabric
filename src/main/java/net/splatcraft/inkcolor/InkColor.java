@@ -1,11 +1,18 @@
 package net.splatcraft.inkcolor;
 
 import me.shedaniel.math.Color;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.splatcraft.registry.SplatcraftRegistries;
 
 import java.util.function.Function;
+
+import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY;
+import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY_ICON;
 
 public class InkColor {
     public static final Function<InkColor, Identifier> TO_IDENTIFIER = Util.memoize(SplatcraftRegistries.INK_COLOR::getId);
@@ -34,12 +41,21 @@ public class InkColor {
         return TO_IDENTIFIER.apply(this);
     }
 
+    public Text getDisplayText() {
+        Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
+        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, this);
+    }
+
+    public static String toString(InkColor inkColor) {
+        return (inkColor == null ? InkColors._DEFAULT : inkColor).toString();
+    }
+
     public static InkColor fromString(String id) {
         return FROM_STRING.apply(id);
     }
 
     public boolean equals(InkColor inkColor) {
-        return inkColor.getId().equals(this.getId());
+        return inkColor != null && inkColor.getId().equals(this.getId());
     }
 
     @Override

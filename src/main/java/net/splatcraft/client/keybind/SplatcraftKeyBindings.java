@@ -46,7 +46,7 @@ public class SplatcraftKeyBindings {
                         case HOLD -> nowSquid = CHANGE_SQUID_FORM.isPressed();
                     }
 
-                    if (nowSquid) nowSquid = SplatcraftUtil.canSquid(player);
+                    if (nowSquid) nowSquid = SplatcraftUtil.canEnterSquidForm(player);
                     if (wasSquid != nowSquid) NetworkingClient.sendKeyChangeSquidForm(nowSquid);
                 }
             }

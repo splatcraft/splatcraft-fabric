@@ -11,6 +11,8 @@ import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 
 public class SplatcraftBlocks {
+    public static final Block CANVAS = register("canvas", new CanvasBlock(FabricBlockSettings.of(Material.WOOL).strength(0.8f).sounds(BlockSoundGroup.WOOL)));
+
     public static final Block GRATE = register("grate", new GrateBlock(
         FabricBlockSettings.of(Material.METAL)
                            .requiresTool().strength(4.0f)

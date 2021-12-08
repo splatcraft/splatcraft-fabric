@@ -324,6 +324,9 @@ public class InkColors {
     public static final InkColor SPLATFEST_SUPER_STAR = splatoon("splatfest_super_star", 0xB3A10D);
     public static final InkColor SPLATFEST_SUPER_MUSHROOM_VS_SUPER_STAR_NEUTRAL = splatoon("splatfest_super_mushroom_vs_super_star_neutral", 0x0D40DE);
 
+    // technical
+    public static final InkColor _DEFAULT = InkColors.DYE_WHITE;
+
     private static InkColor register(Identifier id, Color color) {
         return Registry.register(SplatcraftRegistries.INK_COLOR, id, new InkColor(color));
     }
