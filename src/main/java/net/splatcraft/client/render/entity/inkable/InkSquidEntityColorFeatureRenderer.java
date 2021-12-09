@@ -1,4 +1,4 @@
-package net.splatcraft.client.renderer.inkable;
+package net.splatcraft.client.render.entity.inkable;
 
 import me.shedaniel.math.Color;
 import net.fabricmc.api.EnvType;
@@ -28,12 +28,7 @@ public class InkSquidEntityColorFeatureRenderer<T extends LivingEntity> extends 
     public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity instanceof Inkable inkable) {
             Color color = inkable.getInkColor().getColor();
-
-            float red = color.getRed() / 255.0f;
-            float green = color.getGreen() / 255.0f;
-            float blue = color.getBlue() / 255.0f;
-
-            FeatureRenderer.render(this.getContextModel(), this.model, this.texture, matrices, vertices, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, red, green, blue);
+            FeatureRenderer.render(this.getContextModel(), this.model, this.texture, matrices, vertices, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, color.getRed(), color.getGreen(), color.getBlue());
         } else {
             throw new IllegalArgumentException("Trying to render non-inkable entity with %s".formatted(this.getClass().getCanonicalName()));
         }

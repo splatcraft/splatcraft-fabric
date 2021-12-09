@@ -1,0 +1,6 @@
+{
+  "parent": "splatcraft:block/cube_all_tinted",
+  "textures": {
+    "all": "splatcraft:block/inked_block"
+  }
+}

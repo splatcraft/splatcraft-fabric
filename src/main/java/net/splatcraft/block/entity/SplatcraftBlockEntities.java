@@ -13,6 +13,7 @@ import net.splatcraft.Splatcraft;
 
 public class SplatcraftBlockEntities {
     public static final BlockEntityType<InkableBlockEntity> INKABLE = register("inkable", (p, s) -> new InkableBlockEntity(SplatcraftBlockEntities.INKABLE, p, s));
+    public static final BlockEntityType<InkedBlockEntity> INKED_BLOCK = register("inked_block", (p, s) -> new InkedBlockEntity(SplatcraftBlockEntities.INKED_BLOCK, p, s));
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder<T> builder) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);

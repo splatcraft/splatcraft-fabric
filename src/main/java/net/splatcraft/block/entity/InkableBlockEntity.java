@@ -37,10 +37,7 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
     public boolean setInkColor(InkColor inkColor) {
         if (this.inkColor.equals(inkColor)) return false;
         this.inkColor = inkColor;
-        if (this.world != null) {
-            this.markDirty();
-            this.world.updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
-        }
+        this.sync();
         return true;
     }
 
@@ -72,5 +69,12 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    protected void sync() {
+        if (this.world != null) {
+            this.markDirty();
+            this.world.updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+        }
     }
 }

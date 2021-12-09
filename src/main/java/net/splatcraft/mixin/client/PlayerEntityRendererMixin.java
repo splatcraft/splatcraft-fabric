@@ -6,7 +6,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.splatcraft.client.renderer.inkable.PlayerInkSquidEntityModelRenderer;
+import net.splatcraft.client.render.entity.inkable.PlayerInkSquidEntityModelRenderer;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.util.SplatcraftUtil;
 import org.spongepowered.asm.mixin.Mixin;

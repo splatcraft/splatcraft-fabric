@@ -31,6 +31,18 @@ public class InkColor implements Identifiable {
         return this.color.getColor();
     }
 
+    public float getRed() {
+        return this.color.getRed() / 255.0f;
+    }
+
+    public float getGreen() {
+        return this.color.getGreen() / 255.0f;
+    }
+
+    public float getBlue() {
+        return this.color.getBlue() / 255.0f;
+    }
+
     public Text getDisplayText() {
         Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
         return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, this);

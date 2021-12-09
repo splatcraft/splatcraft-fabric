@@ -1,5 +1,6 @@
 package net.splatcraft.datagen;
 
+import net.minecraft.loot.LootTable;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.datagen.impl.generator.loot.AbstractBlockLootTableGenerator;
@@ -12,6 +13,7 @@ public class BlockLootTableGenerator extends AbstractBlockLootTableGenerator {
     @Override
     public void generate() {
         this.add(SplatcraftBlocks.CANVAS);
+        this.add(SplatcraftBlocks.INKED_BLOCK, block -> LootTable.builder());
         this.add(SplatcraftBlocks.GRATE);
     }
 }

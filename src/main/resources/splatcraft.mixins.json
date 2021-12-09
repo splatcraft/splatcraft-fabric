@@ -6,13 +6,14 @@
   "mixins": [
     "AbstractBlockMixin",
     "PlayerEntityMixin",
-    "TrackedDataHandlerRegistryAccessor",
-    "client.EntityRenderDispatcherMixin"
+    "TrackedDataHandlerRegistryAccessor"
   ],
   "client": [
     "client.AbstractClientPlayerEntityInvoker",
+    "client.BlockEntityRenderDispatcherMixin",
     "client.EntityModelLayersInvoker",
     "client.EntityModelLayersMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.HeldItemRendererMixin",
     "client.PlayerEntityRendererMixin"
   ],

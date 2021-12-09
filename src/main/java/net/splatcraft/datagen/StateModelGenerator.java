@@ -21,6 +21,7 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
     @Override
     public void generate() {
         this.add(SplatcraftBlocks.CANVAS, block -> this.simple(name(block), cubeAllTinted(name(block))));
+        this.add(SplatcraftBlocks.INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
         this.add(SplatcraftBlocks.GRATE, this::grate);
     }
 

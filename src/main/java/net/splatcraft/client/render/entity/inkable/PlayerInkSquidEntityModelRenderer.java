@@ -1,4 +1,4 @@
-package net.splatcraft.client.renderer.inkable;
+package net.splatcraft.client.render.entity.inkable;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

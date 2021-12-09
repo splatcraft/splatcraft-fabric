@@ -9,9 +9,11 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.inkcolor.InkType;
 
 public class SplatcraftBlocks {
     public static final Block CANVAS = register("canvas", new CanvasBlock(FabricBlockSettings.of(Material.WOOL).strength(0.8f).sounds(BlockSoundGroup.WOOL)));
+    public static final Block INKED_BLOCK = register("inked_block", new InkedBlock(InkType.NORMAL), false);
 
     public static final Block GRATE = register("grate", new GrateBlock(
         FabricBlockSettings.of(Material.METAL)
