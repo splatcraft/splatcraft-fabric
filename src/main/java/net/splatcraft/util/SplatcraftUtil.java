@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
@@ -56,6 +57,12 @@ public class SplatcraftUtil {
         PlayerDataComponent data = PlayerDataComponent.get(player);
         return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable inkable
             && inkable.getInkColor().equals(data.getInkColor());
+    }
+
+    public static float getMovementSpeed(PlayerEntity player, float base) {
+        return canSwimInInk(player)
+            ? base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100)
+            : -1.0f;
     }
 
     public static InkColor getInkColorFromStack(ItemStack stack) {

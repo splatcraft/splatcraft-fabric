@@ -32,5 +32,7 @@
 
   "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
-  "entity.splatcraft.ink_squid": "Ink Squid"
+  "entity.splatcraft.ink_squid": "Ink Squid",
+
+  "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed"
 }

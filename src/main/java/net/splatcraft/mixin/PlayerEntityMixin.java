@@ -4,13 +4,17 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.util.SplatcraftConstants;
+import net.splatcraft.util.SplatcraftUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,6 +27,8 @@ import static net.splatcraft.util.SplatcraftConstants.*;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable {
     @Shadow public abstract Text getDisplayName();
+
+    @Shadow public abstract PlayerAbilities getAbilities();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -45,6 +51,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
     @Override
     public Text getTextForCommand() {
         return this.getDisplayName();
+    }
+
+    // change attributes for squid form
+    @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
+    private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+        cir.setReturnValue(
+            cir.getReturnValue()
+               .add(SplatcraftAttributes.INK_SWIM_SPEED, SplatcraftAttributes.INK_SWIM_SPEED.getDefaultValue())
+        );
     }
 
     // change pose for squid form
@@ -78,5 +93,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
                 cir.setReturnValue(SplatcraftConstants.getEyeHeight(data.isSubmerged()));
             }
         } catch (NullPointerException ignored) {}
+    }
+
+    @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
+    private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+
+        if (data.isSquid() && !this.getAbilities().flying) {
+            float speed = SplatcraftUtil.getMovementSpeed(that, cir.getReturnValueF());
+            if (speed != -1.0f) cir.setReturnValue(cir.getReturnValueF() * speed);
+        }
     }
 }
