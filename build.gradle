@@ -68,11 +68,19 @@ dependencies {
   modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
   String cardinalComponents = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
-  modImplementation cardinalComponents.formatted("base")
-  modImplementation cardinalComponents.formatted("entity")
+  String            cardinalComponentsBase   = cardinalComponents.formatted("base")
+  modImplementation cardinalComponentsBase
+  include           cardinalComponentsBase
+  String            cardinalComponentsEntity = cardinalComponents.formatted("entity")
+  modImplementation cardinalComponentsEntity
+  include           cardinalComponentsEntity
 
-  modApi "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-  modApi "me.shedaniel.cloth:basic-math:+"
+  String  clothConfig = "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
+  modApi  clothConfig
+  include clothConfig
+  String  clothMath = "me.shedaniel.cloth:basic-math:+";
+  modApi  clothMath
+  include clothMath
 }
 
 loom {
