@@ -27,6 +27,11 @@ repositories {
   }
 
   maven {
+    name = "Modrinth"
+    url  = "https://api.modrinth.com/maven/"
+  }
+
+  maven {
     name = "Terraformers Maven"
     url  = "https://maven.terraformersmc.com/releases/"
   }
@@ -65,8 +70,6 @@ dependencies {
   // dependencies
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-  modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
-
   String cardinalComponents = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
   String            cardinalComponentsBase   = cardinalComponents.formatted("base")
   modImplementation cardinalComponentsBase
@@ -81,6 +84,12 @@ dependencies {
   String  clothMath = "me.shedaniel.cloth:basic-math:+";
   modApi  clothMath
   include clothMath
+
+  // compatibility
+  modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+  modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+  implementation    "org.joml:joml:${project.joml_version}"
 }
 
 loom {

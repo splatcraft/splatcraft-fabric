@@ -14,6 +14,9 @@
   "config.splatcraft.instant_squid_form_change_client": "Instant Squid Form Change",
   "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
   "config.splatcraft.category.common": "Common",
+  "config.splatcraft.category.client_compat": "Compatibility (Client)",
+  "config.sodium.ink_biome_blend_fix": "[Sodium] Ink Biome Blend Fix",
+  "config.sodium.ink_biome_blend_fix.tooltip": "Disables smooth biome blending\nfrom Sodium to fix odd ink\nblending between blocks.",
 
   "command.splatcraft.argument.ink_color.notFound": "Unknown ink color '%s'",
   "command.splatcraft.argument.entity.notAffected": "No entities were affected",
@@ -29,6 +32,8 @@
 
   "block.splatcraft.canvas": "Canvas",
   "block.splatcraft.inked_block": "Inked Block",
+  "block.splatcraft.inkwell": "Inkwell",
+  "block.splatcraft.empty_inkwell": "Empty Inkwell",
   "block.splatcraft.grate": "Grate",
 
   "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",

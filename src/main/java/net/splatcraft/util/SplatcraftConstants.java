@@ -20,6 +20,7 @@ public class SplatcraftConstants {
     public static final String NBT_IS_SQUID = "Squid";
     public static final String NBT_IS_SUBMERGED = "Submerged";
     public static final String NBT_BLOCK_STATE = "BlockState";
+    public static final String NBT_BLOCK_ENTITY_TAG = "BlockEntityTag";
 
     public static final Identifier COMMAND_INK_COLOR = new Identifier(Splatcraft.MOD_ID, "inkcolor");
     public static final String COMMAND_ARGUMENT_INK_COLOR = "ink_color";

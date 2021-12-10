@@ -15,7 +15,8 @@
     "client.EntityModelLayersMixin",
     "client.EntityRenderDispatcherMixin",
     "client.HeldItemRendererMixin",
-    "client.PlayerEntityRendererMixin"
+    "client.PlayerEntityRendererMixin",
+    "client.compat.SodiumBiomeBlendFixMixin"
   ],
   "injectors": {
     "defaultRequire": 1

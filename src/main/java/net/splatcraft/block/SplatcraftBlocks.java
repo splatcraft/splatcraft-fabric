@@ -10,10 +10,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkType;
+import net.splatcraft.sound.SplatcraftBlockSoundGroup;
 
 public class SplatcraftBlocks {
     public static final Block CANVAS = register("canvas", new CanvasBlock(FabricBlockSettings.of(Material.WOOL).strength(0.8f).sounds(BlockSoundGroup.WOOL)));
     public static final Block INKED_BLOCK = register("inked_block", new InkedBlock(InkType.NORMAL), false);
+
+    public static final Block EMPTY_INKWELL = register("empty_inkwell", new EmptyInkwellBlock(FabricBlockSettings.of(Material.GLASS).strength(0.3f).sounds(SplatcraftBlockSoundGroup.EMPTY_INKWELL).nonOpaque()));
+    public static final Block INKWELL = register("inkwell", new InkwellBlock(FabricBlockSettings.of(Material.GLASS).strength(0.35f).sounds(SplatcraftBlockSoundGroup.INKWELL)));
 
     public static final Block GRATE = register("grate", new GrateBlock(
         FabricBlockSettings.of(Material.METAL)

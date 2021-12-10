@@ -67,10 +67,19 @@ public class SplatcraftUtil {
 
     public static InkColor getInkColorFromStack(ItemStack stack) {
         NbtCompound nbt = stack.getItem() instanceof BlockItem
-            ? stack.getSubNbt("BlockEntityTag")
+            ? stack.getSubNbt(NBT_BLOCK_ENTITY_TAG)
             : stack.getNbt();
         if (nbt == null) return InkColors._DEFAULT;
         return InkColor.fromString(nbt.getString(NBT_INK_COLOR));
+    }
+
+    public static ItemStack setInkColorOnStack(ItemStack stack, InkColor inkColor) {
+        NbtCompound nbt = stack.getItem() instanceof BlockItem
+            ? stack.getOrCreateSubNbt(NBT_BLOCK_ENTITY_TAG)
+            : stack.getOrCreateNbt();
+        if (nbt == null) return stack;
+        nbt.putString(NBT_INK_COLOR, inkColor.getId().toString());
+        return stack;
     }
 
     public static float[] mathColorToRGB(Color color) {

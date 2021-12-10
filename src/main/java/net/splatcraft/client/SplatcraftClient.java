@@ -13,6 +13,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
+import net.splatcraft.client.config.ClientCompatConfig;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.keybind.SplatcraftDevelopmentKeyBindings;
 import net.splatcraft.client.keybind.SplatcraftKeyBindings;
@@ -37,6 +38,8 @@ public class SplatcraftClient implements ClientModInitializer {
 
         Reflection.initialize(
             ClientConfig.class,
+            ClientCompatConfig.class,
+
             SplatcraftEntityModelLayers.class,
             SplatcraftKeyBindings.class,
             NetworkingClient.class
@@ -44,7 +47,9 @@ public class SplatcraftClient implements ClientModInitializer {
 
         BlockRenderLayerMap brlm = BlockRenderLayerMap.INSTANCE;
         brlm.putBlocks(RenderLayer.getCutout(),
-            SplatcraftBlocks.GRATE
+            SplatcraftBlocks.GRATE,
+            SplatcraftBlocks.EMPTY_INKWELL,
+            SplatcraftBlocks.INKWELL
         );
 
         EntityRendererRegistry.register(SplatcraftEntities.INK_SQUID, InkSquidEntityModelRenderer::new);
@@ -55,11 +60,11 @@ public class SplatcraftClient implements ClientModInitializer {
             (state, world, pos, tintIndex) -> {
                 if (world != null && world.getBlockEntity(pos) instanceof Inkable inkable) return inkable.getInkColor().getDecimalColor();
                 return 0xFFFFFF;
-            }, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKED_BLOCK
+            }, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK
         );
         ColorProviderRegistry.ITEM.register(
             (stack, tintIndex) -> SplatcraftUtil.getInkColorFromStack(stack).getDecimalColor(),
-            SplatcraftBlocks.CANVAS
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
         );
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();

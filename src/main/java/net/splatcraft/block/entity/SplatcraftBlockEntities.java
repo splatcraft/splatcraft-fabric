@@ -10,10 +10,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.block.SplatcraftBlocks;
 
 public class SplatcraftBlockEntities {
-    public static final BlockEntityType<InkableBlockEntity> INKABLE = register("inkable", (p, s) -> new InkableBlockEntity(SplatcraftBlockEntities.INKABLE, p, s));
-    public static final BlockEntityType<InkedBlockEntity> INKED_BLOCK = register("inked_block", (p, s) -> new InkedBlockEntity(SplatcraftBlockEntities.INKED_BLOCK, p, s));
+    public static final BlockEntityType<InkableBlockEntity> INKABLE = register(
+        "inkable", (p, s) -> new InkableBlockEntity(SplatcraftBlockEntities.INKABLE, p, s),
+        SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
+    );
+    public static final BlockEntityType<InkedBlockEntity> INKED_BLOCK = register(
+        "inked_block", (p, s) -> new InkedBlockEntity(SplatcraftBlockEntities.INKED_BLOCK, p, s),
+        SplatcraftBlocks.INKED_BLOCK
+    );
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder<T> builder) {
         Identifier identifier = new Identifier(Splatcraft.MOD_ID, id);

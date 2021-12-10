@@ -17,6 +17,9 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
         this.add(SplatcraftBlocks.CANVAS);
         this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
 
+        this.add(SplatcraftBlocks.EMPTY_INKWELL);
+        this.add(SplatcraftBlocks.INKWELL);
+
         this.add(SpawnEggItem.forEntity(SplatcraftEntities.INK_SQUID), spawnEgg());
     }
 }

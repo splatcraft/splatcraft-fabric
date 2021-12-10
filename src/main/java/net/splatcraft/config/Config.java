@@ -1,5 +1,6 @@
 package net.splatcraft.config;
 
+import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 public class Config {
     private final File file;
     private final File backupFile;
-    private final HashMap<Identifier, Option<?>> map = new HashMap<>();
+    protected final HashBiMap<Identifier, Option<?>> map = HashBiMap.create();
 
     private JsonObject oldJson;
 
@@ -50,7 +50,7 @@ public class Config {
     public void addConfigListEntries(ConfigEntryBuilder entryBuilder, Supplier<ConfigCategory> categoryCreator) {
         if (this.canDisplayInMenu()) {
             ConfigCategory category = categoryCreator.get();
-            for (Map.Entry<Identifier, Option<?>> entry : this.map.entrySet()) {
+            for (Map.Entry<Identifier, Option<?>> entry : this.getDisplayedConfigListEntries().entrySet()) {
                 Identifier id = entry.getKey();
                 Option<?> option = entry.getValue();
                 category.addEntry(option.createConfigListEntry(id, entryBuilder));
@@ -58,9 +58,13 @@ public class Config {
         }
     }
 
+    public HashBiMap<Identifier, Option<?>> getDisplayedConfigListEntries() {
+        return HashBiMap.create(this.map);
+    }
+
     @Environment(EnvType.CLIENT)
     public boolean canDisplayInMenu() {
-        return !this.map.isEmpty();
+        return !this.getDisplayedConfigListEntries().isEmpty();
     }
 
     public void save() {

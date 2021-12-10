@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
 import net.splatcraft.Splatcraft;
@@ -11,6 +13,7 @@ import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.Config;
 import net.splatcraft.util.SplatcraftUtil;
 
+@Environment(EnvType.CLIENT)
 public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen> {
     public SplatcraftConfigScreenFactory() {}
 
@@ -21,7 +24,11 @@ public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen
             .setParentScreen(parent)
             .setDefaultBackgroundTexture(SplatcraftUtil.texture("block/inked_block"))
             .setTitle(txt("title"))
-            .setSavingRunnable(ClientConfig.INSTANCE::save);
+            .setSavingRunnable(() -> {
+                CommonConfig.INSTANCE.save();
+                ClientConfig.INSTANCE.save();
+                ClientCompatConfig.INSTANCE.save();
+            });
         configBuilder.setGlobalized(true);
         configBuilder.setGlobalizedExpanded(false);
 
@@ -29,6 +36,7 @@ public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen
         new ImmutableMap.Builder<String, Config>()
             .put("common", CommonConfig.INSTANCE)
             .put("client", ClientConfig.INSTANCE)
+            .put("client_compat", ClientCompatConfig.INSTANCE)
         .build().forEach((title, config) -> config.addConfigListEntries(entryBuilder, () -> configBuilder.getOrCreateCategory(catTxt(title))));
 
         return configBuilder.build();

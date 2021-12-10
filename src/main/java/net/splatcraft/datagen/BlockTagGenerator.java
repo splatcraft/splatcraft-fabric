@@ -20,6 +20,9 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
         );
 
         this.add(BlockTags.PICKAXE_MINEABLE,
+            SplatcraftBlocks.EMPTY_INKWELL,
+            SplatcraftBlocks.INKWELL,
+
             SplatcraftBlocks.GRATE
         );
     }
