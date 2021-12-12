@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3f;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.util.Identifiable;
 
@@ -25,6 +26,10 @@ public class InkColor implements Identifiable {
 
     public Color getColor() {
         return this.color;
+    }
+
+    public Vec3f getVectorColor() {
+        return new Vec3f(this.getRed(), this.getGreen(), this.getBlue());
     }
 
     public int getDecimalColor() {

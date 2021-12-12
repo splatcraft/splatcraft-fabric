@@ -8,14 +8,23 @@
   "key.splatcraft.open_config": "Open Configuration Menu",
 
   "config.splatcraft.title": "Splatcraft",
+
   "config.splatcraft.category.common": "Common",
   "config.splatcraft.splatfest_band_must_be_held": "Splatfest Band Must Be Held",
   "config.splatcraft.splatfest_band_must_be_held.tooltip": "Whether or not Splatfest Bands\nmust be held in any hand\nto affect the player's ink type.",
+
   "config.splatcraft.category.client": "Client",
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",
   "config.splatcraft.change_squid_form_key_behavior.tooltip": "",
   "config.splatcraft.instant_squid_form_change_client": "Instant Squid Form Change",
   "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
+  "config.splatcraft.color_lock": "Color Lock",
+  "config.splatcraft.color_lock.tooltip": "Whether or not ink colors\nare replaced with just a\nfriendly or hostile color.\nUseful for color-blind users.",
+  "config.splatcraft.color_lock_friendly": "Color Lock (Friendly)",
+  "config.splatcraft.color_lock_friendly.tooltip": "",
+  "config.splatcraft.color_lock_hostile": "Color Lock (Hostile)",
+  "config.splatcraft.color_lock_hostile.tooltip": "",
+
   "config.splatcraft.category.client_compat": "Compatibility (Client)",
   "config.sodium.ink_biome_blend_fix": "[Sodium] Ink Biome Blend Fix",
   "config.sodium.ink_biome_blend_fix.tooltip": "Disables smooth biome blending\nfrom Sodium to fix odd ink\nblending between blocks.",

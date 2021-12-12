@@ -11,7 +11,8 @@ import net.minecraft.text.TranslatableText;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.Config;
-import net.splatcraft.util.SplatcraftUtil;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen> {
@@ -22,7 +23,7 @@ public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen
         ConfigBuilder configBuilder = ConfigBuilder
             .create()
             .setParentScreen(parent)
-            .setDefaultBackgroundTexture(SplatcraftUtil.texture("block/inked_block"))
+            .setDefaultBackgroundTexture(texture("block/inked_block"))
             .setTitle(txt("title"))
             .setSavingRunnable(() -> {
                 CommonConfig.INSTANCE.save();

@@ -29,7 +29,8 @@ public class SplatcraftConstants {
     public static final String COMMAND_ARGUMENT_FROM = "from";
     public static final String COMMAND_ARGUMENT_TO = "to";
 
-    public static final Identifier IDENTIFIER_DEFAULT_INK_COLOR = new Identifier(DyeColor.WHITE.getName());
+    public static final DyeColor DEFAULT_INK_COLOR_DYE = DyeColor.WHITE;
+    public static final Identifier DEFAULT_INK_COLOR_IDENTIFIER = new Identifier(DEFAULT_INK_COLOR_DYE.getName());
 
     public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);

@@ -13,8 +13,9 @@ import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.SplatcraftConfigScreenFactory;
 import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.util.SplatcraftUtil;
 import org.lwjgl.glfw.GLFW;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftKeyBindings {
@@ -46,7 +47,7 @@ public class SplatcraftKeyBindings {
                         case HOLD -> nowSquid = CHANGE_SQUID_FORM.isPressed();
                     }
 
-                    if (nowSquid) nowSquid = SplatcraftUtil.canEnterSquidForm(player);
+                    if (nowSquid) nowSquid = canEnterSquidForm(player);
                     if (wasSquid != nowSquid) NetworkingClient.sendKeyChangeSquidForm(nowSquid);
                 }
             }

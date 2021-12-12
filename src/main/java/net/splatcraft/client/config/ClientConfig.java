@@ -2,10 +2,12 @@ package net.splatcraft.client.config;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
 import net.splatcraft.config.Config;
 import net.splatcraft.config.option.BooleanOption;
+import net.splatcraft.config.option.ColorOption;
 import net.splatcraft.config.option.EnumOption;
 
 import java.io.File;
@@ -26,7 +28,17 @@ public class ClientConfig extends Config {
         BooleanOption.of(false)
     );
 
+    public final BooleanOption colorLock = add("color_lock", BooleanOption.of(false));
+    public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0x2E0CB5));
+    public final ColorOption colorLockHostile = add("color_lock_hostile", ColorOption.of(0xF86300));
+
     private ClientConfig(File file) {
         super(file);
+    }
+
+    @Override
+    public void save() {
+        super.save();
+        MinecraftClient.getInstance().worldRenderer.reload();
     }
 }

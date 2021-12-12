@@ -24,7 +24,6 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.server.command.InkColorCommand;
-import net.splatcraft.util.SplatcraftUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -66,7 +65,7 @@ public class Splatcraft implements ModInitializer {
         ServerTickEvents.START_SERVER_TICK.register(server -> {
             for (ServerPlayerEntity player : PlayerLookup.all(server)) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
-                data.setSubmerged(SplatcraftUtil.canSubmergeInInk(player));
+                data.setSubmerged(canSubmergeInInk(player));
             }
         });
 

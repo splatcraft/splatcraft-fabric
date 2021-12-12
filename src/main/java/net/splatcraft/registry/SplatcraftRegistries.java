@@ -14,7 +14,7 @@ public class SplatcraftRegistries {
     /**
      * Splatcraft's built-in ink colors.
      */
-    public static final Registry<InkColor> INK_COLOR = defaulted("ink_color", InkColor.class, IDENTIFIER_DEFAULT_INK_COLOR);
+    public static final Registry<InkColor> INK_COLOR = defaulted("ink_color", InkColor.class, DEFAULT_INK_COLOR_IDENTIFIER);
 
     private static <T> SimpleRegistry<T> simple(String id, Class<T> type) {
         return FabricRegistryBuilder.createSimple(type, id(id)).buildAndRegister();

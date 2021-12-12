@@ -1,5 +1,6 @@
 package net.splatcraft.util;
 
+import com.google.common.collect.Lists;
 import me.shedaniel.math.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,9 +17,13 @@ import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3f;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.CommonConfig;
+import net.splatcraft.config.option.ColorOption;
 import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
@@ -27,6 +32,8 @@ import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -75,18 +82,28 @@ public class SplatcraftUtil {
             : -1.0f;
     }
 
-    public static final Function<ServerPlayerEntity, ScreenHandlerListener> SPLATFEST_BAND_REFRESH_LISTENER = (player) -> new ScreenHandlerListener() {
-        @Override
-        public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-            refreshSplatfestBand(player);
-        }
+    public static ScreenHandlerListener createSplatfestBandRefreshScreenHandlerListener(ServerPlayerEntity player) {
+        return new ScreenHandlerListener() {
+            @Override
+            public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+                refreshSplatfestBand(player);
+            }
 
-        @Override
-        public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
-    };
+            @Override
+            public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
+        };
+    }
 
     private static final Hand[] HANDS = Hand.values();
     private static final Set<Item> SPLATFEST_BAND_SET = Set.of(SplatcraftItems.SPLATFEST_BAND);
+
+    /**
+     * Checks a {@link PlayerEntity}'s inventory for a
+     * {@link SplatcraftItems#SPLATFEST_BAND}, with
+     * respect to configuration.
+     *
+     * @return whether or not the method had any effect
+     */
     public static boolean refreshSplatfestBand(PlayerEntity player) {
         PlayerDataComponent data = PlayerDataComponent.get(player);
 
@@ -108,6 +125,59 @@ public class SplatcraftUtil {
     public static InkType getInkType(PlayerEntity player) {
         PlayerDataComponent data = PlayerDataComponent.get(player);
         return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
+    }
+
+    // cache for getVectorColor
+    public static final Function<ColorOption, Vec3f> COLOR_OPTION_TO_VEC3F = Util.memoize(colorOption -> {
+        Color color = Color.ofOpaque(colorOption.getValue());
+        return new Vec3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
+    });
+
+    /**
+     * @return a {@link Vec3f} containing colors, dependent
+     *         on color lock
+     */
+    @Environment(EnvType.CLIENT)
+    public static Vec3f getVectorColor(InkColor clientInkColor) {
+        Optional<ColorOption> colorOption = getColorOption(clientInkColor);
+        return colorOption.isPresent() ? COLOR_OPTION_TO_VEC3F.apply(colorOption.get()) : clientInkColor.getVectorColor();
+    }
+
+    /**
+     * @return a decimal color dependent on color lock
+     */
+    @Environment(EnvType.CLIENT)
+    public static int getDecimalColor(InkColor clientInkColor) {
+        Optional<ColorOption> colorOption = getColorOption(clientInkColor);
+        return colorOption.isPresent() ? colorOption.get().getValue() : clientInkColor.getDecimalColor();
+    }
+
+    public static final List<Integer> WHITE_COLORS = Util.make(() -> {
+        float[] dyeWhiteColors = DEFAULT_INK_COLOR_DYE.getColorComponents();
+        int dyeWhite = Color.ofRGB(dyeWhiteColors[0], dyeWhiteColors[1], dyeWhiteColors[2]).getColor();
+        int pureWhite = InkColors.PURE_WHITE.getDecimalColor();
+        return Lists.newArrayList(dyeWhite, pureWhite);
+    });
+
+    /**
+     * @return an {@link Optional} of {@link ColorOption},
+     *         containing the friendly or hostile instance
+     *         dependent on the client's ink color, or
+     *         empty if color lock is disabled
+     */
+    public static Optional<ColorOption> getColorOption(InkColor clientInkColor) {
+        if (WHITE_COLORS.contains(clientInkColor.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
+            return Optional.empty();
+        }
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        PlayerDataComponent data = PlayerDataComponent.get(client.player);
+
+        ColorOption colorOption = data.getInkColor().equals(clientInkColor)
+            ? ClientConfig.INSTANCE.colorLockFriendly
+            : ClientConfig.INSTANCE.colorLockHostile;
+
+        return Optional.of(colorOption);
     }
 
     public static InkColor getInkColorFromStack(ItemStack stack) {

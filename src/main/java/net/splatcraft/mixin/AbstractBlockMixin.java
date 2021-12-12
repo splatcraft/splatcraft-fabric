@@ -9,11 +9,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.splatcraft.block.InkPassableBlock;
-import net.splatcraft.util.SplatcraftUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Mixin(AbstractBlock.class)
 public class AbstractBlockMixin {
@@ -21,7 +22,7 @@ public class AbstractBlockMixin {
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     private void onGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx, CallbackInfoReturnable<VoxelShape> cir) {
         if (state.getBlock() instanceof InkPassableBlock) {
-            if (ctx instanceof EntityShapeContext entityCtx && SplatcraftUtil.doesInkPassBlock(entityCtx.getEntity())) {
+            if (ctx instanceof EntityShapeContext entityCtx && doesInkPassBlock(entityCtx.getEntity())) {
                 cir.setReturnValue(VoxelShapes.empty());
             }
         }

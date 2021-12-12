@@ -17,12 +17,14 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import net.splatcraft.block.entity.InkedBlockEntity;
-import net.splatcraft.inkcolor.InkColor;
 
 import java.util.List;
 import java.util.Random;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class InkedBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
@@ -44,8 +46,8 @@ public class InkedBlockEntityRenderer<T extends BlockEntity> implements BlockEnt
         BlockState state = blockEntity.getState();
         if (state.getRenderType() == BlockRenderType.MODEL && blockEntity.getCachedState().getRenderType() == BlockRenderType.INVISIBLE) {
             BakedModel model = dispatcher.getModel(state);
-            InkColor color = blockEntity.getInkColor();
-            this.renderModel(blockEntity, matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color.getRed(), color.getGreen(), color.getBlue(), light, overlay);
+            Vec3f color = getVectorColor(blockEntity.getInkColor());
+            this.renderModel(blockEntity, matrices.peek(), vertices.getBuffer(RenderLayers.getEntityBlockLayer(state, true)), state, model, color.getX(), color.getY(), color.getZ(), light, overlay);
         }
     }
 

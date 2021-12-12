@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.splatcraft.Splatcraft;
+import net.splatcraft.client.config.ClientCompatConfig;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.config.CommonConfig;
 import org.lwjgl.glfw.GLFW;
@@ -16,10 +16,9 @@ import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftDevelopmentKeyBindings {
-    private static final String KEY_CATEGORY = "key.categories.%s-dev".formatted(Splatcraft.MOD_ID);
-
     public static final SinglePressKeyBinding RELOAD_CONFIG_COMMON = register("reload_config_common", GLFW.GLFW_KEY_UNKNOWN, SinglePressKeyBinding::new);
     public static final SinglePressKeyBinding RELOAD_CONFIG_CLIENT = register("reload_config_client", GLFW.GLFW_KEY_UNKNOWN, SinglePressKeyBinding::new);
+    public static final SinglePressKeyBinding RELOAD_CONFIG_CLIENT_COMPAT = register("reload_config_client_compat", GLFW.GLFW_KEY_UNKNOWN, SinglePressKeyBinding::new);
 
     static {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -35,6 +34,10 @@ public class SplatcraftDevelopmentKeyBindings {
                 if (RELOAD_CONFIG_CLIENT.wasToggled()) {
                     ClientConfig.INSTANCE.load();
                     client.player.sendMessage(reloadConfigText(RELOAD_CONFIG_CLIENT), true);
+                }
+                if (RELOAD_CONFIG_CLIENT_COMPAT.wasToggled()) {
+                    ClientCompatConfig.INSTANCE.load();
+                    client.player.sendMessage(reloadConfigText(RELOAD_CONFIG_CLIENT_COMPAT), true);
                 }
             }
         });

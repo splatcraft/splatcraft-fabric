@@ -27,6 +27,8 @@ import net.splatcraft.util.SplatcraftUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static net.splatcraft.util.SplatcraftUtil.*;
+
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
@@ -58,12 +60,12 @@ public class SplatcraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.BLOCK.register(
             (state, world, pos, tintIndex) -> {
-                if (world != null && world.getBlockEntity(pos) instanceof Inkable inkable) return inkable.getInkColor().getDecimalColor();
+                if (world != null && world.getBlockEntity(pos) instanceof Inkable inkable) return getDecimalColor(inkable.getInkColor());
                 return 0xFFFFFF;
             }, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK
         );
         ColorProviderRegistry.ITEM.register(
-            (stack, tintIndex) -> SplatcraftUtil.getInkColorFromStack(stack).getDecimalColor(),
+            (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
             SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
         );
 
