@@ -71,9 +71,23 @@ public class SplatcraftUtil {
     }
 
     public static boolean canSwimInInk(PlayerEntity player) {
+        return isOnOwnInk(player);
+    }
+
+    public static boolean isOnOwnInk(PlayerEntity player) {
         PlayerDataComponent data = PlayerDataComponent.get(player);
         return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable inkable
             && inkable.getInkColor().equals(data.getInkColor());
+    }
+
+    public static boolean isOnEnemyInk(PlayerEntity player) {
+        PlayerDataComponent data = PlayerDataComponent.get(player);
+        return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable inkable
+            && !inkable.getInkColor().equals(data.getInkColor());
+    }
+
+    public static boolean isOnInk(PlayerEntity player) {
+        return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable;
     }
 
     public static float getMovementSpeed(PlayerEntity player, float base) {
