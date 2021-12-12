@@ -29,8 +29,8 @@ public class ClientConfig extends Config {
     );
 
     public final BooleanOption colorLock = add("color_lock", BooleanOption.of(false));
-    public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0x2E0CB5));
-    public final ColorOption colorLockHostile = add("color_lock_hostile", ColorOption.of(0xF86300));
+    public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0xDEA801));
+    public final ColorOption colorLockHostile = add("color_lock_hostile", ColorOption.of(0x4717A9));
 
     private ClientConfig(File file) {
         super(file);

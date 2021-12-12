@@ -62,7 +62,7 @@ public class SplatcraftClient implements ClientModInitializer {
             (state, world, pos, tintIndex) -> {
                 if (world != null && world.getBlockEntity(pos) instanceof Inkable inkable) return getDecimalColor(inkable.getInkColor());
                 return 0xFFFFFF;
-            }, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK
+            }, SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
         );
         ColorProviderRegistry.ITEM.register(
             (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),

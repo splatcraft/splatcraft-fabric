@@ -19,7 +19,7 @@ public class SplatcraftBlockEntities {
     );
     public static final BlockEntityType<InkedBlockEntity> INKED_BLOCK = register(
         "inked_block", (p, s) -> new InkedBlockEntity(SplatcraftBlockEntities.INKED_BLOCK, p, s),
-        SplatcraftBlocks.INKED_BLOCK
+        SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
     );
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String id, FabricBlockEntityTypeBuilder<T> builder) {

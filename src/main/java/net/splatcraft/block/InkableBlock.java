@@ -20,14 +20,14 @@ public class InkableBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        // immediately set ink color to prevent flashing white on place
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.setInkColor(getInkColorFromStack(stack));
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return SplatcraftBlockEntities.INKABLE.instantiate(pos, state);
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return SplatcraftBlockEntities.INKABLE.instantiate(pos, state);
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        // immediately set ink color to prevent flashing white on place
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.setInkColor(getInkColorFromStack(stack));
     }
 
     @Override

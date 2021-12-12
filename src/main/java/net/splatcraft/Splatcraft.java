@@ -2,14 +2,11 @@ package net.splatcraft;
 
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -30,11 +27,9 @@ import org.apache.logging.log4j.Logger;
 import static net.splatcraft.util.SplatcraftUtil.*;
 
 public class Splatcraft implements ModInitializer {
-    public static final String    MOD_ID     = "splatcraft";
-    public static final String    MOD_NAME   = "Splatcraft";
-
-    public static final Logger    LOGGER     = LogManager.getLogger(MOD_ID);
-    public static final ItemGroup ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "item_group"), () -> new ItemStack(SplatcraftBlocks.CANVAS));
+    public static final String MOD_ID   = "splatcraft";
+    public static final String MOD_NAME = "Splatcraft";
+    public static final Logger LOGGER   = LogManager.getLogger(MOD_ID);
 
     @SuppressWarnings("UnstableApiUsage")
     @Override

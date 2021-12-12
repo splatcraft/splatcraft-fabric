@@ -13,6 +13,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.entity.data.SplatcraftTrackedDataHandlers;
+import net.splatcraft.item.SplatcraftItemGroups;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
@@ -38,7 +39,7 @@ public class SplatcraftEntities {
         if (spawnEggColors != null)
             Registry.register(
                 Registry.ITEM,  new Identifier(Splatcraft.MOD_ID, "%s_spawn_egg".formatted(id)),
-                new SpawnEggItem((EntityType<? extends MobEntity>) builtEntityType, spawnEggColors.getLeft(), spawnEggColors.getRight(), new FabricItemSettings().maxCount(64).group(Splatcraft.ITEM_GROUP))
+                new SpawnEggItem((EntityType<? extends MobEntity>) builtEntityType, spawnEggColors.getLeft(), spawnEggColors.getRight(), new FabricItemSettings().maxCount(64).group(SplatcraftItemGroups.ALL))
             );
 
         return Registry.register(Registry.ENTITY_TYPE, new Identifier(Splatcraft.MOD_ID, id), builtEntityType);

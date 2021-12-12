@@ -14,6 +14,7 @@ public class BlockLootTableGenerator extends AbstractBlockLootTableGenerator {
     public void generate() {
         this.add(SplatcraftBlocks.CANVAS);
         this.add(SplatcraftBlocks.INKED_BLOCK, block -> LootTable.builder());
+        this.add(SplatcraftBlocks.GLOWING_INKED_BLOCK, block -> LootTable.builder());
 
         this.add(SplatcraftBlocks.EMPTY_INKWELL);
         this.add(SplatcraftBlocks.INKWELL);
