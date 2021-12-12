@@ -128,10 +128,7 @@ public class SplatcraftUtil {
     }
 
     // cache for getVectorColor
-    public static final Function<ColorOption, Vec3f> COLOR_OPTION_TO_VEC3F = Util.memoize(colorOption -> {
-        Color color = Color.ofOpaque(colorOption.getValue());
-        return new Vec3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
-    });
+    public static final Function<ColorOption, Vec3f> COLOR_OPTION_TO_VEC3F = Util.memoize(o -> decimalToRGB(o.getValue()));
 
     /**
      * @return a {@link Vec3f} containing colors, dependent
@@ -197,8 +194,11 @@ public class SplatcraftUtil {
         return stack;
     }
 
-    public static float[] mathColorToRGB(Color color) {
-        return new float[]{ color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f };
+    public static Vec3f decimalToRGB(int color) {
+        float red   = ((color >> 16) & 0xFF) / 255.0f;
+        float green = ((color >> 8)  & 0xFF) / 255.0f;
+        float blue  = ( color        & 0xFF) / 255.0f;
+        return new Vec3f(red, green, blue);
     }
 
     @Environment(EnvType.CLIENT)
