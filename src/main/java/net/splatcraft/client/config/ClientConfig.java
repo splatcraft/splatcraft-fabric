@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.client.config.enums.PreventBobView;
 import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
 import net.splatcraft.config.Config;
 import net.splatcraft.config.option.BooleanOption;
@@ -19,14 +20,10 @@ public class ClientConfig extends Config {
         INSTANCE.load();
     }
 
-    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add(
-        "change_squid_form_key_behavior",
-        EnumOption.of(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD)
-    );
-    public final BooleanOption instantSquidFormChangeClient = add(
-        "instant_squid_form_change_client",
-        BooleanOption.of(false)
-    );
+    public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add("change_squid_form_key_behavior", EnumOption.of(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD));
+    public final BooleanOption instantSquidFormChangeClient = add("instant_squid_form_change_client", BooleanOption.of(false));
+
+    public final EnumOption<PreventBobView> preventBobViewWhenSquid = add("prevent_bob_view_when_squid", EnumOption.of(PreventBobView.class, PreventBobView.ALWAYS));
 
     public final BooleanOption colorLock = add("color_lock", BooleanOption.of(false));
     public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0xDEA801));

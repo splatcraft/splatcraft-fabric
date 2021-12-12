@@ -16,6 +16,7 @@
     "client.EntityModelLayersInvoker",
     "client.EntityModelLayersMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.GameRendererMixin",
     "client.HeldItemRendererMixin",
     "client.PlayerEntityRendererMixin",
     "client.compat.SodiumBiomeBlendFixMixin"

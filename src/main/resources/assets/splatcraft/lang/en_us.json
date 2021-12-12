@@ -20,6 +20,8 @@
   "config.splatcraft.change_squid_form_key_behavior.tooltip": "",
   "config.splatcraft.instant_squid_form_change_client": "Instant Squid Form Change",
   "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
+  "config.splatcraft.prevent_bob_view_when_squid": "Prevent View Bobbing When In Squid Form",
+  "config.splatcraft.prevent_bob_view_when_squid.tooltip": "",
   "config.splatcraft.color_lock": "Color Lock",
   "config.splatcraft.color_lock.tooltip": "Whether or not ink colors\nare replaced with just a\nfriendly or hostile color.\nUseful for color-blind users.",
   "config.splatcraft.color_lock_friendly": "Color Lock (Friendly)",
