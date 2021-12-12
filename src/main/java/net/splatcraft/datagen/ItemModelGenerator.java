@@ -6,6 +6,7 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
 import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
 import net.splatcraft.entity.SplatcraftEntities;
+import net.splatcraft.item.SplatcraftItems;
 
 public class ItemModelGenerator extends AbstractItemModelGenerator {
     public ItemModelGenerator() {
@@ -21,5 +22,7 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
         this.add(SplatcraftBlocks.INKWELL);
 
         this.add(SpawnEggItem.forEntity(SplatcraftEntities.INK_SQUID), spawnEgg());
+
+        this.add(SplatcraftItems.SPLATFEST_BAND, this::generatedItem);
     }
 }

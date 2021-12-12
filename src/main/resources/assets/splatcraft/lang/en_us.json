@@ -8,12 +8,14 @@
   "key.splatcraft.open_config": "Open Configuration Menu",
 
   "config.splatcraft.title": "Splatcraft",
+  "config.splatcraft.category.common": "Common",
+  "config.splatcraft.splatfest_band_must_be_held": "Splatfest Band Must Be Held",
+  "config.splatcraft.splatfest_band_must_be_held.tooltip": "Whether or not Splatfest Bands\nmust be held in any hand\nto affect the player's ink type.",
   "config.splatcraft.category.client": "Client",
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",
   "config.splatcraft.change_squid_form_key_behavior.tooltip": "",
   "config.splatcraft.instant_squid_form_change_client": "Instant Squid Form Change",
   "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
-  "config.splatcraft.category.common": "Common",
   "config.splatcraft.category.client_compat": "Compatibility (Client)",
   "config.sodium.ink_biome_blend_fix": "[Sodium] Ink Biome Blend Fix",
   "config.sodium.ink_biome_blend_fix.tooltip": "Disables smooth biome blending\nfrom Sodium to fix odd ink\nblending between blocks.",
@@ -36,9 +38,10 @@
   "block.splatcraft.empty_inkwell": "Empty Inkwell",
   "block.splatcraft.grate": "Grate",
 
-  "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
+  "item.splatcraft.splatfest_band": "Splatfest Band",
 
   "entity.splatcraft.ink_squid": "Ink Squid",
+  "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
   "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed"
 }

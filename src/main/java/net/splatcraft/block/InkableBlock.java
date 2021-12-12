@@ -9,7 +9,7 @@ import net.minecraft.world.BlockView;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 public class InkableBlock extends BlockWithEntity {
     public InkableBlock(Settings settings) {

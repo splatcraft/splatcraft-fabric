@@ -8,21 +8,31 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.config.CommonConfig;
 import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
+
+import java.util.Set;
+import java.util.function.Function;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftUtil {
-
     /**
      * @return if an entity can pass through a block due to ink abilities
      */
@@ -63,6 +73,41 @@ public class SplatcraftUtil {
         return canSwimInInk(player)
             ? base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100)
             : -1.0f;
+    }
+
+    public static final Function<ServerPlayerEntity, ScreenHandlerListener> SPLATFEST_BAND_REFRESH_LISTENER = (player) -> new ScreenHandlerListener() {
+        @Override
+        public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+            refreshSplatfestBand(player);
+        }
+
+        @Override
+        public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
+    };
+
+    private static final Hand[] HANDS = Hand.values();
+    private static final Set<Item> SPLATFEST_BAND_SET = Set.of(SplatcraftItems.SPLATFEST_BAND);
+    public static boolean refreshSplatfestBand(PlayerEntity player) {
+        PlayerDataComponent data = PlayerDataComponent.get(player);
+
+        if (CommonConfig.INSTANCE.splatfestBandMustBeHeld.getValue()) {
+            for (Hand hand : HANDS) {
+                if (player.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) {
+                    return data.setHasSplatfestBand(true);
+                }
+            }
+        } else {
+            if (player.getInventory().containsAny(SPLATFEST_BAND_SET)) {
+                return data.setHasSplatfestBand(true);
+            }
+        }
+
+        return data.setHasSplatfestBand(false);
+    }
+
+    public static InkType getInkType(PlayerEntity player) {
+        PlayerDataComponent data = PlayerDataComponent.get(player);
+        return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
     }
 
     public static InkColor getInkColorFromStack(ItemStack stack) {

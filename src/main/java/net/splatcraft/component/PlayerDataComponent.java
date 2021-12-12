@@ -12,6 +12,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.item.SplatcraftItems;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
@@ -32,6 +33,11 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      * Defines whether the player is submerged in ink.
      */
     private boolean submerged = false;
+
+    /**
+     * Defines whether the player is holding a {@link SplatcraftItems#SPLATFEST_BAND}.
+     */
+    private boolean hasSplatfestBand = false;
 
     @SuppressWarnings("unused")
     public PlayerDataComponent(PlayerEntity player) {
@@ -106,11 +112,23 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return true;
     }
 
+    public boolean hasSplatfestBand() {
+        return this.hasSplatfestBand;
+    }
+
+    public boolean setHasSplatfestBand(boolean hasSplatfestBand) {
+        if (this.hasSplatfestBand == hasSplatfestBand) return false;
+        this.hasSplatfestBand = hasSplatfestBand;
+        this.sync();
+        return true;
+    }
+
     @Override
     public void writeToNbt(NbtCompound nbt) {
         nbt.putString(NBT_INK_COLOR, InkColor.toString(this.inkColor));
         nbt.putBoolean(NBT_IS_SQUID, this.squid);
         nbt.putBoolean(NBT_IS_SUBMERGED, this.submerged);
+        nbt.putBoolean(NBT_HAS_SPLATFEST_BAND, this.hasSplatfestBand);
     }
 
     @Override
@@ -118,5 +136,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.setInkColor(InkColor.fromString(nbt.getString(NBT_INK_COLOR)));
         this.setSquid(nbt.getBoolean(NBT_IS_SQUID));
         this.setSubmerged(nbt.getBoolean(NBT_IS_SUBMERGED));
+        this.setHasSplatfestBand(nbt.getBoolean(NBT_HAS_SPLATFEST_BAND));
     }
 }

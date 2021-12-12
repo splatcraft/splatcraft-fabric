@@ -6,6 +6,8 @@
   "mixins": [
     "AbstractBlockMixin",
     "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin",
     "TrackedDataHandlerRegistryAccessor"
   ],
   "client": [
