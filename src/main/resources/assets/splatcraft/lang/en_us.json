@@ -45,7 +45,7 @@
   "text.splatcraft.reloaded_config.failed": "Could not reload config",
   "text.splatcraft.ink_color_display": "%s %s",
   "text.splatcraft.ink_color_display.icon": "⬛",
-  "text.splatcraft.block_entity_description": "%s [%s, %s]",
+  "text.splatcraft.block_entity_description": "%s[%s, %s]",
 
   "block.splatcraft.canvas": "Canvas",
   "block.splatcraft.inked_block": "Inked Block",

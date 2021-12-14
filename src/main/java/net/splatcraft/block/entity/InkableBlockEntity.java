@@ -8,9 +8,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.ServerWorldProperties;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
@@ -45,7 +47,13 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
     public Text getTextForCommand() {
         return new TranslatableText(
             T_BLOCK_ENTITY_DESCRIPTION.formatted(Splatcraft.MOD_ID),
-            "InkableBlockEntity", this.world, this.getPos()
+            this.getClass().getSimpleName(),
+            this.world instanceof ServerWorld world
+                ? world.getLevelProperties() instanceof ServerWorldProperties properties
+                    ? properties.getLevelName()
+                    : "[]"
+                : "[]",
+            this.getPos().toShortString()
         );
     }
 
