@@ -1,9 +1,6 @@
 package net.splatcraft.mixin;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable {
@@ -62,6 +60,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         );
     }
 
+    // modify movement speed for squid form
+    @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
+    private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+
+        if (data.isSquid() && !this.getAbilities().flying) {
+            float speed = SplatcraftUtil.getMovementSpeed(that, cir.getReturnValueF());
+            if (speed != -1.0f) cir.setReturnValue(cir.getReturnValueF() * speed);
+        }
+    }
+
     // change pose for squid form
     @Inject(method = "updatePose", at = @At("HEAD"), cancellable = true)
     private void onUpdatePose(CallbackInfo ci) {
@@ -95,14 +105,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         } catch (NullPointerException ignored) {}
     }
 
-    @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
-    private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-
-        if (data.isSquid() && !this.getAbilities().flying) {
-            float speed = SplatcraftUtil.getMovementSpeed(that, cir.getReturnValueF());
-            if (speed != -1.0f) cir.setReturnValue(cir.getReturnValueF() * speed);
-        }
+    @Inject(method = "tickMovement", at = @At("TAIL"))
+    private void onTickMovement(CallbackInfo ci) {
+        tickMovementInkableEntity(this);
     }
 }

@@ -208,6 +208,14 @@ public class SplatcraftUtil {
         return stack;
     }
 
+    public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity) {
+        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
+            if (entity.isOnGround() && entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable) {
+                entity.setInkColor(inkable.getInkColor());
+            }
+        }
+    }
+
     public static Vec3f decimalToRGB(int color) {
         float red   = ((color >> 16) & 0xFF) / 255.0f;
         float green = ((color >> 8)  & 0xFF) / 255.0f;

@@ -14,6 +14,8 @@
   "config.splatcraft.category.common": "Common",
   "config.splatcraft.splatfest_band_must_be_held": "Splatfest Band Must Be Held",
   "config.splatcraft.splatfest_band_must_be_held.tooltip": "Whether or not Splatfest Bands\nmust be held in any hand\nto affect the player's ink type.",
+  "config.splatcraft.inkwell_changes_ink_color": "Inkwell Changes Ink Color",
+  "config.splatcraft.inkwell_changes_ink_color.tooltip": "Whether or not Inkwells change\nthe ink color of entities on top\nof it.",
 
   "config.splatcraft.category.client": "Client",
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",

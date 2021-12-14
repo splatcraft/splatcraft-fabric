@@ -15,6 +15,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+import net.splatcraft.config.CommonConfig;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 
@@ -53,14 +54,16 @@ public class InkwellBlock extends InkableBlock implements FluidFillable {
         super.onEntityLand(world, entity);
 
         // set ink color of item if dropped on inkwell
-        if (entity instanceof ItemEntity itemEntity) {
-            BlockPos pos = entity.getBlockPos();
-            if (world.getBlockEntity(pos.down()) instanceof Inkable inkable) {
-                ItemStack stack = itemEntity.getStack();
-                if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof InkableBlock) {
-                    InkColor inkColor = inkable.getInkColor();
-                    if (!getInkColorFromStack(stack).equals(inkColor)/* && !isColorLocked(stack)*/) {
-                        setInkColorOnStack(stack, inkColor);
+        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
+            if (entity instanceof ItemEntity itemEntity) {
+                BlockPos pos = entity.getBlockPos();
+                if (world.getBlockEntity(pos.down()) instanceof Inkable inkable) {
+                    ItemStack stack = itemEntity.getStack();
+                    if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof InkableBlock) {
+                        InkColor inkColor = inkable.getInkColor();
+                        if (!getInkColorFromStack(stack).equals(inkColor)/* && !isColorLocked(stack)*/) {
+                            setInkColorOnStack(stack, inkColor);
+                        }
                     }
                 }
             }
