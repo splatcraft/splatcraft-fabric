@@ -7,7 +7,7 @@
     "bottom_ink": "splatcraft:block/inkwell_bottom_ink",
     "top": "splatcraft:block/inkwell_top",
     "top_ink": "splatcraft:block/inkwell_top_ink",
-    "ink": "splatcraft:block/inked_block",
+    "ink": "minecraft:misc/white",
     "particle": "#ink"
   },
   "elements": [
