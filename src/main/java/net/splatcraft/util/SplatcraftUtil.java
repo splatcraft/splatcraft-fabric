@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import me.shedaniel.math.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
@@ -30,6 +31,7 @@ import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
+import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 
 import java.util.List;
@@ -209,9 +211,10 @@ public class SplatcraftUtil {
     }
 
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity) {
-        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
-            if (entity.isOnGround() && entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable) {
-                entity.setInkColor(inkable.getInkColor());
+        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue() && entity.isOnGround()) {
+            BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
+            if (blockEntity != null && blockEntity.getCachedState().isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) {
+                if (blockEntity instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
             }
         }
     }

@@ -9,7 +9,7 @@ import net.splatcraft.Splatcraft;
 public class SplatcraftEntityTypeTags {
     public static final Tag.Identified<EntityType<?>> INK_PASSABLES = register("ink_passables");
 
-    public static Tag.Identified<EntityType<?>> register(String id) {
+    private static Tag.Identified<EntityType<?>> register(String id) {
         return TagFactory.ENTITY_TYPE.create(new Identifier(Splatcraft.MOD_ID, id));
     }
 }

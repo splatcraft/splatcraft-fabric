@@ -7,6 +7,7 @@ import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
+import net.splatcraft.tag.SplatcraftBlockTags;
 
 public class BlockTagGenerator extends AbstractTagGenerator<Block> {
     public BlockTagGenerator() {
@@ -24,6 +25,10 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
             SplatcraftBlocks.INKWELL,
 
             SplatcraftBlocks.GRATE
+        );
+
+        this.add(SplatcraftBlockTags.INK_COLOR_CHANGERS,
+            SplatcraftBlocks.INKWELL
         );
     }
 }
