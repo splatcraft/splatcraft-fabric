@@ -12,7 +12,7 @@ import net.splatcraft.Splatcraft;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.Config;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.texture;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen> {

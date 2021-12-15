@@ -15,7 +15,7 @@ import net.splatcraft.Splatcraft;
 import net.splatcraft.entity.data.SplatcraftTrackedDataHandlers;
 import net.splatcraft.item.SplatcraftItemGroups;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 
 public class SplatcraftEntities {
     static {

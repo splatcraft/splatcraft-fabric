@@ -15,7 +15,7 @@ import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.component.PlayerDataComponent;
 import org.lwjgl.glfw.GLFW;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.canEnterSquidForm;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftKeyBindings {

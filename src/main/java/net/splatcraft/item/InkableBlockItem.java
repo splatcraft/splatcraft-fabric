@@ -8,7 +8,8 @@ import net.minecraft.util.collection.DefaultedList;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.registry.SplatcraftRegistries;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
+import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
 
 public class InkableBlockItem extends BlockItem {
     public InkableBlockItem(Block block, Settings settings) {

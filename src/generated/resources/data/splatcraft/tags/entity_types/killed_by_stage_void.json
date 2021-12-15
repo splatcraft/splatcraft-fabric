@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:player",
+    "minecraft:item",
+    "splatcraft:ink_squid",
+    "#minecraft:impact_projectiles"
+  ]
+}

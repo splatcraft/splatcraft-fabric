@@ -3,6 +3,7 @@ package net.splatcraft.client.config;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.WorldRenderer;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.enums.PreventBobView;
 import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
@@ -10,6 +11,7 @@ import net.splatcraft.config.Config;
 import net.splatcraft.config.option.BooleanOption;
 import net.splatcraft.config.option.ColorOption;
 import net.splatcraft.config.option.EnumOption;
+import net.splatcraft.config.option.IntOption;
 
 import java.io.File;
 
@@ -24,6 +26,7 @@ public class ClientConfig extends Config {
     public final BooleanOption instantSquidFormChangeClient = add("instant_squid_form_change_client", BooleanOption.of(false));
 
     public final EnumOption<PreventBobView> preventBobViewWhenSquid = add("prevent_bob_view_when_squid", EnumOption.of(PreventBobView.class, PreventBobView.ALWAYS));
+    public final IntOption stageBlockRadius = add("stage_block_radius", IntOption.of(2, 2, 4));
 
     public final BooleanOption colorLock = add("color_lock", BooleanOption.of(false));
     public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0xDEA801));
@@ -36,6 +39,8 @@ public class ClientConfig extends Config {
     @Override
     public void save() {
         super.save();
-        MinecraftClient.getInstance().worldRenderer.reload();
+
+        WorldRenderer worldRenderer = MinecraftClient.getInstance().worldRenderer;
+        if (worldRenderer != null) worldRenderer.reload();
     }
 }

@@ -24,7 +24,7 @@ import net.splatcraft.block.entity.InkedBlockEntity;
 import java.util.List;
 import java.util.Random;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.getVectorColor;
 
 @Environment(EnvType.CLIENT)
 public class InkedBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {

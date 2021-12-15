@@ -19,7 +19,8 @@ import net.splatcraft.config.CommonConfig;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
+import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
 
 @SuppressWarnings("deprecation")
 public class InkwellBlock extends InkableBlock implements FluidFillable {

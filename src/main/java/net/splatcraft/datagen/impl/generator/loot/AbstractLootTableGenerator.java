@@ -1,8 +1,6 @@
 package net.splatcraft.datagen.impl.generator.loot;
 
 import com.google.common.collect.Sets;
-import net.splatcraft.datagen.impl.ObjectLootTableAccess;
-import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.loot.LootPool;
@@ -24,6 +22,8 @@ import net.minecraft.predicate.StatePredicate;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.impl.ObjectLootTableAccess;
+import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 import java.util.Set;
 import java.util.function.BiConsumer;

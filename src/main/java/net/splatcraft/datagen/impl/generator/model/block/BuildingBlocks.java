@@ -1,12 +1,12 @@
 package net.splatcraft.datagen.impl.generator.model.block;
 
+import net.minecraft.block.enums.BlockHalf;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
 import net.splatcraft.datagen.impl.generator.model.ModelGen;
 import net.splatcraft.datagen.impl.generator.model.StateGen;
 import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 
 @SuppressWarnings("unused")
 public abstract class BuildingBlocks {

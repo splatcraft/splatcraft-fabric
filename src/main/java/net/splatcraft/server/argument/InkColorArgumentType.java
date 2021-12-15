@@ -19,7 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.COMMAND_ARGUMENT_INK_COLOR;
+import static net.splatcraft.util.SplatcraftConstants.EXCEPTION_INK_COLOR_NOT_FOUND;
 
 public final class InkColorArgumentType implements ArgumentType<Identifier> {
     private static final Collection<String> EXAMPLES = Arrays.asList(InkColors.COBALT.toString(), InkColors.DYE_WHITE.toString(), InkColors.DYE_RED.getId().getPath());

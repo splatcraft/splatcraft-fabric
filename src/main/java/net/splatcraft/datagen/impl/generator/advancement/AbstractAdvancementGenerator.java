@@ -1,6 +1,5 @@
 package net.splatcraft.datagen.impl.generator.advancement;
 
-import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.criterion.EnterBlockCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
@@ -13,6 +12,7 @@ import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 @SuppressWarnings("unused")
 public abstract class AbstractAdvancementGenerator extends AbstractGenerator<Identifier, Advancement.Task> {

@@ -2,11 +2,11 @@ package net.splatcraft.datagen.impl.generator.model.block;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.block.Block;
+import net.minecraft.util.Identifier;
 import net.splatcraft.datagen.impl.generator.model.ModelGen;
 import net.splatcraft.datagen.impl.generator.model.StateGen;
 import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
-import net.minecraft.block.Block;
-import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -13,6 +13,7 @@ import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.item.InkableBlockItem;
 import net.splatcraft.item.SplatcraftItemGroups;
+import net.splatcraft.mixin.BlocksInvoker;
 import net.splatcraft.sound.SplatcraftBlockSoundGroup;
 
 import java.util.function.Function;
@@ -43,6 +44,18 @@ public class SplatcraftBlocks {
         FabricBlockSettings.of(Material.METAL)
                            .requiresTool().strength(4.0f)
                            .nonOpaque().sounds(BlockSoundGroup.METAL)
+    ));
+
+    public static final Block STAGE_BARRIER = register("stage_barrier", new StageBarrierBlock(
+        FabricBlockSettings.of(Material.BARRIER)
+                           .strength(-1.0f, 3600000.8f).dropsNothing()
+                           .nonOpaque().allowsSpawning(BlocksInvoker::invoke_never)
+    ));
+
+    public static final Block STAGE_VOID = register("stage_void", new StageVoidBlock(
+        FabricBlockSettings.of(Material.BARRIER)
+                           .strength(-1.0f, 3600000.8f).dropsNothing()
+                           .nonOpaque().allowsSpawning(BlocksInvoker::invoke_never)
     ));
 
     private static Block register(String id, Block block, Function<Block, Item> item) {

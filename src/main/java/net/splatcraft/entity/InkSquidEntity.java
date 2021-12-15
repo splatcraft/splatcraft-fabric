@@ -17,8 +17,8 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
+import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 
 public class InkSquidEntity extends MobEntity implements Inkable {
     public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);

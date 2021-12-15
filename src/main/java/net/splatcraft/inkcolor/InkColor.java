@@ -12,7 +12,8 @@ import net.splatcraft.util.Identifiable;
 
 import java.util.function.Function;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY;
+import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY_ICON;
 
 public class InkColor implements Identifiable {
     public static final Function<InkColor, Identifier> TO_IDENTIFIER = Util.memoize(SplatcraftRegistries.INK_COLOR::getId);

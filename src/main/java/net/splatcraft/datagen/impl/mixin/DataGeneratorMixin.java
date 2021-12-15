@@ -1,11 +1,11 @@
 package net.splatcraft.datagen.impl.mixin;
 
 import com.google.common.base.Stopwatch;
-import net.splatcraft.datagen.impl.DataCacheAccess;
-import net.splatcraft.datagen.impl.DataGenAccess;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.splatcraft.datagen.impl.DataCacheAccess;
+import net.splatcraft.datagen.impl.DataGenAccess;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

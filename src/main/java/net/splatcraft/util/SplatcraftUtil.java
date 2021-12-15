@@ -213,7 +213,7 @@ public class SplatcraftUtil {
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity) {
         if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue() && entity.isOnGround()) {
             BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
-            if (blockEntity != null && blockEntity.getCachedState().isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) {
+            if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
                 if (blockEntity instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
             }
         }

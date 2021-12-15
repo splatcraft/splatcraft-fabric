@@ -12,7 +12,8 @@ import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
+import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
 
 public class InkableBlock extends BlockWithEntity {
     public InkableBlock(Settings settings) {

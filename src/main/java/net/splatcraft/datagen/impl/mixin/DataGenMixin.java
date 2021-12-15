@@ -1,8 +1,8 @@
 package net.splatcraft.datagen.impl.mixin;
 
+import net.minecraft.server.Main;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.datagen.impl.DataMain;
-import net.minecraft.server.Main;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -7,11 +7,12 @@ import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.*;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.inkcolor.InkColor;
+import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.server.argument.InkColorArgumentType;
 
@@ -19,7 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import static net.minecraft.server.command.CommandManager.*;
+import static net.minecraft.server.command.CommandManager.argument;
+import static net.minecraft.server.command.CommandManager.literal;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkColorCommand {

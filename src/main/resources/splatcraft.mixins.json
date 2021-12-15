@@ -5,6 +5,7 @@
   "package": "net.splatcraft.mixin",
   "mixins": [
     "AbstractBlockMixin",
+    "BlocksInvoker",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
@@ -14,6 +15,8 @@
   "client": [
     "client.AbstractClientPlayerEntityInvoker",
     "client.BlockEntityRenderDispatcherMixin",
+    "client.ClientWorldAccessor",
+    "client.ClientWorldMixin",
     "client.EntityModelLayersInvoker",
     "client.EntityModelLayersMixin",
     "client.EntityRenderDispatcherMixin",

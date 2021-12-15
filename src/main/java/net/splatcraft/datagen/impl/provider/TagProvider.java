@@ -2,13 +2,13 @@ package net.splatcraft.datagen.impl.provider;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.util.Identifier;
 import net.splatcraft.datagen.BlockTagGenerator;
 import net.splatcraft.datagen.EntityTagGenerator;
 import net.splatcraft.datagen.InkColorTagGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Map;

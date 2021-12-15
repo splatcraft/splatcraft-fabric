@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 import net.splatcraft.block.SplatcraftBlocks;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.NBT_BLOCK_STATE;
 
 public class InkedBlockEntity extends InkableBlockEntity {
     /**

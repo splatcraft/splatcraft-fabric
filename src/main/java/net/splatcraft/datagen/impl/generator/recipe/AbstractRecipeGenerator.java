@@ -1,6 +1,5 @@
 package net.splatcraft.datagen.impl.generator.recipe;
 
-import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 import net.minecraft.advancement.criterion.EnterBlockCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Block;
@@ -20,6 +19,7 @@ import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
 public abstract class AbstractRecipeGenerator extends AbstractGenerator<Identifier, CraftingRecipeJsonFactory> {

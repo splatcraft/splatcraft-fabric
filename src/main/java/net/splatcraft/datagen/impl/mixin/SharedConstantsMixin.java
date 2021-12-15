@@ -1,9 +1,9 @@
 package net.splatcraft.datagen.impl.mixin;
 
 import com.mojang.bridge.game.GameVersion;
-import net.splatcraft.Splatcraft;
 import net.minecraft.MinecraftVersion;
 import net.minecraft.SharedConstants;
+import net.splatcraft.Splatcraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

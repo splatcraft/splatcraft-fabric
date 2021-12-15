@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.model.inkable.InkSquidEntityModel;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.entityTexture;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidEntityModelRenderer<T extends LivingEntity> extends LivingEntityRenderer<T, InkSquidEntityModel<T>> {

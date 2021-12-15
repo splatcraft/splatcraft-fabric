@@ -1,13 +1,13 @@
 package net.splatcraft.datagen.impl.generator.model.item;
 
-import net.splatcraft.datagen.impl.generator.model.AbstractModelGenerator;
-import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
-import net.splatcraft.datagen.impl.generator.model.ModelGen;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.impl.generator.model.AbstractModelGenerator;
+import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
+import net.splatcraft.datagen.impl.generator.model.ModelGen;
 
 import java.util.function.Function;
 

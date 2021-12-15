@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.isOnEnemyInk;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -32,7 +32,7 @@ public abstract class LivingEntityMixin extends Entity {
                 if (that instanceof PlayerEntity player) {
                     PlayerDataComponent data = PlayerDataComponent.get(player);
                     if (data.isSquid()) this.damage(SplatcraftDamageSource.INKED, 1.0f);
-                } else if (this.getType().isIn(SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK)) this.damage(SplatcraftDamageSource.INKED, 1.0f);
+                } else if (SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())) this.damage(SplatcraftDamageSource.INKED, 1.0f);
             }
         }
     }
@@ -45,7 +45,7 @@ public abstract class LivingEntityMixin extends Entity {
             if (that instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
                 if (data.isSquid()) cir.setReturnValue(true);
-            } else if (this.getType().isIn(SplatcraftEntityTypeTags.HURT_BY_WATER)) cir.setReturnValue(true);
+            } else if (SplatcraftEntityTypeTags.HURT_BY_WATER.contains(this.getType())) cir.setReturnValue(true);
         }
     }
 }

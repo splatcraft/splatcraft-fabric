@@ -13,8 +13,8 @@ import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.component.SplatcraftComponents;
+import net.splatcraft.config.CommonConfig;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
@@ -24,7 +24,8 @@ import net.splatcraft.server.command.InkColorCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.util.SplatcraftUtil.canSubmergeInInk;
+import static net.splatcraft.util.SplatcraftUtil.refreshSplatfestBand;
 
 public class Splatcraft implements ModInitializer {
     public static final String MOD_ID   = "splatcraft";

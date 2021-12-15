@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.Item;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
@@ -23,11 +24,16 @@ import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
 import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.Inkable;
-import net.splatcraft.util.SplatcraftUtil;
+import net.splatcraft.mixin.client.ClientWorldAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import static net.splatcraft.util.SplatcraftUtil.getDecimalColor;
+import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
@@ -68,6 +74,13 @@ public class SplatcraftClient implements ClientModInitializer {
             (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
             SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
         );
+
+        Set<Item> newBlockMarkerItems = new HashSet<>(ClientWorldAccessor.getBlockMarkerItems());
+        Collections.addAll(newBlockMarkerItems,
+            SplatcraftBlocks.STAGE_BARRIER.asItem(),
+            SplatcraftBlocks.STAGE_VOID.asItem()
+        );
+        ClientWorldAccessor.setBlockMarkerItems(newBlockMarkerItems);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
 

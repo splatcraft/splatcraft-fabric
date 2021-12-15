@@ -45,7 +45,7 @@ public class EmptyInkwellBlock extends Block implements Waterloggable {
         BlockPos pos = ctx.getBlockPos();
         FluidState fluidState = world.getFluidState(pos);
         BlockState state = super.getPlacementState(ctx);
-        return state == null ? null : state.with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
+        return state == null ? null : state.with(WATERLOGGED, FluidTags.WATER.contains(fluidState.getFluid()) && fluidState.getLevel() == 8);
     }
 
     @Override

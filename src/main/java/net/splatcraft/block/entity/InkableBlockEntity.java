@@ -18,7 +18,8 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
+import static net.splatcraft.util.SplatcraftConstants.T_BLOCK_ENTITY_DESCRIPTION;
 
 public class InkableBlockEntity extends BlockEntity implements Inkable {
     /**

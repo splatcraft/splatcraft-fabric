@@ -1,9 +1,9 @@
 package net.splatcraft.datagen.impl.generator.tag;
 
-import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 @SuppressWarnings("unused")
 public abstract class AbstractTagGenerator<T> extends AbstractGenerator<Identifier, TagFactory<T>> {

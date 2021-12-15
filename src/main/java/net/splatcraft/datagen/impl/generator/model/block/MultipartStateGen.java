@@ -4,11 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.block.Block;
+import net.minecraft.util.Identifier;
 import net.splatcraft.datagen.impl.generator.model.ModelGen;
 import net.splatcraft.datagen.impl.generator.model.StateGen;
 import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
-import net.minecraft.block.Block;
-import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.function.BiConsumer;

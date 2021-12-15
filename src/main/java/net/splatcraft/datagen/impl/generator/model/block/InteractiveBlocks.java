@@ -1,15 +1,15 @@
 package net.splatcraft.datagen.impl.generator.model.block;
 
-import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
-import net.splatcraft.datagen.impl.generator.model.ModelGen;
-import net.splatcraft.datagen.impl.generator.model.StateGen;
-import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.DoorHinge;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
+import net.splatcraft.datagen.impl.generator.model.ModelGen;
+import net.splatcraft.datagen.impl.generator.model.StateGen;
+import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
 
 @SuppressWarnings("unused")
 public abstract class InteractiveBlocks {

@@ -1,8 +1,8 @@
 package net.splatcraft.datagen.impl.generator.model;
 
-import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 @SuppressWarnings("ConstantConditions")
 public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<T, U> {

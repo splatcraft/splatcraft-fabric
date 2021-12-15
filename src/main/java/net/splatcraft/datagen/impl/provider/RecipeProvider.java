@@ -3,14 +3,14 @@ package net.splatcraft.datagen.impl.provider;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.splatcraft.datagen.RecipeGenerator;
-import net.splatcraft.datagen.impl.DataType;
-import net.splatcraft.datagen.impl.generator.recipe.AbstractRecipeGenerator;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Identifier;
+import net.splatcraft.datagen.RecipeGenerator;
+import net.splatcraft.datagen.impl.DataType;
+import net.splatcraft.datagen.impl.generator.recipe.AbstractRecipeGenerator;
 
 import java.util.List;
 import java.util.Map;

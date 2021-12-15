@@ -2,12 +2,12 @@ package net.splatcraft.datagen.impl.provider;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import net.splatcraft.datagen.ItemModelGenerator;
-import net.splatcraft.datagen.impl.DataType;
-import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.splatcraft.datagen.ItemModelGenerator;
+import net.splatcraft.datagen.impl.DataType;
+import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
 
 import java.util.List;
 import java.util.Map;

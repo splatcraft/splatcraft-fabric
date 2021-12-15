@@ -1,8 +1,8 @@
 package net.splatcraft.datagen.impl.mixin;
 
-import net.splatcraft.datagen.impl.ObjectLootTableAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
+import net.splatcraft.datagen.impl.ObjectLootTableAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

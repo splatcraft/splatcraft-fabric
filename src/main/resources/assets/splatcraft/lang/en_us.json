@@ -2,7 +2,7 @@
   "mod.splatcraft.name": "Splatcraft",
   "mod.splatcraft.contact.discord": "Discord",
 
-  "itemGroup.splatcraft.all": "Splatcraft (All)",
+  "itemGroup.splatcraft.all": "Splatcraft",
   "itemGroup.splatcraft.inkables": "Splatcraft (Inkables)",
 
   "key.categories.splatcraft": "Splatcraft",
@@ -28,6 +28,8 @@
   "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
   "config.splatcraft.prevent_bob_view_when_squid": "Prevent View Bobbing When In Squid Form",
   "config.splatcraft.prevent_bob_view_when_squid.tooltip": "",
+  "config.splatcraft.stage_block_radius": "Stage Block Radius",
+  "config.splatcraft.stage_block_radius.tooltip": "The radius at which to render stage blocks.",
   "config.splatcraft.color_lock": "Color Lock",
   "config.splatcraft.color_lock.tooltip": "Whether or not ink colors are\nreplaced with just a friendly\nor hostile color.\nUseful for color-blind users.",
   "config.splatcraft.color_lock_friendly": "Color Lock (Friendly)",
@@ -56,6 +58,8 @@
   "block.splatcraft.inkwell": "Inkwell",
   "block.splatcraft.empty_inkwell": "Empty Inkwell",
   "block.splatcraft.grate": "Grate",
+  "block.splatcraft.stage_barrier": "Stage Barrier",
+  "block.splatcraft.stage_void": "Stage Void",
 
   "item.splatcraft.splatfest_band": "Splatfest Band",
 
@@ -66,6 +70,8 @@
 
   "death.attack.splatcraft:inked": "%1$s was inked",
   "death.attack.splatcraft:inked.player": "%1$s was inked whilst trying to escape %2$s",
+  "death.attack.splatcraft:out_of_arena": "%1$s fell out of the arena",
+  "death.attack.splatcraft:out_of_arena.player": "%1$s fell out of the arena whilst trying to escape %2$s",
 
   "block.splatcraft.canvas.minecraft:white": "White Canvas",
   "block.splatcraft.canvas.minecraft:orange": "Orange Canvas",

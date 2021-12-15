@@ -1,8 +1,8 @@
 package net.splatcraft.datagen.impl.mixin;
 
 import com.google.common.collect.Sets;
-import net.splatcraft.datagen.impl.DataCacheAccess;
 import net.minecraft.data.DataCache;
+import net.splatcraft.datagen.impl.DataCacheAccess;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -24,6 +24,8 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
         this.add(SplatcraftBlocks.INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
         this.add(SplatcraftBlocks.GLOWING_INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
         this.add(SplatcraftBlocks.GRATE, this::grate);
+        this.add(SplatcraftBlocks.STAGE_BARRIER);
+        this.add(SplatcraftBlocks.STAGE_VOID);
     }
 
     public StateGen grate(Block block) {

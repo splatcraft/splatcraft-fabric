@@ -2,8 +2,8 @@ package net.splatcraft.datagen.impl.generator.model.block;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.splatcraft.datagen.impl.generator.model.ModelGen;
 import net.minecraft.util.Identifier;
+import net.splatcraft.datagen.impl.generator.model.ModelGen;
 
 @SuppressWarnings("unused")
 public record ParticleOnlyModelGen(Identifier particles) implements ModelGen {
