@@ -43,6 +43,7 @@ public class Splatcraft implements ModInitializer {
             SplatcraftRegistries.class,
             InkColors.class,
 
+            // SplatcraftBannerPatterns.class,
             SplatcraftBlockEntities.class,
             SplatcraftBlocks.class,
             SplatcraftItems.class,

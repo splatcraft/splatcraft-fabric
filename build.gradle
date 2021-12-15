@@ -17,11 +17,6 @@ version = System.env.GITHUB_ACTIONS == "true"
 
 repositories {
   maven {
-    name = "Jitpack"
-    url  = "https://jitpack.io/"
-  }
-
-  maven {
     name = "Quilt Maven"
     url  = "https://maven.quiltmc.org/repository/release/"
   }
@@ -52,12 +47,17 @@ repositories {
 
   maven {
     name = "Ladysnake Mods"
-    url = "https://ladysnake.jfrog.io/artifactory/mods/"
+    url  = "https://ladysnake.jfrog.io/artifactory/mods/"
   }
 
   maven {
     name = "Shedaniel"
-    url = "https://maven.shedaniel.me"
+    url  = "https://maven.shedaniel.me"
+  }
+
+  maven {
+    name = "Artifactory"
+    url  = 'https://server.bbkr.space/artifactory/libs-release/'
   }
 }
 
@@ -70,7 +70,7 @@ dependencies {
   // dependencies
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-  String cardinalComponents = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
+  String            cardinalComponents = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
   String            cardinalComponentsBase   = cardinalComponents.formatted("base")
   modImplementation cardinalComponentsBase
   include           cardinalComponentsBase
@@ -84,6 +84,11 @@ dependencies {
   String  clothMath = "me.shedaniel.cloth:basic-math:+";
   modApi  clothMath
   include clothMath
+
+  String            bannerPP = "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
+  // modImplementation bannerPP
+  // include           bannerPP
+  modCompileOnly    bannerPP
 
   // compatibility
   modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"

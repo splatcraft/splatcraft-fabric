@@ -29,5 +29,8 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
         this.add(SpawnEggItem.forEntity(SplatcraftEntities.INK_SQUID), spawnEgg());
 
         this.add(SplatcraftItems.SPLATFEST_BAND, this::generatedItem);
+
+        // this.add(SplatcraftItems.INK_SQUID_BANNER_PATTERN, this::generatedItem);
+        // this.add(SplatcraftItems.OCTOLING_BANNER_PATTERN, this::generatedItem);
     }
 }
