@@ -3,18 +3,21 @@ package net.splatcraft.datagen.impl.provider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import net.splatcraft.datagen.impl.DataType;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.util.Identifier;
+import net.splatcraft.datagen.impl.DataType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 public abstract class AbstractDataProvider<T> implements DataProvider {
@@ -44,11 +47,23 @@ public abstract class AbstractDataProvider<T> implements DataProvider {
         map.forEach((id, json) -> {
             Path output = pathCreator.apply(path, id);
             try {
-                DataProvider.writeToPath(GSON, cache, json, output);
+                this.writeToPath(GSON, cache, json, output);
             } catch (IOException e) {
                 LOGGER.error("Couldn't save {} {}", this.getFolder(), output, e);
             }
         });
+    }
+
+    public void writeToPath(Gson gson, DataCache cache, JsonElement output, Path path) throws IOException {
+        String string = gson.toJson(output) + "\n";
+        String string2 = SHA1.hashUnencodedChars(string).toString();
+        if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path)) {
+            Files.createDirectories(path.getParent());
+            try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path)){
+                bufferedWriter.write(string);
+            }
+        }
+        cache.updateSha1(path, string2);
     }
 
     public void write(DataCache cache, Map<Identifier, JsonElement> map) {
