@@ -1,20 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
-    "#X#",
-    "###"
+    "##",
+    "##"
   ],
   "key": {
     "#": {
-      "item": "minecraft:iron_ingot"
-    },
-    "X": {
-      "item": "minecraft:iron_bars"
+      "item": "splatcraft:grate_block"
     }
   },
   "result": {
     "item": "splatcraft:grate",
-    "count": 8
+    "count": 16
   }
 }

@@ -40,11 +40,13 @@ public class SplatcraftBlocks {
                            .sounds(SplatcraftBlockSoundGroup.INKWELL)
     ), SplatcraftBlocks::inkableBlockItem);
 
-    public static final Block GRATE = register("grate", new GrateBlock(
+    public static final Block GRATE_BLOCK = register("grate_block", new GrateBlockBlock(
         FabricBlockSettings.of(Material.METAL)
                            .requiresTool().strength(4.0f)
                            .nonOpaque().sounds(BlockSoundGroup.METAL)
     ));
+
+    public static final Block GRATE = register("grate", new GrateBlock(FabricBlockSettings.copyOf(GRATE_BLOCK)));
 
     public static final Block STAGE_BARRIER = register("stage_barrier", new StageBarrierBlock(
         FabricBlockSettings.of(Material.BARRIER)

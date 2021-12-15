@@ -16,10 +16,12 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
     @Override
     public void generate() {
         this.add(SplatcraftBlocks.CANVAS);
-        this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
 
         this.add(SplatcraftBlocks.EMPTY_INKWELL);
         this.add(SplatcraftBlocks.INKWELL);
+
+        this.add(SplatcraftBlocks.GRATE_BLOCK);
+        this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
 
         this.add(SplatcraftBlocks.STAGE_BARRIER);
         this.add(SplatcraftBlocks.STAGE_VOID);

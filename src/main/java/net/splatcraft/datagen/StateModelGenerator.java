@@ -4,12 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
 import net.splatcraft.datagen.impl.generator.model.StateGen;
 import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
 import net.splatcraft.datagen.impl.generator.model.block.AbstractStateModelGenerator;
 import net.splatcraft.datagen.impl.generator.model.block.VariantsStateGen;
+
+import static net.splatcraft.block.SplatcraftBlocks.*;
 
 public class StateModelGenerator extends AbstractStateModelGenerator {
     private static final BlockHalf[] BLOCK_HALVES = BlockHalf.values();
@@ -20,12 +21,16 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
 
     @Override
     public void generate() {
-        this.add(SplatcraftBlocks.CANVAS, block -> this.simple(name(block), cubeAllTinted(name(block))));
-        this.add(SplatcraftBlocks.INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
-        this.add(SplatcraftBlocks.GLOWING_INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
-        this.add(SplatcraftBlocks.GRATE, this::grate);
-        this.add(SplatcraftBlocks.STAGE_BARRIER);
-        this.add(SplatcraftBlocks.STAGE_VOID);
+        this.add(CANVAS, block -> this.simple(name(block), cubeAllTinted(name(block))));
+
+        this.add(INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
+        this.add(GLOWING_INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
+
+        this.add(GRATE_BLOCK);
+        this.add(GRATE, this::grate);
+
+        this.add(STAGE_BARRIER);
+        this.add(STAGE_VOID);
     }
 
     public StateGen grate(Block block) {

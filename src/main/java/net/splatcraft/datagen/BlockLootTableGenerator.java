@@ -19,6 +19,7 @@ public class BlockLootTableGenerator extends AbstractBlockLootTableGenerator {
         this.add(SplatcraftBlocks.EMPTY_INKWELL);
         this.add(SplatcraftBlocks.INKWELL);
 
+        this.add(SplatcraftBlocks.GRATE_BLOCK);
         this.add(SplatcraftBlocks.GRATE);
     }
 }

@@ -12,6 +12,7 @@ public class RecipeGenerator extends AbstractRecipeGenerator {
 
     @Override
     public void generate() {
-        this.add("grate", this.ringSurroundng(Items.IRON_INGOT, Items.IRON_BARS, SplatcraftBlocks.GRATE, 8));
+        this.add("grate_block", this.ring(Items.IRON_BARS, SplatcraftBlocks.GRATE_BLOCK, 8));
+        this.add("grate", this.generic2x2(SplatcraftBlocks.GRATE_BLOCK, SplatcraftBlocks.GRATE, 16));
     }
 }

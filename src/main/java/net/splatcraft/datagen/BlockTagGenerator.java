@@ -24,6 +24,7 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
             SplatcraftBlocks.EMPTY_INKWELL,
             SplatcraftBlocks.INKWELL,
 
+            SplatcraftBlocks.GRATE_BLOCK,
             SplatcraftBlocks.GRATE
         );
 
