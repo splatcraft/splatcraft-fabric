@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
+import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 
 public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
@@ -15,6 +16,9 @@ public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
     public void generate() {
         this.add(SplatcraftEntityTypeTags.INK_PASSABLES,
             EntityType.SQUID, EntityType.GLOW_SQUID
+        );
+        this.add(SplatcraftEntityTypeTags.HURT_BY_WATER,
+            SplatcraftEntities.INK_SQUID
         );
     }
 }
