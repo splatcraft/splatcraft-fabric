@@ -76,38 +76,26 @@ public class SplatcraftUtil {
         return isOnOwnInk(player);
     }
 
-    public static boolean isOnOwnInk(PlayerEntity player) {
-        PlayerDataComponent data = PlayerDataComponent.get(player);
-        return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable inkable
-            && inkable.getInkColor().equals(data.getInkColor());
+    public static boolean isOnOwnInk(Entity entity) {
+        if (!(entity instanceof Inkable inkableEntity)) return false;
+        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable
+            && inkable.getInkColor().equals(inkableEntity.getInkColor());
     }
 
-    public static boolean isOnEnemyInk(PlayerEntity player) {
-        PlayerDataComponent data = PlayerDataComponent.get(player);
-        return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable inkable
-            && !inkable.getInkColor().equals(data.getInkColor());
+    public static boolean isOnEnemyInk(Entity entity) {
+        if (!(entity instanceof Inkable inkableEntity)) return false;
+        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable
+            && !inkable.getInkColor().equals(inkableEntity.getInkColor());
     }
 
-    public static boolean isOnInk(PlayerEntity player) {
-        return player.world.getBlockEntity(player.getLandingPos()) instanceof Inkable;
+    public static boolean isOnInk(Entity entity) {
+        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable;
     }
 
     public static float getMovementSpeed(PlayerEntity player, float base) {
         return canSwimInInk(player)
             ? base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100)
             : -1.0f;
-    }
-
-    public static ScreenHandlerListener createSplatfestBandRefreshScreenHandlerListener(ServerPlayerEntity player) {
-        return new ScreenHandlerListener() {
-            @Override
-            public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-                refreshSplatfestBand(player);
-            }
-
-            @Override
-            public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
-        };
     }
 
     private static final Hand[] HANDS = Hand.values();
@@ -136,6 +124,18 @@ public class SplatcraftUtil {
         }
 
         return data.setHasSplatfestBand(false);
+    }
+
+    public static ScreenHandlerListener createSplatfestBandRefreshScreenHandlerListener(ServerPlayerEntity player) {
+        return new ScreenHandlerListener() {
+            @Override
+            public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+                refreshSplatfestBand(player);
+            }
+
+            @Override
+            public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
+        };
     }
 
     public static InkType getInkType(PlayerEntity player) {

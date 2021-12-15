@@ -17,6 +17,7 @@ public class CommonConfig extends Config {
     public final BooleanOption splatfestBandMustBeHeld = add("splatfest_band_must_be_held", BooleanOption.of(true));
     public final BooleanOption inkwellChangesInkColor = add("inkwell_changes_ink_color", BooleanOption.of(false));
     public final BooleanOption hurtInkSquidsInWater = add("hurt_ink_squids_in_water", BooleanOption.of(true));
+    public final BooleanOption hurtInkSquidsOnEnemyInk = add("hurt_ink_squids_on_enemy_ink", BooleanOption.of(true));
 
     private CommonConfig(File file) {
         super(file);

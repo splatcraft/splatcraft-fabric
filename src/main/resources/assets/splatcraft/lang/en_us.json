@@ -18,6 +18,8 @@
   "config.splatcraft.inkwell_changes_ink_color.tooltip": "Whether or not Inkwells change\nthe ink color of entities on top\nof it.",
   "config.splatcraft.hurt_ink_squids_in_water": "Hurt Ink Squids In Water",
   "config.splatcraft.hurt_ink_squids_in_water.tooltip": "Whether or not to hurt Ink\nSquids or players in squid\nform when in water.",
+  "config.splatcraft.hurt_ink_squids_on_enemy_ink": "Hurt Ink Squids On Enemy Ink",
+  "config.splatcraft.hurt_ink_squids_on_enemy_ink.tooltip": "Whether or not to hurt Ink\nSquids or players in squid\nform when on enemy ink.",
 
   "config.splatcraft.category.client": "Client",
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",
@@ -61,6 +63,9 @@
   "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
   "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed",
+
+  "death.attack.splatcraft:inked": "%1$s was inked",
+  "death.attack.splatcraft:inked.player": "%1$s was inked whilst trying to escape %2$s",
 
   "block.splatcraft.canvas.minecraft:white": "White Canvas",
   "block.splatcraft.canvas.minecraft:orange": "Orange Canvas",
