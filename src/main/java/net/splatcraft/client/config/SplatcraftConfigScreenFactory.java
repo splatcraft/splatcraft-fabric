@@ -1,7 +1,6 @@
 package net.splatcraft.client.config;
 
 import com.google.common.collect.ImmutableMap;
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
@@ -15,14 +14,17 @@ import net.splatcraft.config.Config;
 import static net.splatcraft.util.SplatcraftUtil.texture;
 
 @Environment(EnvType.CLIENT)
-public class SplatcraftConfigScreenFactory implements ConfigScreenFactory<Screen> {
-    public SplatcraftConfigScreenFactory() {}
+public class SplatcraftConfigScreenFactory {
+    private final Screen parent;
 
-    @Override
-    public Screen create(Screen parent) {
+    public SplatcraftConfigScreenFactory(Screen parent) {
+        this.parent = parent;
+    }
+
+    public Screen create() {
         ConfigBuilder configBuilder = ConfigBuilder
             .create()
-            .setParentScreen(parent)
+            .setParentScreen(this.parent)
             .setDefaultBackgroundTexture(texture("block/inked_block"))
             .setTitle(txt("title"))
             .setSavingRunnable(() -> {

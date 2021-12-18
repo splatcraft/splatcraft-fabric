@@ -31,7 +31,7 @@ public class SplatcraftKeyBindings {
                 if (player != null) {
                     // config menu
                     if (OPEN_CONFIG.wasPressed()) {
-                        client.setScreen(new SplatcraftConfigScreenFactory().create(client.currentScreen));
+                        client.setScreen(new SplatcraftConfigScreenFactory(client.currentScreen).create());
                         return;
                     }
 

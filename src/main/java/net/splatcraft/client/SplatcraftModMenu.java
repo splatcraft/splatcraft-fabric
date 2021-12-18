@@ -10,6 +10,6 @@ import net.splatcraft.client.config.SplatcraftConfigScreenFactory;
 public class SplatcraftModMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return new SplatcraftConfigScreenFactory();
+        return p -> new SplatcraftConfigScreenFactory(p).create();
     }
 }
