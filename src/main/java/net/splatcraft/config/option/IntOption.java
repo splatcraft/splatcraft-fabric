@@ -5,6 +5,8 @@ import com.google.gson.JsonPrimitive;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
 public class IntOption extends Option<Integer> {
@@ -50,6 +52,7 @@ public class IntOption extends Option<Integer> {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public AbstractConfigListEntry<Integer> createConfigListEntry(Identifier id, ConfigEntryBuilder builder) {
         if (this.isRanged()) {
             return builder.startIntSlider(this.getTitle(id), this.getValue(), this.min, this.max)

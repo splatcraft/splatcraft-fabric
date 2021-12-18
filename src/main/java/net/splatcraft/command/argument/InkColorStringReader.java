@@ -1,4 +1,4 @@
-package net.splatcraft.server.command.argument;
+package net.splatcraft.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

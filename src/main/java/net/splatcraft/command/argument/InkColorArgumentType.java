@@ -1,4 +1,4 @@
-package net.splatcraft.server.command.argument;
+package net.splatcraft.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -7,8 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.ArgumentTypes;
-import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.Identifier;
 import net.splatcraft.inkcolor.InkColor;
@@ -19,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-import static net.splatcraft.util.SplatcraftConstants.COMMAND_ARGUMENT_INK_COLOR;
 import static net.splatcraft.util.SplatcraftConstants.EXCEPTION_INK_COLOR_NOT_FOUND;
 
 public final class InkColorArgumentType implements ArgumentType<Identifier> {
@@ -55,6 +52,4 @@ public final class InkColorArgumentType implements ArgumentType<Identifier> {
     public Collection<String> getExamples() {
         return InkColorArgumentType.EXAMPLES;
     }
-
-    static { ArgumentTypes.register(COMMAND_ARGUMENT_INK_COLOR, InkColorArgumentType.class, new ConstantArgumentSerializer<>(InkColorArgumentType::inkColor)); }
 }

@@ -22,7 +22,7 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
-import net.splatcraft.server.command.InkColorCommand;
+import net.splatcraft.command.InkColorCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

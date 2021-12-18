@@ -58,7 +58,7 @@ public class InkSquidEntity extends MobEntity implements Inkable {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        tickMovementInkableEntity(this);
+        tickMovementInkableEntity(this, this.getVelocity());
     }
 
     @Override

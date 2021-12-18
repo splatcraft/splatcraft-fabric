@@ -1,4 +1,4 @@
-package net.splatcraft.server.command;
+package net.splatcraft.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.registry.SplatcraftRegistries;
-import net.splatcraft.server.command.argument.InkColorArgumentType;
+import net.splatcraft.command.argument.InkColorArgumentType;
 
 import java.util.ArrayList;
 import java.util.Collection;

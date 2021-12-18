@@ -19,6 +19,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
@@ -31,6 +32,7 @@ import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
+import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 
@@ -143,6 +145,35 @@ public class SplatcraftUtil {
         return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
     }
 
+    public static final List<Integer> WHITE_COLORS = Util.make(() -> {
+        float[] dyeWhiteColors = DEFAULT_INK_COLOR_DYE.getColorComponents();
+        int dyeWhite = Color.ofRGB(dyeWhiteColors[0], dyeWhiteColors[1], dyeWhiteColors[2]).getColor();
+        int pureWhite = InkColors.PURE_WHITE.getDecimalColor();
+        return Lists.newArrayList(dyeWhite, pureWhite);
+    });
+
+    /**
+     * @return an {@link Optional} of {@link ColorOption},
+     *         containing the friendly or hostile instance
+     *         dependent on the client's ink color, or
+     *         empty if color lock is disabled
+     */
+    @Environment(EnvType.CLIENT)
+    public static Optional<ColorOption> getColorOption(InkColor clientInkColor) {
+        if (WHITE_COLORS.contains(clientInkColor.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
+            return Optional.empty();
+        }
+
+        MinecraftClient client = MinecraftClient.getInstance();
+        PlayerDataComponent data = PlayerDataComponent.get(client.player);
+
+        ColorOption colorOption = data.getInkColor().equals(clientInkColor)
+            ? ClientConfig.INSTANCE.colorLockFriendly
+            : ClientConfig.INSTANCE.colorLockHostile;
+
+        return Optional.of(colorOption);
+    }
+
     // cache for getVectorColor
     public static final Function<ColorOption, Vec3f> COLOR_OPTION_TO_VEC3F = Util.memoize(o -> decimalToRGB(o.getValue()));
 
@@ -165,34 +196,6 @@ public class SplatcraftUtil {
         return colorOption.isPresent() ? colorOption.get().getValue() : clientInkColor.getDecimalColor();
     }
 
-    public static final List<Integer> WHITE_COLORS = Util.make(() -> {
-        float[] dyeWhiteColors = DEFAULT_INK_COLOR_DYE.getColorComponents();
-        int dyeWhite = Color.ofRGB(dyeWhiteColors[0], dyeWhiteColors[1], dyeWhiteColors[2]).getColor();
-        int pureWhite = InkColors.PURE_WHITE.getDecimalColor();
-        return Lists.newArrayList(dyeWhite, pureWhite);
-    });
-
-    /**
-     * @return an {@link Optional} of {@link ColorOption},
-     *         containing the friendly or hostile instance
-     *         dependent on the client's ink color, or
-     *         empty if color lock is disabled
-     */
-    public static Optional<ColorOption> getColorOption(InkColor clientInkColor) {
-        if (WHITE_COLORS.contains(clientInkColor.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
-            return Optional.empty();
-        }
-
-        MinecraftClient client = MinecraftClient.getInstance();
-        PlayerDataComponent data = PlayerDataComponent.get(client.player);
-
-        ColorOption colorOption = data.getInkColor().equals(clientInkColor)
-            ? ClientConfig.INSTANCE.colorLockFriendly
-            : ClientConfig.INSTANCE.colorLockHostile;
-
-        return Optional.of(colorOption);
-    }
-
     public static InkColor getInkColorFromStack(ItemStack stack) {
         NbtCompound nbt = stack.getItem() instanceof BlockItem
             ? stack.getSubNbt(NBT_BLOCK_ENTITY_TAG)
@@ -210,7 +213,17 @@ public class SplatcraftUtil {
         return stack;
     }
 
-    public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity) {
+    public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
+        if (movementInput.length() > 0.08d && isOnOwnInk(entity)) {
+            Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
+            if (entity instanceof PlayerEntity player) {
+                PlayerDataComponent data = PlayerDataComponent.get(player);
+                if (data.isSubmerged()) NetworkingCommon.sendSquidTravelEffects(entity, pos);
+            } else {
+                NetworkingCommon.sendSquidTravelEffects(entity, pos);
+            }
+        }
+
         if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue() && entity.isOnGround()) {
             BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
             if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {

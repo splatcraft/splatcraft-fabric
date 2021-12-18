@@ -3,6 +3,8 @@ package net.splatcraft.config.option;
 import com.google.gson.JsonElement;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -34,6 +36,7 @@ public abstract class Option<T> {
         throw new RuntimeException("Invalid config for %s: %s".formatted(this, json));
     }
 
+    @Environment(EnvType.CLIENT)
     public abstract AbstractConfigListEntry<T> createConfigListEntry(Identifier id, ConfigEntryBuilder builder);
 
     public TranslatableText getTitle(Identifier id) {

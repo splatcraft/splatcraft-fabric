@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 
 public class ColorOption extends Option<Integer> {
@@ -28,6 +30,7 @@ public class ColorOption extends Option<Integer> {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public AbstractConfigListEntry<Integer> createConfigListEntry(Identifier id, ConfigEntryBuilder builder) {
         return builder.startColorField(this.getTitle(id), this.getValue())
                       .setDefaultValue(this.getDefaultValue())

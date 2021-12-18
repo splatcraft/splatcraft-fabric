@@ -10,7 +10,7 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.server.command.argument.InkColorStringReader;
+import net.splatcraft.command.argument.InkColorStringReader;
 
 import java.util.function.BiFunction;
 

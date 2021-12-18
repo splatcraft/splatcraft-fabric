@@ -5,6 +5,7 @@
   "package": "net.splatcraft.mixin",
   "mixins": [
     "AbstractBlockMixin",
+    "ArgumentTypesMixin",
     "BlocksInvoker",
     "LivingEntityMixin",
     "PlayerEntityMixin",

@@ -8,6 +8,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.SplatcraftAttributes;
@@ -29,7 +30,6 @@ import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable {
     @Shadow public abstract Text getDisplayName();
-
     @Shadow public abstract PlayerAbilities getAbilities();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
@@ -109,8 +109,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         } catch (NullPointerException ignored) {}
     }
 
+    private Vec3d posLastTick;
     @Inject(method = "tickMovement", at = @At("TAIL"))
     private void onTickMovement(CallbackInfo ci) {
-        tickMovementInkableEntity(this);
+        if (!this.world.isClient) {
+            if (this.posLastTick != null) {
+                Vec3d lastRenderPos = new Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ);
+                tickMovementInkableEntity(this, this.posLastTick.subtract(lastRenderPos));
+            }
+            this.posLastTick = this.getPos();
+        }
     }
 }
