@@ -34,14 +34,9 @@ public class InkColor implements Identifiable {
     }
 
     public int getDecimalColor() {
-        int r = this.color.getRed();
-        int g = this.color.getGreen();
-        int b = this.color.getBlue();
-
-        r = (r << 16) & 0xFF0000;
-        g = (g << 8) & 0x00FF00;
-        b = b & 0x0000FF;
-
+        int r = (this.color.getRed()   << 16) & 0xFF0000;
+        int g = (this.color.getGreen() << 8 ) & 0x00FF00;
+        int b = (this.color.getBlue()       ) & 0x0000FF;
         return r | g | b;
     }
 
