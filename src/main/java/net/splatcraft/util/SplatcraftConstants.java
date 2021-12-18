@@ -38,6 +38,7 @@ public class SplatcraftConstants {
     public static final String T_INK_COLOR_TEXT_DISPLAY_ICON = "%s.icon".formatted(T_INK_COLOR_TEXT_DISPLAY);
     public static final String T_BLOCK_ENTITY_DESCRIPTION = "text.%s.block_entity_description".formatted(Splatcraft.MOD_ID);
     public static final String T_COMMAND_ERROR_INK_COLOR_NOT_FOUND = cmdInkColor("notFound");
+    public static final String T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED = cmdInkColor("tagDisallowed");
     public static final String T_COMMAND_ERROR_NO_ENTITIES_AFFECTED = cmdEntity("notAffected");
     public static final String T_COMMAND_INK_COLOR_GET = cmd("%s.get".formatted(COMMAND_INK_COLOR));
     public static final String T_COMMAND_INK_COLOR_SUCCESS_SINGLE = cmdSuc("%s.single".formatted(COMMAND_INK_COLOR));

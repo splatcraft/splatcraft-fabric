@@ -1,4 +1,4 @@
-package net.splatcraft.server.argument;
+package net.splatcraft.server.command.argument;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

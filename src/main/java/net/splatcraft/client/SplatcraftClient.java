@@ -5,6 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -20,11 +21,14 @@ import net.splatcraft.client.keybind.SplatcraftDevelopmentKeyBindings;
 import net.splatcraft.client.keybind.SplatcraftKeyBindings;
 import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.network.NetworkingClient;
+import net.splatcraft.client.particle.InkSplashParticle;
+import net.splatcraft.client.particle.InkSquidSoulParticle;
 import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
 import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
+import net.splatcraft.particle.SplatcraftParticles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,6 +56,10 @@ public class SplatcraftClient implements ClientModInitializer {
             SplatcraftKeyBindings.class,
             NetworkingClient.class
         );
+
+        ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
+        pfrInstance.register(SplatcraftParticles.INK_SPLASH, InkSplashParticle.Factory::new);
+        pfrInstance.register(SplatcraftParticles.INK_SQUID_SOUL, InkSquidSoulParticle.Factory::new);
 
         BlockRenderLayerMap brlm = BlockRenderLayerMap.INSTANCE;
         brlm.putBlocks(RenderLayer.getCutout(),
