@@ -11,6 +11,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
+import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.component.SplatcraftComponents;
@@ -43,7 +44,7 @@ public class Splatcraft implements ModInitializer {
             SplatcraftRegistries.class,
             InkColors.class,
 
-            // SplatcraftBannerPatterns.class,
+            SplatcraftBannerPatterns.class,
             SplatcraftBlockEntities.class,
             SplatcraftBlocks.class,
             SplatcraftItems.class,

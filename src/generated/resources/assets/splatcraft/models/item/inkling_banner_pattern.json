@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "splatcraft:item/inkling_banner_pattern"
+  }
+}
