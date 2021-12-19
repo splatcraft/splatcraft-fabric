@@ -9,8 +9,8 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.command.argument.InkColorStringReader;
+import net.splatcraft.inkcolor.InkColor;
 
 import java.util.function.BiFunction;
 

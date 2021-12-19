@@ -1,7 +1,6 @@
 package net.splatcraft.util;
 
 import com.google.common.collect.Lists;
-import me.shedaniel.math.Color;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;

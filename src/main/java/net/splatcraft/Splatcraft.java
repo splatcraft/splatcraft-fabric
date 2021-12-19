@@ -18,6 +18,7 @@ import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
+import net.splatcraft.command.InkColorCommand;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.config.CommonConfig;
@@ -27,7 +28,6 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
-import net.splatcraft.command.InkColorCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

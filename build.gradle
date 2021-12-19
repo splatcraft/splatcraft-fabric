@@ -87,9 +87,6 @@ dependencies {
   String  clothConfig = "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
   modApi  clothConfig
   include clothConfig
-  String  clothMath = "me.shedaniel.cloth:basic-math:+";
-  modApi  clothMath
-  include clothMath
 
   String            bannerPP = "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
   modImplementation bannerPP

@@ -1,12 +1,12 @@
 package net.splatcraft.inkcolor;
 
-import me.shedaniel.math.Color;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.util.Color;
 
 import java.util.Random;
 
@@ -334,13 +334,13 @@ public class InkColors {
     }
 
     private static InkColor vanilla(String id, int color) {
-        return register(new Identifier(id), Color.ofOpaque(color));
+        return register(new Identifier(id), Color.of(color));
     }
     private static InkColor splatcraft(String id, int color) {
-        return register(new Identifier(Splatcraft.MOD_ID, id), Color.ofOpaque(color));
+        return register(new Identifier(Splatcraft.MOD_ID, id), Color.of(color));
     }
     private static InkColor splatoon(String id, int color) {
-        return register(new Identifier("splatoon", id), Color.ofOpaque(color));
+        return register(new Identifier("splatoon", id), Color.of(color));
     }
 
     private static InkColor pure(String id, float red, float green, float blue) {

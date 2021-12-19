@@ -16,7 +16,8 @@ import net.splatcraft.registry.SplatcraftRegistries;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.T_COMMAND_ERROR_INK_COLOR_NOT_FOUND;
+import static net.splatcraft.util.SplatcraftConstants.T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED;
 
 public class InkColorStringReader {
     public static final SimpleCommandExceptionType TAG_DISALLOWED_EXCEPTION = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED));

@@ -1,6 +1,5 @@
 package net.splatcraft.inkcolor;
 
-import me.shedaniel.math.Color;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -8,6 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Vec3f;
 import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.util.Color;
 import net.splatcraft.util.Identifiable;
 
 import java.util.function.Function;
@@ -30,26 +30,23 @@ public class InkColor implements Identifiable {
     }
 
     public Vec3f getVectorColor() {
-        return new Vec3f(this.getRed(), this.getGreen(), this.getBlue());
+        return new Vec3f(this.getRed() / 255.0f, this.getGreen() / 255.0f, this.getBlue() / 255.0f);
     }
 
     public int getDecimalColor() {
-        int r = (this.color.getRed()   << 16) & 0xFF0000;
-        int g = (this.color.getGreen() << 8 ) & 0x00FF00;
-        int b = (this.color.getBlue()       ) & 0x0000FF;
-        return r | g | b;
+        return this.color.getColor();
     }
 
-    public float getRed() {
-        return this.color.getRed() / 255.0f;
+    public int getRed() {
+        return this.color.getRed();
     }
 
-    public float getGreen() {
-        return this.color.getGreen() / 255.0f;
+    public int getGreen() {
+        return this.color.getGreen();
     }
 
-    public float getBlue() {
-        return this.color.getBlue() / 255.0f;
+    public int getBlue() {
+        return this.color.getBlue();
     }
 
     public Text getDisplayText() {
