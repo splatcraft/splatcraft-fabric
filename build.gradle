@@ -97,6 +97,9 @@ dependencies {
 
   modImplementation "maven.modrinth:sodium:${project.sodium_version}"
   implementation    "org.joml:joml:${project.joml_version}"
+
+  modImplementation "maven.modrinth:lithium:${project.lithium_version}"
+  modImplementation "maven.modrinth:phosphor:${project.phosphor_version}"
 }
 
 loom {
