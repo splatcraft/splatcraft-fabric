@@ -101,6 +101,11 @@ public class SplatcraftUtil {
         return Optional.empty();
     }
 
+    public static boolean canInteractWithWorld(PlayerEntity player) {
+        PlayerDataComponent data = PlayerDataComponent.get(player);
+        return !data.isSquid();
+    }
+
     private static final Hand[] HANDS = Hand.values();
     private static final Set<Item> SPLATFEST_BAND_SET = Set.of(SplatcraftItems.SPLATFEST_BAND);
 

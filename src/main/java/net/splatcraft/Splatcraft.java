@@ -1,25 +1,17 @@
 package net.splatcraft;
 
 import com.google.common.reflect.Reflection;
-import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
-import net.splatcraft.command.InkColorCommand;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.entity.SplatcraftEntities;
@@ -28,11 +20,9 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.util.Events;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static net.splatcraft.util.SplatcraftUtil.canSubmergeInInk;
-import static net.splatcraft.util.SplatcraftUtil.refreshSplatfestBand;
 
 public class Splatcraft implements ModInitializer {
     public static final String MOD_ID   = "splatcraft";
@@ -62,9 +52,15 @@ public class Splatcraft implements ModInitializer {
             NetworkingCommon.class
         );
 
-        CommandRegistrationCallback.EVENT.register(Splatcraft::registerCommands);
-        ServerPlayConnectionEvents.JOIN.register(Splatcraft::onPlayerJoin);
-        ServerTickEvents.START_SERVER_TICK.register(Splatcraft::onStartTick);
+        CommandRegistrationCallback.EVENT.register(Events::registerCommands);
+        ServerPlayConnectionEvents.JOIN.register(Events::onPlayerJoin);
+        ServerTickEvents.START_SERVER_TICK.register(Events::onStartTick);
+
+        UseBlockCallback.EVENT.register(Events::useBlock);
+        UseItemCallback.EVENT.register(Events::useItem);
+        UseEntityCallback.EVENT.register(Events::useEntity);
+        AttackEntityCallback.EVENT.register(Events::attackEntity);
+        AttackBlockCallback.EVENT.register(Events::attackBlock);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
 
@@ -84,18 +80,4 @@ public class Splatcraft implements ModInitializer {
         LOGGER.info("Initialized {}-dev", Splatcraft.MOD_NAME);
     }
 
-    private static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
-        InkColorCommand.register(dispatcher);
-    }
-
-    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        refreshSplatfestBand(handler.player);
-    }
-
-    private static void onStartTick(MinecraftServer server) {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            data.setSubmerged(canSubmergeInInk(player));
-        }
-    }
 }
