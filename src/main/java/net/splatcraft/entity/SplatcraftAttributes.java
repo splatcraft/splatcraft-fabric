@@ -12,6 +12,11 @@ public class SplatcraftAttributes {
         new ClampedEntityAttribute(translation("ink_swim_speed"), 0.9f, 0.0d, 1024.0d)
             .setTracked(true)
     );
+    public static final EntityAttribute INK_JUMP_FORCE = register(
+        "ink_jump_force",
+        new ClampedEntityAttribute(translation("ink_jump_force"), 0.9f, 0.0d, 1024.0d)
+            .setTracked(true)
+    );
 
     private static EntityAttribute register(String id, EntityAttribute entityAttribute) {
         return Registry.register(Registry.ATTRIBUTE, new Identifier(Splatcraft.MOD_ID, id), entityAttribute);

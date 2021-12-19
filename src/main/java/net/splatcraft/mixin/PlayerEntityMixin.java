@@ -8,6 +8,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
@@ -58,9 +59,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
     // change attributes for squid form
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
-        cir.setReturnValue(
-            cir.getReturnValue()
-               .add(SplatcraftAttributes.INK_SWIM_SPEED, SplatcraftAttributes.INK_SWIM_SPEED.getDefaultValue())
+        cir.setReturnValue(cir.getReturnValue()
+                              .add(SplatcraftAttributes.INK_SWIM_SPEED, SplatcraftAttributes.INK_SWIM_SPEED.getDefaultValue())
+                              .add(SplatcraftAttributes.INK_JUMP_FORCE, SplatcraftAttributes.INK_JUMP_FORCE.getDefaultValue())
         );
     }
 
@@ -112,8 +113,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         PlayerDataComponent data = PlayerDataComponent.get(that);
         if (data.isSubmerged()) {
             Vec3d velocity = this.getVelocity();
-            this.setVelocity(velocity.multiply(4.2d, 0.95d, 4.2d));
-            this.velocityDirty = true;
+            if (velocity.horizontalLength() > 0.08d) {
+                float f = this.getYaw() * ((float)Math.PI / 180);
+                double m = this.getAttributeValue(SplatcraftAttributes.INK_JUMP_FORCE);
+                this.setVelocity(
+                    velocity.add(-MathHelper.sin(f) * m, 0.0d, MathHelper.cos(f) * m)
+                            .multiply(1.0d, 0.875d, 1.0d)
+                );
+                this.velocityDirty = true;
+            }
         }
     }
 

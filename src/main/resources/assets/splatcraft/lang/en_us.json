@@ -69,6 +69,7 @@
   "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
   "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed",
+  "attribute.splatcraft.ink_jump_force": "Ink Jump Force",
 
   "death.attack.splatcraft:inked": "%1$s was inked",
   "death.attack.splatcraft:inked.player": "%1$s was inked whilst trying to escape %2$s",
