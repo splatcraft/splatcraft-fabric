@@ -214,12 +214,12 @@ public class SplatcraftUtil {
     }
 
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
-        if (movementInput.length() > 0.08d && isOnOwnInk(entity)) {
+        if (movementInput.length() > 0.08d) {
             Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
                 if (data.isSubmerged()) NetworkingCommon.sendSquidTravelEffects(entity, pos);
-            } else {
+            } else if (isOnOwnInk(entity)) {
                 NetworkingCommon.sendSquidTravelEffects(entity, pos);
             }
         }
