@@ -14,4 +14,9 @@ public interface BlocksInvoker {
     static Boolean invoke_never(BlockState state, BlockView world, BlockPos pos, EntityType<?> type) {
         throw new AssertionError();
     }
+
+    @Invoker("never")
+    static boolean invoke_never(BlockState state, BlockView world, BlockPos pos) {
+        throw new AssertionError();
+    }
 }

@@ -43,7 +43,8 @@ public class SplatcraftBlocks {
     public static final Block GRATE_BLOCK = register("grate_block", new GrateBlockBlock(
         FabricBlockSettings.of(Material.METAL)
                            .requiresTool().strength(4.0f)
-                           .nonOpaque().sounds(BlockSoundGroup.METAL)
+                           .nonOpaque().suffocates(BlocksInvoker::invoke_never)
+                           .sounds(BlockSoundGroup.METAL)
     ));
 
     public static final Block GRATE = register("grate", new GrateBlock(FabricBlockSettings.copyOf(GRATE_BLOCK)));
