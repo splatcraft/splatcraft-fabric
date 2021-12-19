@@ -9,7 +9,7 @@ import net.splatcraft.Splatcraft;
 public class SplatcraftAttributes {
     public static final EntityAttribute INK_SWIM_SPEED = register(
         "ink_swim_speed",
-        new ClampedEntityAttribute(translation("ink_swim_speed"), 0.7f, 0.0d, 1024.0d)
+        new ClampedEntityAttribute(translation("ink_swim_speed"), 0.9f, 0.0d, 1024.0d)
             .setTracked(true)
     );
 

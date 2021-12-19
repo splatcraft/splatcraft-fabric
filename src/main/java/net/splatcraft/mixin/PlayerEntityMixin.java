@@ -15,7 +15,6 @@ import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.util.SplatcraftConstants;
-import net.splatcraft.util.SplatcraftUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
+import static net.splatcraft.util.SplatcraftUtil.getModifiedMovementSpeed;
 import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 
 @Mixin(PlayerEntity.class)
@@ -69,10 +69,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
-
         if (data.isSquid() && !this.getAbilities().flying) {
-            float speed = SplatcraftUtil.getMovementSpeed(that, cir.getReturnValueF());
-            if (speed != -1.0f) cir.setReturnValue(cir.getReturnValueF() * speed);
+            getModifiedMovementSpeed(that, cir.getReturnValueF()).ifPresent(speed -> cir.setReturnValue(cir.getReturnValueF() * speed));
         }
     }
 
@@ -81,7 +79,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
     private void onUpdatePose(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid()) {
+        if (data.isSquid() && !this.getAbilities().flying) {
             this.setPose(EntityPose.SWIMMING);
             ci.cancel();
         }
@@ -103,10 +101,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         PlayerEntity that = PlayerEntity.class.cast(this);
         try {
             PlayerDataComponent data = PlayerDataComponent.get(that);
-            if (data.isSquid()) {
-                cir.setReturnValue(SplatcraftConstants.getEyeHeight(data.isSubmerged()));
-            }
+            if (data.isSquid()) cir.setReturnValue(SplatcraftConstants.getEyeHeight(data.isSubmerged()));
         } catch (NullPointerException ignored) {}
+    }
+
+    // add extra force to a submerged jump
+    @Inject(method = "jump", at = @At("TAIL"))
+    private void onJump(CallbackInfo ci) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        if (data.isSubmerged()) {
+            Vec3d velocity = this.getVelocity();
+            this.setVelocity(velocity.multiply(4.2d, 0.95d, 4.2d));
+            this.velocityDirty = true;
+        }
     }
 
     private Vec3d posLastTick;

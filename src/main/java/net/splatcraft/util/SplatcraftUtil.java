@@ -93,10 +93,12 @@ public class SplatcraftUtil {
         return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable;
     }
 
-    public static float getMovementSpeed(PlayerEntity player, float base) {
-        return canSwimInInk(player)
-            ? base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100)
-            : -1.0f;
+    public static Optional<Float> getModifiedMovementSpeed(PlayerEntity player, float base) {
+        if (canSwimInInk(player)) {
+            return Optional.of(base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100));
+        }
+
+        return Optional.empty();
     }
 
     private static final Hand[] HANDS = Hand.values();
