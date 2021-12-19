@@ -57,12 +57,12 @@ repositories {
 
   maven {
     name = "Artifactory"
-    url  = 'https://server.bbkr.space/artifactory/libs-release/'
+    url  = "https://server.bbkr.space/artifactory/libs-release/"
   }
 
   maven {
     name = "Dodo Gang"
-    url  = 'http://maven.dodogang.net/'
+    url  = "http://maven.dodogang.net/"
     allowInsecureProtocol = true
   }
 }
