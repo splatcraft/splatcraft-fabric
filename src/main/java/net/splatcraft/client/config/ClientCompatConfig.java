@@ -29,7 +29,7 @@ public class ClientCompatConfig extends Config {
     }
 
     @Override
-    public HashBiMap<Identifier, Option<?>> getDisplayedConfigListEntries() {
+    public HashBiMap<Identifier, Option<?>> getDisplayedOptions() {
         HashBiMap<Identifier, Option<?>> map = HashBiMap.create();
 
         if (ModLoaded.SODIUM) {

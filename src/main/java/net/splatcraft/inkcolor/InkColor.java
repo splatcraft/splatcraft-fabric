@@ -1,5 +1,6 @@
 package net.splatcraft.inkcolor;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -49,9 +50,13 @@ public class InkColor implements Identifiable {
         return this.color.getBlue();
     }
 
-    public Text getDisplayText() {
+    public Text getDisplayText(Style textStyle) {
         Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
-        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, this);
+        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, new LiteralText(this.toString()).setStyle(textStyle));
+    }
+
+    public Text getDisplayText() {
+        return getDisplayText(Style.EMPTY);
     }
 
     /**

@@ -19,6 +19,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.splatcraft.Splatcraft;
@@ -35,6 +39,7 @@ import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -211,6 +216,23 @@ public class SplatcraftUtil {
     @Environment(EnvType.CLIENT)
     public static Color getColor(InkColor clientInkColor) {
         return Color.of(getDecimalColor(clientInkColor));
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Nullable
+    public static InkColor getTargetedBlockInkColor() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.crosshairTarget != null && client.world != null) {
+            HitResult target = client.crosshairTarget;
+            if (target instanceof BlockHitResult result) {
+                BlockPos pos = new BlockPos(result.getPos()).offset(result.getSide(), -1);
+                if (client.world.getBlockEntity(pos) instanceof Inkable inkable) return inkable.getInkColor();
+            } else if (target instanceof EntityHitResult result) {
+                if (result.getEntity() instanceof Inkable inkable) return inkable.getInkColor();
+            }
+        }
+
+        return null;
     }
 
     public static InkColor getInkColorFromStack(ItemStack stack) {

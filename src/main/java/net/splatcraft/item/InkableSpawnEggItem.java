@@ -3,43 +3,43 @@ package net.splatcraft.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.world.World;
 import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.util.Color;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 import static net.splatcraft.util.SplatcraftUtil.getDecimalColor;
+import static net.splatcraft.util.SplatcraftUtil.getTargetedBlockInkColor;
 
 public class InkableSpawnEggItem extends SpawnEggItem {
     public InkableSpawnEggItem(EntityType<? extends MobEntity> type, int primaryColor, int secondaryColor, Settings settings) {
         super(type, primaryColor, secondaryColor, settings);
     }
 
-    // set tinted color of spawn egg to targeted block's ink color
     @Environment(EnvType.CLIENT)
     @Override
     public int getColor(int tintIndex) {
         if (tintIndex == 0) return 0xFFFFFF;
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.crosshairTarget != null && client.world != null) {
-            HitResult target = client.crosshairTarget;
-            if (target instanceof BlockHitResult result) {
-                BlockPos pos = new BlockPos(result.getPos()).offset(result.getSide(), -1);
-                if (client.world.getBlockEntity(pos) instanceof Inkable inkable) return getDecimalColor(inkable.getInkColor());
-            } else if (target instanceof EntityHitResult result) {
-                if (result.getEntity() instanceof Inkable inkable) return getDecimalColor(inkable.getInkColor());
-            }
-        }
+        InkColor inkColor = getTargetedBlockInkColor();
+        if (inkColor != null) return getDecimalColor(inkColor);
 
+        // randomising color, similar to jeb_ sheep
+        MinecraftClient client = MinecraftClient.getInstance();
         if (client.player != null) {
             int r = client.player.age / 25 + client.player.getId();
             int colors = SplatcraftRegistries.INK_COLOR.size();
@@ -62,5 +62,16 @@ public class InkableSpawnEggItem extends SpawnEggItem {
         }
 
         return 0x474F52;
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
+        super.appendTooltip(stack, world, tooltip, ctx);
+
+        if (ctx.isAdvanced()) {
+            InkColor inkColor = Optional.ofNullable(getTargetedBlockInkColor()).orElse(InkColors._DEFAULT);
+            tooltip.add(inkColor.getDisplayText(Style.EMPTY.withFormatting(Formatting.DARK_GRAY)));
+        }
     }
 }

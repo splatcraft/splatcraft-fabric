@@ -51,7 +51,7 @@ public class Config {
     public void addConfigListEntries(ConfigEntryBuilder entryBuilder, Supplier<ConfigCategory> categoryCreator) {
         if (this.canDisplayInMenu()) {
             ConfigCategory category = categoryCreator.get();
-            for (Map.Entry<Identifier, Option<?>> entry : this.getDisplayedConfigListEntries().entrySet()) {
+            for (Map.Entry<Identifier, Option<?>> entry : this.getDisplayedOptions().entrySet()) {
                 Identifier id = entry.getKey();
                 Option<?> option = entry.getValue();
 
@@ -61,13 +61,13 @@ public class Config {
         }
     }
 
-    public HashBiMap<Identifier, Option<?>> getDisplayedConfigListEntries() {
+    public HashBiMap<Identifier, Option<?>> getDisplayedOptions() {
         return HashBiMap.create(this.map);
     }
 
     @Environment(EnvType.CLIENT)
     public boolean canDisplayInMenu() {
-        return !this.getDisplayedConfigListEntries().isEmpty();
+        return !this.getDisplayedOptions().isEmpty();
     }
 
     public void save() {
