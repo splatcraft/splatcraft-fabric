@@ -77,8 +77,10 @@
   "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed",
   "attribute.splatcraft.ink_jump_force": "Ink Jump Force",
 
-  "death.attack.splatcraft:inked": "%1$s was inked",
-  "death.attack.splatcraft:inked.player": "%1$s was inked whilst trying to escape %2$s",
+  "death.attack.splatcraft:inked_environment": "%1$s tried to swim in enemy ink",
+  "death.attack.splatcraft:inked_environment.player": "%1$s tried to swim in enemy ink to escape %2$s",
+  "death.attack.splatcraft:inked": "%1$s was splatted by %2$s",
+  "death.attack.splatcraft:inked.item": "%1$s was splatted by %2$s using %3$s",
   "death.attack.splatcraft:out_of_arena": "%1$s fell out of the arena",
   "death.attack.splatcraft:out_of_arena.player": "%1$s fell out of the arena whilst trying to escape %2$s",
 

@@ -35,8 +35,8 @@ public abstract class LivingEntityMixin extends Entity {
             if (CommonConfig.INSTANCE.hurtInkSquidsOnEnemyInk.getValue() && isOnEnemyInk(this)) {
                 if (that instanceof PlayerEntity player) {
                     PlayerDataComponent data = PlayerDataComponent.get(player);
-                    if (data.isSquid()) this.damage(SplatcraftDamageSource.INKED, 1.0f);
-                } else if (SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())) this.damage(SplatcraftDamageSource.INKED, 1.0f);
+                    if (data.isSquid()) this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, 1.0f);
+                } else if (SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())) this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, 1.0f);
             }
         }
     }
