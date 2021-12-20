@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
@@ -28,6 +29,7 @@ import net.splatcraft.client.particle.InkSplashParticle;
 import net.splatcraft.client.particle.InkSquidSoulParticle;
 import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
 import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
+import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
@@ -62,10 +64,12 @@ public class SplatcraftClient implements ClientModInitializer {
             NetworkingClient.class
         );
 
+        // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
         pfrInstance.register(SplatcraftParticles.INK_SPLASH, InkSplashParticle.Factory::new);
         pfrInstance.register(SplatcraftParticles.INK_SQUID_SOUL, InkSquidSoulParticle.Factory::new);
 
+        // render layers
         BlockRenderLayerMap brlm = BlockRenderLayerMap.INSTANCE;
         brlm.putBlocks(RenderLayer.getCutout(),
             SplatcraftBlocks.GRATE_BLOCK,
@@ -74,23 +78,39 @@ public class SplatcraftClient implements ClientModInitializer {
             SplatcraftBlocks.INKWELL
         );
 
+        // entities
         EntityRendererRegistry.register(SplatcraftEntities.INK_SQUID, InkSquidEntityModelRenderer::new);
 
+        // block entities
         BlockEntityRendererRegistry.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
 
+        // model predicates
         modelPredicateUsing(SplatcraftItems.SPLAT_ROLLER);
 
-        ColorProviderRegistry.BLOCK.register(
+        // color providers
+        ColorProviderRegistry.BLOCK.register( // inkable block entity colors
             (state, world, pos, tintIndex) -> world != null && world.getBlockEntity(pos) instanceof Inkable inkable
                 ? getDecimalColor(inkable.getInkColor())
                 : InkColors._DEFAULT.getDecimalColor(),
             SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
         );
-        ColorProviderRegistry.ITEM.register(
+
+        ColorProviderRegistry.ITEM.register( // inkable items
             (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftItems.SPLAT_ROLLER
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
         );
 
+        ColorProviderRegistry.ITEM.register( // inking items
+            (stack, tintIndex) -> {
+                MinecraftClient client = MinecraftClient.getInstance();
+                return client.player instanceof InkableCaster caster
+                    ? getDecimalColor(caster.toInkable().getInkColor())
+                    : getInkColorFromStack(stack).getDecimalColor();
+            },
+            SplatcraftItems.SPLAT_ROLLER
+        );
+
+        // block markers
         Set<Item> newBlockMarkerItems = new HashSet<>(ClientWorldAccessor.getBlockMarkerItems());
         Collections.addAll(newBlockMarkerItems,
             SplatcraftBlocks.STAGE_BARRIER.asItem(),
