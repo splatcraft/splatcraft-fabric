@@ -224,11 +224,11 @@ public class SplatcraftUtil {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.crosshairTarget != null && client.world != null) {
             HitResult target = client.crosshairTarget;
-            if (target instanceof BlockHitResult result) {
-                BlockPos pos = new BlockPos(result.getPos()).offset(result.getSide(), -1);
+            if (target instanceof BlockHitResult hit) {
+                BlockPos pos = new BlockPos(hit.getPos()).offset(hit.getSide(), -1);
                 if (client.world.getBlockEntity(pos) instanceof Inkable inkable) return inkable.getInkColor();
-            } else if (target instanceof EntityHitResult result) {
-                if (result.getEntity() instanceof Inkable inkable) return inkable.getInkColor();
+            } else if (target instanceof EntityHitResult hit) {
+                if (hit.getEntity() instanceof Inkable inkable) return inkable.getInkColor();
             }
         }
 
