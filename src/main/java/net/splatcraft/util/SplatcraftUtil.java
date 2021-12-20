@@ -31,7 +31,6 @@ import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
-import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 
@@ -40,6 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
+import static net.splatcraft.network.NetworkingCommon.sendSquidTravelEffects;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftUtil {
@@ -95,7 +95,7 @@ public class SplatcraftUtil {
 
     public static Optional<Float> getModifiedMovementSpeed(PlayerEntity player, float base) {
         if (canSwimInInk(player)) {
-            return Optional.of(base * (1.0f + (float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 100));
+            return Optional.of(base * ((float) player.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10));
         }
 
         return Optional.empty();
@@ -211,10 +211,10 @@ public class SplatcraftUtil {
     }
 
     public static ItemStack setInkColorOnStack(ItemStack stack, InkColor inkColor) {
+        if (inkColor.equals(getInkColorFromStack(stack))) return stack;
         NbtCompound nbt = stack.getItem() instanceof BlockItem
             ? stack.getOrCreateSubNbt(NBT_BLOCK_ENTITY_TAG)
             : stack.getOrCreateNbt();
-        if (nbt == null) return stack;
         nbt.putString(NBT_INK_COLOR, inkColor.getId().toString());
         return stack;
     }
@@ -224,9 +224,9 @@ public class SplatcraftUtil {
             Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
-                if (data.isSubmerged()) NetworkingCommon.sendSquidTravelEffects(entity, pos);
+                if (data.isSubmerged()) sendSquidTravelEffects(entity, pos);
             } else if (isOnOwnInk(entity)) {
-                NetworkingCommon.sendSquidTravelEffects(entity, pos);
+                sendSquidTravelEffects(entity, pos);
             }
         }
 

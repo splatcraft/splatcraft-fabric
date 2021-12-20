@@ -9,9 +9,12 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
@@ -26,7 +29,9 @@ import net.splatcraft.client.particle.InkSquidSoulParticle;
 import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
 import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
+import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
 import org.apache.logging.log4j.LogManager;
@@ -73,6 +78,8 @@ public class SplatcraftClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
 
+        modelPredicateUsing(SplatcraftItems.SPLAT_ROLLER);
+
         ColorProviderRegistry.BLOCK.register(
             (state, world, pos, tintIndex) -> world != null && world.getBlockEntity(pos) instanceof Inkable inkable
                 ? getDecimalColor(inkable.getInkColor())
@@ -81,7 +88,7 @@ public class SplatcraftClient implements ClientModInitializer {
         );
         ColorProviderRegistry.ITEM.register(
             (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftItems.SPLAT_ROLLER
         );
 
         Set<Item> newBlockMarkerItems = new HashSet<>(ClientWorldAccessor.getBlockMarkerItems());
@@ -100,5 +107,18 @@ public class SplatcraftClient implements ClientModInitializer {
         LOGGER.info("Initializing {}-client-dev", Splatcraft.MOD_NAME);
         Reflection.initialize(SplatcraftDevelopmentKeyBindings.class);
         LOGGER.info("Initialized {}-client-dev", Splatcraft.MOD_NAME);
+    }
+
+    private static void modelPredicate(Item item, String id, UnclampedModelPredicateProvider provider) {
+        FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
+    }
+
+    private static void modelPredicateUsing(Item... items) {
+        for (Item item : items) {
+            modelPredicate(
+                item, "using",
+                (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1 : 0
+            );
+        }
     }
 }

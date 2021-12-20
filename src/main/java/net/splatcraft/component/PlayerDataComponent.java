@@ -8,12 +8,17 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
+import net.splatcraft.entity.InkableCaster;
 
+import java.util.Random;
+
+import static net.splatcraft.network.NetworkingCommon.sendSquidTravelEffects;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
@@ -107,6 +112,17 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.submerged = submerged;
 
         this.player.calculateDimensions();
+        if (!this.player.world.isClient) {
+            Vec3d pos = new Vec3d(this.player.getX(), this.player.getLandingPos().getY() + 1, this.player.getZ());
+            Random rand = this.player.getRandom();
+            for (int i = 0; i < 10; i++) {
+                sendSquidTravelEffects(((InkableCaster) this.player).toInkable(), pos.add(
+                    rand.nextDouble() - 0.5d,
+                    rand.nextDouble() / 3,
+                    rand.nextDouble() - 0.5d)
+                );
+            }
+        }
 
         this.sync();
         return true;

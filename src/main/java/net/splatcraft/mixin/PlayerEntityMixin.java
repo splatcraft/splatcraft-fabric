@@ -1,9 +1,6 @@
 package net.splatcraft.mixin;
 
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
@@ -29,7 +27,7 @@ import static net.splatcraft.util.SplatcraftUtil.getModifiedMovementSpeed;
 import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements Inkable {
+public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster {
     @Shadow public abstract Text getDisplayName();
     @Shadow public abstract PlayerAbilities getAbilities();
 
@@ -56,6 +54,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         return this.getDisplayName();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Entity & Inkable> T toInkable() {
+        return (T) this;
+    }
+
     // change attributes for squid form
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
@@ -71,7 +75,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable 
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
         if (data.isSquid() && !this.getAbilities().flying) {
-            getModifiedMovementSpeed(that, cir.getReturnValueF()).ifPresent(speed -> cir.setReturnValue(cir.getReturnValueF() * speed));
+            getModifiedMovementSpeed(that, cir.getReturnValueF()).ifPresent(cir::setReturnValue);
         }
     }
 

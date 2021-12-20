@@ -11,10 +11,10 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.SplatcraftConfigScreenFactory;
-import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.component.PlayerDataComponent;
 import org.lwjgl.glfw.GLFW;
 
+import static net.splatcraft.client.network.NetworkingClient.sendKeyChangeSquidForm;
 import static net.splatcraft.util.SplatcraftUtil.canEnterSquidForm;
 
 @Environment(EnvType.CLIENT)
@@ -48,7 +48,7 @@ public class SplatcraftKeyBindings {
                     }
 
                     if (nowSquid) nowSquid = canEnterSquidForm(player);
-                    if (wasSquid != nowSquid) NetworkingClient.sendKeyChangeSquidForm(nowSquid);
+                    if (wasSquid != nowSquid) sendKeyChangeSquidForm(nowSquid);
                 }
             }
         });

@@ -3,6 +3,8 @@ package net.splatcraft.util;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -62,6 +64,10 @@ public final class Events {
 
     public static ActionResult attackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
         return getInteractActionResult(player);
+    }
+
+    public static boolean beforeBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        return getInteractActionResult(player).isAccepted();
     }
 
     public static ActionResult getInteractActionResult(PlayerEntity player) {
