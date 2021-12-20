@@ -59,4 +59,17 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity that = LivingEntity.class.cast(this);
         if (!this.world.isClient && that instanceof Inkable) deathInkableEntity(((InkableCaster) that).toInkable());
     }
+
+    // ensure that the player is invisible when submerged
+    @Inject(method = "updatePotionVisibility", at = @At("HEAD"), cancellable = true)
+    private void onUpdatePotionVisibility(CallbackInfo ci) {
+        LivingEntity that = LivingEntity.class.cast(this);
+        if (that instanceof PlayerEntity player) {
+            PlayerDataComponent data = PlayerDataComponent.get(player);
+            if (data.isSubmerged()) {
+                this.setInvisible(true);
+                ci.cancel();
+            }
+        }
+    }
 }

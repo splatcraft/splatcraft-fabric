@@ -9,6 +9,7 @@
     "EntityTypeMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
+    "LivingEntityInvoker",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "TrackedDataHandlerRegistryAccessor"

@@ -15,6 +15,7 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.mixin.LivingEntityInvoker;
 
 import java.util.Random;
 
@@ -111,7 +112,9 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (this.submerged == submerged) return false;
         this.submerged = submerged;
 
+        ((LivingEntityInvoker) this.player).invoke_updatePotionVisibility();
         this.player.calculateDimensions();
+
         if (!this.player.world.isClient) {
             Vec3d pos = new Vec3d(this.player.getX(), this.player.getLandingPos().getY() + 1, this.player.getZ());
             Random rand = this.player.getRandom();
