@@ -32,6 +32,9 @@ public class ClientConfig extends Config {
     public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0xDEA801));
     public final ColorOption colorLockHostile = add("color_lock_hostile", ColorOption.of(0x4717A9));
 
+    public final BooleanOption inkSplashParticleOnTravel = add("ink_splash_particle_on_travel", BooleanOption.of(true));
+    public final BooleanOption inkSquidSoulParticleOnDeath = add("ink_squid_soul_particle_on_death", BooleanOption.of(true));
+
     private ClientConfig(File file) {
         super(file);
     }
@@ -39,7 +42,6 @@ public class ClientConfig extends Config {
     @Override
     public void save() {
         super.save();
-
         WorldRenderer worldRenderer = MinecraftClient.getInstance().worldRenderer;
         if (worldRenderer != null) worldRenderer.reload();
     }

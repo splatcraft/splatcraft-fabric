@@ -83,16 +83,14 @@ public class Config {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            throw new RuntimeException("Fatal error! Could not find config %s".formatted(this.file));
-        }
+        } else throw new RuntimeException("Fatal error! Could not find config %s".formatted(this.file));
     }
 
     public void load() {
         try {
             Files.copy(this.file.toPath(), this.backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (NoSuchFileException | FileNotFoundException e) {
-            save();
+            this.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,12 +115,10 @@ public class Config {
                     }
                 }
 
-                if (!loadedConfigs.equals(this.map.keySet())) save();
-            } else {
-                save();
-            }
+                if (!loadedConfigs.equals(this.map.keySet())) this.save();
+            } else this.save();
         } catch (NoSuchFileException | FileNotFoundException e) {
-            save();
+            this.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,6 +133,6 @@ public class Config {
 
     public static File createFile(String name) {
         Path configDir = FabricLoader.getInstance().getConfigDir();
-        return new File(new File(String.valueOf(configDir)), "%s.json".formatted(name));
+        return new File(new File(configDir.toString()), "%s.json".formatted(name));
     }
 }

@@ -27,6 +27,8 @@ public class NetworkingClient {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(INK_SPLASH_PARTICLE_AT_POS, (client, handler, buf, responseSender) -> {
+            if (!ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) return;
+
             Identifier id = buf.readIdentifier();
             double x = buf.readDouble();
             double y = buf.readDouble();
@@ -40,6 +42,8 @@ public class NetworkingClient {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(INK_SQUID_SOUL_PARTICLE_AT_POS, (client, handler, buf, responseSender) -> {
+            if (!ClientConfig.INSTANCE.inkSquidSoulParticleOnDeath.getValue()) return;
+
             Identifier id = buf.readIdentifier();
             double x = buf.readDouble();
             double y = buf.readDouble();

@@ -36,6 +36,10 @@
   "config.splatcraft.color_lock_friendly.tooltip": "",
   "config.splatcraft.color_lock_hostile": "Color Lock (Hostile)",
   "config.splatcraft.color_lock_hostile.tooltip": "",
+  "config.splatcraft.ink_splash_particle_on_travel": "Ink Splash Particle On Travel",
+  "config.splatcraft.ink_splash_particle_on_travel.tooltip": "Whether or not ink splash\nparticles are displayed on\nentering ink, movement in\nink, or leaving ink.",
+  "config.splatcraft.ink_squid_soul_particle_on_death": "Ink Squid Soul Particle On Death",
+  "config.splatcraft.ink_squid_soul_particle_on_death.tooltip": "Whether or not an ink squid\nsoul particle displays when\nink squids or players die.",
 
   "config.splatcraft.category.client_compat": "Compatibility (Client)",
   "config.sodium.ink_biome_blend_fix": "[Sodium] Ink Biome Blend Fix",

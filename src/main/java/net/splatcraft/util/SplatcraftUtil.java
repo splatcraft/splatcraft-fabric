@@ -236,18 +236,23 @@ public class SplatcraftUtil {
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
         if (movementInput.length() > 0.08d) {
             Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
+            float scale = 0.75f;
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
-                if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, 0.75f);
-            } else if (isOnOwnInk(entity)) {
-                inkSplashParticleAtPos(entity, pos, 0.75f);
-            }
+                if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, scale);
+            } else if (isOnOwnInk(entity)) inkSplashParticleAtPos(entity, pos, scale);
         }
 
         if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue() && entity.isOnGround()) {
             BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
             if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
-                if (blockEntity instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
+                if (blockEntity instanceof Inkable inkable) {
+                    InkColor inkColor = inkable.getInkColor();
+                    if (entity instanceof PlayerEntity player) {
+                        PlayerDataComponent data = PlayerDataComponent.get(player);
+                        if (data.isSquid()) entity.setInkColor(inkColor);
+                    } else entity.setInkColor(inkColor);
+                }
             }
         }
     }
