@@ -8,7 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.text.Style;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3f;
@@ -71,7 +71,7 @@ public class InkableSpawnEggItem extends SpawnEggItem {
 
         if (ctx.isAdvanced()) {
             InkColor inkColor = Optional.ofNullable(getTargetedBlockInkColor()).orElse(InkColors._DEFAULT);
-            tooltip.add(inkColor.getDisplayText(Style.EMPTY.withFormatting(Formatting.DARK_GRAY)));
+            tooltip.add(new LiteralText(inkColor.toString()).formatted(Formatting.DARK_GRAY));
         }
     }
 }
