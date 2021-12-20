@@ -11,6 +11,7 @@ import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.particle.InkSplashParticleEffect;
+import net.splatcraft.particle.InkSquidSoulParticleEffect;
 
 import static net.splatcraft.network.PacketIdentifiers.*;
 import static net.splatcraft.util.SplatcraftUtil.getColor;
@@ -35,6 +36,19 @@ public class NetworkingClient {
             if (client.world != null) {
                 InkColor inkColor = InkColor.fromId(id);
                 client.world.addParticle(new InkSplashParticleEffect(getColor(inkColor), scale), x, y, z, 0.0d, 0.0d, 0.0d);
+            }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(INK_SQUID_SOUL_PARTICLE_AT_POS, (client, handler, buf, responseSender) -> {
+            Identifier id = buf.readIdentifier();
+            double x = buf.readDouble();
+            double y = buf.readDouble();
+            double z = buf.readDouble();
+            float scale = buf.readFloat();
+
+            if (client.world != null) {
+                InkColor inkColor = InkColor.fromId(id);
+                client.world.addParticle(new InkSquidSoulParticleEffect(getColor(inkColor), scale), x, y, z, 0.0d, 0.0d, 0.0d);
             }
         });
     }

@@ -19,6 +19,11 @@ public class PacketIdentifiers {
      */
     public static final Identifier INK_SPLASH_PARTICLE_AT_POS = create("ink_splash_particle_at_pos");
 
+    /**
+     * A packet for playing an ink squid soul particle at a position.
+     */
+    public static final Identifier INK_SQUID_SOUL_PARTICLE_AT_POS = create("ink_squid_soul_particle_at_pos");
+
     private static Identifier create(String id) {
         return new Identifier(Splatcraft.MOD_ID, id);
     }

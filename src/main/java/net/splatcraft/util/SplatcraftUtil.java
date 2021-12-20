@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -25,6 +26,7 @@ import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.option.ColorOption;
+import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
@@ -40,6 +42,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static net.splatcraft.network.NetworkingCommon.inkSplashParticleAtPos;
+import static net.splatcraft.network.NetworkingCommon.inkSquidSoulParticleAtPos;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftUtil {
@@ -227,6 +230,9 @@ public class SplatcraftUtil {
         return stack;
     }
 
+    /**
+     * A movement tick for entities of {@link Inkable}. Does not run client-side.
+     */
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
         if (movementInput.length() > 0.08d) {
             Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
@@ -244,6 +250,15 @@ public class SplatcraftUtil {
                 if (blockEntity instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
             }
         }
+    }
+
+    /**
+     * Runs on death for entities of {@link Inkable}. Does not run client-side.
+     */
+    public static <T extends Entity & Inkable> void deathInkableEntity(T entity) {
+        EntityDimensions dimensions = entity.getDimensions(entity.getPose());
+        Vec3d pos = entity.getPos().add(dimensions.width / 2, dimensions.height + 0.5f, dimensions.width / 2);
+        inkSquidSoulParticleAtPos(((InkableCaster) entity).toInkable(), pos, 1.0f);
     }
 
     public static Vec3f decimalToRGB(int color) {

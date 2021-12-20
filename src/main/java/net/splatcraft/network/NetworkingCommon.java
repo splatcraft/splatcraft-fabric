@@ -45,4 +45,21 @@ public class NetworkingCommon {
             }
         }
     }
+
+    public static <T extends Entity & Inkable> void inkSquidSoulParticleAtPos(T inkable, Vec3d pos, float scale) {
+        InkColor inkColor = inkable.getInkColor();
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeIdentifier(inkColor.getId());
+        buf.writeDouble(pos.x);
+        buf.writeDouble(pos.y);
+        buf.writeDouble(pos.z);
+        buf.writeFloat(scale);
+
+        if (inkable.getWorld() instanceof ServerWorld world) {
+            for (ServerPlayerEntity player : PlayerLookup.tracking(world, new BlockPos(pos))) {
+                ServerPlayNetworking.send(player, INK_SQUID_SOUL_PARTICLE_AT_POS, buf);
+            }
+        }
+    }
 }

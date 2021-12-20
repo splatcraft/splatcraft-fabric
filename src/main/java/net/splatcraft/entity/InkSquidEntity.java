@@ -1,6 +1,7 @@
 package net.splatcraft.entity;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -20,7 +21,7 @@ import net.splatcraft.inkcolor.Inkable;
 import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
 import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 
-public class InkSquidEntity extends MobEntity implements Inkable {
+public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster {
     public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);
 
     public InkSquidEntity(EntityType<? extends MobEntity> entityType, World world) {
@@ -50,6 +51,12 @@ public class InkSquidEntity extends MobEntity implements Inkable {
         return this.getDisplayName();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Entity & Inkable> T toInkable() {
+        return (T) this;
+    }
+
     @Override
     public boolean cannotDespawn() {
         return true;
@@ -58,7 +65,7 @@ public class InkSquidEntity extends MobEntity implements Inkable {
     @Override
     public void tickMovement() {
         super.tickMovement();
-        tickMovementInkableEntity(this, this.getVelocity());
+        if (!this.world.isClient) tickMovementInkableEntity(this, this.getVelocity());
     }
 
     @Override
