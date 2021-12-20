@@ -13,6 +13,7 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.particle.InkSplashParticleEffect;
 
 import static net.splatcraft.network.PacketIdentifiers.*;
+import static net.splatcraft.util.SplatcraftUtil.getColor;
 
 @Environment(EnvType.CLIENT)
 public class NetworkingClient {
@@ -33,12 +34,12 @@ public class NetworkingClient {
 
             if (client.world != null) {
                 InkColor inkColor = InkColor.fromId(id);
-                client.world.addParticle(new InkSplashParticleEffect(inkColor, scale), x, y, z, 0.0d, 0.0d, 0.0d);
+                client.world.addParticle(new InkSplashParticleEffect(getColor(inkColor), scale), x, y, z, 0.0d, 0.0d, 0.0d);
             }
         });
     }
 
-    public static void sendKeyChangeSquidForm(boolean squid) {
+    public static void keyChangeSquidForm(boolean squid) {
         PacketByteBuf buf = PacketByteBufs.create();
         buf.writeBoolean(squid);
         ClientPlayNetworking.send(KEY_CHANGE_SQUID_FORM, buf);

@@ -1,5 +1,7 @@
 package net.splatcraft.util;
 
+import net.minecraft.util.math.Vec3f;
+
 public class Color {
     private final int color;
 
@@ -91,6 +93,10 @@ public class Color {
 
     public int getBlue() {
         return this.color & 0xFF;
+    }
+
+    public Vec3f getVector() {
+        return new Vec3f(this.getRed() / 255.0f, this.getGreen() / 255.0f, this.getBlue() / 255.0f);
     }
 
     /**

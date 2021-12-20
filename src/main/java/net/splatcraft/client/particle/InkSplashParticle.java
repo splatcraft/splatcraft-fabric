@@ -11,7 +11,6 @@ import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
-import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.particle.InkSplashParticleEffect;
 
 @Environment(EnvType.CLIENT)
@@ -30,8 +29,7 @@ public class InkSplashParticle extends RainSplashParticle {
         }
 
         float rand = (float)Math.random() * 0.4f + 0.6f;
-        InkColor inkColor = effect.getInkColor();
-        Vec3f color = inkColor.getVectorColor();
+        Vec3f color = effect.getColor().getVector();
         this.colorRed = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getX() * rand;
         this.colorGreen = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getY() * rand;
         this.colorBlue = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getZ() * rand;

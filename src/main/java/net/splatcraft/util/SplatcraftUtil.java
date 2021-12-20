@@ -202,6 +202,14 @@ public class SplatcraftUtil {
         return colorOption.isPresent() ? colorOption.get().getValue() : clientInkColor.getDecimalColor();
     }
 
+    /**
+     * @return a {@link Color} dependent on color lock
+     */
+    @Environment(EnvType.CLIENT)
+    public static Color getColor(InkColor clientInkColor) {
+        return Color.of(getDecimalColor(clientInkColor));
+    }
+
     public static InkColor getInkColorFromStack(ItemStack stack) {
         NbtCompound nbt = stack.getItem() instanceof BlockItem
             ? stack.getSubNbt(NBT_BLOCK_ENTITY_TAG)

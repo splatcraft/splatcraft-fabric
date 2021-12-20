@@ -10,7 +10,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
-import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.particle.InkSquidSoulParticleEffect;
 
 @Environment(EnvType.CLIENT)
@@ -20,8 +19,7 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
     private InkSquidSoulParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, InkSquidSoulParticleEffect effect, SpriteProvider spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
 
-        InkColor inkColor = effect.getInkColor();
-        Vec3f color = inkColor.getVectorColor();
+        Vec3f color = effect.getColor().getVector();
         this.colorRed = Math.max(0.018f, color.getX() - 0.018f);
         this.colorGreen = Math.max(0.018f, color.getY() - 0.018f);
         this.colorBlue = Math.max(0.018f, color.getZ() - 0.018f);
