@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-import static net.splatcraft.network.NetworkingCommon.sendSquidTravelEffects;
+import static net.splatcraft.network.NetworkingCommon.inkSplashParticleAtPos;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftUtil {
@@ -224,9 +224,9 @@ public class SplatcraftUtil {
             Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
-                if (data.isSubmerged()) sendSquidTravelEffects(entity, pos);
+                if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, 0.75f);
             } else if (isOnOwnInk(entity)) {
-                sendSquidTravelEffects(entity, pos);
+                inkSplashParticleAtPos(entity, pos, 0.75f);
             }
         }
 

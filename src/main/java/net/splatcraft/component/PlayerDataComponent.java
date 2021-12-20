@@ -18,7 +18,7 @@ import net.splatcraft.entity.InkableCaster;
 
 import java.util.Random;
 
-import static net.splatcraft.network.NetworkingCommon.sendSquidTravelEffects;
+import static net.splatcraft.network.NetworkingCommon.inkSplashParticleAtPos;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
@@ -116,10 +116,12 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
             Vec3d pos = new Vec3d(this.player.getX(), this.player.getLandingPos().getY() + 1, this.player.getZ());
             Random rand = this.player.getRandom();
             for (int i = 0; i < 10; i++) {
-                sendSquidTravelEffects(((InkableCaster) this.player).toInkable(), pos.add(
-                    rand.nextDouble() - 0.5d,
-                    rand.nextDouble() / 3,
-                    rand.nextDouble() - 0.5d)
+                inkSplashParticleAtPos(
+                    ((InkableCaster) this.player).toInkable(), pos.add(
+                        rand.nextDouble() - 0.5d,
+                        rand.nextDouble() / 3,
+                        rand.nextDouble() - 0.5d
+                    ), 0.9f
                 );
             }
         }

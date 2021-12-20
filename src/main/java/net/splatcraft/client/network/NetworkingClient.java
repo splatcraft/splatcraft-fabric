@@ -24,15 +24,16 @@ public class NetworkingClient {
             data.setSquid(squid);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(PLAY_SQUID_TRAVEL_EFFECTS, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(INK_SPLASH_PARTICLE_AT_POS, (client, handler, buf, responseSender) -> {
             Identifier id = buf.readIdentifier();
             double x = buf.readDouble();
             double y = buf.readDouble();
             double z = buf.readDouble();
+            float scale = buf.readFloat();
 
             if (client.world != null) {
                 InkColor inkColor = InkColor.fromId(id);
-                client.world.addParticle(new InkSplashParticleEffect(inkColor, 0.75f), x, y, z, 0.0d, 0.0d, 0.0d);
+                client.world.addParticle(new InkSplashParticleEffect(inkColor, scale), x, y, z, 0.0d, 0.0d, 0.0d);
             }
         });
     }

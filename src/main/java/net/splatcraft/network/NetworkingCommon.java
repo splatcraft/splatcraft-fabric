@@ -29,7 +29,7 @@ public class NetworkingCommon {
         });
     }
 
-    public static <T extends Entity & Inkable> void sendSquidTravelEffects(T inkable, Vec3d pos) {
+    public static <T extends Entity & Inkable> void inkSplashParticleAtPos(T inkable, Vec3d pos, float scale) {
         InkColor inkColor = inkable.getInkColor();
 
         PacketByteBuf buf = PacketByteBufs.create();
@@ -37,10 +37,11 @@ public class NetworkingCommon {
         buf.writeDouble(pos.x);
         buf.writeDouble(pos.y);
         buf.writeDouble(pos.z);
+        buf.writeFloat(scale);
 
         if (inkable.getWorld() instanceof ServerWorld world) {
             for (ServerPlayerEntity player : PlayerLookup.tracking(world, new BlockPos(pos))) {
-                ServerPlayNetworking.send(player, PLAY_SQUID_TRAVEL_EFFECTS, buf);
+                ServerPlayNetworking.send(player, INK_SPLASH_PARTICLE_AT_POS, buf);
             }
         }
     }
