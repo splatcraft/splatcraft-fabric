@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.splatcraft.util.SplatcraftUtil.deathInkableEntity;
-import static net.splatcraft.util.SplatcraftUtil.isOnEnemyInk;
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -71,5 +70,11 @@ public abstract class LivingEntityMixin extends Entity {
                 ci.cancel();
             }
         }
+    }
+
+    // prevent fall damage when on own ink
+    @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
+    private void onHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+        if (isOnOwnInk(this)) cir.setReturnValue(false);
     }
 }

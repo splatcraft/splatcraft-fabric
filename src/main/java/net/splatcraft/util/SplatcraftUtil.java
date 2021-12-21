@@ -87,9 +87,9 @@ public class SplatcraftUtil {
     }
 
     public static boolean isOnOwnInk(Entity entity) {
-        if (!(entity instanceof Inkable inkableEntity)) return false;
-        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable
-            && inkable.getInkColor().equals(inkableEntity.getInkColor());
+        if (!(entity instanceof Inkable inkable)) return false;
+        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkableBlock
+            && inkableBlock.getInkColor().equals(inkable.getInkColor());
     }
 
     public static boolean isOnEnemyInk(Entity entity) {
