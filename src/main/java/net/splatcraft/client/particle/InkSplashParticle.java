@@ -15,8 +15,12 @@ import net.splatcraft.particle.InkSplashParticleEffect;
 
 @Environment(EnvType.CLIENT)
 public class InkSplashParticle extends RainSplashParticle {
-    private final SpriteProvider spriteProvider;
+    public static final int MAX_SPRITE_AGE = 15;
+
+    protected final SpriteProvider spriteProvider;
     protected final float baseScale;
+
+    protected int spriteAge = 0;
 
     private InkSplashParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, InkSplashParticleEffect effect, SpriteProvider spriteProvider) {
         super(world, x, y, z);
@@ -28,23 +32,34 @@ public class InkSplashParticle extends RainSplashParticle {
             this.velocityZ = velocityZ;
         }
 
-        float rand = (float)Math.random() * 0.4f + 0.6f;
+        float rand = randCol(world);
         Vec3f color = effect.getColor().getVector();
-        this.colorRed = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getX() * rand;
-        this.colorGreen = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getY() * rand;
-        this.colorBlue = ((float)(Math.random() * 0.20000000298023224d) + 0.8f) * color.getZ() * rand;
+        this.colorRed = randCol(world) * color.getX() * rand;
+        this.colorGreen = randCol(world) * color.getY() * rand;
+        this.colorBlue = randCol(world) * color.getZ() * rand;
         this.baseScale = effect.getScale() * (0.33f * (this.random.nextFloat() * 0.5f + 0.5f) * 2.0f);
 
-        this.maxAge = 20 + this.random.nextInt(4);
+        this.collidesWithWorld = false;
+        this.maxAge = 20 + (this.random.nextInt(3) * 20) + (20 * 3);
+
         this.spriteProvider = spriteProvider;
         this.setSpriteForAge(spriteProvider);
     }
 
+    public float randCol(ClientWorld world) {
+        return world.random.nextFloat() * 0.075f + 0.925f;
+    }
+
     @Override
     public void tick() {
+        if (this.collidesWithWorld || this.age++ >= this.maxAge) {
+            this.markDead();
+        } else {
+            this.spriteAge++;
+            this.setSpriteForAge(this.spriteProvider);
+        }
+
         super.tick();
-        if (this.age++ >= this.maxAge) this.markDead();
-            else this.setSpriteForAge(this.spriteProvider);
     }
 
     @Override
@@ -52,11 +67,14 @@ public class InkSplashParticle extends RainSplashParticle {
         return this.isInvisible() ? 0.0f : this.baseScale;
     }
 
+    public void setSpriteForAge(SpriteProvider spriteProvider) {
+        if (!this.dead) this.setSprite(spriteProvider.getSprite(Math.min(this.spriteAge, MAX_SPRITE_AGE), MAX_SPRITE_AGE));
+    }
+
     public boolean isInvisible() {
         MinecraftClient client = MinecraftClient.getInstance();
         Vec3d pos = new Vec3d(this.x, this.y, this.z);
-        Vec3d cameraPos = client.gameRenderer.getCamera().getPos();
-        return cameraPos.squaredDistanceTo(pos) < 0.7d;
+        return this.age < 2 && client.gameRenderer.getCamera().getFocusedEntity().squaredDistanceTo(pos) < 12.25f;
     }
 
     @Environment(EnvType.CLIENT)
