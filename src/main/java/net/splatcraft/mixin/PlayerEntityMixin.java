@@ -155,7 +155,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         PlayerDataComponent data = PlayerDataComponent.get(that);
         if (data.isSubmerged()) {
             Vec3d velocity = this.getVelocity();
-            if (velocity.horizontalLength() > 0.08d) {
+            if (that.forwardSpeed > 0) {
                 float f = this.getYaw() * ((float)Math.PI / 180);
                 double m = this.getAttributeValue(SplatcraftAttributes.INK_JUMP_FORCE);
                 this.setVelocity(
