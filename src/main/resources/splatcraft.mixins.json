@@ -7,9 +7,10 @@
     "AbstractBlockMixin",
     "ArgumentTypesMixin",
     "EntityTypeMixin",
+    "ItemEntityMixin",
+    "LivingEntityInvoker",
     "LivingEntityMixin",
     "PlayerEntityMixin",
-    "LivingEntityInvoker",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "TrackedDataHandlerRegistryAccessor"
