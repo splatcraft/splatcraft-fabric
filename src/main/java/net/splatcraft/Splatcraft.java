@@ -13,7 +13,6 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.component.SplatcraftComponents;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.entity.data.SplatcraftTrackedDataHandlers;
 import net.splatcraft.inkcolor.InkColors;
@@ -22,6 +21,7 @@ import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.util.Events;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,12 +36,11 @@ public class Splatcraft implements ModInitializer {
         LOGGER.info("Initializing {}", MOD_NAME);
 
         Reflection.initialize(
-            CommonConfig.class,
-
             SplatcraftRegistries.class,
             InkColors.class,
 
             SplatcraftParticles.class,
+            SplatcraftGameRules.class,
 
             SplatcraftBannerPatterns.class,
             SplatcraftBlockEntities.class,

@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.Config;
 
 import static net.splatcraft.util.SplatcraftUtil.texture;
@@ -28,7 +27,6 @@ public class SplatcraftConfigScreenFactory {
             .setDefaultBackgroundTexture(texture("block/inked_block"))
             .setTitle(txt("title"))
             .setSavingRunnable(() -> {
-                CommonConfig.INSTANCE.save();
                 ClientConfig.INSTANCE.save();
                 ClientCompatConfig.INSTANCE.save();
             });
@@ -37,7 +35,6 @@ public class SplatcraftConfigScreenFactory {
 
         ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
         new ImmutableMap.Builder<String, Config>()
-            .put("common", CommonConfig.INSTANCE)
             .put("client", ClientConfig.INSTANCE)
             .put("client_compat", ClientCompatConfig.INSTANCE)
         .build().forEach((title, config) -> config.addConfigListEntries(entryBuilder, () -> configBuilder.getOrCreateCategory(catTxt(title))));

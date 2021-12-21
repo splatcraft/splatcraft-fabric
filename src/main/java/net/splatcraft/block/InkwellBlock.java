@@ -15,9 +15,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.world.SplatcraftGameRules;
 
 import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
 import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
@@ -54,8 +54,9 @@ public class InkwellBlock extends InkableBlock implements FluidFillable {
     public void onEntityLand(BlockView world, Entity entity) {
         super.onEntityLand(world, entity);
 
+        // TODO generify this outside of inkwells (move to item entity class)
         // set ink color of item if dropped on inkwell
-        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
+        if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR)) {
             if (entity instanceof ItemEntity itemEntity) {
                 BlockPos pos = entity.getBlockPos();
                 if (world.getBlockEntity(pos.down()) instanceof Inkable inkable) {

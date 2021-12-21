@@ -7,11 +7,11 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.damage.SplatcraftDamageSource;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void onTickMovement(CallbackInfo ci) {
         LivingEntity that = LivingEntity.class.cast(this);
         if (!this.world.isClient) {
-            if (CommonConfig.INSTANCE.hurtInkSquidsOnEnemyInk.getValue() && isOnEnemyInk(this)) {
+            if (this.world.getGameRules().getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_ON_ENEMY_INK) && isOnEnemyInk(this)) {
                 if (that instanceof PlayerEntity player) {
                     PlayerDataComponent data = PlayerDataComponent.get(player);
                     if (data.isSquid()) this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, 1.0f);
@@ -44,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "hurtByWater", at = @At("HEAD"), cancellable = true)
     private void onHurtByWater(CallbackInfoReturnable<Boolean> cir) {
         LivingEntity that = LivingEntity.class.cast(this);
-        if (CommonConfig.INSTANCE.hurtInkSquidsInWater.getValue()) {
+        if (this.world.getGameRules().getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_IN_WATER)) {
             if (that instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
                 if (data.isSquid()) cir.setReturnValue(true);

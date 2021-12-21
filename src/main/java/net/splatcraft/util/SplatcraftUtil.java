@@ -29,7 +29,6 @@ import net.minecraft.util.math.Vec3f;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.config.CommonConfig;
 import net.splatcraft.config.option.ColorOption;
 import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.SplatcraftAttributes;
@@ -40,6 +39,7 @@ import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -96,7 +96,7 @@ public class SplatcraftUtil {
         if (!(entity instanceof Inkable inkableEntity)) return false;
 
         BlockPos pos = entity.getLandingPos();
-        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
+        if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR)) {
             BlockState state = entity.world.getBlockState(pos);
             if (SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(state.getBlock())) return false;
         }
@@ -133,7 +133,7 @@ public class SplatcraftUtil {
     public static boolean refreshSplatfestBand(PlayerEntity player) {
         PlayerDataComponent data = PlayerDataComponent.get(player);
 
-        if (CommonConfig.INSTANCE.splatfestBandMustBeHeld.getValue()) {
+        if (player.world.getGameRules().getBoolean(SplatcraftGameRules.SPLATFEST_BAND_MUST_BE_HELD)) {
             for (Hand hand : HANDS) {
                 if (player.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) {
                     return data.setHasSplatfestBand(true);
@@ -271,7 +271,7 @@ public class SplatcraftUtil {
             } else if (isOnOwnInk(entity)) inkSplashParticleAtPos(entity, pos, scale);
         }
 
-        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue() && entity.isOnGround()) {
+        if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR) && entity.isOnGround()) {
             BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
             if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
                 if (blockEntity instanceof Inkable inkable) {
