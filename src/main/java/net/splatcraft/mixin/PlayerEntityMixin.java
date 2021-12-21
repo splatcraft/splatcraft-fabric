@@ -90,6 +90,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return Optional.empty();
     }
 
+    // cancel exhaustion if squid
+    @Inject(method = "addExhaustion", at = @At("HEAD"), cancellable = true)
+    private void onAddExhaustion(float exhaustion, CallbackInfo ci) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        if (data.isSquid()) ci.cancel();
+    }
+
     // change attributes for squid form
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
