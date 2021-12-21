@@ -3,6 +3,7 @@ package net.splatcraft.util;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -93,8 +94,13 @@ public class SplatcraftUtil {
 
     public static boolean isOnEnemyInk(Entity entity) {
         if (!(entity instanceof Inkable inkableEntity)) return false;
-        return entity.world.getBlockEntity(entity.getLandingPos()) instanceof Inkable inkable
-            && !inkable.getInkColor().equals(inkableEntity.getInkColor());
+
+        BlockPos pos = entity.getLandingPos();
+        if (CommonConfig.INSTANCE.inkwellChangesInkColor.getValue()) {
+            BlockState state = entity.world.getBlockState(pos);
+            if (SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(state.getBlock())) return false;
+        }
+        return entity.world.getBlockEntity(pos) instanceof Inkable inkable && !inkable.getInkColor().equals(inkableEntity.getInkColor());
     }
 
     public static boolean isOnInk(Entity entity) {
