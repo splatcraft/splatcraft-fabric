@@ -5,15 +5,20 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.entity.PlayerEntityAccess;
 import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.util.SplatcraftConstants;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,13 +26,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import static net.splatcraft.util.Events.tickMovementInkableEntity;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
-import static net.splatcraft.util.SplatcraftUtil.getModifiedMovementSpeed;
-import static net.splatcraft.util.SplatcraftUtil.tickMovementInkableEntity;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster {
+public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess {
     @Shadow public abstract Text getDisplayName();
     @Shadow public abstract PlayerAbilities getAbilities();
 
@@ -60,6 +67,29 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return (T) this;
     }
 
+    @Override
+    public boolean updateSplatfestBand() {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+
+        if (that.world.getGameRules().getBoolean(SplatcraftGameRules.SPLATFEST_BAND_MUST_BE_HELD)) {
+            for (Hand hand : Hand.values()) {
+                if (that.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
+            }
+        } else if (that.getInventory().containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
+
+        return data.setHasSplatfestBand(false);
+    }
+
+    @Override
+    public Optional<Float> getMovementSpeedM(float base) {
+        if (((InkEntityAccess) this).canSubmergeInInk()) {
+            return Optional.of(base * ((float) this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10));
+        }
+
+        return Optional.empty();
+    }
+
     // change attributes for squid form
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
@@ -73,9 +103,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid() && !this.getAbilities().flying) {
-            getModifiedMovementSpeed(that, cir.getReturnValueF()).ifPresent(cir::setReturnValue);
+        if (!this.getAbilities().flying) {
+            ((PlayerEntityAccess) that).getMovementSpeedM(cir.getReturnValueF())
+                                       .ifPresent(cir::setReturnValue);
         }
     }
 

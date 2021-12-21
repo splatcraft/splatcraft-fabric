@@ -7,18 +7,18 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.damage.SplatcraftDamageSource;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.util.Events;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -31,7 +31,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void onTickMovement(CallbackInfo ci) {
         LivingEntity that = LivingEntity.class.cast(this);
         if (!this.world.isClient) {
-            if (this.world.getGameRules().getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_ON_ENEMY_INK) && isOnEnemyInk(this)) {
+            if (this.world.getGameRules().getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_ON_ENEMY_INK) && ((InkEntityAccess) this).isOnEnemyInk()) {
                 if (that instanceof PlayerEntity player) {
                     PlayerDataComponent data = PlayerDataComponent.get(player);
                     if (data.isSquid()) this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, 1.0f);
@@ -56,7 +56,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "onDeath", at = @At("TAIL"))
     private void onOnDeath(DamageSource source, CallbackInfo ci) {
         LivingEntity that = LivingEntity.class.cast(this);
-        if (!this.world.isClient && that instanceof Inkable) deathInkableEntity(((InkableCaster) that).toInkable());
+        if (!this.world.isClient && that instanceof Inkable) Events.deathInkableEntity(((InkableCaster) that).toInkable());
     }
 
     // ensure that the player is invisible when submerged
@@ -75,6 +75,6 @@ public abstract class LivingEntityMixin extends Entity {
     // prevent fall damage when on own ink
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
     private void onHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (isOnOwnInk(this)) cir.setReturnValue(false);
+        if (((InkEntityAccess) this).isOnOwnInk()) cir.setReturnValue(false);
     }
 }

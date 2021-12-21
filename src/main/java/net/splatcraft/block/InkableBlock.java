@@ -12,8 +12,6 @@ import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 
-import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
-import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
 
 public class InkableBlock extends BlockWithEntity {
     public InkableBlock(Settings settings) {
@@ -25,16 +23,18 @@ public class InkableBlock extends BlockWithEntity {
         return SplatcraftBlockEntities.INKABLE.instantiate(pos, state);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         // immediately set ink color to prevent flashing white on place
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.setInkColor(getInkColorFromStack(stack));
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.setInkColor(Inkable.class.cast(stack).getInkColor());
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) setInkColorOnStack(stack, inkable.getInkColor());
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
         return stack;
     }
 }

@@ -14,7 +14,7 @@ import net.splatcraft.particle.InkSplashParticleEffect;
 import net.splatcraft.particle.InkSquidSoulParticleEffect;
 
 import static net.splatcraft.network.PacketIdentifiers.*;
-import static net.splatcraft.util.SplatcraftUtil.getColor;
+import static net.splatcraft.client.util.ClientUtil.getColor;
 
 @Environment(EnvType.CLIENT)
 public class NetworkingClient {

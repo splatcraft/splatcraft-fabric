@@ -3,19 +3,21 @@ package net.splatcraft.mixin;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.entity.PlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.util.SplatcraftUtil.createSplatfestBandRefreshScreenHandlerListener;
-import static net.splatcraft.util.SplatcraftUtil.deathInkableEntity;
+import static net.splatcraft.util.Events.deathInkableEntity;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
@@ -26,7 +28,15 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     @Inject(method = "onScreenHandlerOpened", at = @At("TAIL"))
     private void onOnScreenHandlerOpened(ScreenHandler screenHandler, CallbackInfo ci) {
         ServerPlayerEntity that = ServerPlayerEntity.class.cast(this);
-        screenHandler.addListener(createSplatfestBandRefreshScreenHandlerListener(that));
+        screenHandler.addListener(new ScreenHandlerListener() {
+            @Override
+            public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+                ((PlayerEntityAccess) that).updateSplatfestBand();
+            }
+
+            @Override
+            public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
+        });
     }
 
     // spawn ink squid soul particle on death

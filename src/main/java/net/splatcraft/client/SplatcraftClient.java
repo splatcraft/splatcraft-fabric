@@ -41,14 +41,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.splatcraft.util.SplatcraftUtil.getDecimalColor;
-import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
+import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("%s-client".formatted(Splatcraft.MOD_ID));
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onInitializeClient() {
         LOGGER.info("Initializing {}-client", Splatcraft.MOD_NAME);
@@ -94,12 +94,8 @@ public class SplatcraftClient implements ClientModInitializer {
         );
 
         ColorProviderRegistry.ITEM.register( // inkable items
-            (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
-        );
-
-        ColorProviderRegistry.ITEM.register( // inking items
-            (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
+            (stack, tintIndex) -> Inkable.class.cast(stack).getInkColor().getDecimalColor(),
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL,
             SplatcraftItems.SPLAT_ROLLER
         );
 

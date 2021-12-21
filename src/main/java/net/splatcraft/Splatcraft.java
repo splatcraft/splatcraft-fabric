@@ -54,8 +54,8 @@ public class Splatcraft implements ModInitializer {
         );
 
         CommandRegistrationCallback.EVENT.register(Events::registerCommands);
-        ServerPlayConnectionEvents.JOIN.register(Events::onPlayerJoin);
-        ServerTickEvents.START_SERVER_TICK.register(Events::onStartTick);
+        ServerPlayConnectionEvents.JOIN.register(Events::playerJoin);
+        ServerTickEvents.START_SERVER_TICK.register(Events::startTick);
 
         UseBlockCallback.EVENT.register(Events::useBlock);
         UseItemCallback.EVENT.register(Events::useItem);

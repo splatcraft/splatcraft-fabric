@@ -23,30 +23,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.util.SplatcraftUtil.getInkColorFromStack;
-import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
-
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEntityAccess {
     @Shadow public abstract ItemStack getStack();
-    @Shadow public abstract void setStack(ItemStack stack);
 
     private ItemEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public InkColor getInkColor() {
-        return getInkColorFromStack(this.getStack());
+        return Inkable.class.cast(this.getStack()).getInkColor();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean setInkColor(InkColor inkColor) {
         ItemStack stack = this.getStack();
+        Inkable inkable = Inkable.class.cast(stack);
 
-        if (inkColor.equals(getInkColorFromStack(stack))) return false;
+        if (inkColor.equals(inkable.getInkColor())) return false;
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
-            this.setStack(setInkColorOnStack(stack, inkColor));
+            inkable.setInkColor(inkColor);
 
             // force sync because minecraft dumb
             if (!this.world.isClient) {

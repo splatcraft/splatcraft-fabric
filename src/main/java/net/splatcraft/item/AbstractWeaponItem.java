@@ -6,16 +6,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftUtil.setInkColorOnStack;
-
 public class AbstractWeaponItem extends Item {
     public AbstractWeaponItem(Settings settings) {
         super(settings);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof Inkable inkable) setInkColorOnStack(stack, inkable.getInkColor());
+        if (entity instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
         super.inventoryTick(stack, world, entity, slot, selected);
     }
 

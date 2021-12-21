@@ -3,7 +3,9 @@ package net.splatcraft.util;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -17,12 +19,21 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.command.InkColorCommand;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.entity.PlayerEntityAccess;
+import net.splatcraft.inkcolor.InkColor;
+import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.tag.SplatcraftBlockTags;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
-import static net.splatcraft.util.SplatcraftUtil.*;
+import static net.splatcraft.network.NetworkingCommon.inkSplashParticleAtPos;
+import static net.splatcraft.network.NetworkingCommon.inkSquidSoulParticleAtPos;
 
 @SuppressWarnings("unused")
 public final class Events {
@@ -32,14 +43,14 @@ public final class Events {
         InkColorCommand.register(dispatcher);
     }
 
-    public static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        refreshSplatfestBand(handler.player);
+    public static void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+        ((PlayerEntityAccess) handler.player).updateSplatfestBand();
     }
 
-    public static void onStartTick(MinecraftServer server) {
+    public static void startTick(MinecraftServer server) {
         for (ServerPlayerEntity player : PlayerLookup.all(server)) {
             PlayerDataComponent data = PlayerDataComponent.get(player);
-            data.setSubmerged(canSubmergeInInk(player));
+            data.setSubmerged(((InkEntityAccess) player).canSubmergeInInk());
         }
     }
 
@@ -66,5 +77,46 @@ public final class Events {
 
     public static ActionResult getInteractActionResult(PlayerEntity player) {
         return !canInteractWithWorld(player) ? ActionResult.FAIL : ActionResult.PASS;
+    }
+
+    public static boolean canInteractWithWorld(PlayerEntity player) {
+        PlayerDataComponent data = PlayerDataComponent.get(player);
+        return !data.isSquid();
+    }
+
+    /**
+     * A movement tick for entities of {@link Inkable}. Does not run client-side.
+     */
+    public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
+        if (movementInput.length() > 0.08d) {
+            Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
+            float scale = 0.75f;
+            if (entity instanceof PlayerEntity player) {
+                PlayerDataComponent data = PlayerDataComponent.get(player);
+                if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, scale);
+            } else if (((InkEntityAccess) entity).isOnOwnInk()) inkSplashParticleAtPos(entity, pos, scale);
+        }
+
+        if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR) && entity.isOnGround()) {
+            BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
+            if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
+                if (blockEntity instanceof Inkable inkable) {
+                    InkColor inkColor = inkable.getInkColor();
+                    if (entity instanceof PlayerEntity player) {
+                        PlayerDataComponent data = PlayerDataComponent.get(player);
+                        if (data.isSquid()) entity.setInkColor(inkColor);
+                    } else entity.setInkColor(inkColor);
+                }
+            }
+        }
+    }
+
+    /**
+     * Runs on death for entities of {@link Inkable}. Does not run client-side.
+     */
+    public static <T extends Entity & Inkable> void deathInkableEntity(T entity) {
+        EntityDimensions dimensions = entity.getDimensions(entity.getPose());
+        Vec3d pos = entity.getPos().add(dimensions.width / 2, dimensions.height + 0.5f, dimensions.width / 2);
+        inkSquidSoulParticleAtPos(((InkableCaster) entity).toInkable(), pos, 1.0f);
     }
 }

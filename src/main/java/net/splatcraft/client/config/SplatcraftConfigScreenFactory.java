@@ -10,7 +10,7 @@ import net.minecraft.text.TranslatableText;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.config.Config;
 
-import static net.splatcraft.util.SplatcraftUtil.texture;
+import static net.splatcraft.client.util.ClientUtil.texture;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftConfigScreenFactory {

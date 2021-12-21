@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-import static net.splatcraft.util.SplatcraftUtil.getDecimalColor;
-import static net.splatcraft.util.SplatcraftUtil.getTargetedBlockInkColor;
+import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
+import static net.splatcraft.client.util.ClientUtil.getTargetedBlockInkColor;
 
 public class InkableSpawnEggItem extends SpawnEggItem {
     public InkableSpawnEggItem(EntityType<? extends MobEntity> type, int primaryColor, int secondaryColor, Settings settings) {

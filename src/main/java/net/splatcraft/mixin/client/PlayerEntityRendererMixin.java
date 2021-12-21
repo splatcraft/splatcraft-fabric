@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.util.SplatcraftUtil.entityRendererFactoryContext;
+import static net.splatcraft.client.util.ClientUtil.entityRendererFactoryContext;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)
