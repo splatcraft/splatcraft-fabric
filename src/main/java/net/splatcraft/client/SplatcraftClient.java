@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.Item;
@@ -29,7 +28,6 @@ import net.splatcraft.client.particle.InkSplashParticle;
 import net.splatcraft.client.particle.InkSquidSoulParticle;
 import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
 import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
-import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
@@ -101,12 +99,7 @@ public class SplatcraftClient implements ClientModInitializer {
         );
 
         ColorProviderRegistry.ITEM.register( // inking items
-            (stack, tintIndex) -> {
-                MinecraftClient client = MinecraftClient.getInstance();
-                return client.player instanceof InkableCaster caster
-                    ? getDecimalColor(caster.toInkable().getInkColor())
-                    : getInkColorFromStack(stack).getDecimalColor();
-            },
+            (stack, tintIndex) -> getInkColorFromStack(stack).getDecimalColor(),
             SplatcraftItems.SPLAT_ROLLER
         );
 
