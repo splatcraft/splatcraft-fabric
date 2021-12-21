@@ -102,22 +102,22 @@ public class InkColors {
     public static final InkColor S2G_MUSTARD_VS_PURPLE_NEUTRAL = splatoon("regular_mustard_vs_purple_neutral", 0x1AB46A);
 
     // splatoon: ranked
-    public static final InkColor S2R_LEMON = splatoon("ranked_lemon", 0xBBC905);
-    public static final InkColor S2R_PLUM = splatoon("ranked_plum", 0x830B9C);
-    public static final InkColor S2R_SKY = splatoon("ranked_sky", 0x007EDC);
-    public static final InkColor S2R_GOLD = splatoon("ranked_gold", 0xE1A307);
-    public static final InkColor S2R_LIGHT_PINK = splatoon("ranked_light_pink", 0xD60E6E);
-    public static final InkColor S2R_BLUE = splatoon("ranked_blue", 0x311AA8);
-    public static final InkColor S2R_NEON_PINK = splatoon("ranked_neon_pink", 0xCF0466);
-    public static final InkColor S2R_NEON_GREEN = splatoon("ranked_neon_green", 0x17A80D);
-    public static final InkColor S2R_PINK = splatoon("ranked_pink", 0xCB0856);
-    public static final InkColor S2R_LIGHT_BLUE = splatoon("ranked_light_blue", 0x0199B8);
-    public static final InkColor S2R_RASPBERRY = splatoon("ranked_raspberry", 0xDE0B64);
-    public static final InkColor S2R_NEON_YELLOW = splatoon("ranked_neon_yellow", 0xBFD002);
-    public static final InkColor S2R_DARK_PURPLE = splatoon("ranked_dark_purple", 0x4A14AA);
-    public static final InkColor S2R_ORANGE = splatoon("ranked_orange", 0xFB5C03);
-    public static final InkColor S2R_GRAPE = splatoon("ranked_grape", 0x5F0FB4);
-    public static final InkColor S2R_TURQUOISE = splatoon("ranked_turquoise", 0x08B672);
+    public static final InkColor S2R_LEMON = splatoon("ranked/lemon", 0xBBC905);
+    public static final InkColor S2R_PLUM = splatoon("ranked/plum", 0x830B9C);
+    public static final InkColor S2R_SKY = splatoon("ranked/sky", 0x007EDC);
+    public static final InkColor S2R_GOLD = splatoon("ranked/gold", 0xE1A307);
+    public static final InkColor S2R_LIGHT_PINK = splatoon("ranked/light_pink", 0xD60E6E);
+    public static final InkColor S2R_BLUE = splatoon("ranked/blue", 0x311AA8);
+    public static final InkColor S2R_NEON_PINK = splatoon("ranked/neon_pink", 0xCF0466);
+    public static final InkColor S2R_NEON_GREEN = splatoon("ranked/neon_green", 0x17A80D);
+    public static final InkColor S2R_PINK = splatoon("ranked/pink", 0xCB0856);
+    public static final InkColor S2R_LIGHT_BLUE = splatoon("ranked/light_blue", 0x0199B8);
+    public static final InkColor S2R_RASPBERRY = splatoon("ranked/raspberry", 0xDE0B64);
+    public static final InkColor S2R_NEON_YELLOW = splatoon("ranked/neon_yellow", 0xBFD002);
+    public static final InkColor S2R_DARK_PURPLE = splatoon("ranked/dark_purple", 0x4A14AA);
+    public static final InkColor S2R_ORANGE = splatoon("ranked/orange", 0xFB5C03);
+    public static final InkColor S2R_GRAPE = splatoon("ranked/grape", 0x5F0FB4);
+    public static final InkColor S2R_TURQUOISE = splatoon("ranked/turquoise", 0x08B672);
 
     // splatoon: color lock
     public static final InkColor S2CL_GOLDEN_YELLOW = splatoon("color_lock/golden_yellow", 0xDEA801);
