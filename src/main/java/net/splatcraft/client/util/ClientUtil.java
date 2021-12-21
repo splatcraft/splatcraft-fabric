@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static net.splatcraft.util.SplatcraftConstants.DEFAULT_INK_COLOR_DYE;
 
@@ -43,46 +42,43 @@ public class ClientUtil {
      *         dependent on the client's ink color, or
      *         empty if color lock is disabled
      */
-    public static Optional<ColorOption> getColorOption(InkColor clientInkColor) {
-        if (WHITE_COLORS.contains(clientInkColor.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
+    public static Optional<ColorOption> getColorOption(InkColor toMatch) {
+        if (WHITE_COLORS.contains(toMatch.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
             return Optional.empty();
         }
 
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerDataComponent data = PlayerDataComponent.get(client.player);
 
-        ColorOption colorOption = data.getInkColor().equals(clientInkColor)
+        ColorOption colorOption = data.getInkColor().equals(toMatch)
             ? ClientConfig.INSTANCE.colorLockFriendly
             : ClientConfig.INSTANCE.colorLockHostile;
 
         return Optional.of(colorOption);
     }
 
-    // cache for getVectorColor
-    public static final Function<ColorOption, Vec3f> COLOR_OPTION_TO_VEC3F = Util.memoize(o -> decimalToRGB(o.getValue()));
-
     /**
      * @return a {@link Vec3f} containing colors, dependent
      *         on color lock
      */
-    public static Vec3f getVectorColor(InkColor clientInkColor) {
-        Optional<ColorOption> colorOption = getColorOption(clientInkColor);
-        return colorOption.isPresent() ? COLOR_OPTION_TO_VEC3F.apply(colorOption.get()) : clientInkColor.getVectorColor();
+    public static Vec3f getVectorColor(InkColor toMatch) {
+        Optional<ColorOption> colorOption = getColorOption(toMatch);
+        return colorOption.map(o -> decimalToRGB(o.getValue())).orElseGet(toMatch::getVectorColor);
     }
 
     /**
      * @return a decimal color dependent on color lock
      */
-    public static int getDecimalColor(InkColor clientInkColor) {
-        Optional<ColorOption> colorOption = getColorOption(clientInkColor);
-        return colorOption.isPresent() ? colorOption.get().getValue() : clientInkColor.getDecimalColor();
+    public static int getDecimalColor(InkColor toMatch) {
+        Optional<ColorOption> colorOption = getColorOption(toMatch);
+        return colorOption.isPresent() ? colorOption.get().getValue() : toMatch.getDecimalColor();
     }
 
     /**
      * @return a {@link Color} dependent on color lock
      */
-    public static Color getColor(InkColor clientInkColor) {
-        return Color.of(getDecimalColor(clientInkColor));
+    public static Color getColor(InkColor toMatch) {
+        return Color.of(getDecimalColor(toMatch));
     }
 
     @Nullable
