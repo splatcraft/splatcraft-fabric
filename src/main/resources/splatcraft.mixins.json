@@ -20,6 +20,7 @@
   "client": [
     "client.AbstractClientPlayerEntityInvoker",
     "client.BlockEntityRenderDispatcherMixin",
+    "client.ClientPlayerEntityMixin",
     "client.ClientWorldAccessor",
     "client.ClientWorldMixin",
     "client.EntityModelLayersInvoker",

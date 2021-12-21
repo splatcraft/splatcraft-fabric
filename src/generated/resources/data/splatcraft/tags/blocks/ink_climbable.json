@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "splatcraft:canvas",
+    "splatcraft:inked_block",
+    "splatcraft:glowing_inked_block"
+  ]
+}

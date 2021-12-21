@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
+import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
@@ -116,7 +117,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.player.calculateDimensions();
 
         if (!this.player.world.isClient) {
-            Vec3d pos = new Vec3d(this.player.getX(), this.player.getLandingPos().getY() + 1, this.player.getZ());
+            Vec3d pos = ((InkEntityAccess) this.player).getInkSplashParticlePos();
             Random rand = this.player.getRandom();
             for (int i = 0; i < 10; i++) {
                 inkSplashParticleAtPos(

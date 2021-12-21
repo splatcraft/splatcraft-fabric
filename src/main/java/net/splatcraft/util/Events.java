@@ -89,7 +89,7 @@ public final class Events {
      */
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
         if (movementInput.length() > 0.08d) {
-            Vec3d pos = new Vec3d(entity.getX(), entity.getLandingPos().getY() + 1, entity.getZ());
+            Vec3d pos = ((InkEntityAccess) entity).getInkSplashParticlePos();
             float scale = 0.75f;
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);

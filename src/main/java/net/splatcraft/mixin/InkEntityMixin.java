@@ -1,11 +1,16 @@
 package net.splatcraft.mixin;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.splatcraft.block.InkableBlock;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.inkcolor.InkType;
@@ -16,6 +21,8 @@ import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Optional;
+
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {
     @Shadow public World world;
@@ -24,6 +31,13 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Shadow public abstract boolean hasVehicle();
     @Shadow public abstract boolean isSpectator();
     @Shadow public abstract EntityType<?> getType();
+    @Shadow public abstract double getX();
+    @Shadow public abstract double getY();
+    @Shadow public abstract double getZ();
+    @Shadow public abstract BlockPos getBlockPos();
+    @Shadow public abstract Vec3d getPos();
+    @Shadow public abstract EntityDimensions getDimensions(EntityPose pose);
+    @Shadow public abstract EntityPose getPose();
 
     @Override
     public InkType getInkType() {
@@ -70,23 +84,67 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     }
 
     @Override
-    public boolean canSubmergeInInk() {
-        Entity that = Entity.class.cast(this);
-
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return data.isSquid() && !this.isSpectator() && this.isOnOwnInk();
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean doesInkPassing() {
         Entity that = Entity.class.cast(this);
         if (that instanceof PlayerEntity player) {
             PlayerDataComponent data = PlayerDataComponent.get(player);
             return data.isSquid();
         } else return SplatcraftEntityTypeTags.INK_PASSABLES.contains(this.getType());
+    }
+
+    @Override
+    public boolean canSubmergeInInk() {
+        Entity that = Entity.class.cast(this);
+
+        if (that instanceof PlayerEntity player) {
+            PlayerDataComponent data = PlayerDataComponent.get(player);
+            return data.isSquid() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean canClimbInk() {
+        return this.getInkClimbingPos().isPresent();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public Optional<BlockPos> getInkClimbingPos() {
+        if (this instanceof Inkable inkable) {
+            BlockPos.Mutable pos = new BlockPos.Mutable();
+            double x = this.getX();
+            double y = this.getY();
+            double z = this.getZ();
+            for (int i = 0; i < 4; i++) {
+                int n = i % 2 == 0 ? 1 : -1;
+                float xo = ( (i < 2) ? 0 : 0.32f) * n;
+                float zo = (!(i < 2) ? 0 : 0.32f) * n;
+
+                pos.set(x - xo, y, z - zo);
+                if (!pos.equals(this.getBlockPos())) {
+                    Block block = this.world.getBlockState(pos).getBlock();
+                    if (block instanceof InkableBlock && SplatcraftBlockTags.INK_CLIMBABLE.contains(block)) {
+                        if (this.world.getBlockEntity(pos) instanceof Inkable inkableBlock && inkable.getInkColor().equals(inkableBlock.getInkColor())) {
+                            return Optional.of(pos);
+                        }
+                    }
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public Vec3d getInkSplashParticlePos() {
+        return new Vec3d(
+            this.getX(),
+            this.canClimbInk() && !this.isOnOwnInk()
+                ? this.getPos().getY() + (this.getDimensions(this.getPose()).height / 2)
+                : this.getLandingPos().getY() + 1.0d,
+            this.getZ()
+        );
     }
 }

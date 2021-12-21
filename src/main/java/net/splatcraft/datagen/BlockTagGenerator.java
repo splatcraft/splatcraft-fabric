@@ -31,5 +31,11 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
         this.add(SplatcraftBlockTags.INK_COLOR_CHANGERS,
             SplatcraftBlocks.INKWELL
         );
+
+        this.add(SplatcraftBlockTags.INK_CLIMBABLE,
+            SplatcraftBlocks.CANVAS,
+            SplatcraftBlocks.INKED_BLOCK,
+            SplatcraftBlocks.GLOWING_INKED_BLOCK
+        );
     }
 }

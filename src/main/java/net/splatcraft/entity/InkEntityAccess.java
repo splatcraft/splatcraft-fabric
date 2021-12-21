@@ -1,6 +1,10 @@
 package net.splatcraft.entity;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.splatcraft.inkcolor.InkType;
+
+import java.util.Optional;
 
 public interface InkEntityAccess {
     InkType getInkType();
@@ -15,12 +19,24 @@ public interface InkEntityAccess {
     boolean canEnterSquidForm();
 
     /**
+     * @return if an entity can pass through a block due to ink abilities
+     */
+    boolean doesInkPassing();
+
+    /**
      * @return whether an entity can submerge in ink
      */
     boolean canSubmergeInInk();
 
     /**
-     * @return if an entity can pass through a block due to ink abilities
+     * @return whether an entity can climb nearby ink
      */
-    boolean doesInkPassing();
+    boolean canClimbInk();
+
+    /**
+     * @return an available climbing position
+     */
+    Optional<BlockPos> getInkClimbingPos();
+
+    Vec3d getInkSplashParticlePos();
 }
