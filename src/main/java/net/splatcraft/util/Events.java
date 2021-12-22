@@ -89,7 +89,7 @@ public final class Events {
      */
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
         InkEntityAccess inkEntity = ((InkEntityAccess) entity);
-        if (movementInput.horizontalLength() > 0.08d || (inkEntity.canClimbInk()) && Math.abs(movementInput.y) > 0.001d) {
+        if ((inkEntity.isOnOwnInk() && movementInput.length() > 0.08d) || (inkEntity.canClimbInk() && (movementInput.y > 0.001d || movementInput.y < -0.08d))) {
             Vec3d pos = inkEntity.getInkSplashParticlePos();
             float scale = 0.75f;
             if (entity instanceof PlayerEntity player) {
