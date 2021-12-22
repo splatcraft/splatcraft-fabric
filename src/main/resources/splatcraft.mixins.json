@@ -28,6 +28,7 @@
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HeldItemRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.PlayerEntityRendererMixin",
     "client.compat.SodiumBiomeBlendFixMixin"
   ],

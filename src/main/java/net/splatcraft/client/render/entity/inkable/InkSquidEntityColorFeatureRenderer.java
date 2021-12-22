@@ -2,7 +2,10 @@ package net.splatcraft.client.render.entity.inkable;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -29,10 +32,24 @@ public class InkSquidEntityColorFeatureRenderer<T extends LivingEntity> extends 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         if (entity instanceof Inkable inkable) {
-            Vec3f color = getVectorColor(inkable.getInkColor());
-            FeatureRenderer.render(this.getContextModel(), this.model, this.texture, matrices, vertices, light, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch, color.getX(), color.getY(), color.getZ());
-        } else {
-            throw new IllegalArgumentException("Trying to render non-inkable entity with %s".formatted(this.getClass().getCanonicalName()));
-        }
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (!entity.isInvisibleTo(client.player)) {
+                this.getContextModel().copyStateTo(this.model);
+                this.model.animateModel(entity, limbAngle, limbDistance, tickDelta);
+                this.model.setAngles(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+
+                boolean invisible = entity.isInvisible();
+                RenderLayer renderLayer = invisible
+                    ? RenderLayer.getItemEntityTranslucentCull(this.texture)
+                    : RenderLayer.getEntityCutoutNoCull(this.texture);
+                Vec3f color = getVectorColor(inkable.getInkColor());
+
+                this.model.render(
+                    matrices, vertices.getBuffer(renderLayer),
+                    light, LivingEntityRenderer.getOverlay(entity, 0.0f),
+                    color.getX(), color.getY(), color.getZ(), invisible ? 0.15f : 1.0f
+                );
+            }
+        } else throw new IllegalArgumentException("Trying to render non-inkable entity with %s".formatted(this.getClass().getSimpleName()));
     }
 }

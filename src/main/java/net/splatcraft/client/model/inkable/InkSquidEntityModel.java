@@ -80,6 +80,10 @@ public class InkSquidEntityModel<T extends LivingEntity> extends SinglePartEntit
 
         this.leftTentacle.yaw = MathHelper.cos(limbAngle * 0.6662f + (float) Math.PI) * 1.4f * limbDistance / (isSwimming ? 2.2f : 1.5f);
         this.rightTentacle.yaw = MathHelper.cos(limbAngle * 0.6662f) * 1.4f * limbDistance / (isSwimming ? 2.2f : 1.5f);
+
+        boolean tentacleVisible = !entity.isSpectator();
+        this.leftTentacle.visible = tentacleVisible;
+        this.rightTentacle.visible = tentacleVisible;
     }
 
     @Override

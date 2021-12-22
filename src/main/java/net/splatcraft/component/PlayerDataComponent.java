@@ -12,10 +12,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
 import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
-import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.mixin.LivingEntityInvoker;
 
 import java.util.Random;
@@ -115,6 +115,8 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.submerged = submerged;
 
         ((LivingEntityInvoker) this.player).invoke_updatePotionVisibility();
+        if (this.player.isSpectator()) this.player.setInvisible(true);
+
         this.player.calculateDimensions();
 
         if (!this.player.world.isClient) {
