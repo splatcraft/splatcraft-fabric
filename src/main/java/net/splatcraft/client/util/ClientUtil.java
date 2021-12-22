@@ -11,6 +11,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
@@ -87,7 +88,9 @@ public class ClientUtil {
         if (client.crosshairTarget != null && client.world != null) {
             HitResult target = client.crosshairTarget;
             if (target instanceof BlockHitResult hit) {
-                BlockPos pos = new BlockPos(hit.getPos()).offset(hit.getSide(), -1);
+                BlockPos hitPos = new BlockPos(hit.getPos());
+                Direction side = hit.getSide();
+                BlockPos pos = side != Direction.DOWN && side != Direction.NORTH ? hitPos.offset(side, -1) : hitPos;
                 if (client.world.getBlockEntity(pos) instanceof Inkable inkable) return inkable.getInkColor();
             } else if (target instanceof EntityHitResult hit) {
                 if (hit.getEntity() instanceof Inkable inkable) return inkable.getInkColor();

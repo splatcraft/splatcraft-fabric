@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +27,9 @@ public class EntityTypeMixin<T extends Entity> {
         if (ret instanceof Inkable entity && player != null) {
             HitResult result = player.raycast(8.0d, 1.0f, false);
             if (result instanceof BlockHitResult hit) {
-                BlockPos pos = new BlockPos(hit.getPos()).offset(hit.getSide(), -1);
+                BlockPos hitPos = new BlockPos(hit.getPos());
+                Direction side = hit.getSide();
+                BlockPos pos = side != Direction.DOWN && side != Direction.NORTH ? hitPos.offset(side, -1) : hitPos;
                 if (world.getBlockEntity(pos) instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
             }
         }
