@@ -8,8 +8,10 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.entity.InputPlayerEntityAccess;
 import net.splatcraft.entity.PlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,9 +22,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.splatcraft.util.Events.deathInkableEntity;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity implements InputPlayerEntityAccess {
+    private Vec3d storedForwardSpeed = Vec3d.ZERO;
+
     private ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
+    }
+
+    @Override
+    public Vec3d getInputSpeeds() {
+        return this.storedForwardSpeed;
+    }
+
+    @Inject(method = "updateInput", at = @At("HEAD"))
+    private void onUpdateInput(float sidewaysSpeed, float forwardSpeed, boolean jumping, boolean sneaking, CallbackInfo ci) {
+        this.storedForwardSpeed = new Vec3d(sidewaysSpeed, upwardSpeed, forwardSpeed);
     }
 
     @Inject(method = "onScreenHandlerOpened", at = @At("TAIL"))

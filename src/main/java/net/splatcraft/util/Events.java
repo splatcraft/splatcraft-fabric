@@ -88,13 +88,14 @@ public final class Events {
      * A movement tick for entities of {@link Inkable}. Does not run client-side.
      */
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
-        if (movementInput.length() > 0.08d) {
-            Vec3d pos = ((InkEntityAccess) entity).getInkSplashParticlePos();
+        InkEntityAccess inkEntity = ((InkEntityAccess) entity);
+        if (movementInput.horizontalLength() > 0.08d || (inkEntity.canClimbInk()) && Math.abs(movementInput.y) > 0.001d) {
+            Vec3d pos = inkEntity.getInkSplashParticlePos();
             float scale = 0.75f;
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
                 if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, scale);
-            } else if (((InkEntityAccess) entity).isOnOwnInk()) inkSplashParticleAtPos(entity, pos, scale);
+            } else if (inkEntity.isOnOwnInk()) inkSplashParticleAtPos(entity, pos, scale);
         }
 
         if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR) && entity.isOnGround()) {

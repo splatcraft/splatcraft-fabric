@@ -2,10 +2,8 @@ package net.splatcraft.mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.*;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -38,6 +36,9 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Shadow public abstract Vec3d getPos();
     @Shadow public abstract EntityDimensions getDimensions(EntityPose pose);
     @Shadow public abstract EntityPose getPose();
+    @Shadow public abstract boolean isSwimming();
+    @Shadow public abstract boolean isInLava();
+    @Shadow public abstract boolean isWet();
 
     @Override
     public InkType getInkType() {
@@ -112,6 +113,13 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @SuppressWarnings("ConstantConditions")
     @Override
     public Optional<BlockPos> getInkClimbingPos() {
+        Entity that = Entity.class.cast(this);
+
+        if (this.isSwimming() || this.hasVehicle() || this.isInLava() || this.isWet()
+            || (that instanceof LivingEntity living && living.hasStatusEffect(StatusEffects.LEVITATION))
+            || (that instanceof PlayerEntity player && player.getAbilities().flying)
+        ) return Optional.empty();
+
         if (this instanceof Inkable inkable) {
             BlockPos.Mutable pos = new BlockPos.Mutable();
             double x = this.getX();

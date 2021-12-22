@@ -13,6 +13,8 @@ import static net.splatcraft.client.util.ClientUtil.entityTexture;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidEntityModelRenderer<T extends LivingEntity> extends LivingEntityRenderer<T, InkSquidEntityModel<T>> {
+    public static final Identifier TEXTURE = entityTexture("ink_squid/ink_squid_overlay");
+
     public InkSquidEntityModelRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, createModel(ctx), 0.2f);
         this.addFeature(new InkSquidEntityColorFeatureRenderer<>(this, createModel(ctx), entityTexture("ink_squid/ink_squid")));
@@ -25,7 +27,7 @@ public class InkSquidEntityModelRenderer<T extends LivingEntity> extends LivingE
 
     @Override
     public Identifier getTexture(T entity) {
-        return entityTexture("ink_squid/ink_squid_overlay");
+        return TEXTURE;
     }
 
     public static <T extends LivingEntity> InkSquidEntityModel<T> createModel(EntityRendererFactory.Context ctx) {

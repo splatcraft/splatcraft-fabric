@@ -2,23 +2,23 @@ package net.splatcraft.mixin;
 
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.InkEntityAccess;
-import net.splatcraft.entity.InkableCaster;
-import net.splatcraft.entity.PlayerEntityAccess;
-import net.splatcraft.entity.SplatcraftAttributes;
+import net.splatcraft.entity.*;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.util.SplatcraftConstants;
 import net.splatcraft.world.SplatcraftGameRules;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,8 +35,11 @@ import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMEN
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess {
+    @Shadow @Final private PlayerAbilities abilities;
+
     @Shadow public abstract Text getDisplayName();
-    @Shadow public abstract PlayerAbilities getAbilities();
+    @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
+    @Shadow public abstract void stopFallFlying();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -111,7 +114,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity that = PlayerEntity.class.cast(this);
-        if (!this.getAbilities().flying) {
+        if (!this.abilities.flying) {
             ((PlayerEntityAccess) that).getMovementSpeedM(cir.getReturnValueF())
                                        .ifPresent(cir::setReturnValue);
         }
@@ -122,7 +125,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     private void onUpdatePose(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid() && !this.getAbilities().flying) {
+        if (data.isSquid() && !this.abilities.flying) {
             this.setPose(EntityPose.SWIMMING);
             ci.cancel();
         }
@@ -176,6 +179,73 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
                 tickMovementInkableEntity(this, this.posLastTick.subtract(lastRenderPos));
             }
             this.posLastTick = this.getPos();
+        }
+    }
+
+    // disable flying in squid form
+    @Inject(method = "checkFallFlying", at = @At("HEAD"), cancellable = true)
+    private void onCheckFallFlying(CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        if (data.isSquid()) {
+            this.stopFallFlying();
+            cir.setReturnValue(false);
+        }
+    }
+
+    // override travel with custom logic if climbing ink
+    @SuppressWarnings("deprecation")
+    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
+    private void onTravel(Vec3d movementInput, CallbackInfo ci) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        if (data.isSquid() && ((InkEntityAccess) that).canClimbInk()) {
+            ci.cancel();
+
+            double dx = this.getX();
+            double dy = this.getY();
+            double dz = this.getZ();
+
+            if (this.canMoveVoluntarily() || this.isLogicalSideForUpdatingMovement()) {
+                InputPlayerEntityAccess inputAccess = ((InputPlayerEntityAccess) this);
+
+                double gravity = 0.08d;
+                BlockPos vpos = this.getVelocityAffectingPos();
+
+                // if slow falling, reduce gravity
+                boolean falling = this.getVelocity().y <= 0.0d;
+                if (falling && this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
+                    gravity = 0.01d;
+                    this.onLanding();
+                }
+
+                // process input
+                float slipperiness = this.world.getBlockState(vpos).getBlock().getSlipperiness();
+                Vec3d applied = this.applyMovementInput(movementInput, slipperiness);
+
+                // convert forwards input to upwards
+                double upward = (inputAccess.isForwardPressed() ? 0.3d : 0.0d);
+                double y = Math.min(applied.y + upward, that.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 0.75d);
+
+                // apply gravity
+                if (!this.world.isClient || this.world.isChunkLoaded(vpos)) {
+                    if (!this.hasNoGravity()) y -= gravity;
+                } else {
+                    y = this.getY() > (double)this.world.getBottomY() ? -0.1d : 0.0d;
+                }
+
+                // speed up/slow down speed conditionally
+                if (this.isSneaking()) y /= 1.5d;
+                if (this.jumping) y = Math.abs(y * 1.25d);
+
+                // set velocity
+                double friction = this.onGround ? slipperiness * 0.91d : 0.91d;
+                this.setVelocity(applied.x * friction, y * 0.98d, applied.z * friction);
+
+                // super logic
+                this.updateLimbs(this, this instanceof Flutterer);
+                this.increaseTravelMotionStats(this.getX() - dx, this.getY() - dy, this.getZ() - dz);
+            }
         }
     }
 }

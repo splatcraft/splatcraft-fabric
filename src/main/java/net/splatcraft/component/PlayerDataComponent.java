@@ -86,6 +86,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.player.calculateDimensions();
 
         if (squid) {
+            this.player.checkFallFlying();
             if (!this.player.getAbilities().flying) this.player.setSprinting(false);
         } else {
             // teleport up if inside block

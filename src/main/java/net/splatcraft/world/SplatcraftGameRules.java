@@ -11,7 +11,7 @@ import net.splatcraft.Splatcraft;
 import static net.minecraft.world.GameRules.*;
 
 public class SplatcraftGameRules {
-    public static CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
+    public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
         new Identifier(Splatcraft.MOD_ID, "category"),
         new TranslatableText("gamerule.%s.category".formatted(Splatcraft.MOD_ID))
             .formatted(Formatting.YELLOW, Formatting.BOLD)
