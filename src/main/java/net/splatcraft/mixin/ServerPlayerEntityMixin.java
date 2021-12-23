@@ -23,7 +23,7 @@ import static net.splatcraft.util.Events.deathInkableEntity;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements InputPlayerEntityAccess {
-    private Vec3d storedForwardSpeed = Vec3d.ZERO;
+    private Vec3d storedInputSpeeds = Vec3d.ZERO;
 
     private ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -31,12 +31,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
 
     @Override
     public Vec3d getInputSpeeds() {
-        return this.storedForwardSpeed;
+        return this.storedInputSpeeds;
     }
 
-    @Inject(method = "updateInput", at = @At("HEAD"))
-    private void onUpdateInput(float sidewaysSpeed, float forwardSpeed, boolean jumping, boolean sneaking, CallbackInfo ci) {
-        this.storedForwardSpeed = new Vec3d(sidewaysSpeed, upwardSpeed, forwardSpeed);
+    @Override
+    public void setInputSpeeds(Vec3d inputSpeeds) {
+        this.storedInputSpeeds = inputSpeeds;
     }
 
     @Inject(method = "onScreenHandlerOpened", at = @At("TAIL"))

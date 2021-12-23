@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.splatcraft.client.network.NetworkingClient.clientInput;
+
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements InputPlayerEntityAccess {
@@ -30,5 +32,6 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasVehicle()Z", shift = At.Shift.BEFORE))
     private void onTick(CallbackInfo ci) {
         this.storedForwardSpeed = new Vec3d(this.sidewaysSpeed, this.upwardSpeed, this.forwardSpeed);
+        clientInput(this.sidewaysSpeed, this.upwardSpeed, this.forwardSpeed);
     }
 }

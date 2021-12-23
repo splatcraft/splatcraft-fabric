@@ -206,46 +206,44 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             double dy = this.getY();
             double dz = this.getZ();
 
-            if (this.canMoveVoluntarily() || this.isLogicalSideForUpdatingMovement()) {
-                InputPlayerEntityAccess inputAccess = ((InputPlayerEntityAccess) this);
+            InputPlayerEntityAccess inputAccess = ((InputPlayerEntityAccess) this);
 
-                double gravity = 0.08d;
-                BlockPos vpos = this.getVelocityAffectingPos();
+            double gravity = 0.08d;
+            BlockPos vpos = this.getVelocityAffectingPos();
 
-                // if slow falling, reduce gravity
-                boolean falling = this.getVelocity().y <= 0.0d;
-                if (falling && this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
-                    gravity = 0.01d;
-                    this.onLanding();
-                }
-
-                // process input
-                float slipperiness = this.world.getBlockState(vpos).getBlock().getSlipperiness();
-                Vec3d applied = this.applyMovementInput(movementInput, slipperiness);
-
-                // convert forwards input to upwards
-                double upward = (inputAccess.isForwardPressed() ? 0.3d : 0.0d);
-                double y = Math.min(applied.y + upward, that.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 0.75d);
-
-                // apply gravity
-                if (!this.world.isClient || this.world.isChunkLoaded(vpos)) {
-                    if (!this.hasNoGravity()) y -= gravity;
-                } else {
-                    y = this.getY() > (double)this.world.getBottomY() ? -0.1d : 0.0d;
-                }
-
-                // speed up/slow down speed conditionally
-                if (this.isSneaking()) y /= 1.5d;
-                if (this.jumping) y = Math.abs(y * 1.25d);
-
-                // set velocity
-                double friction = this.onGround ? slipperiness * 0.91d : 0.91d;
-                this.setVelocity(applied.x * friction, y * 0.98d, applied.z * friction);
-
-                // super logic
-                this.updateLimbs(this, this instanceof Flutterer);
-                this.increaseTravelMotionStats(this.getX() - dx, this.getY() - dy, this.getZ() - dz);
+            // if slow falling, reduce gravity
+            boolean falling = this.getVelocity().y <= 0.0d;
+            if (falling && this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
+                gravity = 0.01d;
+                this.onLanding();
             }
+
+            // process input
+            float slipperiness = this.world.getBlockState(vpos).getBlock().getSlipperiness();
+            Vec3d applied = this.applyMovementInput(movementInput, slipperiness);
+
+            // convert forwards input to upwards
+            double upward = (inputAccess.isForwardPressed() || inputAccess.isSidewaysPressed() ? 0.3d : 0.0d);
+            double y = Math.min(applied.y + upward, that.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 0.75d);
+
+            // apply gravity
+            if (this.world.isChunkLoaded(vpos)) {
+                if (!this.hasNoGravity()) y -= gravity;
+            } else {
+                y = this.getY() > (double)this.world.getBottomY() ? -0.1d : 0.0d;
+            }
+
+            // speed up/slow down speed conditionally
+            if (this.isSneaking()) y /= 1.5d;
+            if (this.jumping) y = Math.abs(y * 1.25d);
+
+            // set velocity
+            double friction = this.onGround ? slipperiness * 0.91d : 0.91d;
+            this.setVelocity(applied.x * friction, y * 0.98d, applied.z * friction);
+
+            // super logic
+            this.updateLimbs(this, this instanceof Flutterer);
+            this.increaseTravelMotionStats(this.getX() - dx, this.getY() - dy, this.getZ() - dz);
         }
     }
 }

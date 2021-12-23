@@ -10,6 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.InputPlayerEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 
@@ -26,6 +27,13 @@ public class NetworkingCommon {
                 returnBuf.writeBoolean(squid);
                 ServerPlayNetworking.send(player, KEY_CHANGE_SQUID_FORM_RESPONSE, returnBuf);
             }
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(CLIENT_INPUT, (server, player, handler, buf, responseSender) -> {
+            double sidewaysSpeed = buf.readDouble();
+            double upwardSpeed = buf.readDouble();
+            double forwardSpeed = buf.readDouble();
+            ((InputPlayerEntityAccess) player).setInputSpeeds(new Vec3d(sidewaysSpeed, upwardSpeed, forwardSpeed));
         });
     }
 

@@ -13,8 +13,8 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.particle.InkSplashParticleEffect;
 import net.splatcraft.particle.InkSquidSoulParticleEffect;
 
-import static net.splatcraft.network.PacketIdentifiers.*;
 import static net.splatcraft.client.util.ClientUtil.getColor;
+import static net.splatcraft.network.PacketIdentifiers.*;
 
 @Environment(EnvType.CLIENT)
 public class NetworkingClient {
@@ -69,5 +69,13 @@ public class NetworkingClient {
             PlayerDataComponent data = PlayerDataComponent.get(client.player);
             data.setSquid(squid);
         }
+    }
+
+    public static void clientInput(float sidewaysSpeed, float upwardSpeed, float forwardSpeed) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeDouble(sidewaysSpeed);
+        buf.writeDouble(upwardSpeed);
+        buf.writeDouble(forwardSpeed);
+        ClientPlayNetworking.send(CLIENT_INPUT, buf);
     }
 }
