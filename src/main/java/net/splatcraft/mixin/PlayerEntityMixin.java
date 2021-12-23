@@ -105,8 +105,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
-                              .add(SplatcraftAttributes.INK_SWIM_SPEED, SplatcraftAttributes.INK_SWIM_SPEED.getDefaultValue())
-                              .add(SplatcraftAttributes.INK_JUMP_FORCE, SplatcraftAttributes.INK_JUMP_FORCE.getDefaultValue())
+                              .add(SplatcraftAttributes.INK_SWIM_SPEED)
+                              .add(SplatcraftAttributes.INK_JUMP_FORCE)
         );
     }
 
