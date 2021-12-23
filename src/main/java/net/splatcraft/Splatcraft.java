@@ -3,7 +3,6 @@ package net.splatcraft;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -55,7 +54,6 @@ public class Splatcraft implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(Events::registerCommands);
         ServerPlayConnectionEvents.JOIN.register(Events::playerJoin);
-        ServerTickEvents.START_SERVER_TICK.register(Events::startTick);
 
         UseBlockCallback.EVENT.register(Events::useBlock);
         UseItemCallback.EVENT.register(Events::useItem);

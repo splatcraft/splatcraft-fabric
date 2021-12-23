@@ -173,7 +173,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     private Vec3d posLastTick;
     @Inject(method = "tickMovement", at = @At("TAIL"))
     private void onTickMovement(CallbackInfo ci) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+
+        // check for submersion
+        data.setSubmerged(((InkEntityAccess) that).canSubmergeInInk());
+
         if (!this.world.isClient) {
+            // tick movement
             if (this.posLastTick != null) {
                 Vec3d lastRenderPos = new Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ);
                 tickMovementInkableEntity(this, this.posLastTick.subtract(lastRenderPos));

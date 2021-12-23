@@ -2,7 +2,6 @@ package net.splatcraft.util;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
@@ -11,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -45,13 +43,6 @@ public final class Events {
 
     public static void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         ((PlayerEntityAccess) handler.player).updateSplatfestBand();
-    }
-
-    public static void startTick(MinecraftServer server) {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            data.setSubmerged(((InkEntityAccess) player).canSubmergeInInk());
-        }
     }
 
     public static ActionResult useBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
