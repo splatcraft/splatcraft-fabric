@@ -1,12 +1,10 @@
 package net.splatcraft.client.util;
 
-import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -18,25 +16,14 @@ import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.option.ColorOption;
 import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.util.Color;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
-
-import static net.splatcraft.util.SplatcraftConstants.DEFAULT_INK_COLOR_DYE;
 
 @Environment(EnvType.CLIENT)
 public class ClientUtil {
-    public static final List<Integer> WHITE_COLORS = Util.make(() -> {
-        float[] dyeWhiteColors = DEFAULT_INK_COLOR_DYE.getColorComponents();
-        int dyeWhite = Color.ofRGB(dyeWhiteColors[0], dyeWhiteColors[1], dyeWhiteColors[2]).getColor();
-        int pureWhite = InkColors.PURE_WHITE.getDecimalColor();
-        return Lists.newArrayList(dyeWhite, pureWhite);
-    });
-
     /**
      * @return an {@link Optional} of {@link ColorOption},
      *         containing the friendly or hostile instance
@@ -44,9 +31,7 @@ public class ClientUtil {
      *         empty if color lock is disabled
      */
     public static Optional<ColorOption> getColorOption(InkColor toMatch) {
-        if (WHITE_COLORS.contains(toMatch.getDecimalColor()) || !ClientConfig.INSTANCE.colorLock.getValue()) {
-            return Optional.empty();
-        }
+        if (!ClientConfig.INSTANCE.colorLock.getValue()) return Optional.empty();
 
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerDataComponent data = PlayerDataComponent.get(client.player);
