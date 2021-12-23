@@ -23,7 +23,7 @@ public class ClientConfig extends Config {
     }
 
     public final EnumOption<ChangeSquidFormKeyBehavior> changeSquidKeyBehavior = add("change_squid_form_key_behavior", EnumOption.of(ChangeSquidFormKeyBehavior.class, ChangeSquidFormKeyBehavior.HOLD));
-    public final BooleanOption instantSquidFormChangeClient = add("instant_squid_form_change_client", BooleanOption.of(false));
+    public final BooleanOption instantSquidFormChangeClient = add("instant_squid_form_change_client", BooleanOption.of(true));
 
     public final EnumOption<PreventBobView> preventBobViewWhenSquid = add("prevent_bob_view_when_squid", EnumOption.of(PreventBobView.class, PreventBobView.ALWAYS));
     public final IntOption stageBlockRadius = add("stage_block_radius", IntOption.of(2, 2, 4));

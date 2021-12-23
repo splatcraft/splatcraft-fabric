@@ -25,7 +25,7 @@
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",
   "config.splatcraft.change_squid_form_key_behavior.tooltip": "",
   "config.splatcraft.instant_squid_form_change_client": "Instant Squid Form Change",
-  "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.",
+  "config.splatcraft.instant_squid_form_change_client.tooltip": "Whether or not the client waits\nfor the server's confirmation\nto change squid form.\nDisabling will reduce desync.",
   "config.splatcraft.prevent_bob_view_when_squid": "Prevent View Bobbing When In Squid Form",
   "config.splatcraft.prevent_bob_view_when_squid.tooltip": "",
   "config.splatcraft.stage_block_radius": "Stage Block Radius",
