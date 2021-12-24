@@ -70,6 +70,11 @@
   "block.splatcraft.stage_barrier": "Stage Barrier",
   "block.splatcraft.stage_void": "Stage Void",
 
+  "item.splatcraft.ink_cloth_helmet": "Ink Cloth Helmet",
+  "item.splatcraft.ink_cloth_chestplate": "Ink Cloth Chestplate",
+  "item.splatcraft.ink_cloth_leggings": "Ink Cloth Leggings",
+  "item.splatcraft.ink_cloth_boots": "Ink Cloth Boots",
+
   "item.splatcraft.splatfest_band": "Splatfest Band",
 
   "item.splatcraft.splat_roller": "Splat Roller",

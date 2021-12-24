@@ -15,22 +15,27 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
 
     @Override
     public void generate() {
-        this.add(SplatcraftBlocks.CANVAS);
+        this.block(SplatcraftBlocks.CANVAS);
 
-        this.add(SplatcraftBlocks.EMPTY_INKWELL);
-        this.add(SplatcraftBlocks.INKWELL);
+        this.block(SplatcraftBlocks.EMPTY_INKWELL);
+        this.block(SplatcraftBlocks.INKWELL);
 
-        this.add(SplatcraftBlocks.GRATE_BLOCK);
+        this.block(SplatcraftBlocks.GRATE_BLOCK);
         this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
 
-        this.add(SplatcraftBlocks.STAGE_BARRIER);
-        this.add(SplatcraftBlocks.STAGE_VOID);
+        this.block(SplatcraftBlocks.STAGE_BARRIER);
+        this.block(SplatcraftBlocks.STAGE_VOID);
 
         this.add(SpawnEggItem.forEntity(SplatcraftEntities.INK_SQUID), spawnEgg());
 
-        this.add(SplatcraftItems.SPLATFEST_BAND, this::generatedItem);
+        this.generated(SplatcraftItems.INK_CLOTH_HELMET);
+        this.generated(SplatcraftItems.INK_CLOTH_CHESTPLATE);
+        this.generated(SplatcraftItems.INK_CLOTH_LEGGINGS);
+        this.generated(SplatcraftItems.INK_CLOTH_BOOTS);
 
-        this.add(SplatcraftItems.INK_SQUID_BANNER_PATTERN, this::generatedItem);
-        this.add(SplatcraftItems.OCTOLING_BANNER_PATTERN, this::generatedItem);
+        this.generated(SplatcraftItems.SPLATFEST_BAND);
+
+        this.generated(SplatcraftItems.INK_SQUID_BANNER_PATTERN);
+        this.generated(SplatcraftItems.OCTOLING_BANNER_PATTERN);
     }
 }

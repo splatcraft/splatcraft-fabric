@@ -6,7 +6,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-public class RollerItem extends AbstractWeaponItem {
+public class RollerItem extends WeaponItem {
     public RollerItem(Settings settings) {
         super(settings);
     }
@@ -15,5 +15,10 @@ public class RollerItem extends AbstractWeaponItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         user.setCurrentHand(hand);
         return super.use(world, user, hand);
+    }
+
+    @Override
+    public int getMaxUseTime(ItemStack stack) {
+        return Integer.MAX_VALUE;
     }
 }

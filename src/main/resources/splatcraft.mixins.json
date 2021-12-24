@@ -19,6 +19,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerEntityInvoker",
+    "client.ArmorFeatureRendererMixin",
     "client.BlockEntityRenderDispatcherMixin",
     "client.ClientPlayerEntityMixin",
     "client.ClientWorldAccessor",

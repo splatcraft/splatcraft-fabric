@@ -27,8 +27,16 @@ public abstract class AbstractItemModelGenerator extends AbstractModelGenerator<
         this.map.put(item, gen);
     }
 
-    public void add(Block block) {
+    public void block(Block block) {
         this.add(block.asItem(), InheritingModelGen.inherit(name(block.asItem(), "block/%s")));
+    }
+
+    public void generated(Item item) {
+        this.add(item, this::generatedItem);
+    }
+
+    public void generated(Block block) {
+        this.add(block, this::generatedBlock);
     }
 
     public <T> T using(Identifier name, Function<Identifier, T> func) {

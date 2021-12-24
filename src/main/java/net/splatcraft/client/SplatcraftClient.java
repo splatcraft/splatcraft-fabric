@@ -95,6 +95,8 @@ public class SplatcraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.ITEM.register( // inkable items
             (stack, tintIndex) -> Inkable.class.cast(stack).getInkColor().getDecimalColor(),
+            SplatcraftItems.INK_CLOTH_HELMET, SplatcraftItems.INK_CLOTH_CHESTPLATE,
+            SplatcraftItems.INK_CLOTH_LEGGINGS, SplatcraftItems.INK_CLOTH_BOOTS,
             SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL,
             SplatcraftItems.SPLAT_ROLLER
         );
