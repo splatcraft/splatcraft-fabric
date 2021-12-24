@@ -86,6 +86,12 @@ public abstract class LivingEntityMixin extends Entity {
     // prevent fall damage when on own ink
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
     private void onHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (((InkEntityAccess) this).isOnOwnInk()) cir.setReturnValue(false);
+        LivingEntity that = LivingEntity.class.cast(this);
+        if (((InkEntityAccess) this).isOnOwnInk()) {
+            if (that instanceof PlayerEntity player) {
+                PlayerDataComponent data = PlayerDataComponent.get(player);
+                if (data.isSubmerged()) cir.setReturnValue(false);
+            } else cir.setReturnValue(false);
+        }
     }
 }
