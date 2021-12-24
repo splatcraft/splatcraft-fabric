@@ -1,6 +1,7 @@
 package net.splatcraft.mixin;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
@@ -9,6 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InputPlayerEntityAccess;
 import net.splatcraft.entity.PlayerEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,5 +48,16 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
             @Override
             public void onPropertyUpdate(ScreenHandler handler, int property, int value) {}
         });
+    }
+
+    // disable squid form on death
+    @Inject(method = "onDeath", at = @At("TAIL"))
+    private void onOnDeath(DamageSource source, CallbackInfo ci) {
+        ServerPlayerEntity that = ServerPlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        if (data.isSquid()) {
+            data.setSquid(false);
+            this.setInvisible(true);
+        }
     }
 }
