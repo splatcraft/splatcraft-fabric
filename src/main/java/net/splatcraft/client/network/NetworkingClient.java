@@ -29,7 +29,7 @@ public class NetworkingClient {
         ClientPlayNetworking.send(KEY_CHANGE_SQUID_FORM, buf);
 
         // if configured, instantly change squid form client-side without response
-        if (ClientConfig.INSTANCE.optimiseDesync.getValue()) {
+        if (!ClientConfig.INSTANCE.optimiseDesync.getValue()) {
             MinecraftClient client = MinecraftClient.getInstance();
             PlayerDataComponent data = PlayerDataComponent.get(client.player);
             data.setSquid(squid);
