@@ -1,12 +1,16 @@
 package net.splatcraft.config.option;
 
 import com.google.gson.JsonElement;
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 public abstract class Option<T> {
     private final T defaultValue;
@@ -37,14 +41,22 @@ public abstract class Option<T> {
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract AbstractConfigListEntry<T> createConfigListEntry(Identifier id, ConfigEntryBuilder builder);
+    public abstract void addConfigEntries(ConfigCategory category, Identifier id, ConfigEntryBuilder builder);
 
-    public TranslatableText getTitle(Identifier id) {
-        return new TranslatableText("config.%s.%s".formatted(id.getNamespace(), id.getPath()));
+    @Environment(EnvType.CLIENT)
+    public String getTranslationKey(Identifier id) {
+        return "config.%s.%s".formatted(id.getNamespace(), id.getPath());
     }
 
-    public TranslatableText getTooltip(Identifier id) {
-        return new TranslatableText("%s.tooltip".formatted(this.getTitle(id).getKey()));
+    @Environment(EnvType.CLIENT)
+    public TranslatableText getTitle(Identifier id) {
+        return new TranslatableText(this.getTranslationKey(id));
+    }
+
+    @Environment(EnvType.CLIENT)
+    public Optional<Text[]> getTooltip(Identifier id) {
+        String key = "%s.tooltip".formatted(this.getTranslationKey(id));
+        return I18n.hasTranslation(key) ? Optional.of(new Text[]{ new TranslatableText(key) }) : Optional.empty();
     }
 
     @Override

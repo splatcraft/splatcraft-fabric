@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
@@ -54,9 +53,7 @@ public class Config {
             for (Map.Entry<Identifier, Option<?>> entry : this.getDisplayedOptions().entrySet()) {
                 Identifier id = entry.getKey();
                 Option<?> option = entry.getValue();
-
-                AbstractConfigListEntry<?> configListEntry = option.createConfigListEntry(id, entryBuilder);
-                if (configListEntry != null) category.addEntry(configListEntry);
+                option.addConfigEntries(category, id, entryBuilder);
             }
         }
     }

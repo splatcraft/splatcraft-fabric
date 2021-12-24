@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.PackedInput;
 
 import static net.splatcraft.network.PacketIdentifiers.*;
 
@@ -28,19 +29,14 @@ public class NetworkingClient {
         ClientPlayNetworking.send(KEY_CHANGE_SQUID_FORM, buf);
 
         // if configured, instantly change squid form client-side without response
-        boolean instantSquidFormChange = ClientConfig.INSTANCE.instantSquidFormChangeClient.getValue();
-        if (instantSquidFormChange) {
+        if (ClientConfig.INSTANCE.optimiseDesync.getValue()) {
             MinecraftClient client = MinecraftClient.getInstance();
             PlayerDataComponent data = PlayerDataComponent.get(client.player);
             data.setSquid(squid);
         }
     }
 
-    public static void clientInput(float sidewaysSpeed, float upwardSpeed, float forwardSpeed) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeDouble(sidewaysSpeed);
-        buf.writeDouble(upwardSpeed);
-        buf.writeDouble(forwardSpeed);
-        ClientPlayNetworking.send(CLIENT_INPUT, buf);
+    public static void clientInput(PackedInput input) {
+        ClientPlayNetworking.send(CLIENT_INPUT, input.toPacket());
     }
 }

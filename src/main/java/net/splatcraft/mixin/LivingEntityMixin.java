@@ -1,5 +1,7 @@
 package net.splatcraft.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -8,6 +10,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.entity.InkableCaster;
@@ -55,12 +58,15 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     // spawn ink squid soul particle on death if inkable
+    @Environment(EnvType.CLIENT)
     @Inject(method = "handleStatus", at = @At("HEAD"))
     private void onHandleStatus(byte status, CallbackInfo ci) {
-        if (status == 3 && this instanceof InkableCaster caster) {
-            EntityDimensions dimensions = this.getDimensions(this.getPose());
-            Vec3d pos = this.getPos().add(0.0d, dimensions.height + 0.5f, 0.0d);
-            inkSquidSoul(caster.toInkable(), pos, 1.0f);
+        if (ClientConfig.INSTANCE.inkSquidSoulParticleOnDeath.getValue()) {
+            if (status == 3 && this instanceof InkableCaster caster) {
+                EntityDimensions dimensions = this.getDimensions(this.getPose());
+                Vec3d pos = this.getPos().add(0.0d, dimensions.height + 0.5f, 0.0d);
+                inkSquidSoul(caster.toInkable(), pos, 1.0f);
+            }
         }
     }
 

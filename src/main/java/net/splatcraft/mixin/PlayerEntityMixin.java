@@ -1,5 +1,7 @@
 package net.splatcraft.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffects;
@@ -11,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.*;
 import net.splatcraft.inkcolor.InkColor;
@@ -30,7 +33,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static net.splatcraft.util.Events.tickInkable;
-import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
 
@@ -179,14 +181,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         // check for submersion
-        if (data.setSubmerged(access.canSubmergeInInk()) && this.world.isClient) {
-            inkSplash(this, access.getInkSplashParticlePos(), 1.0f);
-        }
+        if (!this.world.isClient || !optimiseDesyncSetting()) data.setSubmerged(access.canSubmergeInInk());
 
         // tick movement
         Vec3d pos = this.getPos();
         if (this.posLastTick != null) tickInkable(this, this.posLastTick.subtract(pos));
         this.posLastTick = pos;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static boolean optimiseDesyncSetting() {
+        return ClientConfig.INSTANCE.optimiseDesync.getValue();
     }
 
     // disable flying in squid form
@@ -213,8 +218,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             double dy = this.getY();
             double dz = this.getZ();
 
-            InputPlayerEntityAccess inputAccess = ((InputPlayerEntityAccess) this);
-
+            PackedInput input = ((InputPlayerEntityAccess) this).getPackedInput();
             double gravity = 0.08d;
             BlockPos vpos = this.getVelocityAffectingPos();
 
@@ -230,7 +234,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             Vec3d applied = this.applyMovementInput(movementInput, slipperiness);
 
             // convert forwards input to upwards
-            double upward = (inputAccess.isForwardPressed() || inputAccess.isSidewaysPressed() ? 0.3d : 0.0d);
+            double upward = (input.jumping() || input.forward() || input.sideways() ? 0.3d : 0.0d);
             double y = Math.min(applied.y + upward, that.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 0.75d);
 
             // apply gravity
@@ -241,8 +245,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             }
 
             // speed up/slow down speed conditionally
-            if (this.isSneaking()) y /= 1.5d;
-            if (this.jumping) y = Math.abs(y * 1.25d);
+            if (input.sneaking()) y /= 1.5d;
+            if (input.jumping()) y = Math.abs(y * 1.25d);
 
             // set velocity
             double friction = this.onGround ? slipperiness * 0.91d : 0.91d;

@@ -1,6 +1,8 @@
 package net.splatcraft.util;
 
 import com.mojang.brigadier.CommandDispatcher;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.command.InkColorCommand;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
@@ -73,13 +76,8 @@ public final class Events {
 
     public static <T extends Entity & Inkable> void tickInkable(T entity, Vec3d movementInput) {
         PlayerDataComponent data = entity instanceof PlayerEntity player ? PlayerDataComponent.get(player) : null;
-        InkEntityAccess access = (InkEntityAccess) entity;
         if (entity.world.isClient) {
-            if (movementInput.length() > 0.2d) {
-                if ((entity instanceof PlayerEntity player && data.isSubmerged()) || (!(entity instanceof PlayerEntity) && access.isOnInk())) {
-                    inkSplash(entity, access.getInkSplashParticlePos(), 0.75f);
-                }
-            }
+            clientTickInkable(entity, movementInput, data);
         } else {
             if (entity.isOnGround() && entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR)) {
                 BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
@@ -87,6 +85,18 @@ public final class Events {
                     if (blockEntity instanceof Inkable inkable) {
                         if (!(entity instanceof PlayerEntity player) || data.isSquid()) entity.setInkColor(inkable.getInkColor());
                     }
+                }
+            }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static <T extends Entity & Inkable> void clientTickInkable(T entity, Vec3d movementInput, PlayerDataComponent data) {
+        if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
+            InkEntityAccess access = (InkEntityAccess) entity;
+            if (movementInput.length() > 0.2d) {
+                if ((entity instanceof PlayerEntity player && data.isSubmerged()) || (!(entity instanceof PlayerEntity) && access.isOnInk())) {
+                    inkSplash(entity, access.getInkSplashParticlePos(), 0.75f);
                 }
             }
         }

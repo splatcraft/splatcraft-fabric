@@ -2,19 +2,29 @@ package net.splatcraft.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
+import net.splatcraft.client.config.ClientConfig;
+import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.LivingEntityInvoker;
 
+import java.util.Random;
+
+import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
@@ -113,8 +123,24 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
         this.player.calculateDimensions();
 
+        if (this.player.world.isClient) spawnSubmergeParticles();
+
         this.sync();
         return true;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private <T extends Entity & Inkable> void spawnSubmergeParticles() {
+        if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
+            T inkable = ((InkableCaster) this.player).toInkable();
+            Vec3d pos = this.player.getPos();
+            Random random = this.player.getRandom();
+            for (int i = 0; i < 15; i++) {
+                double x = (random.nextDouble() - 0.5d) / 1.5d;
+                double z = (random.nextDouble() - 0.5d) / 1.5d;
+                inkSplash(inkable, pos.add(x, 0.0d, z), 1.0f);
+            }
+        }
     }
 
     public boolean hasSplatfestBand() {
