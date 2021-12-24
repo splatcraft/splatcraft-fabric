@@ -18,8 +18,8 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 
+import static net.splatcraft.util.Events.tickInkable;
 import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
-import static net.splatcraft.util.Events.tickMovementInkableEntity;
 
 public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster {
     public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);
@@ -63,9 +63,9 @@ public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster 
     }
 
     @Override
-    public void tickMovement() {
-        super.tickMovement();
-        if (!this.world.isClient) tickMovementInkableEntity(this, this.getVelocity().multiply(1.0d, 0.0d, 1.0d));
+    public void tick() {
+        super.tick();
+        tickInkable(this, this.getVelocity().multiply(1.0d, 0.0d, 1.0d));
     }
 
     @Override

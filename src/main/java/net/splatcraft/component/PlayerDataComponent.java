@@ -8,19 +8,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.splatcraft.block.InkPassableBlock;
-import net.splatcraft.entity.InkEntityAccess;
-import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.LivingEntityInvoker;
 
-import java.util.Random;
-
-import static net.splatcraft.network.NetworkingCommon.inkSplashParticleAtPos;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
@@ -118,20 +112,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (this.player.isSpectator()) this.player.setInvisible(true);
 
         this.player.calculateDimensions();
-
-        if (!this.player.world.isClient) {
-            Vec3d pos = ((InkEntityAccess) this.player).getInkSplashParticlePos();
-            Random rand = this.player.getRandom();
-            for (int i = 0; i < 10; i++) {
-                inkSplashParticleAtPos(
-                    ((InkableCaster) this.player).toInkable(), pos.add(
-                        rand.nextDouble() - 0.5d,
-                        rand.nextDouble() / 3,
-                        rand.nextDouble() - 0.5d
-                    ), 0.9f
-                );
-            }
-        }
 
         this.sync();
         return true;

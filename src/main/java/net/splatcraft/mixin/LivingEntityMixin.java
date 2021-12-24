@@ -1,24 +1,26 @@
 package net.splatcraft.mixin;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.entity.damage.SplatcraftDamageSource;
-import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
-import net.splatcraft.util.Events;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static net.splatcraft.particle.SplatcraftParticles.inkSquidSoul;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -53,10 +55,13 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     // spawn ink squid soul particle on death if inkable
-    @Inject(method = "onDeath", at = @At("TAIL"))
-    private void onOnDeath(DamageSource source, CallbackInfo ci) {
-        LivingEntity that = LivingEntity.class.cast(this);
-        if (!this.world.isClient && that instanceof Inkable) Events.deathInkableEntity(((InkableCaster) that).toInkable());
+    @Inject(method = "handleStatus", at = @At("HEAD"))
+    private void onHandleStatus(byte status, CallbackInfo ci) {
+        if (status == 3 && this instanceof InkableCaster caster) {
+            EntityDimensions dimensions = this.getDimensions(this.getPose());
+            Vec3d pos = this.getPos().add(0.0d, dimensions.height + 0.5f, 0.0d);
+            inkSquidSoul(caster.toInkable(), pos, 1.0f);
+        }
     }
 
     // ensure that the player is invisible when submerged

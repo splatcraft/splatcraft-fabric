@@ -29,7 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Optional;
 
-import static net.splatcraft.util.Events.tickMovementInkableEntity;
+import static net.splatcraft.util.Events.tickInkable;
+import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
 
@@ -171,20 +172,19 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     private Vec3d posLastTick;
-    @Inject(method = "tickMovement", at = @At("TAIL"))
+    @Inject(method = "tick", at = @At("TAIL"))
     private void onTickMovement(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
+        InkEntityAccess access = ((InkEntityAccess) that);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         // check for submersion
-        data.setSubmerged(((InkEntityAccess) that).canSubmergeInInk());
+        if (data.setSubmerged(access.canSubmergeInInk())) inkSplash(this, access.getInkSplashParticlePos(), 1.0f);
 
-        if (!this.world.isClient) {
-            // tick movement
-            Vec3d pos = this.getPos();
-            if (this.posLastTick != null) tickMovementInkableEntity(this, this.posLastTick.subtract(pos));
-            this.posLastTick = pos;
-        }
+        // tick movement
+        Vec3d pos = this.getPos();
+        if (this.posLastTick != null) tickInkable(this, this.posLastTick.subtract(pos));
+        this.posLastTick = pos;
     }
 
     // disable flying in squid form
