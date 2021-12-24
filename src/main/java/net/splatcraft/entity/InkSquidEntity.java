@@ -65,7 +65,7 @@ public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster 
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (!this.world.isClient) tickMovementInkableEntity(this, this.getVelocity());
+        if (!this.world.isClient) tickMovementInkableEntity(this, this.getVelocity().multiply(1.0d, 0.0d, 1.0d));
     }
 
     @Override

@@ -80,13 +80,13 @@ public final class Events {
      */
     public static <T extends Entity & Inkable> void tickMovementInkableEntity(T entity, Vec3d movementInput) {
         InkEntityAccess inkEntity = ((InkEntityAccess) entity);
-        if ((inkEntity.isOnOwnInk() && movementInput.length() > 0.08d) || (inkEntity.canClimbInk() && (movementInput.y > 0.001d || movementInput.y < -0.08d))) {
+        if (movementInput.length() > 0.2d) {
             Vec3d pos = inkEntity.getInkSplashParticlePos();
             float scale = 0.75f;
             if (entity instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
                 if (data.isSubmerged()) inkSplashParticleAtPos(entity, pos, scale);
-            } else if (inkEntity.isOnOwnInk()) inkSplashParticleAtPos(entity, pos, scale);
+            } else inkSplashParticleAtPos(entity, pos, scale);
         }
 
         if (entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR) && entity.isOnGround()) {

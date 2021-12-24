@@ -181,11 +181,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
         if (!this.world.isClient) {
             // tick movement
-            if (this.posLastTick != null) {
-                Vec3d lastRenderPos = new Vec3d(this.lastRenderX, this.lastRenderY, this.lastRenderZ);
-                tickMovementInkableEntity(this, this.posLastTick.subtract(lastRenderPos));
-            }
-            this.posLastTick = this.getPos();
+            Vec3d pos = this.getPos();
+            if (this.posLastTick != null) tickMovementInkableEntity(this, this.posLastTick.subtract(pos));
+            this.posLastTick = pos;
         }
     }
 
