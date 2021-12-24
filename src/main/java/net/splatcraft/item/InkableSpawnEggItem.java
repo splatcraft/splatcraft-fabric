@@ -35,13 +35,14 @@ public class InkableSpawnEggItem extends SpawnEggItem {
     public int getColor(int tintIndex) {
         if (tintIndex == 0) return 0xFFFFFF;
 
-        InkColor inkColor = getTargetedBlockInkColor();
-        if (inkColor != null) return getDecimalColor(inkColor);
-
-        // randomising color, similar to jeb_ sheep
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player != null) {
-            int r = client.player.age / 25 + client.player.getId();
+            InkColor inkColor = getTargetedBlockInkColor();
+            if (inkColor != null && client.player.isHolding(this)) return getDecimalColor(inkColor);
+
+            // else randomise color, similar to jeb_ sheep
+            int rate = 6;
+            int r = client.player.age / rate + client.player.getId();
             int colors = SplatcraftRegistries.INK_COLOR.size();
             int a = r % colors;
             int b = (r + 1) % colors;
@@ -52,7 +53,7 @@ public class InkableSpawnEggItem extends SpawnEggItem {
                 Vec3f va = ia.getVectorColor();
                 Vec3f vb = ib.getVectorColor();
 
-                float rand = ((float) (client.player.age % 25) + 1) / 25.0f;
+                float rand = ((float) (client.player.age % rate) + 1) / rate;
                 float red = va.getX() * (1.0f - rand) + vb.getX() * rand;
                 float green = va.getY() * (1.0f - rand) + vb.getY() * rand;
                 float blue = va.getZ() * (1.0f - rand) + vb.getZ() * rand;
@@ -61,7 +62,7 @@ public class InkableSpawnEggItem extends SpawnEggItem {
             }
         }
 
-        return 0x474F52;
+        return 0x474F52; // will never return here, probably...
     }
 
     @Environment(EnvType.CLIENT)
