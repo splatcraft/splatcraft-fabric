@@ -11,7 +11,7 @@ import net.splatcraft.Splatcraft;
 import java.util.function.Supplier;
 
 public enum SplatcraftArmorMaterial implements ArmorMaterial {
-    INK_CLOTH("ink_cloth", -1, new int[]{ 0, 0, 0, 0 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, null);
+    INK_CLOTH("ink_cloth", 0, new int[]{ 1, 2, 3, 1 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, null);
 
     private static final int[] BASE_DURABILITY = new int[]{ 13, 15, 16, 11 };
 
