@@ -90,7 +90,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (((InkEntityAccess) this).isOnOwnInk()) {
             if (that instanceof PlayerEntity player) {
                 PlayerDataComponent data = PlayerDataComponent.get(player);
-                if (data.isSubmerged()) cir.setReturnValue(false);
+                if (data.isSquid()) cir.setReturnValue(false);
             } else cir.setReturnValue(false);
         }
     }
