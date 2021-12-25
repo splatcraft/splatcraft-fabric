@@ -43,6 +43,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Shadow public abstract Text getDisplayName();
     @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
     @Shadow public abstract void stopFallFlying();
+    @Shadow public abstract float getMovementSpeed();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -90,7 +91,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Override
     public Optional<Float> getMovementSpeedM(float base) {
         if (((InkEntityAccess) this).canSubmergeInInk()) {
-            return Optional.of(base * ((float) this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10));
+            return Optional.of(base * ((float) this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1));
         }
 
         return Optional.empty();
@@ -235,7 +236,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
             // convert forwards input to upwards
             double upward = (input.jumping() || input.forward() || input.sideways() ? 0.3d : 0.0d);
-            double y = Math.min(applied.y + upward, that.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 0.75d);
+            double y = Math.min(applied.y + upward, this.getMovementSpeed());
 
             // apply gravity
             if (this.world.isChunkLoaded(vpos)) {
@@ -245,7 +246,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             }
 
             // speed up/slow down speed conditionally
-            if (input.sneaking()) y /= 1.5d;
             if (input.jumping()) y = Math.abs(y * 1.25d);
 
             // set velocity
