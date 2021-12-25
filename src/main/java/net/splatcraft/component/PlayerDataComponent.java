@@ -4,7 +4,12 @@ import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientChunkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -13,7 +18,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.chunk.WorldChunk;
 import net.splatcraft.block.InkPassableBlock;
+import net.splatcraft.block.entity.InkableBlockEntity;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.inkcolor.InkColor;
@@ -21,8 +28,12 @@ import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.LivingEntityInvoker;
+import net.splatcraft.mixin.client.ClientChunkManagerAccessor;
+import net.splatcraft.mixin.client.ClientChunkManagerClientChunkMapAccessor;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 import static net.splatcraft.util.SplatcraftConstants.*;
@@ -75,8 +86,38 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     public boolean setInkColor(InkColor inkColor) {
         if (this.inkColor.equals(inkColor)) return false;
         this.inkColor = inkColor;
+
+        if (this.player.world.isClient) setInkColorClient(inkColor);
+
         this.sync();
         return true;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void setInkColorClient(InkColor inkColor) {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        // if the updated player is the client player, and color lock is enabled, re-render modelled inked blocks
+        if (this.player == client.player && client.world != null && ClientConfig.INSTANCE.colorLock.getValue()) {
+            ClientChunkManager clientChunkManager = client.world.getChunkManager();
+            ClientChunkManager.ClientChunkMap chunkMap = ((ClientChunkManagerAccessor) clientChunkManager).getChunks();
+            AtomicReferenceArray<WorldChunk> chunks = ((ClientChunkManagerClientChunkMapAccessor) chunkMap).getChunks();
+            for (int i = 0, l = chunks.length(); i < l; i++) {
+                WorldChunk chunk = chunks.get(i);
+                if (chunk != null) {
+                    for (Map.Entry<BlockPos, BlockEntity> entry : chunk.getBlockEntities().entrySet()) {
+                        BlockPos pos = entry.getKey();
+                        BlockEntity blockEntity = entry.getValue();
+                        if (blockEntity instanceof InkableBlockEntity) {
+                            BlockState state = blockEntity.getCachedState();
+                            if (state.getRenderType() == BlockRenderType.MODEL) {
+                                client.world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public boolean isSquid() {
@@ -123,14 +164,14 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
         this.player.calculateDimensions();
 
-        if (this.player.world.isClient) spawnSubmergeParticles();
+        if (this.player.world.isClient) setSubmergedClient(submerged);
 
         this.sync();
         return true;
     }
 
     @Environment(EnvType.CLIENT)
-    private <T extends Entity & Inkable> void spawnSubmergeParticles() {
+    private <T extends Entity & Inkable> void setSubmergedClient(boolean submerged) {
         if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
             T inkable = ((InkableCaster) this.player).toInkable();
             Vec3d pos = this.player.getPos();

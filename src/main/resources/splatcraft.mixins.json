@@ -21,6 +21,8 @@
     "client.AbstractClientPlayerEntityInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BlockEntityRenderDispatcherMixin",
+    "client.ClientChunkManagerAccessor",
+    "client.ClientChunkManagerClientChunkMapAccessor",
     "client.ClientPlayerEntityMixin",
     "client.ClientWorldAccessor",
     "client.ClientWorldMixin",
