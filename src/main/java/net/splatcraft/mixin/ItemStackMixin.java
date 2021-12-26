@@ -1,5 +1,6 @@
 package net.splatcraft.mixin;
 
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,7 @@ public abstract class ItemStackMixin implements Inkable {
 
     @Override
     public InkColor getInkColor() {
-        NbtCompound nbt = this.getItem() instanceof BlockItem
+        NbtCompound nbt = this.getItem() instanceof BlockItem item && item.getBlock() instanceof BlockWithEntity
             ? this.getSubNbt(NBT_BLOCK_ENTITY_TAG)
             : this.getNbt();
         if (nbt == null) return InkColors.getDefault();
@@ -36,7 +37,7 @@ public abstract class ItemStackMixin implements Inkable {
     @Override
     public boolean setInkColor(InkColor inkColor) {
         if (inkColor.equals(this.getInkColor())) return false;
-        NbtCompound nbt = this.getItem() instanceof BlockItem
+        NbtCompound nbt = this.getItem() instanceof BlockItem item && item.getBlock() instanceof BlockWithEntity
             ? this.getOrCreateSubNbt(NBT_BLOCK_ENTITY_TAG)
             : this.getOrCreateNbt();
         nbt.putString(NBT_INK_COLOR, inkColor.getId().toString());

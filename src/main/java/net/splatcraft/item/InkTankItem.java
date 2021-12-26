@@ -69,12 +69,12 @@ public class InkTankItem extends Item implements Wearable {
             } else {
                 if (!(entity instanceof PlayerEntity player) || player.getEquippedStack(EquipmentSlot.CHEST) == stack) {
                     InkEntityAccess access = ((InkEntityAccess) entity);
-                    int add = 0;
+                    int nu = containedInk;
 
-                    if (entity.age % 3 == 0) add++;
-                    if (access.isInSquidForm() && access.isOnInk()) add += 2;
+                    if (entity.age % 3 == 0) nu++;
+                    if (access.isInSquidForm() && access.isOnInk()) nu += 2;
 
-                    int nu = Math.min(containedInk + add, capacity);
+                    nu = Math.min(nu, capacity);
                     if (nu != containedInk) setContainedInk(stack, nu);
                 }
             }
@@ -111,12 +111,12 @@ public class InkTankItem extends Item implements Wearable {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
+        super.appendTooltip(stack, world, tooltip, ctx);
         tooltip.add(new TranslatableText(T_CONTAINED_INK, getContainedInk(stack), this.getCapacity()).formatted(Formatting.GRAY));
     }
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) stacks.add(setContainedInk(new ItemStack(this), 0));
-        super.appendStacks(group, stacks);
     }
 }

@@ -9,6 +9,7 @@
     "EntityTypeMixin",
     "InkEntityMixin",
     "ItemEntityMixin",
+    "ItemMixin",
     "ItemStackMixin",
     "LivingEntityInvoker",
     "LivingEntityMixin",

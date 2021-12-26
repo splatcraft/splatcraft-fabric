@@ -1,6 +1,5 @@
 package net.splatcraft.inkcolor;
 
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -14,9 +13,13 @@ import net.splatcraft.util.Identifiable;
 import java.util.function.Function;
 
 import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY;
-import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY_ICON;
 
 public class InkColor implements Identifiable {
+    public static final Function<InkColor, String> TO_TRANSLATION_KEY = Util.memoize(inkColor -> {
+        Identifier id = inkColor.getId();
+        return "%s.%s.%s".formatted(SplatcraftRegistries.INK_COLOR.getKey().getValue(), id.getNamespace(), id.getPath());
+    });
+
     public static final Function<InkColor, Identifier> TO_IDENTIFIER = Util.memoize(SplatcraftRegistries.INK_COLOR::getId);
     public static final Function<String, InkColor> FROM_STRING = Util.memoize(s -> SplatcraftRegistries.INK_COLOR.get(Identifier.tryParse(s)));
 
@@ -50,9 +53,12 @@ public class InkColor implements Identifiable {
         return this.color.getBlue();
     }
 
-    public Text getDisplayText(Style textStyle) {
-        Text text = new TranslatableText(T_INK_COLOR_TEXT_DISPLAY_ICON).setStyle(Style.EMPTY.withColor(this.getDecimalColor()));
-        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, text, new LiteralText(this.toString()).setStyle(textStyle));
+    public String getTranslationKey() {
+        return TO_TRANSLATION_KEY.apply(this);
+    }
+
+    public Text getDisplayText(Style style) {
+        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, new TranslatableText(this.getTranslationKey())).setStyle(style.withColor(this.getDecimalColor()));
     }
 
     public Text getDisplayText() {

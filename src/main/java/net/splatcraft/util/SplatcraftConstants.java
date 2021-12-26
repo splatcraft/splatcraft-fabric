@@ -35,8 +35,8 @@ public class SplatcraftConstants {
     public static final String T_CONTAINED_INK = "text.%s.contained_ink".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);
-    public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color_display".formatted(Splatcraft.MOD_ID);
-    public static final String T_INK_COLOR_TEXT_DISPLAY_ICON = "%s.icon".formatted(T_INK_COLOR_TEXT_DISPLAY);
+    public static final String T_INK_COLOR = "text.%s.ink_color".formatted(Splatcraft.MOD_ID);
+    public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color.icon".formatted(Splatcraft.MOD_ID);
     public static final String T_BLOCK_ENTITY_DESCRIPTION = "text.%s.block_entity_description".formatted(Splatcraft.MOD_ID);
     public static final String T_COMMAND_ERROR_INK_COLOR_NOT_FOUND = cmdInkColor("notFound");
     public static final String T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED = cmdInkColor("tagDisallowed");
