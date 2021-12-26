@@ -10,6 +10,8 @@ public interface InkEntityAccess {
     InkType getInkType();
 
     boolean isInSquidForm();
+    boolean isSubmerged();
+
     boolean isOnInk();
     boolean isOnOwnInk();
     boolean isOnEnemyInk();

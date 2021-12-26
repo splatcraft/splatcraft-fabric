@@ -62,6 +62,17 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     }
 
     @Override
+    public boolean isSubmerged() {
+        Entity that = Entity.class.cast(this);
+        if (that instanceof PlayerEntity player) {
+            PlayerDataComponent data = PlayerDataComponent.get(player);
+            return data.isSubmerged();
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean isOnInk() {
         return this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable;
     }

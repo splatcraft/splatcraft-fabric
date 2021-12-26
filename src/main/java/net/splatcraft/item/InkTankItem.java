@@ -69,12 +69,16 @@ public class InkTankItem extends Item implements Wearable {
             } else {
                 if (!(entity instanceof PlayerEntity player) || player.getEquippedStack(EquipmentSlot.CHEST) == stack) {
                     InkEntityAccess access = ((InkEntityAccess) entity);
-                    int nu = containedInk;
-
-                    if (entity.age % 3 == 0) nu++;
-                    if (access.isInSquidForm() && access.isOnInk()) nu += 2;
-
-                    nu = Math.min(nu, capacity);
+                    int nu = Math.min(
+                        containedInk + (
+                            access.isSubmerged()
+                                ? (int) (100f / (20 * 3.253f)) // splatoon-accurate calculation
+                                : entity.age % 10 == 0
+                                    ? 1
+                                    : 0
+                        ),
+                        capacity
+                    );
                     if (nu != containedInk) setContainedInk(stack, nu);
                 }
             }
