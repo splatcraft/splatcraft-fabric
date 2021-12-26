@@ -68,7 +68,7 @@ public class ClientUtil {
     }
 
     @Nullable
-    public static InkColor getTargetedBlockInkColor() {
+    public static InkColor getTargetedInkColor() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.crosshairTarget != null && client.world != null) {
             HitResult target = client.crosshairTarget;

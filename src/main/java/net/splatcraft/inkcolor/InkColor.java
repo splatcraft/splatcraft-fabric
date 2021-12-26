@@ -81,7 +81,7 @@ public class InkColor implements Identifiable {
     }
 
     public static String toString(InkColor inkColor) {
-        return (inkColor == null ? InkColors._DEFAULT : inkColor).toString();
+        return (inkColor == null ? InkColors.getDefault() : inkColor).toString();
     }
 
     @Override

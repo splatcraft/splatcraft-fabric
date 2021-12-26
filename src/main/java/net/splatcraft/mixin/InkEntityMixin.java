@@ -51,6 +51,17 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     }
 
     @Override
+    public boolean isInSquidForm() {
+        Entity that = Entity.class.cast(this);
+        if (that instanceof PlayerEntity player) {
+            PlayerDataComponent data = PlayerDataComponent.get(player);
+            return data.isSquid();
+        }
+
+        return this instanceof Inkable;
+    }
+
+    @Override
     public boolean isOnInk() {
         return this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable;
     }
@@ -86,11 +97,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
 
     @Override
     public boolean doesInkPassing() {
-        Entity that = Entity.class.cast(this);
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return data.isSquid();
-        } else return SplatcraftEntityTypeTags.INK_PASSABLES.contains(this.getType());
+        return this.isInSquidForm() && SplatcraftEntityTypeTags.INK_PASSABLES.contains(this.getType());
     }
 
     @Override

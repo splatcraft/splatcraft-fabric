@@ -32,8 +32,8 @@ public class ClientConfig extends Config {
     public final BooleanOption inkSquidSoulParticleOnDeath = add("ink_squid_soul_particle_on_death", BooleanOption.of(true));
 
     public final EnumOption<PreventBobView> preventBobViewWhenSquid = add("prevent_bob_view_when_squid", EnumOption.of(PreventBobView.class, PreventBobView.ALWAYS));
+    public final BooleanOption cancelCapeRenderWithInkTank = add("cancel_cape_render_with_ink_tank", BooleanOption.of(true));
     public final IntOption stageBlockRadius = add("stage_block_radius", IntOption.of(2, 2, 4));
-
     public final BooleanOption optimiseDesync = add("optimise_desync", BooleanOption.of(false));
 
     private ClientConfig(File file) {

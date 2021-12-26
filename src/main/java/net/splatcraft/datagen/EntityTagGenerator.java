@@ -16,7 +16,8 @@ public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
     @Override
     public void generate() {
         this.add(SplatcraftEntityTypeTags.INK_PASSABLES,
-            EntityType.SQUID, EntityType.GLOW_SQUID
+            EntityType.PLAYER,
+            SplatcraftEntities.INK_SQUID
         );
         this.add(SplatcraftEntityTypeTags.HURT_BY_WATER,
             SplatcraftEntities.INK_SQUID

@@ -33,6 +33,8 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
         this.generated(SplatcraftItems.INK_CLOTH_LEGGINGS);
         this.generated(SplatcraftItems.INK_CLOTH_BOOTS);
 
+        this.add(SplatcraftItems.INK_TANK, this::dyeable);
+
         this.generated(SplatcraftItems.SPLATFEST_BAND);
 
         this.generated(SplatcraftItems.INK_SQUID_BANNER_PATTERN);

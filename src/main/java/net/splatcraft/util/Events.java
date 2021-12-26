@@ -5,7 +5,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -26,6 +28,7 @@ import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.entity.PlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.InkTankItem;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
@@ -100,5 +103,10 @@ public final class Events {
                 }
             }
         }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static boolean allowCapeRender(AbstractClientPlayerEntity player) {
+        return !ClientConfig.INSTANCE.cancelCapeRenderWithInkTank.getValue() || !(player.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof InkTankItem);
     }
 }

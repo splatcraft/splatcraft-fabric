@@ -1,4 +1,4 @@
-package net.splatcraft.client.render.entity.inkable;
+package net.splatcraft.client.render.entity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
-import net.splatcraft.client.model.inkable.InkSquidEntityModel;
+import net.splatcraft.client.model.entity.InkSquidEntityModel;
 import net.splatcraft.inkcolor.Inkable;
 
 import static net.splatcraft.client.util.ClientUtil.getVectorColor;

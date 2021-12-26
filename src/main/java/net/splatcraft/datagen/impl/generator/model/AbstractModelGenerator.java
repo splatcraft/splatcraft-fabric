@@ -12,13 +12,13 @@ public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<T, 
 
     public abstract Registry<T> getRegistry();
 
-    public Identifier name(T block, String nameFormat) {
-        Identifier id = this.getRegistry().getId(block);
+    public Identifier name(T object, String nameFormat) {
+        Identifier id = this.getRegistry().getId(object);
         return new Identifier(id.getNamespace(), String.format(nameFormat, id.getPath()));
     }
 
-    public Identifier name(T block, String nameFormat, String omitSuffix) {
-        Identifier id = this.getRegistry().getId(block);
+    public Identifier name(T object, String nameFormat, String omitSuffix) {
+        Identifier id = this.getRegistry().getId(object);
 
         String path = id.getPath();
         if (path.endsWith(omitSuffix)) {
@@ -28,8 +28,8 @@ public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<T, 
         return new Identifier(id.getNamespace(), String.format(nameFormat, path));
     }
 
-    public Identifier name(T block, String nameFormat, String pattern, String reformat) {
-        Identifier id = this.getRegistry().getId(block);
+    public Identifier name(T object, String nameFormat, String pattern, String reformat) {
+        Identifier id = this.getRegistry().getId(object);
 
         String path = id.getPath();
         path = path.replaceAll(pattern, reformat);
@@ -37,7 +37,7 @@ public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<T, 
         return new Identifier(id.getNamespace(), String.format(nameFormat, path));
     }
 
-    public Identifier name(T block) {
-        return name(block, "block/%s");
+    public Identifier name(T object) {
+        return name(object, "block/%s");
     }
 }

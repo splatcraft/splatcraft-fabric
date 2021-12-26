@@ -20,18 +20,19 @@ public class SplatcraftConstants {
     public static final String NBT_IS_SQUID = "Squid";
     public static final String NBT_IS_SUBMERGED = "Submerged";
     public static final String NBT_HAS_SPLATFEST_BAND = "HasSplatfestBand";
+    public static final String NBT_CONTAINED_INK = "ContainedInk";
     public static final String NBT_BLOCK_STATE = "BlockState";
     public static final String NBT_BLOCK_ENTITY_TAG = "BlockEntityTag";
 
-    public static final Identifier COMMAND_INK_COLOR = new Identifier(Splatcraft.MOD_ID, "inkcolor");
+    public static final String COMMAND_INK_COLOR = new Identifier(Splatcraft.MOD_ID, "inkcolor").toString();
     public static final String COMMAND_ARGUMENT_INK_COLOR = "ink_color";
     public static final String COMMAND_ARGUMENT_TARGETS = "targets";
     public static final String COMMAND_ARGUMENT_FROM = "from";
     public static final String COMMAND_ARGUMENT_TO = "to";
 
-    public static final DyeColor DEFAULT_INK_COLOR_DYE = DyeColor.WHITE;
-    public static final Identifier DEFAULT_INK_COLOR_IDENTIFIER = new Identifier(DEFAULT_INK_COLOR_DYE.getName());
+    public static final Identifier DEFAULT_INK_COLOR_IDENTIFIER = new Identifier(DyeColor.WHITE.getName());
 
+    public static final String T_CONTAINED_INK = "text.%s.contained_ink".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
     public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);
     public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color_display".formatted(Splatcraft.MOD_ID);

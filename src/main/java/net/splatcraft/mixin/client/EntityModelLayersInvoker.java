@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(EntityModelLayers.class)
 public interface EntityModelLayersInvoker {
     @Invoker("register")
-    static EntityModelLayer register(String id, String layer) {
+    static EntityModelLayer invoke_register(String id, String layer) {
         throw new AssertionError();
     }
 }

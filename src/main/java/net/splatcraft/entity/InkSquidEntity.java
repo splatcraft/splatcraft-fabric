@@ -31,7 +31,7 @@ public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(INK_COLOR, InkColors._DEFAULT);
+        this.dataTracker.startTracking(INK_COLOR, InkColors.getDefault());
     }
 
     @Override

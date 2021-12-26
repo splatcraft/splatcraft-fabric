@@ -58,6 +58,10 @@ public class Config {
         }
     }
 
+    public final HashBiMap<Identifier, Option<?>> getMap() {
+        return HashBiMap.create(this.map);
+    }
+
     public HashBiMap<Identifier, Option<?>> getDisplayedOptions() {
         return HashBiMap.create(this.map);
     }

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
-import static net.splatcraft.client.util.ClientUtil.getTargetedBlockInkColor;
+import static net.splatcraft.client.util.ClientUtil.getTargetedInkColor;
 
 public class InkableSpawnEggItem extends SpawnEggItem {
     public InkableSpawnEggItem(EntityType<? extends MobEntity> type, int primaryColor, int secondaryColor, Settings settings) {
@@ -37,7 +37,7 @@ public class InkableSpawnEggItem extends SpawnEggItem {
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player != null) {
-            InkColor inkColor = getTargetedBlockInkColor();
+            InkColor inkColor = getTargetedInkColor();
             if (inkColor != null && client.player.isHolding(this)) return getDecimalColor(inkColor);
 
             // else randomise color, similar to jeb_ sheep
@@ -71,7 +71,7 @@ public class InkableSpawnEggItem extends SpawnEggItem {
         super.appendTooltip(stack, world, tooltip, ctx);
 
         if (ctx.isAdvanced()) {
-            InkColor inkColor = Optional.ofNullable(getTargetedBlockInkColor()).orElse(InkColors._DEFAULT);
+            InkColor inkColor = Optional.ofNullable(getTargetedInkColor()).orElse(InkColors.getDefault());
             tooltip.add(new LiteralText(inkColor.toString()).formatted(Formatting.DARK_GRAY));
         }
     }

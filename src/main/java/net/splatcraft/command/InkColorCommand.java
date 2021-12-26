@@ -27,7 +27,7 @@ import static net.splatcraft.util.SplatcraftConstants.*;
 public class InkColorCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
-            literal(COMMAND_INK_COLOR.toString())
+            literal(COMMAND_INK_COLOR)
                 .executes(InkColorCommand::executeGet)
                 .then(
                     argument(COMMAND_ARGUMENT_INK_COLOR, InkColorArgumentType.inkColor())

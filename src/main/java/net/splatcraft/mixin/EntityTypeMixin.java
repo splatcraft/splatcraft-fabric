@@ -25,7 +25,7 @@ public class EntityTypeMixin<T extends Entity> {
     private void onSpawn(ServerWorld world, @Nullable NbtCompound nbt, @Nullable Text name, @Nullable PlayerEntity player, BlockPos spawnPos, SpawnReason spawnReason, boolean alignPosition, boolean invertY, CallbackInfoReturnable<@Nullable T> cir) {
         Entity ret = cir.getReturnValue();
         if (ret instanceof Inkable entity && player != null) {
-            HitResult result = player.raycast(8.0d, 1.0f, false);
+            HitResult result = player.raycast(8.0d, 0.0f, false);
             if (result instanceof BlockHitResult hit) {
                 BlockPos hitPos = new BlockPos(hit.getPos());
                 Direction side = hit.getSide();

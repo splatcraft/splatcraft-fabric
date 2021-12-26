@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface InkEntityAccess {
     InkType getInkType();
 
+    boolean isInSquidForm();
     boolean isOnInk();
     boolean isOnOwnInk();
     boolean isOnEnemyInk();

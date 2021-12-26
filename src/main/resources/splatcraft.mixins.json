@@ -33,6 +33,7 @@
     "client.GameRendererMixin",
     "client.HeldItemRendererMixin",
     "client.LivingEntityRendererMixin",
+    "client.ModelPartAccessor",
     "client.PlayerEntityRendererMixin",
     "client.compat.SodiumBiomeBlendFixMixin"
   ],

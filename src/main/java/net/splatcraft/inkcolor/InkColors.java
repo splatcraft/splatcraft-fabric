@@ -1,14 +1,16 @@
 package net.splatcraft.inkcolor;
 
-import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.util.Color;
 
 import java.util.Random;
+
+import static net.splatcraft.util.SplatcraftConstants.DEFAULT_INK_COLOR_IDENTIFIER;
 
 @SuppressWarnings("unused")
 public class InkColors {
@@ -31,7 +33,7 @@ public class InkColors {
     public static final InkColor DYE_BLACK = dye(DyeColor.BLACK);
 
     // splatcraft colors
-    public static final InkColor MOJANG = vanilla("mojang", BackgroundHelper.ColorMixer.getArgb(255, 239, 50, 61)); // mojang logo background color
+    public static final InkColor MOJANG = vanilla("mojang", ColorHelper.Argb.getArgb(255, 239, 50, 61)); // mojang logo background color
     public static final InkColor COBALT = splatcraft("cobalt", 0x005682); // Cibernet
     public static final InkColor ICE = splatcraft("ice", 0x88FFC1); // icearstorm
     public static final InkColor FLORAL = splatcraft("floral", 0xFF9BEE); // floralQuaFloral
@@ -326,8 +328,10 @@ public class InkColors {
     public static final InkColor SPLATFEST_SUPER_STAR = splatoon("splatfest/super_star", 0xB3A10D);
     public static final InkColor SPLATFEST_SUPER_MUSHROOM_VS_SUPER_STAR_NEUTRAL = splatoon("splatfest/super_mushroom_vs_super_star_neutral", 0x0D40DE);
 
-    // technical
-    public static final InkColor _DEFAULT = InkColors.DYE_WHITE;
+    private static final InkColor _DEFAULT = SplatcraftRegistries.INK_COLOR.get(DEFAULT_INK_COLOR_IDENTIFIER);
+    public static InkColor getDefault() {
+        return _DEFAULT;
+    }
 
     private static InkColor register(Identifier id, Color color) {
         return Registry.register(SplatcraftRegistries.INK_COLOR, id, new InkColor(color));

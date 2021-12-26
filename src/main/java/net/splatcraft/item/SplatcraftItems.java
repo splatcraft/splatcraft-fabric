@@ -20,6 +20,8 @@ public class SplatcraftItems {
     public static final Item INK_CLOTH_LEGGINGS = armor("ink_cloth_leggings", INK_CLOTH, EquipmentSlot.LEGS, InkableArmorItem::new);
     public static final Item INK_CLOTH_BOOTS = armor("ink_cloth_boots", INK_CLOTH, EquipmentSlot.FEET, InkableArmorItem::new);
 
+    public static final Item INK_TANK = register("ink_tank", 100, InkTankItem::new);
+
     public static final Item SPLAT_ROLLER = unstackable("splat_roller", RollerItem::new);
 
     public static final Item SPLATFEST_BAND = unstackable("splatfest_band", Item::new);
@@ -35,6 +37,12 @@ public class SplatcraftItems {
         return register(id, new LoomPatternItem(pattern, new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
     }
 
+    private static Item register(String id, int capacity, InkTankFactory factory) {
+        return register(id, factory.create(capacity, new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.CHEST)
+                                                                             .maxCount(1)
+                                                                             .group(SplatcraftItemGroups.ALL)));
+    }
+
     private static Item unstackable(String id, ItemFactory<Item> factory) {
         return register(id, factory.create(new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
     }
@@ -45,11 +53,16 @@ public class SplatcraftItems {
 
     @FunctionalInterface
     private interface ItemFactory<T extends Item> {
-        T create(Item.Settings settings);
+        T create(FabricItemSettings settings);
     }
 
     @FunctionalInterface
     private interface ArmorFactory {
-        ArmorItem create(ArmorMaterial material, EquipmentSlot slot, Item.Settings settings);
+        ArmorItem create(ArmorMaterial material, EquipmentSlot slot, FabricItemSettings settings);
+    }
+
+    @FunctionalInterface
+    private interface InkTankFactory {
+        InkTankItem create(int capacity, FabricItemSettings settings);
     }
 }

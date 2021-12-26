@@ -25,7 +25,7 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
     /**
      * Defines a block's ink color.
      */
-    private InkColor inkColor = InkColors._DEFAULT;
+    private InkColor inkColor = InkColors.getDefault();
 
     public InkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);

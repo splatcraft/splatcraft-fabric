@@ -44,7 +44,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     /**
      * Defines a player's ink color.
      */
-    private InkColor inkColor = InkColors._DEFAULT;
+    private InkColor inkColor = InkColors.getDefault();
 
     /**
      * Defines whether the player is in squid form.

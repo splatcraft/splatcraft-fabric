@@ -6,9 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
@@ -26,14 +24,16 @@ import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.client.particle.InkSplashParticle;
 import net.splatcraft.client.particle.InkSquidSoulParticle;
-import net.splatcraft.client.render.block.inkable.InkedBlockEntityRenderer;
-import net.splatcraft.client.render.entity.inkable.InkSquidEntityModelRenderer;
+import net.splatcraft.client.render.block.InkedBlockEntityRenderer;
+import net.splatcraft.client.render.entity.InkSquidEntityModelRenderer;
+import net.splatcraft.client.render.entity.InkTankRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
+import net.splatcraft.util.Events;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,10 +70,8 @@ public class SplatcraftClient implements ClientModInitializer {
         // render layers
         BlockRenderLayerMap brlm = BlockRenderLayerMap.INSTANCE;
         brlm.putBlocks(RenderLayer.getCutout(),
-            SplatcraftBlocks.GRATE_BLOCK,
-            SplatcraftBlocks.GRATE,
-            SplatcraftBlocks.EMPTY_INKWELL,
-            SplatcraftBlocks.INKWELL
+            SplatcraftBlocks.GRATE_BLOCK, SplatcraftBlocks.GRATE,
+            SplatcraftBlocks.EMPTY_INKWELL, SplatcraftBlocks.INKWELL
         );
 
         // entities
@@ -82,6 +80,10 @@ public class SplatcraftClient implements ClientModInitializer {
         // block entities
         BlockEntityRendererRegistry.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
 
+        // armor
+        ArmorRenderer.register(InkTankRenderer.INSTANCE::render, SplatcraftItems.INK_TANK);
+        LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.register(Events::allowCapeRender);
+
         // model predicates
         modelPredicateUsing(SplatcraftItems.SPLAT_ROLLER);
 
@@ -89,16 +91,19 @@ public class SplatcraftClient implements ClientModInitializer {
         ColorProviderRegistry.BLOCK.register( // inkable block entity colors
             (state, world, pos, tintIndex) -> world != null && world.getBlockEntity(pos) instanceof Inkable inkable
                 ? getDecimalColor(inkable.getInkColor())
-                : InkColors._DEFAULT.getDecimalColor(),
+                : InkColors.getDefault().getDecimalColor(),
             SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
         );
 
         ColorProviderRegistry.ITEM.register( // inkable items
-            (stack, tintIndex) -> Inkable.class.cast(stack).getInkColor().getDecimalColor(),
+            (stack, tintIndex) -> {
+                return tintIndex == 0 ? Inkable.class.cast(stack).getInkColor().getDecimalColor() : 0xFFFFFF;
+            },
             SplatcraftItems.INK_CLOTH_HELMET, SplatcraftItems.INK_CLOTH_CHESTPLATE,
             SplatcraftItems.INK_CLOTH_LEGGINGS, SplatcraftItems.INK_CLOTH_BOOTS,
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL,
-            SplatcraftItems.SPLAT_ROLLER
+            SplatcraftItems.INK_TANK, SplatcraftItems.SPLAT_ROLLER,
+
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
         );
 
         // block markers

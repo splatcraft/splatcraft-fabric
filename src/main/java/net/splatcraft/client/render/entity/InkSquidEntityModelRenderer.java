@@ -1,4 +1,4 @@
-package net.splatcraft.client.render.entity.inkable;
+package net.splatcraft.client.render.entity;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -7,7 +7,7 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 import net.splatcraft.client.model.SplatcraftEntityModelLayers;
-import net.splatcraft.client.model.inkable.InkSquidEntityModel;
+import net.splatcraft.client.model.entity.InkSquidEntityModel;
 
 import static net.splatcraft.client.util.ClientUtil.entityTexture;
 

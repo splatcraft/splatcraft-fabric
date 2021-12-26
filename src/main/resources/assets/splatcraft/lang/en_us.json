@@ -32,6 +32,7 @@
   "config.splatcraft.prevent_bob_view_when_squid.value.off": "Off",
   "config.splatcraft.prevent_bob_view_when_squid.value.submerged": "Only Submerged",
   "config.splatcraft.prevent_bob_view_when_squid.value.always": "In Squid Form",
+  "config.splatcraft.cancel_cape_render_with_ink_tank": "Cancel Cape Render With Ink Tank",
   "config.splatcraft.stage_block_radius": "Stage Block Radius",
   "config.splatcraft.stage_block_radius.tooltip": "The radius at which to\nrender stage blocks.",
   "config.splatcraft.stage_block_radius.value": "%s Blocks",
@@ -55,6 +56,7 @@
   "command.splatcraft:inkcolor.single.success": "Changed the ink color of %s to %s",
   "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s inkables to %s",
 
+  "text.splatcraft.contained_ink": "Ink: %s / %s",
   "text.splatcraft.reloaded_config": "Reloaded config: %s",
   "text.splatcraft.reloaded_config.failed": "Could not reload config",
   "text.splatcraft.ink_color_display": "%s %s",
@@ -74,6 +76,9 @@
   "item.splatcraft.ink_cloth_chestplate": "Ink Cloth Chestplate",
   "item.splatcraft.ink_cloth_leggings": "Ink Cloth Leggings",
   "item.splatcraft.ink_cloth_boots": "Ink Cloth Boots",
+
+  "item.splatcraft.ink_tank": "Ink Tank",
+  "item.splatcraft.ink_tank.empty": "Empty Ink Tank",
 
   "item.splatcraft.splatfest_band": "Splatfest Band",
 

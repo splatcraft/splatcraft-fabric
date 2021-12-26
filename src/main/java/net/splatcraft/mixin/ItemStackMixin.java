@@ -29,7 +29,7 @@ public abstract class ItemStackMixin implements Inkable {
         NbtCompound nbt = this.getItem() instanceof BlockItem
             ? this.getSubNbt(NBT_BLOCK_ENTITY_TAG)
             : this.getNbt();
-        if (nbt == null) return InkColors._DEFAULT;
+        if (nbt == null) return InkColors.getDefault();
         return InkColor.fromString(nbt.getString(NBT_INK_COLOR));
     }
 

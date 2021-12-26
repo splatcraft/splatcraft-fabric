@@ -60,6 +60,13 @@ public abstract class AbstractItemModelGenerator extends AbstractModelGenerator<
         return InheritingModelGen.wallInventory(name(item, "block/%ss", "_wall"));
     }
 
+    public ModelGen dyeable(Item item) {
+        return InheritingModelGen.generated(
+            name(item, "item/%s"),
+            name(item, "item/%s_overlay")
+        );
+    }
+
     public ModelGen spawnEgg() {
         return InheritingModelGen.inherit("item/template_spawn_egg");
     }
