@@ -246,6 +246,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             }
 
             // speed up/slow down speed conditionally
+            if (input.sneaking() && y < 0) y /= 1.5d;
             if (input.jumping()) y = Math.abs(y * 1.25d);
 
             // set velocity
