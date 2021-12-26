@@ -74,8 +74,8 @@ public class InkTankItem extends Item implements Wearable {
                     if (entity.age % 3 == 0) add++;
                     if (access.isInSquidForm() && access.isOnInk()) add += 2;
 
-                    int nu = containedInk + add;
-                    if (nu != containedInk && nu <= capacity) setContainedInk(stack, Math.min(containedInk + add, capacity));
+                    int nu = Math.min(containedInk + add, capacity);
+                    if (nu != containedInk) setContainedInk(stack, nu);
                 }
             }
         }
