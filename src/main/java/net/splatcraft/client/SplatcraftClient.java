@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
@@ -111,7 +112,12 @@ public class SplatcraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.ITEM.register( // inkable items
             (stack, tintIndex) -> {
-                return tintIndex == 0 ? Inkable.class.cast(stack).getInkColor().getDecimalColor() : 0xFFFFFF;
+                Inkable inkable = Inkable.class.cast(stack);
+                return tintIndex == 0
+                    ? stack.getItem() instanceof BlockItem
+                        ? inkable.getInkColor().getDecimalColor()
+                        : getDecimalColor(inkable.getInkColor())
+                    : 0xFFFFFF;
             },
             SplatcraftItems.INK_CLOTH_HELMET, SplatcraftItems.INK_CLOTH_CHESTPLATE,
             SplatcraftItems.INK_CLOTH_LEGGINGS, SplatcraftItems.INK_CLOTH_BOOTS,

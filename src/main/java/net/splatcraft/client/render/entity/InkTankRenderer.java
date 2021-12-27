@@ -20,8 +20,7 @@ import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 
-import static net.splatcraft.client.util.ClientUtil.entityRendererFactoryContext;
-import static net.splatcraft.client.util.ClientUtil.texture;
+import static net.splatcraft.client.util.ClientUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class InkTankRenderer {
@@ -42,7 +41,7 @@ public class InkTankRenderer {
         PlayerDataComponent data = entity instanceof PlayerEntity player ? PlayerDataComponent.get(player) : null;
         InkColor inkColor = data == null ? InkColors.getDefault() : data.getInkColor();
 
-        Vec3f color = inkColor.getVectorColor();
+        Vec3f color = getVectorColor(inkColor);
         this.render(TEXTURE, entity, stack, matrices, vertices, light, color.getX(), color.getY(), color.getZ());
         this.render(TEXTURE_OVERLAY, entity, stack, matrices, vertices, light);
     }
