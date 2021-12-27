@@ -4,6 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -66,6 +68,14 @@ public final class Events {
 
     public static ActionResult attackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
         return getInteractActionResult(player);
+    }
+
+    public static boolean beforeBlockBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        return canInteractWithWorld(player);
+    }
+
+    public static void onBlockBreakCanceled(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        if (!world.isClient) world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
     }
 
     public static ActionResult getInteractActionResult(PlayerEntity player) {

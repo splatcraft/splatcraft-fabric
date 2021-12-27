@@ -60,6 +60,8 @@ public class Splatcraft implements ModInitializer {
         UseEntityCallback.EVENT.register(Events::useEntity);
         AttackEntityCallback.EVENT.register(Events::attackEntity);
         AttackBlockCallback.EVENT.register(Events::attackBlock);
+        PlayerBlockBreakEvents.BEFORE.register(Events::beforeBlockBreak);
+        PlayerBlockBreakEvents.CANCELED.register(Events::onBlockBreakCanceled);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
 
