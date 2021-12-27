@@ -15,6 +15,10 @@ public class WeaponItem extends Item {
         super(settings);
     }
 
+    public float getMobility() {
+        return 1.0f;
+    }
+
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (entity instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());

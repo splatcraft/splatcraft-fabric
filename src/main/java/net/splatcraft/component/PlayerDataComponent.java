@@ -30,6 +30,7 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.LivingEntityInvoker;
 import net.splatcraft.mixin.client.ClientChunkManagerAccessor;
 import net.splatcraft.mixin.client.ClientChunkManagerClientChunkMapAccessor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Random;
@@ -39,7 +40,7 @@ import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
-    private final PlayerEntity player;
+    @NotNull private final PlayerEntity player;
 
     /**
      * Defines a player's ink color.
@@ -62,7 +63,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     private boolean hasSplatfestBand = false;
 
     @SuppressWarnings("unused")
-    public PlayerDataComponent(PlayerEntity player) {
+    public PlayerDataComponent(@NotNull PlayerEntity player) {
         this.player = player;
     }
 
@@ -132,6 +133,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
         if (squid) {
             this.player.checkFallFlying();
+            this.player.clearActiveItem();
             if (!this.player.getAbilities().flying) this.player.setSprinting(false);
         } else {
             // teleport up if inside block

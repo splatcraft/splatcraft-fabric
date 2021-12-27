@@ -7,6 +7,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,7 @@ import net.splatcraft.entity.*;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
+import net.splatcraft.item.WeaponItem;
 import net.splatcraft.util.SplatcraftConstants;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Final;
@@ -90,6 +92,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     public Optional<Float> getMovementSpeedM(float base) {
         if (((InkEntityAccess) this).canSubmergeInInk()) {
             return Optional.of(base * ((float) this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1));
+        }
+
+        if (this.isUsingItem()) {
+            ItemStack stack = this.getActiveItem();
+            if (!stack.isEmpty() && stack.getItem() instanceof WeaponItem weapon) {
+                float mobility =  weapon.getMobility();
+                return Optional.of(base / 0.2f * mobility);
+            }
         }
 
         return Optional.empty();
