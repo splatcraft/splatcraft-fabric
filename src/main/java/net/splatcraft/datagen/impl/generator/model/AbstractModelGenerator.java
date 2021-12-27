@@ -5,7 +5,7 @@ import net.minecraft.util.registry.Registry;
 import net.splatcraft.datagen.impl.generator.AbstractGenerator;
 
 @SuppressWarnings("ConstantConditions")
-public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<T, U> {
+public abstract class AbstractModelGenerator<T, U> extends AbstractGenerator<Identifier, U> {
     public AbstractModelGenerator(String modId) {
         super(modId);
     }

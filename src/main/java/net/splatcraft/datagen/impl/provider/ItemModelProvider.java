@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.splatcraft.datagen.ItemModelGenerator;
 import net.splatcraft.datagen.impl.DataType;
 import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
@@ -42,11 +41,8 @@ public class ItemModelProvider extends AbstractDataProvider<Supplier<AbstractIte
     public Map<Identifier, JsonElement> createFileMap() {
         Map<Identifier, JsonElement> map = Maps.newHashMap();
         for (Supplier<AbstractItemModelGenerator> generator : this.getGenerators()) {
-            generator.get().accept((item, modelGen) -> {
-                Identifier id = Registry.ITEM.getId(item);
-                if (map.put(id, modelGen.makeJson(id)) != null) {
-                    throw new IllegalStateException("Duplicate model " + id);
-                }
+            generator.get().accept((id, modelGen) -> {
+                if (map.put(id, modelGen.makeJson(id)) != null) throw new IllegalStateException("Duplicate model " + id);
             });
         }
         return map;

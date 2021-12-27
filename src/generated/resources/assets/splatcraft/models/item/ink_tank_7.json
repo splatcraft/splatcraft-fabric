@@ -1,0 +1,6 @@
+{
+  "parent": "splatcraft:item/ink_tank",
+  "textures": {
+    "layer0": "splatcraft:item/ink_tank_7"
+  }
+}

@@ -30,6 +30,7 @@ import net.splatcraft.client.render.entity.InkTankRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.InkTankItem;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
@@ -42,6 +43,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
+import static net.splatcraft.item.InkTankItem.getContainedInk;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
@@ -85,14 +87,26 @@ public class SplatcraftClient implements ClientModInitializer {
         LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.register(Events::allowCapeRender);
 
         // model predicates
-        modelPredicateUsing(SplatcraftItems.SPLAT_ROLLER);
+        modelPredicate("using",
+            (stack, world, entity, seed) -> {
+                return entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1 : 0;
+            }, SplatcraftItems.SPLAT_ROLLER
+        );
+        modelPredicate("contained_ink",
+            (stack, world, entity, seed) -> {
+                int containedInk = getContainedInk(stack);
+                int capacity = ((InkTankItem) stack.getItem()).getCapacity();
+                return (float) containedInk / capacity;
+            }, SplatcraftItems.INK_TANK
+        );
 
         // color providers
         ColorProviderRegistry.BLOCK.register( // inkable block entity colors
             (state, world, pos, tintIndex) -> world != null && world.getBlockEntity(pos) instanceof Inkable inkable
                 ? getDecimalColor(inkable.getInkColor())
                 : InkColors.getDefault().getDecimalColor(),
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL, SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL,
+            SplatcraftBlocks.INKED_BLOCK, SplatcraftBlocks.GLOWING_INKED_BLOCK
         );
 
         ColorProviderRegistry.ITEM.register( // inkable items
@@ -125,16 +139,9 @@ public class SplatcraftClient implements ClientModInitializer {
         LOGGER.info("Initialized {}-client-dev", Splatcraft.MOD_NAME);
     }
 
-    private static void modelPredicate(Item item, String id, UnclampedModelPredicateProvider provider) {
-        FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
-    }
-
-    private static void modelPredicateUsing(Item... items) {
+    private static void modelPredicate(String id, UnclampedModelPredicateProvider provider, Item... items) {
         for (Item item : items) {
-            modelPredicate(
-                item, "using",
-                (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1 : 0
-            );
+            FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
         }
     }
 }

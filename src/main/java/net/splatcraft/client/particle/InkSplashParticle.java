@@ -67,6 +67,7 @@ public class InkSplashParticle extends RainSplashParticle {
         return this.isInvisible() ? 0.0f : this.baseScale;
     }
 
+    @Override
     public void setSpriteForAge(SpriteProvider spriteProvider) {
         if (!this.dead) this.setSprite(spriteProvider.getSprite(Math.min(this.spriteAge, MAX_SPRITE_AGE), MAX_SPRITE_AGE));
     }

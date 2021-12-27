@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "splatcraft:item/ink_tank",
+    "layer1": "splatcraft:item/ink_tank_overlay"
+  },
+  "overrides": [
+    { "predicate": { "splatcraft:contained_ink": 0.01 }, "model": "splatcraft:item/ink_tank_1" },
+    { "predicate": { "splatcraft:contained_ink": 0.28 }, "model": "splatcraft:item/ink_tank_2" },
+    { "predicate": { "splatcraft:contained_ink": 0.42 }, "model": "splatcraft:item/ink_tank_3" },
+    { "predicate": { "splatcraft:contained_ink": 0.57 }, "model": "splatcraft:item/ink_tank_4" },
+    { "predicate": { "splatcraft:contained_ink": 0.71 }, "model": "splatcraft:item/ink_tank_5" },
+    { "predicate": { "splatcraft:contained_ink": 0.85 }, "model": "splatcraft:item/ink_tank_6" },
+    { "predicate": { "splatcraft:contained_ink": 1.00 }, "model": "splatcraft:item/ink_tank_7" }
+  ]
+}

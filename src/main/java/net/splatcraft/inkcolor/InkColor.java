@@ -70,6 +70,7 @@ public class InkColor implements Identifiable {
      *         If not registered, it will return the
      *         default.
      */
+    @Override
     public Identifier getId() {
         return TO_IDENTIFIER.apply(this);
     }

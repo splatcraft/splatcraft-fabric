@@ -40,10 +40,8 @@ import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMEN
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess {
     @Shadow @Final private PlayerAbilities abilities;
 
-    @Shadow public abstract Text getDisplayName();
     @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
     @Shadow public abstract void stopFallFlying();
-    @Shadow public abstract float getMovementSpeed();
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);

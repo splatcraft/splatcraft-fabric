@@ -2,6 +2,7 @@ package net.splatcraft.datagen.impl.provider;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
+import net.minecraft.block.Block;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Identifier;
@@ -49,11 +50,9 @@ public class StateModelProvider extends AbstractDataProvider<Supplier<AbstractSt
     public Map<Identifier, JsonElement> createFileMap() {
         Map<Identifier, JsonElement> map = Maps.newHashMap();
         for (Supplier<AbstractStateModelGenerator> generator : this.getGenerators()) {
-            generator.get().accept((block, stateGen) -> {
-                Identifier id = Registry.BLOCK.getId(block);
-                if (map.put(id, stateGen.makeJson(id, block)) != null) {
-                    throw new IllegalStateException("Duplicate state " + id);
-                }
+            generator.get().accept((id, stateGen) -> {
+                Block block = Registry.BLOCK.get(id);
+                if (map.put(id, stateGen.makeJson(id, block)) != null) throw new IllegalStateException("Duplicate state " + id);
             });
         }
         return map;

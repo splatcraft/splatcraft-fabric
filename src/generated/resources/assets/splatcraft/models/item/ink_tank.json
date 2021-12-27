@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "splatcraft:item/ink_tank",
-    "layer1": "splatcraft:item/ink_tank_overlay"
-  }
-}

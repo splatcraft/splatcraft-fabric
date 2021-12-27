@@ -24,11 +24,16 @@ public abstract class AbstractItemModelGenerator extends AbstractModelGenerator<
     public void add(ItemConvertible provider, Function<Item, ModelGen> factory) {
         Item item = provider.asItem();
         ModelGen gen = factory.apply(item);
-        this.map.put(item, gen);
+        this.map.put(Registry.ITEM.getId(item), gen);
+    }
+
+    public void add(ItemConvertible provider, Function<Item, Identifier> id, Function<Item, ModelGen> factory) {
+        Item item = provider.asItem();
+        this.add(id.apply(item), factory.apply(item));
     }
 
     public void block(Block block) {
-        this.add(block.asItem(), InheritingModelGen.inherit(name(block.asItem(), "block/%s")));
+        this.add(Registry.BLOCK.getId(block), InheritingModelGen.inherit(name(block.asItem(), "block/%s")));
     }
 
     public void generated(Item item) {

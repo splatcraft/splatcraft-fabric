@@ -30,7 +30,7 @@ public abstract class AbstractDataProvider<T> implements DataProvider {
         this.root = root;
     }
 
-    public abstract String getName();
+    @Override public abstract String getName();
     public abstract String getFolder();
     public abstract DataType getDataType();
 

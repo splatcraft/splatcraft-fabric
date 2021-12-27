@@ -19,11 +19,11 @@ public abstract class AbstractStateModelGenerator extends AbstractModelGenerator
     }
 
     public void add(Block block, Function<Block, StateGen> factory) {
-        add(block, factory.apply(block));
+        this.add(Registry.BLOCK.getId(block), factory.apply(block));
     }
 
     public void add(Block block) {
-        add(block, this::cubeAll);
+        this.add(block, this::cubeAll);
     }
 
     public StateGen empty(Block block) {

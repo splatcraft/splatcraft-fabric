@@ -76,7 +76,7 @@ dependencies {
   // dependencies
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-  String            cardinalComponents = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
+  String            cardinalComponents       = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
   String            cardinalComponentsBase   = cardinalComponents.formatted("base")
   modImplementation cardinalComponentsBase
   include           cardinalComponentsBase
