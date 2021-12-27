@@ -22,10 +22,7 @@ public class InkableBlockItem extends BlockItem {
                 Inkable.class.cast(stack).setInkColor(inkColor);
                 stacks.add(stack);
             }
-            return;
-        }
-
-        super.appendStacks(group, stacks);
+        } else super.appendStacks(group, stacks);
     }
 
     @SuppressWarnings("ConstantConditions")

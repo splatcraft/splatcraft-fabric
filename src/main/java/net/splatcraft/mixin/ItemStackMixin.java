@@ -36,12 +36,23 @@ public abstract class ItemStackMixin implements Inkable {
 
     @Override
     public boolean setInkColor(InkColor inkColor) {
-        if (inkColor.equals(this.getInkColor())) return false;
+        if (inkColor.equals(this.getInkColor()) && hasInkColor()) return false;
         NbtCompound nbt = this.getItem() instanceof BlockItem item && item.getBlock() instanceof BlockWithEntity
             ? this.getOrCreateSubNbt(NBT_BLOCK_ENTITY_TAG)
             : this.getOrCreateNbt();
         nbt.putString(NBT_INK_COLOR, inkColor.getId().toString());
         return true;
+    }
+
+    @Override
+    @SuppressWarnings("ConstantConditions")
+    public boolean hasInkColor() {
+        try {
+            return this.getItem() instanceof BlockItem item && item.getBlock() instanceof BlockWithEntity
+                ? this.getSubNbt(NBT_BLOCK_ENTITY_TAG).contains(NBT_INK_COLOR)
+                : this.getOrCreateNbt().contains(NBT_INK_COLOR);
+        } catch (NullPointerException ignored) {}
+        return false;
     }
 
     @Override

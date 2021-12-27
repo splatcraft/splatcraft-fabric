@@ -4,11 +4,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
+import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,5 +39,12 @@ public class InkableBlock extends BlockWithEntity {
         ItemStack stack = super.getPickStack(world, pos, state);
         if (world.getBlockEntity(pos) instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
         return stack;
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        ItemStack stack = new ItemStack(this);
+        Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
+        stacks.add(stack);
     }
 }

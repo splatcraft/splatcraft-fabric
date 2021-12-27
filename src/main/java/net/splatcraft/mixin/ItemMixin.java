@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -25,16 +26,25 @@ import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR;
 
 @Mixin(Item.class)
 public abstract class ItemMixin implements ItemConvertible {
-    // add ink color tooltip to items with the tag
-    // does not apply to blocks, as their translation key will most likely be changed for ink color
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     private void onAppendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx, CallbackInfo ci) {
+        // add ink color tooltip to items with the tag
+        // does not apply to blocks, as their translation key will most likely be changed for ink color
         NbtCompound nbt = stack.getNbt();
         if (nbt != null && nbt.contains(NBT_INK_COLOR)) {
             Inkable inkable = Inkable.class.cast(stack);
             InkColor inkColor = inkable.getInkColor();
             Text colorText = new TranslatableText(inkColor.getTranslationKey()).setStyle(Style.EMPTY.withColor(inkColor.getDecimalColor()));
             tooltip.add(new TranslatableText(T_INK_COLOR, colorText).formatted(Formatting.GRAY));
+        }
+
+        // add technical ink color to any item
+        if (ctx.isAdvanced()) {
+            Inkable inkable = Inkable.class.cast(stack);
+            if (inkable.hasInkColor()) {
+                InkColor inkColor = inkable.getInkColor();
+                tooltip.add(new LiteralText(inkColor.toString()).formatted(Formatting.DARK_GRAY));
+            }
         }
     }
 }

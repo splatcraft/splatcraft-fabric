@@ -19,6 +19,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,6 +122,10 @@ public class InkTankItem extends Item implements Wearable {
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) stacks.add(setContainedInk(new ItemStack(this), 0));
+        if (this.isIn(group)) {
+            ItemStack stack = setContainedInk(new ItemStack(this), 0);
+            Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
+            stacks.add(stack);
+        }
     }
 }

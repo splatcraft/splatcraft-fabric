@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEntityAccess {
     @Shadow public abstract ItemStack getStack();
@@ -31,19 +32,17 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         super(type, world);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public InkColor getInkColor() {
         return Inkable.class.cast(this.getStack()).getInkColor();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public boolean setInkColor(InkColor inkColor) {
         ItemStack stack = this.getStack();
         Inkable inkable = Inkable.class.cast(stack);
 
-        if (inkColor.equals(inkable.getInkColor())) return false;
+        if (inkColor.equals(inkable.getInkColor()) && hasInkColor()) return false;
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
             inkable.setInkColor(inkColor);
 
@@ -58,6 +57,11 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         }
 
         return false;
+    }
+
+    @Override
+    public boolean hasInkColor() {
+        return Inkable.class.cast(this.getStack()).hasInkColor();
     }
 
     @Override
