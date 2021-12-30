@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -90,19 +91,19 @@ public class InkTankItem extends Item implements Wearable {
                 NbtCompound nbt = stack.getNbt();
                 if (nbt == null || !nbt.contains(NBT_CONTAINED_INK)) setContainedInk(stack, capacity);
             } else {
-                if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
-                    InkEntityAccess access = ((InkEntityAccess) entity);
-                    float nu = Math.min(
-                        containedInk + (
-                            access.isSubmerged()
-                                ? (int) (100f / (20 * 3.253f)) // splatoon-accurate calculation
-                                : entity.age % 10 == 0
-                                    ? 1
-                                    : 0
-                        ),
-                        capacity
-                    );
-                    if (nu != containedInk) setContainedInk(stack, nu);
+                if (world.getGameRules().getBoolean(SplatcraftGameRules.INK_TANK_INK_REGENERATION)) {
+                    if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
+                        float nu = Math.min(
+                            containedInk + (
+                                ((InkEntityAccess) entity).isSubmerged()
+                                    ? (int) (100f / (20 * 3.253f)) // splatoon-accurate calculation
+                                    : entity.age % 10 == 0
+                                        ? 1
+                                        : 0
+                            ), capacity
+                        );
+                        if (nu != containedInk) setContainedInk(stack, nu);
+                    }
                 }
             }
         }

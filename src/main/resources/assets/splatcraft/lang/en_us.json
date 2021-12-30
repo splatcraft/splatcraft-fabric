@@ -20,6 +20,8 @@
   "gamerule.splatcraft:hurtInkSquidsInWater.description": "Whether or not to hurt Ink Squids or players in squid form when in water.",
   "gamerule.splatcraft:hurtInkSquidsOnEnemyInk": "Hurt Ink Squids On Enemy Ink",
   "gamerule.splatcraft:hurtInkSquidsOnEnemyInk.description": "Whether or not to hurt Ink Squids or players in squid form when on enemy ink.",
+  "gamerule.splatcraft:inkTankInkRegeneration": "Ink Tank Ink Regeneration",
+  "gamerule.splatcraft:inkTankInkRegeneration.description": "Whether or not ink tanks ambiently regenerate their ink.",
 
   "config.splatcraft.category.client": "Client",
   "config.splatcraft.change_squid_form_key_behavior": "Change Squid Form Key Behavior",
