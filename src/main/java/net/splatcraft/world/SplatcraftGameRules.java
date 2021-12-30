@@ -8,7 +8,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 
-import static net.minecraft.world.GameRules.*;
+import static net.minecraft.world.GameRules.BooleanRule;
+import static net.minecraft.world.GameRules.Key;
+import static net.minecraft.world.GameRules.Rule;
+import static net.minecraft.world.GameRules.Type;
 
 public class SplatcraftGameRules {
     public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
@@ -21,6 +24,7 @@ public class SplatcraftGameRules {
     public static final Key<BooleanRule> INKWELL_CHANGES_INK_COLOR = register("inkwellChangesInkColor", GameRuleFactory.createBooleanRule(false));
     public static final Key<BooleanRule> HURT_INK_SQUIDS_IN_WATER = register("hurtInkSquidsInWater", GameRuleFactory.createBooleanRule(true));
     public static final Key<BooleanRule> HURT_INK_SQUIDS_ON_ENEMY_INK = register("hurtInkSquidsOnEnemyInk", GameRuleFactory.createBooleanRule(true));
+    public static final Key<BooleanRule> RESTORE_INK = register("restoreInk", GameRuleFactory.createBooleanRule(true));
 
     private static <T extends Rule<T>> Key<T> register(String id, Type<T> type) {
         return GameRuleRegistry.register("%s:%s".formatted(Splatcraft.MOD_ID, id), SplatcraftGameRules.CATEGORY, type);

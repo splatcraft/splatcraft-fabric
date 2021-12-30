@@ -1,12 +1,17 @@
 package net.splatcraft.item;
 
+import java.util.List;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Wearable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -21,9 +26,8 @@ import net.minecraft.world.World;
 import net.splatcraft.entity.InkEntityAccess;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static net.splatcraft.util.SplatcraftConstants.NBT_CONTAINED_INK;
 import static net.splatcraft.util.SplatcraftConstants.T_CONTAINED_INK;
@@ -80,7 +84,7 @@ public class InkTankItem extends Item implements Wearable {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!entity.world.isClient && entity instanceof Inkable inkable) {
+        if (!entity.world.isClient && entity instanceof Inkable inkable && world.getGameRules().getBoolean(SplatcraftGameRules.RESTORE_INK)) {
             Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
 
             float containedInk = getContainedInk(stack);
