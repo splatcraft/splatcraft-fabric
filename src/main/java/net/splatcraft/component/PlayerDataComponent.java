@@ -176,7 +176,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
             Vec3d pos = this.player.getPos();
             Random random = this.player.getRandom();
-            for (int i = 0; i < 15; i++) {
+            for (int i = 0; i < (submerged ? 12 : 4); i++) {
                 double x = (random.nextDouble() - 0.5d) / 1.5d;
                 double z = (random.nextDouble() - 0.5d) / 1.5d;
                 inkSplash(this.player.world, (Inkable) this.player, pos.add(x, 0.0d, z), 1.0f);
