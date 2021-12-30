@@ -57,6 +57,8 @@
   "command.splatcraft:inkcolor.single.success": "Changed the ink color of %s to %s",
   "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s inkables to %s",
 
+  "text.splatcraft.not_installed_on_server.line1": "Splatcraft is not present",
+  "text.splatcraft.not_installed_on_server.line2": "on the connected server",
   "text.splatcraft.low_ink": "Low Ink!",
   "text.splatcraft.contained_ink": "Ink: %s / %s",
   "text.splatcraft.reloaded_config": "Reloaded config: %s",

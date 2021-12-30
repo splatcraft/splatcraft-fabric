@@ -36,6 +36,9 @@ public class SplatcraftConstants {
     public static final Identifier DEFAULT_INK_COLOR_IDENTIFIER = new Identifier(DyeColor.WHITE.getName());
 
     public static final String T_LOW_INK = text("low_ink");
+    public static final String T_NOT_INSTALLED_ON_SERVER = text("not_installed_on_server.line");
+    public static final String T_NOT_INSTALLED_ON_SERVER_1 = T_NOT_INSTALLED_ON_SERVER + 1;
+    public static final String T_NOT_INSTALLED_ON_SERVER_2 = T_NOT_INSTALLED_ON_SERVER + 2;
     public static final String T_CONTAINED_INK = text("contained_ink");
     public static final String T_RELOADED_CONFIG = text("reloaded_config");
     public static final String T_INK_COLOR = text("ink_color");

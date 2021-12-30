@@ -2,6 +2,7 @@ package net.splatcraft.client.network;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
@@ -14,13 +15,24 @@ import static net.splatcraft.network.PacketIdentifiers.*;
 
 @Environment(EnvType.CLIENT)
 public class NetworkingClient {
+    private static boolean splatcraftPresentOnServer = false;
+
     static {
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> NetworkingClient.splatcraftPresentOnServer = false);
+
+        // packet receivers
         ClientPlayNetworking.registerGlobalReceiver(KEY_CHANGE_SQUID_FORM_RESPONSE, (client, handler, buf, responseSender) -> {
             boolean squid = buf.readBoolean();
 
             PlayerDataComponent data = PlayerDataComponent.get(client.player);
             data.setSquid(squid);
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(S2C_INIT, (client, handler, buf, responseSender) -> NetworkingClient.splatcraftPresentOnServer = true);
+    }
+
+    public static boolean isSplatcraftPresentOnServer() {
+        return NetworkingClient.splatcraftPresentOnServer;
     }
 
     public static void keyChangeSquidForm(boolean squid) {

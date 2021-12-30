@@ -35,6 +35,7 @@ import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
+import static net.splatcraft.network.NetworkingCommon.s2cInit;
 import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
 
 @SuppressWarnings("unused")
@@ -43,6 +44,10 @@ public final class Events {
 
     public static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
         InkColorCommand.register(dispatcher);
+    }
+
+    public static void playerInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
+        s2cInit(handler.player);
     }
 
     public static void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

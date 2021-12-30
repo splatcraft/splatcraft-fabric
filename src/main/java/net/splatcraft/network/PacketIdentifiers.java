@@ -19,6 +19,11 @@ public class PacketIdentifiers {
      */
     public static final Identifier CLIENT_INPUT = create("client_input"); // C2S
 
+    /**
+     * A packet for notifying the client that Splatcraft is installed on the server.
+     */
+    public static final Identifier S2C_INIT = create("s2c_init"); // S2C
+
     private static Identifier create(String id) {
         return new Identifier(Splatcraft.MOD_ID, id);
     }

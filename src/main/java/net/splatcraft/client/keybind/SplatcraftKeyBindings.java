@@ -6,7 +6,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
@@ -15,7 +18,10 @@ import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.InkEntityAccess;
 import org.lwjgl.glfw.GLFW;
 
+import static net.splatcraft.client.network.NetworkingClient.isSplatcraftPresentOnServer;
 import static net.splatcraft.client.network.NetworkingClient.keyChangeSquidForm;
+import static net.splatcraft.util.SplatcraftConstants.T_NOT_INSTALLED_ON_SERVER_1;
+import static net.splatcraft.util.SplatcraftConstants.T_NOT_INSTALLED_ON_SERVER_2;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftKeyBindings {
@@ -37,18 +43,28 @@ public class SplatcraftKeyBindings {
 
                     //---
 
-                    PlayerDataComponent data = PlayerDataComponent.get(player);
-                    boolean wasSquid = data.isSquid();
+                    if (isSplatcraftPresentOnServer()) {
+                        PlayerDataComponent data = PlayerDataComponent.get(player);
+                        boolean wasSquid = data.isSquid();
 
-                    // squid form
-                    boolean nowSquid = wasSquid;
-                    switch (ClientConfig.INSTANCE.changeSquidKeyBehavior.getValue()) {
-                        case TOGGLE -> nowSquid = CHANGE_SQUID_FORM.wasToggled() ? !wasSquid : nowSquid;
-                        case HOLD -> nowSquid = CHANGE_SQUID_FORM.isPressed();
+                        // squid form
+                        boolean nowSquid = wasSquid;
+                        switch (ClientConfig.INSTANCE.changeSquidKeyBehavior.getValue()) {
+                            case TOGGLE -> nowSquid = CHANGE_SQUID_FORM.wasToggled() ? !wasSquid : nowSquid;
+                            case HOLD -> nowSquid = CHANGE_SQUID_FORM.isPressed();
+                        }
+
+                        if (nowSquid) nowSquid = ((InkEntityAccess) player).canEnterSquidForm();
+                        if (wasSquid != nowSquid) keyChangeSquidForm(nowSquid);
+                    } else {
+                        if (CHANGE_SQUID_FORM.wasPressed()) {
+                            SystemToast.add(
+                                client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
+                                new TranslatableText(T_NOT_INSTALLED_ON_SERVER_1),
+                                new TranslatableText(T_NOT_INSTALLED_ON_SERVER_2).setStyle(Style.EMPTY.withColor(0xFCFC00))
+                            );
+                        }
                     }
-
-                    if (nowSquid) nowSquid = ((InkEntityAccess) player).canEnterSquidForm();
-                    if (wasSquid != nowSquid) keyChangeSquidForm(nowSquid);
                 }
             }
         });
