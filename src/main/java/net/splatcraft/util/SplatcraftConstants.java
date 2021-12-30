@@ -16,6 +16,8 @@ public class SplatcraftConstants {
         return submerged ? SQUID_FORM_SUBMERGED_DIMENSIONS.height / 2.0f : SQUID_FORM_DIMENSIONS.height / 1.5f;
     }
 
+    public static final int MAX_INK_OVERLAYS = 3;
+
     public static final String NBT_INK_COLOR = "InkColor";
     public static final String NBT_INK_TYPE = "InkType";
     public static final String NBT_SIZE = "Size";

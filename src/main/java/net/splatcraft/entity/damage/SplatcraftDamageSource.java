@@ -7,11 +7,13 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 
 public class SplatcraftDamageSource extends DamageSource {
+    public static final String ID_INKED = name("inked");
+
     public static final DamageSource INKED_ENVIRONMENT = new SplatcraftDamageSource("inked_environment").setBypassesArmor();
     public static final DamageSource OUT_OF_ARENA = new SplatcraftDamageSource("out_of_arena").setBypassesArmor();
 
     public static DamageSource inked(LivingEntity attacker) {
-        return new EntityDamageSource(name("inked"), attacker);
+        return new EntityDamageSource(ID_INKED, attacker);
     }
 
     public SplatcraftDamageSource(String name) {
