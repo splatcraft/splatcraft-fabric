@@ -30,7 +30,7 @@ public class EntityTypeMixin<T extends Entity> {
                 BlockPos hitPos = new BlockPos(hit.getPos());
                 Direction side = hit.getSide();
                 BlockPos pos = side != Direction.DOWN && side != Direction.NORTH ? hitPos.offset(side, -1) : hitPos;
-                if (world.getBlockEntity(pos) instanceof Inkable inkable) entity.setInkColor(inkable.getInkColor());
+                if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.copyInkableTo(entity);
             }
         }
     }

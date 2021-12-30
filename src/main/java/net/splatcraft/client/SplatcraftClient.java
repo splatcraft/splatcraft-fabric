@@ -26,6 +26,7 @@ import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.client.particle.InkSplashParticle;
 import net.splatcraft.client.particle.InkSquidSoulParticle;
 import net.splatcraft.client.render.block.InkedBlockEntityRenderer;
+import net.splatcraft.client.render.entity.InkProjectileEntityRenderer;
 import net.splatcraft.client.render.entity.InkSquidEntityModelRenderer;
 import net.splatcraft.client.render.entity.InkTankRenderer;
 import net.splatcraft.entity.SplatcraftEntities;
@@ -79,6 +80,7 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // entities
         EntityRendererRegistry.register(SplatcraftEntities.INK_SQUID, InkSquidEntityModelRenderer::new);
+        EntityRendererRegistry.register(SplatcraftEntities.INK_PROJECTILE, InkProjectileEntityRenderer::new);
 
         // block entities
         BlockEntityRendererRegistry.register(SplatcraftBlockEntities.INKED_BLOCK, InkedBlockEntityRenderer::new);
@@ -95,9 +97,9 @@ public class SplatcraftClient implements ClientModInitializer {
         );
         modelPredicate("contained_ink",
             (stack, world, entity, seed) -> {
-                int containedInk = getContainedInk(stack);
-                int capacity = ((InkTankItem) stack.getItem()).getCapacity();
-                return (float) containedInk / capacity;
+                float containedInk = getContainedInk(stack);
+                float capacity = ((InkTankItem) stack.getItem()).getCapacity();
+                return containedInk / capacity;
             }, SplatcraftItems.INK_TANK
         );
 
@@ -119,11 +121,13 @@ public class SplatcraftClient implements ClientModInitializer {
                         : getDecimalColor(inkable.getInkColor())
                     : 0xFFFFFF;
             },
+            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL,
+
             SplatcraftItems.INK_CLOTH_HELMET, SplatcraftItems.INK_CLOTH_CHESTPLATE,
             SplatcraftItems.INK_CLOTH_LEGGINGS, SplatcraftItems.INK_CLOTH_BOOTS,
-            SplatcraftItems.INK_TANK, SplatcraftItems.SPLAT_ROLLER,
+            SplatcraftItems.INK_TANK,
 
-            SplatcraftBlocks.CANVAS, SplatcraftBlocks.INKWELL
+            SplatcraftItems.SPLAT_ROLLER, SplatcraftItems.SPLATTERSHOT
         );
 
         // block markers

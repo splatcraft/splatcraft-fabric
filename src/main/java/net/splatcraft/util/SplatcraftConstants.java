@@ -17,6 +17,9 @@ public class SplatcraftConstants {
     }
 
     public static final String NBT_INK_COLOR = "InkColor";
+    public static final String NBT_INK_TYPE = "InkType";
+    public static final String NBT_SIZE = "Size";
+    public static final String NBT_DROPS_INK = "DropsInk";
     public static final String NBT_IS_SQUID = "Squid";
     public static final String NBT_IS_SUBMERGED = "Submerged";
     public static final String NBT_HAS_SPLATFEST_BAND = "HasSplatfestBand";
@@ -32,26 +35,30 @@ public class SplatcraftConstants {
 
     public static final Identifier DEFAULT_INK_COLOR_IDENTIFIER = new Identifier(DyeColor.WHITE.getName());
 
-    public static final String T_CONTAINED_INK = "text.%s.contained_ink".formatted(Splatcraft.MOD_ID);
-    public static final String T_RELOADED_CONFIG = "text.%s.reloaded_config".formatted(Splatcraft.MOD_ID);
-    public static final String T_RELOADED_CONFIG_FAILED = "%s.failed".formatted(T_RELOADED_CONFIG);
-    public static final String T_INK_COLOR = "text.%s.ink_color".formatted(Splatcraft.MOD_ID);
-    public static final String T_INK_COLOR_TEXT_DISPLAY = "text.%s.ink_color.icon".formatted(Splatcraft.MOD_ID);
-    public static final String T_BLOCK_ENTITY_DESCRIPTION = "text.%s.block_entity_description".formatted(Splatcraft.MOD_ID);
+    public static final String T_LOW_INK = text("low_ink");
+    public static final String T_CONTAINED_INK = text("contained_ink");
+    public static final String T_RELOADED_CONFIG = text("reloaded_config");
+    public static final String T_INK_COLOR = text("ink_color");
+    public static final String T_INK_COLOR_TEXT_DISPLAY = text("ink_color.icon");
+    public static final String T_BLOCK_ENTITY_DESCRIPTION = text("block_entity_description");
+
     public static final String T_COMMAND_ERROR_INK_COLOR_NOT_FOUND = cmdInkColor("notFound");
     public static final String T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED = cmdInkColor("tagDisallowed");
-    public static final String T_COMMAND_ERROR_NO_ENTITIES_AFFECTED = cmdEntity("notAffected");
+    public static final String T_COMMAND_ERROR_NO_ENTITIES_AFFECTED = cmdArg("entity.notAffected");
+    public static final String T_COMMAND_ERROR_NO_INKABLES_AFFECTED = cmdArg("inkable.notAffected");
     public static final String T_COMMAND_INK_COLOR_GET = cmd("%s.get".formatted(COMMAND_INK_COLOR));
     public static final String T_COMMAND_INK_COLOR_SUCCESS_SINGLE = cmdSuc("%s.single".formatted(COMMAND_INK_COLOR));
     public static final String T_COMMAND_INK_COLOR_SUCCESS_MULTIPLE = cmdSuc("%s.multiple".formatted(COMMAND_INK_COLOR));
+
+    private static String text(String id) { return "text.%s.%s".formatted(Splatcraft.MOD_ID, id); }
 
     private static String cmd         (String s) { return         "command.%s"     .formatted(s);                     }
     private static String cmdSuc      (String c) { return cmd   ( "%s.success"     .formatted(c));                    }
     private static String cmdErr      (String c) { return cmd   ( "%s.error"       .formatted(c));                    }
     private static String cmdArg      (String s) { return cmd   ( "%s.argument.%s" .formatted(Splatcraft.MOD_ID, s)); }
     private static String cmdInkColor (String s) { return cmdArg( "ink_color.%s"   .formatted(s));                    }
-    private static String cmdEntity   (String s) { return cmdArg( "entity.%s"      .formatted(s));                    }
 
     public static final DynamicCommandExceptionType EXCEPTION_INK_COLOR_NOT_FOUND = new DynamicCommandExceptionType(c -> new TranslatableText(T_COMMAND_ERROR_INK_COLOR_NOT_FOUND, c));
     public static final SimpleCommandExceptionType EXCEPTION_NO_ENTITIES_AFFECTED = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_NO_ENTITIES_AFFECTED));
+    public static final SimpleCommandExceptionType EXCEPTION_NO_INKABLES_AFFECTED = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_NO_INKABLES_AFFECTED));
 }

@@ -104,7 +104,7 @@ public class InkColorCommand {
             }
         }
 
-        if (affectedInkables.isEmpty()) throw EXCEPTION_NO_ENTITIES_AFFECTED.create();
+        if (affectedInkables.isEmpty()) throw EXCEPTION_NO_INKABLES_AFFECTED.create();
 
         int affected = affectedInkables.size();
 

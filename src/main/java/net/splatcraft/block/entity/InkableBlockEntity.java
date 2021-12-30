@@ -16,16 +16,14 @@ import net.minecraft.world.level.ServerWorldProperties;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
-import static net.splatcraft.util.SplatcraftConstants.T_BLOCK_ENTITY_DESCRIPTION;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkableBlockEntity extends BlockEntity implements Inkable {
-    /**
-     * Defines a block's ink color.
-     */
     private InkColor inkColor = InkColors.getDefault();
+    private InkType inkType = InkType.NORMAL;
 
     public InkableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -41,6 +39,18 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
         if (this.inkColor.equals(inkColor)) return false;
         this.inkColor = inkColor;
         this.sync();
+        return true;
+    }
+
+    @Override
+    public InkType getInkType() {
+        return this.inkType;
+    }
+
+    @Override
+    public boolean setInkType(InkType inkType) {
+        if (this.getInkType().equals(inkType)) return false;
+        this.inkType = inkType;
         return true;
     }
 
@@ -61,11 +71,13 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
     @Override
     protected void writeNbt(NbtCompound nbt) {
         nbt.putString(NBT_INK_COLOR, InkColor.toString(this.inkColor));
+        nbt.putString(NBT_INK_TYPE, this.inkType.toString());
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
         this.setInkColor(InkColor.fromString(nbt.getString(NBT_INK_COLOR)));
+        this.setInkType(InkType.safeValueOf(nbt.getString(NBT_INK_TYPE)));
     }
 
     @Override

@@ -29,30 +29,52 @@ import static net.splatcraft.util.SplatcraftConstants.NBT_CONTAINED_INK;
 import static net.splatcraft.util.SplatcraftConstants.T_CONTAINED_INK;
 
 public class InkTankItem extends Item implements Wearable {
-    private final int capacity;
+    private final float capacity;
 
-    public InkTankItem(int capacity, Settings settings) {
+    public InkTankItem(float capacity, Settings settings) {
         super(settings);
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
 
         this.capacity = capacity;
     }
 
-    public int getCapacity() {
+    public float getCapacity() {
         return this.capacity;
     }
 
-    public static int getContainedInk(ItemStack stack) {
+    public static float getContainedInk(ItemStack stack) {
         if (!(stack.getItem() instanceof InkTankItem item)) return 0;
         NbtCompound nbt = stack.getNbt();
-        if (nbt != null && nbt.contains(NBT_CONTAINED_INK)) return nbt.getInt(NBT_CONTAINED_INK);
+        if (nbt != null && nbt.contains(NBT_CONTAINED_INK)) return nbt.getFloat(NBT_CONTAINED_INK);
         return item.getCapacity();
     }
 
-    public static ItemStack setContainedInk(ItemStack stack, int containedInk) {
+    public static ItemStack setContainedInk(ItemStack stack, float containedInk) {
         if (!(stack.getItem() instanceof InkTankItem)) return stack;
-        stack.getOrCreateNbt().putInt(NBT_CONTAINED_INK, containedInk);
+        int accuracy = 1000;
+        stack.getOrCreateNbt().putFloat(NBT_CONTAINED_INK, (float) ((int) (containedInk * accuracy)) / accuracy); // round to 3 decimal places
         return stack;
+    }
+
+    public static boolean takeContainedInk(ItemStack stack, float amount) {
+        if (!(stack.getItem() instanceof InkTankItem)) return false;
+
+        float containedInk = getContainedInk(stack);
+        float nu = containedInk - amount;
+
+        if (nu < 0) return false;
+        setContainedInk(stack, nu);
+        return true;
+    }
+
+    public static boolean takeContainedInk(PlayerEntity player, float percentage) {
+        if (player.isCreative()) return true;
+        if (player.isSpectator()) return false;
+
+        ItemStack stack = player.getEquippedStack(EquipmentSlot.CHEST);
+        if (!(stack.getItem() instanceof InkTankItem item)) return false;
+        float capacity = item.getCapacity();
+        return takeContainedInk(stack, capacity * (percentage / 100));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -61,16 +83,16 @@ public class InkTankItem extends Item implements Wearable {
         if (!entity.world.isClient && entity instanceof Inkable inkable) {
             Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
 
-            int containedInk = getContainedInk(stack);
-            int capacity = this.getCapacity();
+            float containedInk = getContainedInk(stack);
+            float capacity = this.getCapacity();
 
             if (containedInk == capacity) {
                 NbtCompound nbt = stack.getNbt();
                 if (nbt == null || !nbt.contains(NBT_CONTAINED_INK)) setContainedInk(stack, capacity);
             } else {
-                if (!(entity instanceof PlayerEntity player) || player.getEquippedStack(EquipmentSlot.CHEST) == stack) {
+                if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
                     InkEntityAccess access = ((InkEntityAccess) entity);
-                    int nu = Math.min(
+                    float nu = Math.min(
                         containedInk + (
                             access.isSubmerged()
                                 ? (int) (100f / (20 * 3.253f)) // splatoon-accurate calculation
@@ -111,13 +133,13 @@ public class InkTankItem extends Item implements Wearable {
     @Override
     public String getTranslationKey(ItemStack stack) {
         String key = super.getTranslationKey(stack);
-        return getContainedInk(stack) == 0 ? "%s.empty".formatted(key) : key;
+        return getContainedInk(stack) <= 1 ? "%s.empty".formatted(key) : key;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
         super.appendTooltip(stack, world, tooltip, ctx);
-        tooltip.add(new TranslatableText(T_CONTAINED_INK, getContainedInk(stack), this.getCapacity()).formatted(Formatting.GRAY));
+        tooltip.add(new TranslatableText(T_CONTAINED_INK, (int) getContainedInk(stack), (int) this.getCapacity()).formatted(Formatting.GRAY));
     }
 
     @Override

@@ -15,6 +15,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkType;
+import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.InkableBlockItem;
 import net.splatcraft.item.SplatcraftItemGroups;
 import net.splatcraft.sound.SplatcraftBlockSoundGroup;
@@ -24,8 +25,8 @@ import java.util.function.Function;
 public class SplatcraftBlocks {
     public static final Block CANVAS = register("canvas", new CanvasBlock(
         FabricBlockSettings.of(Material.WOOL)
-                           .strength(0.8f)
-                           .sounds(BlockSoundGroup.WOOL)
+                           .strength(0.8f).sounds(BlockSoundGroup.WOOL)
+                           .emissiveLighting((state, world, pos) -> world.getBlockEntity(pos) instanceof Inkable inkable && inkable.getInkType() == InkType.GLOWING)
     ), SplatcraftBlocks::inkableBlockItem);
 
     public static final Block INKED_BLOCK = register("inked_block", new InkedBlock(InkType.NORMAL), null);

@@ -10,5 +10,17 @@ public interface Inkable {
         return true;
     }
 
+    InkType getInkType();
+    boolean setInkType(InkType inkType);
+
+    default boolean hasInkType() {
+        return true;
+    }
+
+    default void copyInkableTo(Inkable inkable) {
+        inkable.setInkColor(this.getInkColor());
+        inkable.setInkType(this.getInkType());
+    }
+
     Text getTextForCommand();
 }

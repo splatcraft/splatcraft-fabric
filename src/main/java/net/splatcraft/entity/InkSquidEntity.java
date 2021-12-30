@@ -13,16 +13,18 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.splatcraft.entity.data.SplatcraftTrackedDataHandlers;
+import net.splatcraft.entity.data.SplatcraftTrackedDataHandlerRegistry;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 
 import static net.splatcraft.util.Events.tickInkable;
 import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
 
 public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster {
-    public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlers.INK_COLOR);
+    public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlerRegistry.INK_COLOR);
+    public static final TrackedData<InkType> INK_TYPE = DataTracker.registerData(InkSquidEntity.class, SplatcraftTrackedDataHandlerRegistry.INK_TYPE);
 
     public InkSquidEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
@@ -32,6 +34,7 @@ public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster 
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(INK_COLOR, InkColors.getDefault());
+        this.dataTracker.startTracking(INK_TYPE, InkType.NORMAL);
     }
 
     @Override
@@ -43,6 +46,18 @@ public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster 
     public boolean setInkColor(InkColor inkColor) {
         if (this.getInkColor().equals(inkColor)) return false;
         this.dataTracker.set(INK_COLOR, inkColor);
+        return true;
+    }
+
+    @Override
+    public InkType getInkType() {
+        return this.dataTracker.get(INK_TYPE);
+    }
+
+    @Override
+    public boolean setInkType(InkType inkType) {
+        if (this.getInkType().equals(inkType)) return false;
+        this.dataTracker.set(INK_TYPE, inkType);
         return true;
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.splatcraft.block.InkableBlock;
 import net.splatcraft.entity.ItemEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
+import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.world.SplatcraftGameRules;
@@ -42,7 +43,7 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         ItemStack stack = this.getStack();
         Inkable inkable = Inkable.class.cast(stack);
 
-        if (inkColor.equals(inkable.getInkColor()) && hasInkColor()) return false;
+        if (inkColor.equals(inkable.getInkColor()) && this.hasInkColor()) return false;
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
             inkable.setInkColor(inkColor);
 
@@ -62,6 +63,38 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     @Override
     public boolean hasInkColor() {
         return Inkable.class.cast(this.getStack()).hasInkColor();
+    }
+
+    @Override
+    public InkType getInkType() {
+        return Inkable.class.cast(this.getStack()).getInkType();
+    }
+
+    @Override
+    public boolean setInkType(InkType inkType) {
+        ItemStack stack = this.getStack();
+        Inkable inkable = Inkable.class.cast(stack);
+
+        if (inkType.equals(inkable.getInkType()) && this.hasInkType()) return false;
+        if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
+            inkable.setInkType(inkType);
+
+            // force sync because minecraft dumb
+            if (!this.world.isClient) {
+                for (ServerPlayerEntity player : PlayerLookup.tracking(this)) {
+                    player.networkHandler.sendPacket(new EntityTrackerUpdateS2CPacket(this.getId(), this.dataTracker, true));
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hasInkType() {
+        return Inkable.class.cast(this.getStack()).hasInkType();
     }
 
     @Override

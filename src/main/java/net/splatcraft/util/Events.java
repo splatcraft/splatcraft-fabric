@@ -109,7 +109,7 @@ public final class Events {
             InkEntityAccess access = (InkEntityAccess) entity;
             if (movementInput.length() > 0.2d) {
                 if ((entity instanceof PlayerEntity player && data.isSubmerged()) || (!(entity instanceof PlayerEntity) && access.isOnInk())) {
-                    inkSplash(entity, access.getInkSplashParticlePos(), 0.75f);
+                    inkSplash(entity.world, entity, access.getInkSplashParticlePos(), 0.75f);
                 }
             }
         }

@@ -8,6 +8,7 @@ import net.minecraft.particle.ParticleType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.Inkable;
@@ -34,10 +35,10 @@ public class SplatcraftParticles {
         return Registry.register(Registry.PARTICLE_TYPE, new Identifier(Splatcraft.MOD_ID, id), new PublicDefaultParticleType(alwaysShow));
     }
 
-    public static <T extends Entity & Inkable> void inkSplash(T inkable, Vec3d pos, float scale) {
+    public static void inkSplash(World world, Inkable inkable, Vec3d pos, float scale) {
         InkColor inkColor = inkable.getInkColor();
         ParticleEffect effect = new InkSplashParticleEffect(getColor(inkColor), scale);
-        inkable.world.addParticle(effect, pos.x, pos.y, pos.z, 0.0d, 0.0d, 0.0d);
+        world.addParticle(effect, pos.x, pos.y, pos.z, 0.0d, 0.0d, 0.0d);
     }
 
     public static <T extends Entity & Inkable> void inkSquidSoul(T inkable, Vec3d pos, float scale) {

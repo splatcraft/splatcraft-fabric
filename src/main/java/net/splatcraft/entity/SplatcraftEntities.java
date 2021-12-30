@@ -27,6 +27,12 @@ public class SplatcraftEntities {
         colors(0xF78F2E, 0xFEDC0C), InkableSpawnEggItem::new
     );
 
+    public static final EntityType<InkProjectileEntity> INK_PROJECTILE = register(
+        "ink_projectile",
+        FabricEntityTypeBuilder.<InkProjectileEntity>create()
+            .entityFactory(InkProjectileEntity::new).spawnGroup(SpawnGroup.MISC)
+    );
+
     @SuppressWarnings("unchecked")
     private static <T extends Entity> EntityType<T> register(String id, FabricEntityTypeBuilder<T> entityType, Pair<Integer, Integer> colors, SpawnEggFactory eggFactory) {
         EntityType<T> builtEntityType = entityType.build();
@@ -43,7 +49,7 @@ public class SplatcraftEntities {
     }
 
     private static <T extends Entity> EntityType<T> register(String id, FabricEntityTypeBuilder<T> entityType) {
-        return register(id, entityType, null);
+        return register(id, entityType, null, null);
     }
 
     private static Pair<Integer, Integer> colors(int primary, int secondary) {

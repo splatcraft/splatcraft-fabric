@@ -17,10 +17,12 @@ public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
     public void generate() {
         this.add(SplatcraftEntityTypeTags.INK_PASSABLES,
             EntityType.PLAYER,
-            SplatcraftEntities.INK_SQUID
+            SplatcraftEntities.INK_SQUID,
+            SplatcraftEntities.INK_PROJECTILE
         );
         this.add(SplatcraftEntityTypeTags.HURT_BY_WATER,
-            SplatcraftEntities.INK_SQUID
+            SplatcraftEntities.INK_SQUID,
+            SplatcraftEntities.INK_PROJECTILE
         );
         this.add(SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK,
             SplatcraftEntities.INK_SQUID
@@ -31,5 +33,9 @@ public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
             EntityType.ITEM,
             SplatcraftEntities.INK_SQUID
         ).add(EntityTypeTags.IMPACT_PROJECTILES);
+
+        this.add(EntityTypeTags.IMPACT_PROJECTILES,
+            SplatcraftEntities.INK_PROJECTILE
+        );
     }
 }

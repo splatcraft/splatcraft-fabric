@@ -30,14 +30,14 @@ public class InkableBlock extends BlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         // immediately set ink color to prevent flashing white on place
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.setInkColor(Inkable.class.cast(stack).getInkColor());
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) Inkable.class.cast(stack).copyInkableTo(inkable);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.copyInkableTo(Inkable.class.cast(stack));
         return stack;
     }
 

@@ -105,11 +105,11 @@ public class InkTankModel<T extends LivingEntity> extends SinglePartEntityModel<
         int total = cuboids.size();
 
         ItemStack stack = entity.getEquippedStack(EquipmentSlot.CHEST);
-        int containedInk = getContainedInk(stack);
-        int capacity = ((InkTankItem) stack.getItem()).getCapacity();
+        float containedInk = getContainedInk(stack);
+        float capacity = ((InkTankItem) stack.getItem()).getCapacity();
 
-        int toRender = (int) (total * ((float) containedInk / capacity));
-        if (containedInk > 0) toRender = Math.max(1, toRender);
+        int toRender = (int) (total * (containedInk / capacity));
+        if (!(containedInk <= 1)) toRender = Math.max(1,  toRender);
 
         for (int i = 0; i < total && i < toRender; i++) {
             ModelPart.Cuboid cuboid = cuboids.get(i);

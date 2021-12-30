@@ -13,7 +13,7 @@ import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.entity.SplatcraftEntities;
-import net.splatcraft.entity.data.SplatcraftTrackedDataHandlers;
+import net.splatcraft.entity.data.SplatcraftTrackedDataHandlerRegistry;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
@@ -46,7 +46,7 @@ public class Splatcraft implements ModInitializer {
             SplatcraftBlocks.class,
             SplatcraftItems.class,
             SplatcraftComponents.class,
-            SplatcraftTrackedDataHandlers.class,
+            SplatcraftTrackedDataHandlerRegistry.class,
             SplatcraftEntities.class,
 
             NetworkingCommon.class

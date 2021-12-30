@@ -18,6 +18,7 @@ import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.*;
 import net.splatcraft.inkcolor.InkColor;
+import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.item.WeaponItem;
@@ -64,6 +65,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     @Override
+    public InkType getInkType() {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
+    }
+
+    @Override
+    public boolean setInkType(InkType inkType) {
+        return false;
+    }
+
+    @Override
     public Text getTextForCommand() {
         return this.getDisplayName();
     }
@@ -90,19 +103,25 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
     @Override
     public Optional<Float> getMovementSpeedM(float base) {
-        if (((InkEntityAccess) this).canSubmergeInInk()) {
-            return Optional.of(base * ((float) this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1));
-        }
+        InkEntityAccess access = ((InkEntityAccess) this);
+        float nu = base;
 
         if (this.isUsingItem()) {
             ItemStack stack = this.getActiveItem();
             if (!stack.isEmpty() && stack.getItem() instanceof WeaponItem weapon) {
-                float mobility =  weapon.getMobility();
-                return Optional.of(base / 0.2f * mobility);
+                float mobility = weapon.getMobility();
+                nu /= 0.2f; // cancel vanilla use multiplier
+                nu *= mobility;
             }
         }
 
-        return Optional.empty();
+        if (access.canSubmergeInInk()) {
+            nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
+        } else {
+            if (access.isOnEnemyInk()) nu *= 0.475f;
+        }
+
+        return base != nu ? Optional.of(nu) : Optional.empty();
     }
 
     // cancel exhaustion if squid
@@ -212,6 +231,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             this.stopFallFlying();
             cir.setReturnValue(false);
         }
+    }
+
+    // prevent attack cooldown when holding a weapon
+    @Inject(method = "resetLastAttackedTicks", at = @At("HEAD"), cancellable = true)
+    private void onResetLastAttackedTicks(CallbackInfo ci) {
+        if (this.getMainHandStack().getItem() instanceof WeaponItem) ci.cancel();
     }
 
     // override travel with custom logic if climbing ink

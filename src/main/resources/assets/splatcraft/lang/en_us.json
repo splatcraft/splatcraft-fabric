@@ -52,10 +52,12 @@
   "command.splatcraft.argument.ink_color.notFound": "Unknown ink color '%s'",
   "command.splatcraft.argument.ink_color.tagDisallowed": "Tags aren't allowed here, only actual ink colors",
   "command.splatcraft.argument.entity.notAffected": "No entities were affected",
+  "command.splatcraft.argument.inkable.notAffected": "No inkables were affected",
   "command.splatcraft:inkcolor.get": "The ink color of %s is %s",
   "command.splatcraft:inkcolor.single.success": "Changed the ink color of %s to %s",
   "command.splatcraft:inkcolor.multiple.success": "Changed the ink color of %s inkables to %s",
 
+  "text.splatcraft.low_ink": "Low Ink!",
   "text.splatcraft.contained_ink": "Ink: %s / %s",
   "text.splatcraft.reloaded_config": "Reloaded config: %s",
   "text.splatcraft.reloaded_config.failed": "Could not reload config",
@@ -83,12 +85,16 @@
   "item.splatcraft.splatfest_band": "Splatfest Band",
 
   "item.splatcraft.splat_roller": "Splat Roller",
+  "item.splatcraft.splattershot": "Splattershot",
 
   "entity.splatcraft.ink_squid": "Ink Squid",
+  "entity.splatcraft.ink_projectile": "Ink Projectile",
   "item.splatcraft.ink_squid_spawn_egg": "Ink Squid Spawn Egg",
 
   "attribute.splatcraft.ink_swim_speed": "Ink Swim Speed",
   "attribute.splatcraft.ink_jump_force": "Ink Jump Force",
+
+  "subtitles.splatcraft.item.shooter.shoot": "Shooter Shot",
 
   "death.attack.splatcraft:inked_environment": "%1$s tried to swim in enemy ink",
   "death.attack.splatcraft:inked_environment.player": "%1$s tried to swim in enemy ink to escape %2$s",

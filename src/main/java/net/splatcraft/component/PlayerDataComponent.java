@@ -22,7 +22,6 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.splatcraft.block.InkPassableBlock;
 import net.splatcraft.block.entity.InkableBlockEntity;
 import net.splatcraft.client.config.ClientConfig;
-import net.splatcraft.entity.InkableCaster;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
@@ -175,13 +174,12 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     @Environment(EnvType.CLIENT)
     private <T extends Entity & Inkable> void setSubmergedClient(boolean submerged) {
         if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
-            T inkable = ((InkableCaster) this.player).toInkable();
             Vec3d pos = this.player.getPos();
             Random random = this.player.getRandom();
             for (int i = 0; i < 15; i++) {
                 double x = (random.nextDouble() - 0.5d) / 1.5d;
                 double z = (random.nextDouble() - 0.5d) / 1.5d;
-                inkSplash(inkable, pos.add(x, 0.0d, z), 1.0f);
+                inkSplash(this.player.world, (Inkable) this.player, pos.add(x, 0.0d, z), 1.0f);
             }
         }
     }

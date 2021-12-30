@@ -10,15 +10,14 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.model.entity.InkTankModel;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.InkColors;
+import net.splatcraft.inkcolor.InkType;
+import net.splatcraft.inkcolor.Inkable;
 
 import static net.splatcraft.client.util.ClientUtil.*;
 
@@ -35,14 +34,16 @@ public class InkTankRenderer {
 
     @SuppressWarnings("unused")
     public void render(MatrixStack matrices, VertexConsumerProvider vertices, ItemStack stack, LivingEntity entity, EquipmentSlot slot, int light, BipedEntityModel<LivingEntity> contextModel) {
+        if (!(entity instanceof Inkable inkable)) throw new IllegalArgumentException("Entity rendering ink tank is not inkable");
+
         if (this.model == null) this.model = new InkTankModel<>(entityRendererFactoryContext().getPart(SplatcraftEntityModelLayers.INK_TANK));
         this.model.copyFrom(contextModel);
 
-        PlayerDataComponent data = entity instanceof PlayerEntity player ? PlayerDataComponent.get(player) : null;
-        InkColor inkColor = data == null ? InkColors.getDefault() : data.getInkColor();
+        InkColor inkColor = inkable.getInkColor();
+        InkType inkType = inkable.getInkType();
 
         Vec3f color = getVectorColor(inkColor);
-        this.render(TEXTURE, entity, stack, matrices, vertices, light, color.getX(), color.getY(), color.getZ());
+        this.render(TEXTURE, entity, stack, matrices, vertices, inkType == InkType.GLOWING ? 0xFF00FF : light, color.getX(), color.getY(), color.getZ());
         this.render(TEXTURE_OVERLAY, entity, stack, matrices, vertices, light);
     }
 
