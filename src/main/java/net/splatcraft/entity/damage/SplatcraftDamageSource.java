@@ -9,6 +9,7 @@ import net.splatcraft.Splatcraft;
 public class SplatcraftDamageSource extends DamageSource {
     public static final DamageSource INKED_ENVIRONMENT = new SplatcraftDamageSource("inked_environment").setBypassesArmor();
     public static final DamageSource OUT_OF_ARENA = new SplatcraftDamageSource("out_of_arena").setBypassesArmor();
+    public static final DamageSource WATER = new SplatcraftDamageSource("water").setBypassesArmor();
 
     public static DamageSource inked(LivingEntity attacker) {
         return new EntityDamageSource(name("inked"), attacker);

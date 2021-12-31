@@ -1,8 +1,15 @@
 package net.splatcraft.mixin;
 
+import java.util.Collections;
+import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Flutterer;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -16,7 +23,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.*;
+import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.InkableCaster;
+import net.splatcraft.entity.InputPlayerEntityAccess;
+import net.splatcraft.entity.PackedInput;
+import net.splatcraft.entity.PlayerEntityAccess;
+import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
@@ -31,9 +43,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Collections;
-import java.util.Optional;
 
 import static net.splatcraft.util.Events.tickInkable;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
@@ -116,9 +125,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         }
 
         if (access.canSubmergeInInk()) {
-            nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
+            nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 9) / (this.isSneaking() ? 1.5f : 1);
         } else {
-            if (access.isOnEnemyInk()) nu *= 0.475f;
+            if (access.isOnEnemyInk() && this.world.getGameRules().getBoolean(SplatcraftGameRules.ENEMY_INK_SLOWS_DOWN))
+                nu *= 0.475f;
         }
 
         return base != nu ? Optional.of(nu) : Optional.empty();

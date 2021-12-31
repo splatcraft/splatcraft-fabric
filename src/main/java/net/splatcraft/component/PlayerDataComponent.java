@@ -2,6 +2,9 @@ package net.splatcraft.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -31,12 +34,11 @@ import net.splatcraft.mixin.client.ClientChunkManagerAccessor;
 import net.splatcraft.mixin.client.ClientChunkManagerClientChunkMapAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicReferenceArray;
-
 import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftConstants.NBT_HAS_SPLATFEST_BAND;
+import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
+import static net.splatcraft.util.SplatcraftConstants.NBT_IS_SQUID;
+import static net.splatcraft.util.SplatcraftConstants.NBT_IS_SUBMERGED;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
     @NotNull private final PlayerEntity player;
@@ -60,6 +62,23 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      * Defines whether the player is holding a {@link SplatcraftItems#SPLATFEST_BAND}.
      */
     private boolean hasSplatfestBand = false;
+
+    /**
+     * How many ticks a player has spent without taking damage or stepping in enemy ink
+     * Used for Splatoon-accurate regeneration system
+     */
+    private float ticksWithoutDamage = 0;
+
+    /**
+     * Health on previous tick. Used for Splatoon-accurate regeneration system
+     */
+    private float prevHealth = 0;
+
+    /**
+     * Health lost due to stepping on enemy ink
+     * Used for Splatoon-accurate damage stepping on enemy ink
+     **/
+    private float damageTakenOnEnemyInk = 0;
 
     @SuppressWarnings("unused")
     public PlayerDataComponent(@NotNull PlayerEntity player) {
@@ -193,6 +212,36 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.hasSplatfestBand = hasSplatfestBand;
         this.sync();
         return true;
+    }
+
+    public float getTicksWithoutDamage() {
+        return ticksWithoutDamage;
+    }
+
+    public void addTicksWithoutDamage(float ticksWithoutDamage) {
+        this.ticksWithoutDamage += ticksWithoutDamage;
+    }
+
+    public void resetTicksWithoutDamage() { this.ticksWithoutDamage = 0; }
+
+    public float getPrevHealth() {
+        return prevHealth;
+    }
+
+    public void setPrevHealth(float prevHealth) {
+        this.prevHealth = prevHealth;
+    }
+
+    public float getDamageTakenOnEnemyInk() {
+        return damageTakenOnEnemyInk;
+    }
+
+    public void addDamageTakenOnEnemyInk(float damageTakenOnEnemyInk) {
+        this.damageTakenOnEnemyInk += damageTakenOnEnemyInk;
+    }
+
+    public void resetDamageTakenOnEnemyInk() {
+        this.damageTakenOnEnemyInk = 0;
     }
 
     @Override
