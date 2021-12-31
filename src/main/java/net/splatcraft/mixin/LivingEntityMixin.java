@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin extends Entity {
                     float damage = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() * 0.09f : 1.8f;
                     if (isPlayer) {
                         float maxDamage = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() * 0.4f : 8;
-                        if (that.getMaxHealth() - maxDamage <= this.getHealth() && (data.isSquid() || !rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ONLY_IN_SQUID_FORM))) {
+                        if (data.getDamageTakenOnEnemyInk() < maxDamage && (data.isSquid() || !rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ONLY_IN_SQUID_FORM))) {
                             this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, damage);
                             data.addDamageTakenOnEnemyInk(damage);
                             data.resetTicksWithoutDamage();
@@ -88,6 +88,7 @@ public abstract class LivingEntityMixin extends Entity {
                         healing = scalesToMax ? that.getMaxHealth() / 20 : 1;
                     else if (!rules.getBoolean(SplatcraftGameRules.REGENERATE_HEALTH_ONLY_IN_SQUID_FORM))
                         healing = scalesToMax ? that.getMaxHealth() * 0.00625f : 0.125f;
+                    data.addDamageTakenOnEnemyInk(-healing);
                     this.heal(healing);
                     if (this.getHealth() > data.getPrevHealth())
                         data.addDamageTakenOnEnemyInk(data.getPrevHealth() - this.getHealth());

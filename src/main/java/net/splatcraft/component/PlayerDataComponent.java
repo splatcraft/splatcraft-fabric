@@ -175,8 +175,8 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return this.submerged;
     }
 
-    public boolean setSubmerged(boolean submerged) {
-        if (this.submerged == submerged) return false;
+    public void setSubmerged(boolean submerged) {
+        if (this.submerged == submerged) return;
         this.submerged = submerged;
 
         ((LivingEntityInvoker) this.player).invoke_updatePotionVisibility();
@@ -187,7 +187,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (this.player.world.isClient) setSubmergedClient(submerged);
 
         this.sync();
-        return true;
     }
 
     @Environment(EnvType.CLIENT)
@@ -222,7 +221,9 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.ticksWithoutDamage += ticksWithoutDamage;
     }
 
-    public void resetTicksWithoutDamage() { this.ticksWithoutDamage = 0; }
+    public void resetTicksWithoutDamage() {
+        this.ticksWithoutDamage = 0;
+    }
 
     public float getPrevHealth() {
         return prevHealth;
