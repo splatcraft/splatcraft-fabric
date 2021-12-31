@@ -45,7 +45,7 @@ public abstract class LivingEntityMixin extends Entity {
                 data = PlayerDataComponent.get(player);
             }
             if (((InkEntityAccess) this).isOnEnemyInk()) {
-                if (rules.getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_ON_ENEMY_INK)) {
+                if (rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ENABLED)) {
                     float damage = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() * 0.09f : 1.8f;
                     if (isPlayer) {
                         float maxDamage = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() * 0.4f : 8;
@@ -59,7 +59,7 @@ public abstract class LivingEntityMixin extends Entity {
                 }
             } else if (isPlayer)
                 data.addTicksWithoutDamage(1);
-            if (rules.getBoolean(SplatcraftGameRules.HURT_INK_SQUIDS_IN_WATER) && that.isWet()) {
+            if (rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ENABLED) && that.isWet()) {
                 float damageScaled = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() / 5 : 4;
                 float damage = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_KILLS_INSTANTLY) ? Float.MAX_VALUE : damageScaled;
                 if (isPlayer) {
