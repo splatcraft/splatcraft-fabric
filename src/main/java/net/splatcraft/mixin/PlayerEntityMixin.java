@@ -125,7 +125,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         }
 
         if (access.canSubmergeInInk()) {
-            nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 9) / (this.isSneaking() ? 1.5f : 1);
+            nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
         } else {
             if (access.isOnEnemyInk() && this.world.getGameRules().getBoolean(SplatcraftGameRules.ENEMY_INK_SLOWS_DOWN))
                 nu *= 0.475f;
