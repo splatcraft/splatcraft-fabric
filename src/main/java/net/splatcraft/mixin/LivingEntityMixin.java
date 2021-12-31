@@ -19,7 +19,6 @@ import net.splatcraft.entity.damage.SplatcraftDamageSource;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -29,10 +28,6 @@ import static net.splatcraft.particle.SplatcraftParticles.inkSquidSoul;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-    @Shadow public abstract void heal(float amount);
-
-    @Shadow public abstract float getHealth();
-
     private LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -77,9 +72,9 @@ public abstract class LivingEntityMixin extends Entity {
             }
 
             if (isPlayer && rules.getBoolean(SplatcraftGameRules.SPLATOON_HEALTH_REGENERATION)) {
-                if (data.getPrevHealth() > this.getHealth())
+                if (data.getPrevHealth() > that.getHealth())
                     data.resetTicksWithoutDamage();
-                if (this.getHealth() <= 0)
+                if (that.getHealth() <= 0)
                     data.resetDamageTakenOnEnemyInk();
                 if (data.getTicksWithoutDamage() >= 20) {
                     float healing = 0;
@@ -89,11 +84,11 @@ public abstract class LivingEntityMixin extends Entity {
                     else if (!rules.getBoolean(SplatcraftGameRules.REGENERATE_HEALTH_ONLY_IN_SQUID_FORM))
                         healing = scalesToMax ? that.getMaxHealth() * 0.00625f : 0.125f;
                     data.addDamageTakenOnEnemyInk(-healing);
-                    this.heal(healing);
-                    if (this.getHealth() > data.getPrevHealth())
-                        data.addDamageTakenOnEnemyInk(data.getPrevHealth() - this.getHealth());
+                    that.heal(healing);
+                    if (that.getHealth() > data.getPrevHealth())
+                        data.addDamageTakenOnEnemyInk(data.getPrevHealth() - that.getHealth());
                 }
-                data.setPrevHealth(this.getHealth());
+                data.setPrevHealth(that.getHealth());
             }
         }
     }
