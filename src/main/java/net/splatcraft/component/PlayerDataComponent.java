@@ -74,12 +74,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      */
     private float prevHealth = 0;
 
-    /**
-     * Health lost due to stepping on enemy ink
-     * Used for Splatoon-accurate damage stepping on enemy ink
-     **/
-    private float damageTakenOnEnemyInk = 0;
-
     @SuppressWarnings("unused")
     public PlayerDataComponent(@NotNull PlayerEntity player) {
         this.player = player;
@@ -231,18 +225,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
 
     public void setPrevHealth(float prevHealth) {
         this.prevHealth = prevHealth;
-    }
-
-    public float getDamageTakenOnEnemyInk() {
-        return damageTakenOnEnemyInk;
-    }
-
-    public void addDamageTakenOnEnemyInk(float damageTakenOnEnemyInk) {
-        this.damageTakenOnEnemyInk += damageTakenOnEnemyInk;
-    }
-
-    public void resetDamageTakenOnEnemyInk() {
-        this.damageTakenOnEnemyInk = 0;
     }
 
     @Override
