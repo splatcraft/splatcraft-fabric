@@ -45,28 +45,31 @@ public abstract class LivingEntityMixin extends Entity {
                 data = PlayerDataComponent.get(player);
             }
             InkEntityAccess access = (InkEntityAccess) this;
-            if (rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ENABLED) && access.isOnEnemyInk() &&
-                    (access.isInSquidForm() || !rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ONLY_IN_SQUID_FORM))) {
-                boolean scalesToMax = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH);
-                float maxDamage = scalesToMax ? that.getMaxHealth() * 0.4f : 8;
-                float threshold = scalesToMax ? that.getMaxHealth() - maxDamage : 12;
-                if (that.getHealth() > threshold) {
-                    float damage = scalesToMax ? that.getMaxHealth() * 0.09f : 1.8f;
-                    if (that.getHealth() - damage < threshold)
-                        damage = that.getHealth() - threshold;
-                    if (isPlayer || SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())) {
-                        if (isPlayer) {
-                            data.setSquid(false);
-                            data.resetTicksWithoutDamage();
-                        }
+
+            boolean enemyInkAlwaysDamages = !rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ONLY_IN_SQUID_FORM);
+            if (access.isOnEnemyInk()) {
+                if (rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ENABLED) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())
+                        && (access.isInSquidForm() || enemyInkAlwaysDamages)) {
+                    boolean scalesToMax = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH);
+                    float maxDamage = scalesToMax ? that.getMaxHealth() * 0.4f : 8;
+                    float threshold = scalesToMax ? that.getMaxHealth() - maxDamage : 12;
+                    if (that.getHealth() > threshold) {
+                        float damage = scalesToMax ? that.getMaxHealth() * 0.09f : 1.8f;
+                        if (that.getHealth() - damage < threshold)
+                            damage = that.getHealth() - threshold;
                         this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, damage);
                     }
                 }
+                if (isPlayer) {
+                    if (enemyInkAlwaysDamages) data.setSquid(false);
+                    data.resetTicksWithoutDamage();
+                }
             } else if (isPlayer)
                 data.addTicksWithoutDamage(1);
-            if (rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ENABLED) && this.isWet()
-                    && (isPlayer || SplatcraftEntityTypeTags.HURT_BY_WATER.contains(this.getType()))
-                    && (access.isInSquidForm() || !rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ONLY_IN_SQUID_FORM))) {
+
+            if (rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ENABLED) && SplatcraftEntityTypeTags.HURT_BY_WATER.contains(this.getType())
+                    && (access.isInSquidForm() || !rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ONLY_IN_SQUID_FORM))
+                    && this.isWet()) {
                 float damageScaled = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() / 5 : 4;
                 float damage = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_KILLS_INSTANTLY) ? Float.MAX_VALUE : damageScaled;
                 this.damage(SplatcraftDamageSource.WATER, damage);
