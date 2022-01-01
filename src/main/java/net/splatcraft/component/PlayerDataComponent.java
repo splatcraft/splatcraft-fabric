@@ -63,17 +63,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      */
     private boolean hasSplatfestBand = false;
 
-    /**
-     * How many ticks a player has spent without taking damage or stepping in enemy ink
-     * Used for Splatoon-accurate regeneration system
-     */
-    private float ticksWithoutDamage = 0;
-
-    /**
-     * Health on previous tick. Used for Splatoon-accurate regeneration system
-     */
-    private float prevHealth = 0;
-
     @SuppressWarnings("unused")
     public PlayerDataComponent(@NotNull PlayerEntity player) {
         this.player = player;
@@ -205,26 +194,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.hasSplatfestBand = hasSplatfestBand;
         this.sync();
         return true;
-    }
-
-    public float getTicksWithoutDamage() {
-        return ticksWithoutDamage;
-    }
-
-    public void addTicksWithoutDamage(float ticksWithoutDamage) {
-        this.ticksWithoutDamage += ticksWithoutDamage;
-    }
-
-    public void resetTicksWithoutDamage() {
-        this.ticksWithoutDamage = 0;
-    }
-
-    public float getPrevHealth() {
-        return prevHealth;
-    }
-
-    public void setPrevHealth(float prevHealth) {
-        this.prevHealth = prevHealth;
     }
 
     @Override

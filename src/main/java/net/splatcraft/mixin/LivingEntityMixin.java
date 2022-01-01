@@ -32,6 +32,9 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
+    private int ticksWithoutDamage = 0;
+    private float prevHealth = 0;
+
     // damage entity if on enemy ink and is squid
     @Inject(method = "tickMovement", at = @At("TAIL"))
     private void onTickMovement(CallbackInfo ci) {
@@ -45,49 +48,50 @@ public abstract class LivingEntityMixin extends Entity {
                 data = PlayerDataComponent.get(player);
             }
             InkEntityAccess access = (InkEntityAccess) this;
-
+            float curHealth = that.getHealth();
+            float maxHealth = that.getMaxHealth();
             boolean enemyInkAlwaysDamages = !rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ONLY_IN_SQUID_FORM);
             if (access.isOnEnemyInk()) {
                 if (rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_ENABLED) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(this.getType())
                         && (access.isInSquidForm() || enemyInkAlwaysDamages)) {
                     boolean scalesToMax = rules.getBoolean(SplatcraftGameRules.ENEMY_INK_DAMAGE_SCALES_TO_MAX_HEALTH);
-                    float maxDamage = scalesToMax ? that.getMaxHealth() * 0.4f : 8;
-                    float threshold = scalesToMax ? that.getMaxHealth() - maxDamage : 12;
-                    if (that.getHealth() > threshold) {
-                        float damage = scalesToMax ? that.getMaxHealth() * 0.09f : 1.8f;
-                        if (that.getHealth() - damage < threshold)
-                            damage = that.getHealth() - threshold;
+                    float maxDamage = scalesToMax ? maxHealth * 0.4f : 8;
+                    float threshold = scalesToMax ? maxHealth - maxDamage : 12;
+                    if (curHealth > threshold) {
+                        float damage = scalesToMax ? maxHealth * 0.09f : 1.8f;
+                        if (curHealth - damage < threshold)
+                            damage = curHealth - threshold;
                         this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, damage);
                     }
                 }
                 if (isPlayer) {
                     if (enemyInkAlwaysDamages) data.setSquid(false);
-                    data.resetTicksWithoutDamage();
+                    ticksWithoutDamage = 0;
                 }
             } else if (isPlayer)
-                data.addTicksWithoutDamage(1);
+                ticksWithoutDamage++;
 
             if (rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ENABLED) && SplatcraftEntityTypeTags.HURT_BY_WATER.contains(this.getType())
                     && (access.isInSquidForm() || !rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_ONLY_IN_SQUID_FORM))
                     && this.isWet()) {
-                float damageScaled = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_SCALES_TO_MAX_HEALTH) ? that.getMaxHealth() / 5 : 4;
+                float damageScaled = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_SCALES_TO_MAX_HEALTH) ? maxHealth / 5 : 4;
                 float damage = rules.getBoolean(SplatcraftGameRules.WATER_DAMAGE_KILLS_INSTANTLY) ? Float.MAX_VALUE : damageScaled;
                 this.damage(SplatcraftDamageSource.WATER, damage);
             }
 
             if (isPlayer && rules.getBoolean(SplatcraftGameRules.SPLATOON_HEALTH_REGENERATION)) {
-                if (data.getPrevHealth() > that.getHealth())
-                    data.resetTicksWithoutDamage();
-                if (data.getTicksWithoutDamage() >= 20) {
+                if (prevHealth > curHealth)
+                    ticksWithoutDamage = 0;
+                if (ticksWithoutDamage > 20) {
                     float healing = 0;
                     boolean scalesToMax = rules.getBoolean(SplatcraftGameRules.HEALTH_REGENERATION_SCALES_TO_MAX_HEALTH);
                     if (data.isSubmerged())
-                        healing = scalesToMax ? that.getMaxHealth() / 20 : 1;
+                        healing = scalesToMax ? maxHealth / 20 : 1;
                     else if (!rules.getBoolean(SplatcraftGameRules.REGENERATE_HEALTH_ONLY_IN_SQUID_FORM))
-                        healing = scalesToMax ? that.getMaxHealth() * 0.00625f : 0.125f;
+                        healing = scalesToMax ? maxHealth * 0.00625f : 0.125f;
                     that.heal(healing);
                 }
-                data.setPrevHealth(that.getHealth());
+                prevHealth = curHealth;
             }
         }
     }
