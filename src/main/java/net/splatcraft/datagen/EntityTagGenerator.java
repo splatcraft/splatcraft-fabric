@@ -21,10 +21,12 @@ public class EntityTagGenerator extends AbstractTagGenerator<EntityType<?>> {
             SplatcraftEntities.INK_PROJECTILE
         );
         this.add(SplatcraftEntityTypeTags.HURT_BY_WATER,
+            EntityType.PLAYER,
             SplatcraftEntities.INK_SQUID,
             SplatcraftEntities.INK_PROJECTILE
         );
         this.add(SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK,
+            EntityType.PLAYER,
             SplatcraftEntities.INK_SQUID
         );
 
