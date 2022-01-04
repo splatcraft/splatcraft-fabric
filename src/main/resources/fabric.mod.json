@@ -42,14 +42,13 @@
   "accessWidener": "splatcraft.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.12.11",
-    "minecraft": ">=1.18",
     "java": ">=17",
+    "minecraft": ">=1.18",
+    "fabricloader": ">=0.12",
 
-    "fabric": ">=0.44.0",
-    "cardinal-components-base": ">=4.0.0",
-    "cloth-basic-math": ">=0.6.0",
-    "cloth-config": ">=6.0.45"
+    "fabric": ">=0.45",
+    "cardinal-components-base": ">=4.0",
+    "cloth-config": ">=6.1"
   },
   "suggests": {
     "modmenu": "*",
@@ -57,14 +56,15 @@
   },
 
   "custom": {
+    "cardinal-components": [
+      "splatcraft:player_data"
+    ],
+
     "modmenu": {
       "badges": [],
       "links": {
         "mod.splatcraft.contact.discord": "https://discord.splatcraft.net"
       }
-    },
-    "cardinal-components": [
-      "splatcraft:player_data"
-    ]
+    }
   }
 }

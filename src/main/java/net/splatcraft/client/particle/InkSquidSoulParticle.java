@@ -20,9 +20,9 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
 
         Vec3f color = effect.getColor().getVector();
-        this.colorRed = Math.max(0.018f, color.getX() - 0.018f);
-        this.colorGreen = Math.max(0.018f, color.getY() - 0.018f);
-        this.colorBlue = Math.max(0.018f, color.getZ() - 0.018f);
+        this.red = Math.max(0.018f, color.getX() - 0.018f);
+        this.green = Math.max(0.018f, color.getY() - 0.018f);
+        this.blue = Math.max(0.018f, color.getZ() - 0.018f);
 
         this.gravityStrength = 0.15f;
         this.maxAge = 20;
@@ -80,10 +80,10 @@ public class InkSquidSoulParticle extends SpriteBillboardParticle {
 
 
         for (int i = 0; i < 3; i++) {
-            float r = i == 1 ? this.colorRed : 1;
-            float g = i == 1 ? this.colorGreen : 1;
-            float b = i == 1 ? this.colorBlue : 1;
-            float a = this.colorAlpha;
+            float r = i == 1 ? this.red : 1;
+            float g = i == 1 ? this.green : 1;
+            float b = i == 1 ? this.blue : 1;
+            float a = this.alpha;
             if (age > maxAge - 5) a = (1f - Math.max(0, age - maxAge + 5) - tickDelta) * 0.2f;
 
             setSprite(spriteProvider.getSprite(i + 1, 3));

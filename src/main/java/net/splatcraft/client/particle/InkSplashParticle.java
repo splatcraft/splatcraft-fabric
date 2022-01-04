@@ -34,9 +34,9 @@ public class InkSplashParticle extends RainSplashParticle {
 
         float rand = randCol(world);
         Vec3f color = effect.getColor().getVector();
-        this.colorRed = randCol(world) * color.getX() * rand;
-        this.colorGreen = randCol(world) * color.getY() * rand;
-        this.colorBlue = randCol(world) * color.getZ() * rand;
+        this.red = randCol(world) * color.getX() * rand;
+        this.green = randCol(world) * color.getY() * rand;
+        this.blue = randCol(world) * color.getZ() * rand;
         this.baseScale = effect.getScale() * (0.33f * (this.random.nextFloat() * 0.5f + 0.5f) * 2.0f);
 
         this.collidesWithWorld = false;
