@@ -7,6 +7,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -14,14 +15,24 @@ import net.minecraft.world.WorldAccess;
 
 @SuppressWarnings("deprecation")
 public class InkwellBlock extends InkableBlock implements FluidFillable {
-    private static final VoxelShape SHAPE = VoxelShapes.union(
-        Block.createCuboidShape(0.0d, 0.0d, 0.0d, 16.0d, 12.0d, 16.0d),
-        Block.createCuboidShape(1.0d, 12.0d, 1.0d, 14.0d, 13.0d, 14.0d),
-        Block.createCuboidShape(0.0d, 13.0d, 0.0d, 16.0d, 16.0d, 16.0d)
+    public static final VoxelShape SHAPE = VoxelShapes.union(
+        Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D),
+        Block.createCuboidShape(1.0D, 12.0D, 1.0D, 15.0D, 13.0D, 15.0D),
+        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D)
     );
 
     public InkwellBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        return stateFrom.isOf(this);
     }
 
     @Override
@@ -38,11 +49,6 @@ public class InkwellBlock extends InkableBlock implements FluidFillable {
     @Override
     public boolean canFillWithFluid(BlockView world, BlockPos pos, BlockState state, Fluid fluid) {
         return true;
-    }
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE;
     }
 
     @Override

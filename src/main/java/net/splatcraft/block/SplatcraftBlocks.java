@@ -34,13 +34,13 @@ public class SplatcraftBlocks {
 
     public static final Block EMPTY_INKWELL = register("empty_inkwell", new EmptyInkwellBlock(
         FabricBlockSettings.of(Material.GLASS)
-                           .strength(0.3f)
-                           .nonOpaque().sounds(SplatcraftBlockSoundGroup.EMPTY_INKWELL)
+                           .strength(0.3f).nonOpaque()
+                           .sounds(SplatcraftBlockSoundGroup.EMPTY_INKWELL)
     ));
 
     public static final Block INKWELL = register("inkwell", new InkwellBlock(
         FabricBlockSettings.of(Material.GLASS)
-                           .strength(0.35f)
+                           .strength(0.35f).nonOpaque()
                            .sounds(SplatcraftBlockSoundGroup.INKWELL)
     ), SplatcraftBlocks::inkableBlockItem);
 
