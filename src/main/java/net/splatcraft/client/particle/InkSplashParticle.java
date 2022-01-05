@@ -39,7 +39,6 @@ public class InkSplashParticle extends RainSplashParticle {
         this.blue = randCol(world) * color.getZ() * rand;
         this.baseScale = effect.getScale() * (0.33f * (this.random.nextFloat() * 0.5f + 0.5f) * 2.0f);
 
-        this.collidesWithWorld = false;
         this.maxAge = 20 + (this.random.nextInt(3) * 20) + (20 * 3);
 
         this.spriteProvider = spriteProvider;
@@ -47,19 +46,34 @@ public class InkSplashParticle extends RainSplashParticle {
     }
 
     public float randCol(ClientWorld world) {
-        return world.random.nextFloat() * 0.075f + 0.925f;
+        return (world.random.nextFloat() * 0.075f) + 0.925f;
     }
 
     @Override
     public void tick() {
-        if (this.collidesWithWorld || this.age++ >= this.maxAge) {
+        this.prevPosX = this.x;
+        this.prevPosY = this.y;
+        this.prevPosZ = this.z;
+
+        if (this.age++ >= this.maxAge) {
             this.markDead();
+            return;
         } else {
             this.spriteAge++;
             this.setSpriteForAge(this.spriteProvider);
         }
 
-        super.tick();
+        this.velocityY -= this.gravityStrength;
+        this.move(this.velocityX, this.velocityY, this.velocityZ);
+        this.velocityX *= 0.98f;
+        this.velocityY *= 0.98f;
+        this.velocityZ *= 0.98f;
+
+        if (this.onGround) {
+            if (Math.random() <= 0.2d) this.markDead();
+            this.velocityX *= 0.7f;
+            this.velocityZ *= 0.7f;
+        }
     }
 
     @Override
