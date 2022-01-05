@@ -48,9 +48,9 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             // damage entity if on enemy ink
             if (this.isOnEnemyInk()) {
                 this.resetTicksWithoutDamage(); // disallow increased health regeneration
-                if (get(this.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(type)) {
-                    if (isInSquidForm || !get(this.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM)) {
-                        boolean canKill = get(this.world, DAMAGE_ON_ENEMY_INK_CAN_KILL);
+                if (gameRule(this.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(type)) {
+                    if (isInSquidForm || !gameRule(this.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM)) {
+                        boolean canKill = gameRule(this.world, DAMAGE_ON_ENEMY_INK_CAN_KILL);
                         float health = this.getHealth();
                         float max = this.getMaxHealthForOnEnemyInk();
                         if (canKill || health > max) {
@@ -63,14 +63,14 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             }
 
             // damage entity if is wet
-            if (get(this.world, DAMAGE_WHEN_WET) && SplatcraftEntityTypeTags.HURT_BY_WATER.contains(type)) {
-                if (this.isWet() && (isInSquidForm || !get(this.world, DAMAGE_WHEN_WET_ONLY_IN_SQUID_FORM))) {
-                    boolean canKill = get(this.world, DAMAGE_WHEN_WET_CAN_KILL);
-                    if (get(this.world, DAMAGE_WHEN_WET_INSTANT_KILL) && canKill) {
+            if (gameRule(this.world, DAMAGE_WHEN_WET) && SplatcraftEntityTypeTags.HURT_BY_WATER.contains(type)) {
+                if (this.isWet() && (isInSquidForm || !gameRule(this.world, DAMAGE_WHEN_WET_ONLY_IN_SQUID_FORM))) {
+                    boolean canKill = gameRule(this.world, DAMAGE_WHEN_WET_CAN_KILL);
+                    if (gameRule(this.world, DAMAGE_WHEN_WET_INSTANT_KILL) && canKill) {
                         this.damage(SplatcraftDamageSource.INK_IN_WATER, Float.MAX_VALUE);
                     } else {
                         float maxHealth = this.getMaxHealth();
-                        float scale = get(this.world, DAMAGE_WHEN_WET_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                        float scale = gameRule(this.world, DAMAGE_WHEN_WET_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
                         if (canKill || this.getHealth() > (maxHealth - (0.8f * scale))) {
                             this.damage(SplatcraftDamageSource.INK_IN_WATER, 0.2f * scale);
                         }
@@ -82,11 +82,11 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             this.ticksWithoutDamage++;
             if (this.ticksWithoutDamage > 20) {
                 float maxHealth = this.getMaxHealth();
-                if (get(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
-                    float scale = get(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                if (gameRule(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
+                    float scale = gameRule(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
                     this.heal((1.0f / 20) * scale);
-                } else if (get(this.world, ACCURATE_REGENERATION) && (isInSquidForm || !(get(this.world, ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM)))) {
-                    float scale = get(this.world, ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                } else if (gameRule(this.world, ACCURATE_REGENERATION) && (isInSquidForm || !(gameRule(this.world, ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM)))) {
+                    float scale = gameRule(this.world, ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
                     this.heal((0.125f / 20) * scale);
                 }
             }
@@ -95,7 +95,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
 
     @Override
     public float getScaleForOnEnemyInk() {
-        return get(this.world, DAMAGE_ON_ENEMY_INK_SCALES_TO_MAX_HEALTH) ? this.getMaxHealth() : 20;
+        return gameRule(this.world, DAMAGE_ON_ENEMY_INK_SCALES_TO_MAX_HEALTH) ? this.getMaxHealth() : 20;
     }
 
     @Override

@@ -11,7 +11,6 @@ import net.minecraft.world.World;
 import net.splatcraft.block.InkableBlock;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.access.InkEntityAccess;
-import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 import static net.splatcraft.network.NetworkingCommon.universalInk;
 import static net.splatcraft.world.SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR;
-import static net.splatcraft.world.SplatcraftGameRules.get;
+import static net.splatcraft.world.SplatcraftGameRules.gameRule;
 
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {
@@ -85,7 +84,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     public boolean isOnEnemyInk() {
         if (this instanceof Inkable inkable) {
             BlockPos pos = this.getLandingPos();
-            if (get(this.world, INKWELL_CHANGES_INK_COLOR)) {
+            if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR)) {
                 BlockState state = this.world.getBlockState(pos);
                 if (SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(state.getBlock())) return false;
             }

@@ -99,7 +99,7 @@ public final class Events {
         if (entity.world.isClient) {
             clientTickInkable(entity, movementInput, data);
         } else {
-            if (entity.isOnGround() && get(entity.world, INKWELL_CHANGES_INK_COLOR)) {
+            if (entity.isOnGround() && gameRule(entity.world, INKWELL_CHANGES_INK_COLOR)) {
                 BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
                 if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
                     if (blockEntity instanceof Inkable inkable) {

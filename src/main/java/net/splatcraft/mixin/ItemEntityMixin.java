@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.splatcraft.world.SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR;
-import static net.splatcraft.world.SplatcraftGameRules.get;
+import static net.splatcraft.world.SplatcraftGameRules.gameRule;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(ItemEntity.class)
@@ -113,7 +113,7 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     // change ink color of stack if on inkable and configured
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
-        if (get(this.world, INKWELL_CHANGES_INK_COLOR) && this.isOnGround()) {
+        if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR) && this.isOnGround()) {
             if (this.isInkable()) {
                 BlockEntity blockEntity = this.world.getBlockEntity(this.getLandingPos());
                 if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {

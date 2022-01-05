@@ -82,7 +82,7 @@ public class SplatcraftGameRules {
         return Splatcraft.MOD_ID + NAMESPACE_SEPARATOR + id;
     }
 
-    public static boolean get(World world, Key<BooleanRule> rule) {
+    public static boolean gameRule(World world, Key<BooleanRule> rule) {
         return world.getGameRules().getBoolean(rule);
     }
 }

@@ -16,9 +16,9 @@ public class HungerManagerMixin {
     // cap natural regeneration when on enemy ink
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;heal(F)V"))
     private void onUpdateHeal(PlayerEntity player, float amount) {
-        if (get(player.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(player.getType())) {
+        if (gameRule(player.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(player.getType())) {
             InkEntityAccess inkAccess = (InkEntityAccess) player;
-            if (inkAccess.isOnEnemyInk() && (inkAccess.isInSquidForm() || !get(player.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM))) {
+            if (inkAccess.isOnEnemyInk() && (inkAccess.isInSquidForm() || !gameRule(player.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM))) {
                 LivingEntityAccess livingAccess = (LivingEntityAccess) player;
                 float health = player.getHealth();
                 float nu = health + amount;

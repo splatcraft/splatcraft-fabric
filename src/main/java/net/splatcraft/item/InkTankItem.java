@@ -90,7 +90,7 @@ public class InkTankItem extends Item implements Wearable {
                 NbtCompound nbt = stack.getNbt();
                 if (nbt == null || !nbt.contains(NBT_CONTAINED_INK)) setContainedInk(stack, capacity);
             } else {
-                if (get(world, INK_TANK_INK_REGENERATION)) {
+                if (gameRule(world, INK_TANK_INK_REGENERATION)) {
                     if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
                         float nu = Math.min(
                             containedInk + (

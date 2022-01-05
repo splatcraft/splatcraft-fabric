@@ -52,7 +52,7 @@ public class NetworkingCommon {
     }
 
     public static boolean universalInk(World world) {
-        return world.isClient ? clientUniversalInk() : get(world, UNIVERSAL_INK);
+        return world.isClient ? clientUniversalInk() : gameRule(world, UNIVERSAL_INK);
     }
 
     @Environment(EnvType.CLIENT)
@@ -61,7 +61,7 @@ public class NetworkingCommon {
     }
 
     public static boolean enemyInkSlowness(World world) {
-        return world.isClient ? clientEnemyInkSlowness() : get(world, ENEMY_INK_SLOWNESS);
+        return world.isClient ? clientEnemyInkSlowness() : gameRule(world, ENEMY_INK_SLOWNESS);
     }
 
     @Environment(EnvType.CLIENT)

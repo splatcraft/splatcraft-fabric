@@ -101,7 +101,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
-        if (get(this.world, SPLATFEST_BAND_MUST_BE_HELD)) {
+        if (gameRule(this.world, SPLATFEST_BAND_MUST_BE_HELD)) {
             for (Hand hand : Hand.values()) {
                 if (this.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
             }
@@ -246,7 +246,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     private boolean shouldTickEnemyInkSquidForm() {
-        if (!get(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
+        if (!gameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.isSquid() && this.isOnEnemyInk();
