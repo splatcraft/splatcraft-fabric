@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "minecraft:player",
     "splatcraft:ink_squid",
     "splatcraft:ink_projectile"
   ]

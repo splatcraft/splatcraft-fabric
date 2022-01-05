@@ -84,15 +84,15 @@ public class Color {
     }
 
     public int getRed() {
-        return this.color >> 16 & 0xFF;
+        return red(this.color);
     }
 
     public int getGreen() {
-        return this.color >> 8 & 0xFF;
+        return green(this.color);
     }
 
     public int getBlue() {
-        return this.color & 0xFF;
+        return blue(this.color);
     }
 
     public Vec3f getVector() {
@@ -129,6 +129,36 @@ public class Color {
         return ofRGB(Math.max((int) (getRed() * (1 / factor)), 0),
             Math.max((int) (getGreen() * (1 / factor)), 0),
             Math.max((int) (getBlue() * (1 / factor)), 0));
+    }
+
+    public static int interpolate(float step, int a, int b) {
+        step = Math.max(Math.min(step, 1.0f), 0.0f);
+
+        int deltaRed = red(b) - red(a);
+        int deltaGreen = green(b) - green(a);
+        int deltaBlue = blue(b) - blue(a);
+
+        int resultRed = (int) (red(a) + (deltaRed * step));
+        int resultGreen = (int) (green(a) + (deltaGreen * step));
+        int resultBlue = (int) (blue(a) + (deltaBlue * step));
+
+        resultRed = Math.max(Math.min(resultRed, 255), 0);
+        resultGreen = Math.max(Math.min(resultGreen, 255), 0);
+        resultBlue = Math.max(Math.min(resultBlue, 255), 0);
+
+        return resultRed << 16 | resultGreen << 8 | resultBlue;
+    }
+
+    public static int red(int color) {
+        return color >> 16 & 0xFF;
+    }
+
+    public static int green(int color) {
+        return color >> 8 & 0xFF;
+    }
+
+    public static int blue(int color) {
+        return color & 0xFF;
     }
 
     @Override

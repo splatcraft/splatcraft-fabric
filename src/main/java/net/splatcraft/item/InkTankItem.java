@@ -18,16 +18,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
-import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
-import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static net.splatcraft.util.SplatcraftConstants.NBT_CONTAINED_INK;
-import static net.splatcraft.util.SplatcraftConstants.T_CONTAINED_INK;
+import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.world.SplatcraftGameRules.*;
 
 public class InkTankItem extends Item implements Wearable {
     private final float capacity;
@@ -91,11 +90,11 @@ public class InkTankItem extends Item implements Wearable {
                 NbtCompound nbt = stack.getNbt();
                 if (nbt == null || !nbt.contains(NBT_CONTAINED_INK)) setContainedInk(stack, capacity);
             } else {
-                if (world.getGameRules().getBoolean(SplatcraftGameRules.INK_TANK_INK_REGENERATION)) {
+                if (get(world, INK_TANK_INK_REGENERATION)) {
                     if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
                         float nu = Math.min(
                             containedInk + (
-                                ((InkEntityAccess) entity).isSubmerged()
+                                ((InkEntityAccess) entity).isSubmergedInInk()
                                     ? (int) (100f / (20 * 3.253f)) // splatoon-accurate calculation
                                     : entity.age % 10 == 0
                                         ? 1

@@ -1,4 +1,6 @@
-package net.splatcraft.entity;
+package net.splatcraft.entity.access;
+
+import net.splatcraft.entity.PackedInput;
 
 public interface InputPlayerEntityAccess {
     PackedInput getPackedInput();

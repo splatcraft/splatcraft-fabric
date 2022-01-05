@@ -7,6 +7,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -17,13 +18,16 @@ import net.minecraft.world.World;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.*;
+import net.splatcraft.entity.access.InkEntityAccess;
+import net.splatcraft.entity.access.InkableCaster;
+import net.splatcraft.entity.access.InputPlayerEntityAccess;
+import net.splatcraft.entity.access.PlayerEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.item.WeaponItem;
 import net.splatcraft.util.SplatcraftConstants;
-import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,16 +39,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Optional;
 
+import static net.splatcraft.network.NetworkingCommon.enemyInkSlowness;
 import static net.splatcraft.util.Events.tickInkable;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
 import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
+import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess {
+public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess, InkEntityAccess {
     @Shadow @Final private PlayerAbilities abilities;
 
     @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
     @Shadow public abstract void stopFallFlying();
+    @Shadow public abstract PlayerInventory getInventory();
+
+    private int enemyInkSquidFormTicks;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -92,18 +101,22 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
-        if (that.world.getGameRules().getBoolean(SplatcraftGameRules.SPLATFEST_BAND_MUST_BE_HELD)) {
+        if (get(this.world, SPLATFEST_BAND_MUST_BE_HELD)) {
             for (Hand hand : Hand.values()) {
-                if (that.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
+                if (this.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
             }
-        } else if (that.getInventory().containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
+        } else if (this.getInventory().containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
 
         return data.setHasSplatfestBand(false);
     }
 
     @Override
+    public boolean canEnterSquidForm() {
+        return !this.hasVehicle();
+    }
+
+    @Override
     public Optional<Float> getMovementSpeedM(float base) {
-        InkEntityAccess access = ((InkEntityAccess) this);
         float nu = base;
 
         if (this.isUsingItem()) {
@@ -115,10 +128,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             }
         }
 
-        if (access.canSubmergeInInk()) {
+        if (this.canSubmergeInInk()) {
             nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
         } else {
-            if (access.isOnEnemyInk()) nu *= 0.475f;
+            if (this.isOnEnemyInk() && enemyInkSlowness(this.world)) nu *= 0.475f;
         }
 
         return base != nu ? Optional.of(nu) : Optional.empty();
@@ -130,6 +143,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
         if (data.isSquid()) ci.cancel();
+    }
+
+    // disallow food to heal when in squid form
+    @Inject(method = "canFoodHeal", at = @At("RETURN"), cancellable = true)
+    private void onCanFoodHeal(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValueZ()) {
+            PlayerEntity that = PlayerEntity.class.cast(this);
+            PlayerDataComponent data = PlayerDataComponent.get(that);
+            if (data.isSquid()) cir.setReturnValue(false);
+        }
     }
 
     // change attributes for squid form
@@ -205,16 +228,28 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
-        InkEntityAccess access = ((InkEntityAccess) that);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
+        if (!this.world.isClient) {
+            // leave squid form if on enemy ink and time passed
+            this.enemyInkSquidFormTicks = this.shouldTickEnemyInkSquidForm() ? this.enemyInkSquidFormTicks + 1 : 0;
+            if (this.enemyInkSquidFormTicks > 6) data.setSquid(false);
+        }
+
         // check for submersion
-        if (!this.world.isClient || !optimiseDesyncSetting()) data.setSubmerged(access.canSubmergeInInk());
+        if (!this.world.isClient || !optimiseDesyncSetting()) data.setSubmerged(this.canSubmergeInInk());
 
         // tick movement
         Vec3d pos = this.getPos();
         if (this.posLastTick != null) tickInkable(this, this.posLastTick.subtract(pos));
         this.posLastTick = pos;
+    }
+
+    private boolean shouldTickEnemyInkSquidForm() {
+        if (!get(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        return data.isSquid() && this.isOnEnemyInk();
     }
 
     @Environment(EnvType.CLIENT)
@@ -245,7 +280,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     private void onTravel(Vec3d movementInput, CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid() && ((InkEntityAccess) that).canClimbInk()) {
+        if (data.isSquid() && this.canClimbInk()) {
             ci.cancel();
 
             double dx = this.getX();

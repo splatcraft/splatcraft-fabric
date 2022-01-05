@@ -4,8 +4,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.splatcraft.client.config.ClientConfig;
+import net.splatcraft.client.config.enums.HealthInkOverlay;
 import net.splatcraft.client.config.enums.PreventBobView;
 import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.config.option.EnumOption;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,9 +24,14 @@ public class GameRendererMixin {
     private void onBobView(MatrixStack matrices, float f, CallbackInfo ci) {
         PlayerDataComponent data = PlayerDataComponent.get(this.client.player);
         if (data.isSquid()) {
-            PreventBobView preventBobView = ClientConfig.INSTANCE.preventBobViewWhenSquid.getValue();
-            if (preventBobView == PreventBobView.ALWAYS
-            || (preventBobView == PreventBobView.SUBMERGED && data.isSubmerged())) ci.cancel();
+            EnumOption<PreventBobView> preventBobView = ClientConfig.INSTANCE.preventBobViewWhenSquid;
+            if (preventBobView.is(PreventBobView.ALWAYS) || (preventBobView.is(PreventBobView.SUBMERGED) && data.isSubmerged())) ci.cancel();
         }
+    }
+
+    // disable hurt bob when ink health overlay is enabled
+    @Inject(method = "bobViewWhenHurt", at = @At("HEAD"), cancellable = true)
+    private void onBobViewWhenHurt(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
+        if (ClientConfig.INSTANCE.healthInkOverlay.is(HealthInkOverlay.ON)) ci.cancel();
     }
 }

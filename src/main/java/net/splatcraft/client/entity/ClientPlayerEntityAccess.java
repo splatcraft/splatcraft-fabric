@@ -6,4 +6,5 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public interface ClientPlayerEntityAccess {
     float getInkOverlayTick();
+    int getInkOverlayColor();
 }

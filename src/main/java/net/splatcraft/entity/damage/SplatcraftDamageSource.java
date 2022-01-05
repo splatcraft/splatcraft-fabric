@@ -10,6 +10,7 @@ public class SplatcraftDamageSource extends DamageSource {
     public static final String ID_INKED = name("inked");
 
     public static final DamageSource INKED_ENVIRONMENT = new SplatcraftDamageSource("inked_environment").setBypassesArmor();
+    public static final DamageSource INK_IN_WATER = new SplatcraftDamageSource("ink_in_water").setBypassesArmor();
     public static final DamageSource OUT_OF_ARENA = new SplatcraftDamageSource("out_of_arena").setBypassesArmor();
 
     public static DamageSource inked(LivingEntity attacker) {

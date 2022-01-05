@@ -9,7 +9,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.splatcraft.block.InkPassableBlock;
-import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.access.InkEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

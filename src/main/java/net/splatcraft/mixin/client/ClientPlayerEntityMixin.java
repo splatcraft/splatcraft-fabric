@@ -7,21 +7,20 @@ import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.splatcraft.client.entity.ClientPlayerEntityAccess;
-import net.splatcraft.entity.InkEntityAccess;
-import net.splatcraft.entity.InputPlayerEntityAccess;
+import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.entity.PackedInput;
+import net.splatcraft.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.splatcraft.client.network.NetworkingClient.clientInput;
-import static net.splatcraft.entity.damage.SplatcraftDamageSource.ID_INKED;
+import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
+import static net.splatcraft.util.Color.interpolate;
 import static net.splatcraft.util.SplatcraftConstants.MAX_INK_OVERLAYS;
 
 @Environment(EnvType.CLIENT)
@@ -30,7 +29,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Shadow public Input input;
 
     private PackedInput storedForwardSpeed = PackedInput.EMPTY;
+
     private float inkOverlayTick = 0;
+    private Integer inkOverlayColor = null;
 
     private ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
@@ -46,28 +47,42 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         return this.inkOverlayTick;
     }
 
+    @Override
+    public int getInkOverlayColor() {
+        return this.inkOverlayColor == null ? 0xFFFFFF : this.inkOverlayColor;
+    }
+
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasVehicle()Z", shift = At.Shift.BEFORE))
     private void onTick(CallbackInfo ci) {
         ClientPlayerEntity that = ClientPlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
 
         // input
         PackedInput input = PackedInput.of(this.input);
         this.storedForwardSpeed = input;
         clientInput(input);
 
-        // ink overlay tick
-        int inkOverlayIndex = (int) inkOverlayTick + 1;
-        this.inkOverlayTick = MathHelper.clamp(
-            this.inkOverlayTick + (
-                ((InkEntityAccess) that).isOnEnemyInk()
-                    ? 0.03f * (1f / inkOverlayIndex + 1) // slower build up
-                    : -0.28f * (inkOverlayIndex / 5f)    // faster decay
-            ), 0, MAX_INK_OVERLAYS + 1
-        );
-    }
+        // ink overlay tick - perform this logic in the player entity as I can't be asked with tickDelta
+        float maxHealth = this.getMaxHealth();
+        float health = this.getAbilities().invulnerable ? maxHealth : (int) this.getHealth();
 
-    @Inject(method = "damage", at = @At("HEAD"))
-    private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (source.getName().equals(ID_INKED)) this.inkOverlayTick = Math.max(1.0f, this.inkOverlayTick) + 1.5f;
+        float buffer = (maxHealth * 0.3f);
+        float damage = maxHealth - (health + buffer);
+        float maxDamage = maxHealth - buffer;
+
+        float desired = damage <= 0 ? 0 : (damage / maxDamage) * MAX_INK_OVERLAYS;
+        if (this.isDead()) desired++;
+        boolean greater = desired > this.inkOverlayTick;
+        float overlayInterp = this.inkOverlayTick + (0.05f * (greater ? 1 : -1));
+        this.inkOverlayTick = greater ? Math.min(desired, overlayInterp) : Math.max(desired, overlayInterp);
+
+        // ink overlay color
+        if (inkOverlayColor == null || !(this.inkOverlayTick > 0)) {
+            this.inkOverlayColor = getDecimalColor(data.getInkColor());
+        } else {
+            if (this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable inkable) {
+                this.inkOverlayColor = interpolate(0.1f, this.inkOverlayColor, getDecimalColor(inkable.getInkColor()));
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package net.splatcraft.entity;
+package net.splatcraft.entity.access;
 
 import net.minecraft.entity.Entity;
 import net.splatcraft.inkcolor.Inkable;

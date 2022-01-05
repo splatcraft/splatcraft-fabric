@@ -1,4 +1,4 @@
-package net.splatcraft.entity;
+package net.splatcraft.entity.access;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.splatcraft.item.SplatcraftItems;
@@ -14,6 +14,11 @@ public interface PlayerEntityAccess {
      * @return whether or not the method had any effect
      */
     boolean updateSplatfestBand();
+
+    /**
+     * @return whether the player can enter squid form
+     */
+    boolean canEnterSquidForm();
 
     Optional<Float> getMovementSpeedM(float base);
 }

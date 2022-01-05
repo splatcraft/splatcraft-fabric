@@ -1,4 +1,4 @@
-package net.splatcraft.entity;
+package net.splatcraft.entity.access;
 
 public interface ItemEntityAccess {
     boolean isInkable();

@@ -2,6 +2,7 @@ package net.splatcraft.network;
 
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
+import net.splatcraft.world.SplatcraftGameRules;
 
 public class PacketIdentifiers {
     /**
@@ -23,6 +24,16 @@ public class PacketIdentifiers {
      * A packet for notifying the client that Splatcraft is installed on the server.
      */
     public static final Identifier S2C_INIT = create("s2c_init"); // S2C
+
+    /**
+     * A packet for updating the client's knowledge of {@link SplatcraftGameRules#ENEMY_INK_SLOWNESS}.
+     */
+    public static final Identifier UPDATE_ENEMY_INK_SLOWNESS = create("update_enemy_ink_slowness"); // S2C
+
+    /**
+     * A packet for updating the client's knowledge of {@link SplatcraftGameRules#UNIVERSAL_INK}.
+     */
+    public static final Identifier UPDATE_UNIVERSAL_INK = create("update_universal_ink"); // S2C
 
     private static Identifier create(String id) {
         return new Identifier(Splatcraft.MOD_ID, id);

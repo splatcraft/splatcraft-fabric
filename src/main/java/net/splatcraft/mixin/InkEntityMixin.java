@@ -10,16 +10,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.block.InkableBlock;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
-import net.splatcraft.world.SplatcraftGameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
+
+import static net.splatcraft.network.NetworkingCommon.universalInk;
+import static net.splatcraft.world.SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR;
+import static net.splatcraft.world.SplatcraftGameRules.get;
 
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {
@@ -41,16 +44,6 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Shadow public abstract boolean isWet();
 
     @Override
-    public InkType getInkType() {
-        Entity that = Entity.class.cast(this);
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            if (data.hasSplatfestBand()) return InkType.GLOWING;
-        }
-        return InkType.NORMAL;
-    }
-
-    @Override
     public boolean isInSquidForm() {
         Entity that = Entity.class.cast(this);
         if (that instanceof PlayerEntity player) {
@@ -62,7 +55,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     }
 
     @Override
-    public boolean isSubmerged() {
+    public boolean isSubmergedInInk() {
         Entity that = Entity.class.cast(this);
         if (that instanceof PlayerEntity player) {
             PlayerDataComponent data = PlayerDataComponent.get(player);
@@ -80,8 +73,10 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Override
     public boolean isOnOwnInk() {
         if (this instanceof Inkable inkable) {
-            BlockPos pos = this.getLandingPos();
-            return this.world.getBlockEntity(pos) instanceof Inkable block && block.getInkColor().equals(inkable.getInkColor());
+            if (this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable block) {
+                if (universalInk(this.world)) return true;
+                return block.getInkColor().equals(inkable.getInkColor());
+            }
         }
         return false;
     }
@@ -90,20 +85,17 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     public boolean isOnEnemyInk() {
         if (this instanceof Inkable inkable) {
             BlockPos pos = this.getLandingPos();
-            if (this.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR)) {
+            if (get(this.world, INKWELL_CHANGES_INK_COLOR)) {
                 BlockState state = this.world.getBlockState(pos);
                 if (SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(state.getBlock())) return false;
             }
 
-            return this.world.getBlockEntity(pos) instanceof Inkable block && !block.getInkColor().equals(inkable.getInkColor());
+            if (this.world.getBlockEntity(pos) instanceof Inkable block) {
+                return !universalInk(this.world) && !block.getInkColor().equals(inkable.getInkColor());
+            }
         }
 
         return false;
-    }
-
-    @Override
-    public boolean canEnterSquidForm() {
-        return !this.hasVehicle();
     }
 
     @Override
@@ -143,6 +135,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
             double x = this.getX();
             double y = this.getY();
             double z = this.getZ();
+            boolean universalInk = universalInk(this.world);
             for (int i = 0; i < 4; i++) {
                 int n = i % 2 == 0 ? 1 : -1;
                 float xo = ( (i < 2) ? 0 : 0.32f) * n;
@@ -152,8 +145,8 @@ public abstract class InkEntityMixin implements InkEntityAccess {
                 if (!pos.equals(this.getBlockPos())) {
                     Block block = this.world.getBlockState(pos).getBlock();
                     if (block instanceof InkableBlock && SplatcraftBlockTags.INK_CLIMBABLE.contains(block)) {
-                        if (this.world.getBlockEntity(pos) instanceof Inkable inkableBlock && inkable.getInkColor().equals(inkableBlock.getInkColor())) {
-                            return Optional.of(pos);
+                        if (this.world.getBlockEntity(pos) instanceof Inkable inkableBlock) {
+                            if (universalInk || inkable.getInkColor().equals(inkableBlock.getInkColor())) return Optional.of(pos);
                         }
                     }
                 }

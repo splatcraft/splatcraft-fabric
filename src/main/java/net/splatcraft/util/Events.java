@@ -27,16 +27,16 @@ import net.minecraft.world.World;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.command.InkColorCommand;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.InkEntityAccess;
-import net.splatcraft.entity.PlayerEntityAccess;
+import net.splatcraft.entity.access.InkEntityAccess;
+import net.splatcraft.entity.access.PlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.InkTankItem;
 import net.splatcraft.tag.SplatcraftBlockTags;
-import net.splatcraft.world.SplatcraftGameRules;
 import org.jetbrains.annotations.Nullable;
 
-import static net.splatcraft.network.NetworkingCommon.s2cInit;
+import static net.splatcraft.network.NetworkingCommon.*;
 import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
+import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @SuppressWarnings("unused")
 public final class Events {
@@ -48,6 +48,8 @@ public final class Events {
 
     public static void playerInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
         s2cInit(handler.player);
+        updateEnemyInkSlowness(handler.player, server.getGameRules().get(ENEMY_INK_SLOWNESS));
+        updateUniversalInk(handler.player, server.getGameRules().get(UNIVERSAL_INK));
     }
 
     public static void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
@@ -97,7 +99,7 @@ public final class Events {
         if (entity.world.isClient) {
             clientTickInkable(entity, movementInput, data);
         } else {
-            if (entity.isOnGround() && entity.world.getGameRules().getBoolean(SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR)) {
+            if (entity.isOnGround() && get(entity.world, INKWELL_CHANGES_INK_COLOR)) {
                 BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
                 if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
                     if (blockEntity instanceof Inkable inkable) {

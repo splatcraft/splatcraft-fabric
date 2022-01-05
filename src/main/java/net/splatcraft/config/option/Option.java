@@ -9,6 +9,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.splatcraft.Splatcraft;
 
 import java.util.Optional;
 
@@ -33,11 +34,15 @@ public abstract class Option<T> {
         this.value = value;
     }
 
+    public boolean is(T other) {
+        return this.value.equals(other);
+    }
+
     public abstract JsonElement toJson();
     public abstract void fromJson(JsonElement json);
 
     protected void invalidConfig(JsonElement json) {
-        throw new RuntimeException("Invalid config for %s: %s".formatted(this, json));
+        Splatcraft.LOGGER.error("Loading default value for config {}: {}", this, json);
     }
 
     @Environment(EnvType.CLIENT)
@@ -61,6 +66,6 @@ public abstract class Option<T> {
 
     @Override
     public String toString() {
-        return "Option{" + "value=" + value + '}';
+        return "%s{value=%s}".formatted(this.getClass().getSimpleName(), this.value);
     }
 }

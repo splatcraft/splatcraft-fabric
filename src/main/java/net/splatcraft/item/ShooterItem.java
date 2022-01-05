@@ -9,7 +9,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.splatcraft.entity.InkEntityAccess;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.InkProjectileEntity;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.weapon.ShooterSettings;
@@ -51,12 +51,11 @@ public class ShooterItem extends WeaponItem {
 
     public void shoot(World world, PlayerEntity player, ItemStack stack) {
         if (takeContainedInk(player, this.shooter.inkConsumption())) {
-            InkEntityAccess access = (InkEntityAccess) player;
             Inkable inkable = (Inkable) player;
 
             // initialize projectile
             InkProjectileEntity projectile = new InkProjectileEntity(player, world);
-            projectile.setInkType(access.getInkType());
+            projectile.setInkType(inkable.getInkType());
             projectile.setInkColor(inkable.getInkColor());
             projectile.setSize(this.shooter.projectileSize());
             projectile.setDropsInk(world.random.nextFloat() <= 0.75f);

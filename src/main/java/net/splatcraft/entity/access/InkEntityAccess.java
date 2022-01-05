@@ -1,25 +1,17 @@
-package net.splatcraft.entity;
+package net.splatcraft.entity.access;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.splatcraft.inkcolor.InkType;
 
 import java.util.Optional;
 
 public interface InkEntityAccess {
-    InkType getInkType();
-
     boolean isInSquidForm();
-    boolean isSubmerged();
+    boolean isSubmergedInInk();
 
     boolean isOnInk();
     boolean isOnOwnInk();
     boolean isOnEnemyInk();
-
-    /**
-     * @return whether an entity can enter squid form
-     */
-    boolean canEnterSquidForm();
 
     /**
      * @return if an entity can pass through a block due to ink abilities
