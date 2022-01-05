@@ -46,17 +46,18 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             boolean isInSquidForm = this.isInSquidForm();
 
             // damage entity if on enemy ink
-            if (get(this.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(type)) {
-                if (this.isOnEnemyInk() && (isInSquidForm || !get(this.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM))) {
-                    this.resetTicksWithoutDamage();
-
-                    boolean canKill = get(this.world, DAMAGE_ON_ENEMY_INK_CAN_KILL);
-                    float health = this.getHealth();
-                    float max = this.getMaxHealthForOnEnemyInk();
-                    if (canKill || health > max) {
-                        float damage = 0.18f * this.getScaleForOnEnemyInk();
-                        float amount = canKill ? damage : Math.min(health - max, damage); // cap damage at max health
-                        this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, amount);
+            if (this.isOnEnemyInk()) {
+                this.resetTicksWithoutDamage(); // disallow increased health regeneration
+                if (get(this.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(type)) {
+                    if (isInSquidForm || !get(this.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM)) {
+                        boolean canKill = get(this.world, DAMAGE_ON_ENEMY_INK_CAN_KILL);
+                        float health = this.getHealth();
+                        float max = this.getMaxHealthForOnEnemyInk();
+                        if (canKill || health > max) {
+                            float damage = 0.18f * this.getScaleForOnEnemyInk();
+                            float amount = canKill ? damage : Math.min(health - max, damage); // cap damage at max health
+                            this.damage(SplatcraftDamageSource.INKED_ENVIRONMENT, amount);
+                        }
                     }
                 }
             }
