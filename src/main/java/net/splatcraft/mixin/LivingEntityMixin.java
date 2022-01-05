@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.splatcraft.particle.SplatcraftParticles.inkSquidSoul;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(LivingEntity.class)
@@ -32,6 +32,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
     @Shadow public abstract float getMaxHealth();
     @Shadow public abstract float getHealth();
     @Shadow public abstract void heal(float amount);
+    @Shadow public int hurtTime;
 
     private int ticksWithoutDamage;
 
@@ -148,6 +149,10 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
 
     @Inject(method = "damage", at = @At("RETURN"))
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ()) this.resetTicksWithoutDamage();
+        if (cir.getReturnValueZ()) {
+            this.resetTicksWithoutDamage();
+            if (gameRule(this.world, DISABLE_INK_DAMAGE_IMMUNITY) && source.name.equals(SplatcraftDamageSource.ID_INKED))
+                this.hurtTime = 0;
+        }
     }
 }
