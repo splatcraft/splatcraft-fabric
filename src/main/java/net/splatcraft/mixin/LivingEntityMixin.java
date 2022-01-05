@@ -79,19 +79,15 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
 
             // splatoon-accurate health regeneration
             this.ticksWithoutDamage++;
-            if (get(this.world, ACCURATE_REGENERATION) && (isInSquidForm || !(get(this.world, ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM)))) {
-                if (this.ticksWithoutDamage > 30) {
-                    float maxHealth = this.getMaxHealth();
-                    float scale = get(this.world, ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
-                    this.heal(0.05f * scale);
-                }
-            }
-
-            // regenerate health when submerged in ink
-            if (get(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
+            if (this.ticksWithoutDamage > 20) {
                 float maxHealth = this.getMaxHealth();
-                float scale = get(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
-                this.heal(0.2f * scale);
+                if (get(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
+                    float scale = get(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                    this.heal((1.0f / 20) * scale);
+                } else if (get(this.world, ACCURATE_REGENERATION) && (isInSquidForm || !(get(this.world, ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM)))) {
+                    float scale = get(this.world, ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                    this.heal((0.125f / 20) * scale);
+                }
             }
         }
     }
