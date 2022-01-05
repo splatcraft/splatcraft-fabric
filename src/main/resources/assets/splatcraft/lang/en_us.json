@@ -130,7 +130,6 @@
   "death.attack.splatcraft:inked.item": "%1$s was splatted by %2$s using %3$s",
   "death.attack.splatcraft:ink_in_water": "%1$s dissolved in water",
   "death.attack.splatcraft:ink_in_water.player": "%1$s dissolved in water whilst trying to escape %2$s",
-  "death.attack.splatcraft:ink_in_water.player": "%1$s dissolved in water whilst trying to escape %2$s",
   "death.attack.splatcraft:out_of_arena": "%1$s fell out of the arena",
   "death.attack.splatcraft:out_of_arena.player": "%1$s fell out of the arena whilst trying to escape %2$s",
 
