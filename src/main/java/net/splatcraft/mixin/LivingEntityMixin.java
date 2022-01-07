@@ -32,7 +32,6 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
     @Shadow public abstract float getMaxHealth();
     @Shadow public abstract float getHealth();
     @Shadow public abstract void heal(float amount);
-    @Shadow public int hurtTime;
 
     private int ticksWithoutDamage;
 
@@ -152,7 +151,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
         if (cir.getReturnValueZ()) {
             this.resetTicksWithoutDamage();
             if (gameRule(this.world, DISABLE_INK_DAMAGE_IMMUNITY) && source.name.equals(SplatcraftDamageSource.ID_INKED))
-                this.hurtTime = 0;
+                this.timeUntilRegen = 10;
         }
     }
 }
