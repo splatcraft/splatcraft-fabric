@@ -41,6 +41,11 @@ repositories {
   }
 
   maven {
+    name = "Andante's Maven"
+    url = "https://raw.githubusercontent.com/andantet/maven/main/"
+  }
+
+  maven {
     name = "Gegy's Maven"
     url  = "https://maven.gegy.dev/"
   }
@@ -58,12 +63,6 @@ repositories {
   maven {
     name = "Artifactory"
     url  = "https://server.bbkr.space/artifactory/libs-release/"
-  }
-
-  maven {
-    name = "Dodo Gang"
-    url  = "http://maven.dodogang.net/"
-    allowInsecureProtocol = true
   }
 }
 
