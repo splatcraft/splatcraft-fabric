@@ -49,27 +49,33 @@ public class InkTankModel<T extends LivingEntity> extends SinglePartEntityModel<
                             .uv(18, 0)
                             .cuboid(-2.0F, -24.0F, 2.0F, 4.0F, 2.0F, 4.0F)
                             .uv(0, 0)
-                            .cuboid(-3.0F, -22.0F, 1.0F, 6.0F, 9.0F, 6.0F),
+                            .cuboid(-3.0F, -22.0F, 1.0F, 6.0F, 9.0F, 6.0F, new Dilation(0.001F)),
             ModelTransform.of(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F)
         );
 
         ModelPartData ink = root.addChild(
             "ink",
             ModelPartBuilder.create()
-                            .uv(32, 11)
-                            .cuboid(-2.0F, -15.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 10)
-                            .cuboid(-2.0F, -16.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 9)
-                            .cuboid(-2.0F, -17.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 8)
-                            .cuboid(-2.0F, -18.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 7)
-                            .cuboid(-2.0F, -19.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 6)
-                            .cuboid(-2.0F, -20.0F, 2.0F, 4.0F, 1.0F, 4.0F)
-                            .uv(32, 5)
-                            .cuboid(-2.0F, -21.0F, 2.0F, 4.0F, 1.0F, 4.0F),
+                            .uv(24, 24)
+                            .cuboid(-3.0F, -14.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 23)
+                            .cuboid(-3.0F, -15.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 22)
+                            .cuboid(-3.0F, -16.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 21)
+                            .cuboid(-3.0F, -17.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 20)
+                            .cuboid(-3.0F, -18.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 19)
+                            .cuboid(-3.0F, -19.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 18)
+                            .cuboid(-3.0F, -20.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 17)
+                            .cuboid(-3.0F, -21.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 16)
+                            .cuboid(-3.0F, -22.0F, 1.0F, 6.0F, 1.0F, 6.0F)
+                            .uv(24, 15)
+                            .cuboid(-3.0F, -22.0F, 1.0F, 6.0F, 1.0F, 6.0F),
             ModelTransform.of(0.0F, 24.0F, 0.0F, 0.0F, 0.0F, 0.0F)
         );
 
