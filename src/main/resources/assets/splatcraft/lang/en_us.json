@@ -20,6 +20,7 @@
   "gamerule.splatcraft:universalInk.description": "You can submerge in any ink color, regardless of your ink color.",
   "gamerule.splatcraft:inkTankInkRegeneration": "Ink tank ink regeneration",
   "gamerule.splatcraft:inkTankInkRegeneration.description": "If ink tanks ambiently regenerate their ink.",
+  "gamerule.splatcraft:leaveSquidFormOnEnemyInk": "Force-leave squid form on enemy ink",
   "gamerule.splatcraft:enemyInkSlowness": "Enemy ink slowness",
   "gamerule.splatcraft:enemyInkSlowness.description": "If enemy ink slows down players.",
 
