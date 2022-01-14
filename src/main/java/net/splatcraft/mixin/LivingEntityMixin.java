@@ -80,7 +80,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
 
             // splatoon-accurate health regeneration
             this.ticksWithoutDamage++;
-            if (this.ticksWithoutDamage > 20) {
+            if (this.canFastHeal()) {
                 float maxHealth = this.getMaxHealth();
                 if (gameRule(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
                     float scale = gameRule(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
@@ -101,6 +101,11 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
     @Override
     public float getMaxHealthForOnEnemyInk() {
         return this.getMaxHealth() - (0.4f * this.getScaleForOnEnemyInk());
+    }
+
+    @Override
+    public boolean canFastHeal() {
+        return this.ticksWithoutDamage > 20;
     }
 
     @Override

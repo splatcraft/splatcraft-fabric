@@ -21,6 +21,8 @@
   "gamerule.splatcraft:inkTankInkRegeneration": "Ink tank ink regeneration",
   "gamerule.splatcraft:inkTankInkRegeneration.description": "If ink tanks ambiently regenerate their ink.",
   "gamerule.splatcraft:leaveSquidFormOnEnemyInk": "Force-leave squid form on enemy ink",
+  "gamerule.splatcraft:disableFoodHealAfterDamage": "Disable food heal after damage",
+  "gamerule.splatcraft:disableFoodHealAfterDamage.description": "If food saturation healing is disabled for a second after the player takes damage",
   "gamerule.splatcraft:enemyInkSlowness": "Enemy ink slowness",
   "gamerule.splatcraft:enemyInkSlowness.description": "If enemy ink slows down players.",
 

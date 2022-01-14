@@ -21,6 +21,7 @@ import net.splatcraft.entity.*;
 import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.InkableCaster;
 import net.splatcraft.entity.access.InputPlayerEntityAccess;
+import net.splatcraft.entity.access.LivingEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkType;
@@ -145,13 +146,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         if (data.isSquid()) ci.cancel();
     }
 
-    // disallow food to heal when in squid form
+    // disallow food to heal
     @Inject(method = "canFoodHeal", at = @At("RETURN"), cancellable = true)
     private void onCanFoodHeal(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             PlayerEntity that = PlayerEntity.class.cast(this);
             PlayerDataComponent data = PlayerDataComponent.get(that);
-            if (data.isSquid()) cir.setReturnValue(false);
+            LivingEntityAccess access = ((LivingEntityAccess) that);
+            if (data.isSquid() || (!access.canFastHeal() && gameRule(this.world, DISABLE_FOOD_HEAL_AFTER_DAMAGE))) cir.setReturnValue(false);
         }
     }
 
