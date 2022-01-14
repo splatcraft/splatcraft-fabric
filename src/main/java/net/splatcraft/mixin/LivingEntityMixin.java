@@ -150,8 +150,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             this.resetTicksWithoutDamage();
-            if (gameRule(this.world, DISABLE_INK_DAMAGE_IMMUNITY) && source.name.equals(SplatcraftDamageSource.ID_INKED))
-                this.timeUntilRegen = 10;
+            if (gameRule(this.world, DISABLE_INK_DAMAGE_IMMUNITY) && source.name.equals(SplatcraftDamageSource.ID_INKED)) this.timeUntilRegen = 10;
         }
     }
 }
