@@ -21,7 +21,6 @@
     "TrackedDataHandlerRegistryAccessor"
   ],
   "client": [
-    "client.AbstractClientPlayerEntityInvoker",
     "client.ArmorFeatureRendererMixin",
     "client.BlockEntityRenderDispatcherMixin",
     "client.ClientChunkManagerAccessor",

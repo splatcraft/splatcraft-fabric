@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(TrackedDataHandlerRegistry.class)
 public interface TrackedDataHandlerRegistryAccessor {
-    @Accessor("DATA_HANDLERS")
-    static Int2ObjectBiMap<TrackedDataHandler<?>> getDataHandlers() {
+    @Accessor
+    static Int2ObjectBiMap<TrackedDataHandler<?>> getDATA_HANDLERS() {
         throw new AssertionError();
     }
 }

@@ -9,6 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientChunkManager.class)
 public interface ClientChunkManagerAccessor {
-    @Accessor("chunks")
-    ClientChunkManager.ClientChunkMap getChunks();
+    @Accessor ClientChunkManager.ClientChunkMap getChunks();
 }

@@ -160,7 +160,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (this.submerged == submerged) return false;
         this.submerged = submerged;
 
-        ((LivingEntityInvoker) this.player).invoke_updatePotionVisibility();
+        ((LivingEntityInvoker) this.player).invokeUpdatePotionVisibility();
         if (this.player.isSpectator()) this.player.setInvisible(true);
 
         this.player.calculateDimensions();

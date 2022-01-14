@@ -135,12 +135,12 @@ public class SplatcraftClient implements ClientModInitializer {
         );
 
         // block markers
-        Set<Item> newBlockMarkerItems = new HashSet<>(ClientWorldAccessor.getBlockMarkerItems());
+        Set<Item> newBlockMarkerItems = new HashSet<>(ClientWorldAccessor.getBLOCK_MARKER_ITEMS());
         Collections.addAll(newBlockMarkerItems,
             SplatcraftBlocks.STAGE_BARRIER.asItem(),
             SplatcraftBlocks.STAGE_VOID.asItem()
         );
-        ClientWorldAccessor.setBlockMarkerItems(newBlockMarkerItems);
+        ClientWorldAccessor.setBLOCK_MARKER_ITEMS(newBlockMarkerItems);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
 
