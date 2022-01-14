@@ -14,9 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-import static net.splatcraft.client.util.ClientUtil.getColorOption;
-import static net.splatcraft.client.util.ClientUtil.getTargetedInkColor;
-import static org.apache.commons.lang3.StringUtils.capitalize;
+import static net.splatcraft.client.util.ClientUtil.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(DebugHud.class)

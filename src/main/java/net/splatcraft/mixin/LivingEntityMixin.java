@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.splatcraft.particle.SplatcraftParticles.inkSquidSoul;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(LivingEntity.class)

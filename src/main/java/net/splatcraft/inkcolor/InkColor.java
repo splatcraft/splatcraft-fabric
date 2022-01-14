@@ -12,7 +12,7 @@ import net.splatcraft.util.Identifiable;
 
 import java.util.function.Function;
 
-import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR_TEXT_DISPLAY;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkColor implements Identifiable {
     public static final Function<InkColor, String> TO_TRANSLATION_KEY = Util.memoize(inkColor -> {

@@ -15,7 +15,7 @@ import net.splatcraft.inkcolor.Inkable;
 
 import java.util.function.Function;
 
-import static net.splatcraft.client.util.ClientUtil.getColor;
+import static net.splatcraft.client.util.ClientUtil.*;
 
 public class SplatcraftParticles {
     public static final ParticleType<InkSplashParticleEffect> INK_SPLASH = register("ink_splash", InkSplashParticleEffect.PARAMETERS, p -> InkSplashParticleEffect.CODEC);

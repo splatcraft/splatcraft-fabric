@@ -8,7 +8,7 @@ import net.minecraft.util.registry.SimpleRegistry;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkColor;
 
-import static net.splatcraft.util.SplatcraftConstants.DEFAULT_INK_COLOR_IDENTIFIER;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftRegistries {
     /**

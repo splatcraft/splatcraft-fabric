@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static net.splatcraft.util.SplatcraftConstants.NBT_INK_COLOR;
-import static net.splatcraft.util.SplatcraftConstants.T_INK_COLOR;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Mixin(Item.class)
 public abstract class ItemMixin implements ItemConvertible {

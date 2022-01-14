@@ -15,7 +15,7 @@ import net.splatcraft.entity.access.PlayerEntityAccess;
 
 import java.util.function.BiConsumer;
 
-import static net.minecraft.util.Identifier.NAMESPACE_SEPARATOR;
+import static net.minecraft.util.Identifier.*;
 import static net.minecraft.world.GameRules.*;
 import static net.splatcraft.network.NetworkingCommon.*;
 

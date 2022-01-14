@@ -4,7 +4,12 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 import net.minecraft.data.DataGenerator;
-import net.splatcraft.datagen.impl.provider.*;
+import net.splatcraft.datagen.impl.provider.AdvancementProvider;
+import net.splatcraft.datagen.impl.provider.ItemModelProvider;
+import net.splatcraft.datagen.impl.provider.LootTableProvider;
+import net.splatcraft.datagen.impl.provider.RecipeProvider;
+import net.splatcraft.datagen.impl.provider.StateModelProvider;
+import net.splatcraft.datagen.impl.provider.TagProvider;
 
 import java.io.IOException;
 import java.nio.file.Path;

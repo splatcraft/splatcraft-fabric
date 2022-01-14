@@ -15,8 +15,7 @@ import net.splatcraft.client.model.entity.InkProjectileEntityModel;
 import net.splatcraft.entity.InkProjectileEntity;
 import net.splatcraft.inkcolor.InkType;
 
-import static net.splatcraft.client.util.ClientUtil.entityTexture;
-import static net.splatcraft.client.util.ClientUtil.getVectorColor;
+import static net.splatcraft.client.util.ClientUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class InkProjectileEntityRenderer<T extends InkProjectileEntity> extends EntityRenderer<T> {

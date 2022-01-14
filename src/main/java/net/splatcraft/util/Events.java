@@ -35,7 +35,7 @@ import net.splatcraft.tag.SplatcraftBlockTags;
 import org.jetbrains.annotations.Nullable;
 
 import static net.splatcraft.network.NetworkingCommon.*;
-import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @SuppressWarnings("unused")

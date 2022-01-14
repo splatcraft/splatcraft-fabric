@@ -10,8 +10,8 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.splatcraft.client.network.NetworkingClient;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.entity.PackedInput;
+import net.splatcraft.entity.access.InputPlayerEntityAccess;
 
 import static net.splatcraft.network.PacketIdentifiers.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;

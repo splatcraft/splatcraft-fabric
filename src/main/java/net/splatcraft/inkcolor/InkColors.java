@@ -10,7 +10,7 @@ import net.splatcraft.util.Color;
 
 import java.util.Random;
 
-import static net.splatcraft.util.SplatcraftConstants.DEFAULT_INK_COLOR_IDENTIFIER;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @SuppressWarnings("unused")
 public class InkColors {

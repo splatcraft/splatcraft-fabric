@@ -3,7 +3,11 @@ package net.splatcraft.datagen.impl.generator.model.block;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.splatcraft.datagen.impl.generator.model.*;
+import net.splatcraft.datagen.impl.generator.model.AbstractModelGenerator;
+import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
+import net.splatcraft.datagen.impl.generator.model.ModelGen;
+import net.splatcraft.datagen.impl.generator.model.StateGen;
+import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
 
 import java.util.function.Function;
 

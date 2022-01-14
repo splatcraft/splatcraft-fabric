@@ -6,7 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRenderEvents;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
@@ -44,8 +48,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
-import static net.splatcraft.item.InkTankItem.getContainedInk;
+import static net.splatcraft.client.util.ClientUtil.*;
+import static net.splatcraft.item.InkTankItem.*;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)

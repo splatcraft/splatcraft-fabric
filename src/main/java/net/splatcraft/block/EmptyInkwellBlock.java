@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-import static net.minecraft.state.property.Properties.WATERLOGGED;
+import static net.minecraft.state.property.Properties.*;
 
 @SuppressWarnings("deprecation")
 public class EmptyInkwellBlock extends Block implements Waterloggable {

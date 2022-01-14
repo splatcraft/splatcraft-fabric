@@ -9,8 +9,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.splatcraft.client.entity.ClientPlayerEntityAccess;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.entity.PackedInput;
+import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.client.network.NetworkingClient.clientInput;
-import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
-import static net.splatcraft.util.Color.interpolate;
-import static net.splatcraft.util.SplatcraftConstants.MAX_INK_OVERLAYS;
+import static net.splatcraft.client.network.NetworkingClient.*;
+import static net.splatcraft.client.util.ClientUtil.*;
+import static net.splatcraft.util.Color.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)

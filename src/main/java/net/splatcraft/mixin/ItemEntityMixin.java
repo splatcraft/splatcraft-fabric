@@ -23,8 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.world.SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR;
-import static net.splatcraft.world.SplatcraftGameRules.gameRule;
+import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(ItemEntity.class)
