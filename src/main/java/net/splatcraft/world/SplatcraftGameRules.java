@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 
+import java.util.function.BiConsumer;
+
 import static net.minecraft.util.Identifier.*;
 import static net.minecraft.world.GameRules.*;
 import static net.splatcraft.network.NetworkingCommon.*;
@@ -29,6 +31,7 @@ public class SplatcraftGameRules {
     public static final Key<BooleanRule> INK_TANK_INK_REGENERATION = register("inkTankInkRegeneration", true);
     public static final Key<BooleanRule> LEAVE_SQUID_FORM_ON_ENEMY_INK = register("leaveSquidFormOnEnemyInk", true);
     public static final Key<BooleanRule> DISABLE_INK_DAMAGE_IMMUNITY = register("disableInkDamageImmunity", true);
+    public static final Key<BooleanRule> DISABLE_FOOD_HEAL_AFTER_DAMAGE = register("disableFoodHealAfterDamage", true);
 
     public static final Key<BooleanRule> SPLATFEST_BAND_MUST_BE_HELD = register("splatfestBandMustBeHeld", true, (server, rule) -> {
         for (ServerPlayerEntity player : PlayerLookup.all(server)) {

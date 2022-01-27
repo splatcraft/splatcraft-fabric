@@ -9,8 +9,8 @@ import net.splatcraft.client.config.ClientCompatConfig;
 import net.splatcraft.client.config.ClientConfig;
 import org.lwjgl.glfw.GLFW;
 
-import static net.splatcraft.client.keybind.SplatcraftKeyBindings.register;
-import static net.splatcraft.util.SplatcraftConstants.T_RELOADED_CONFIG;
+import static net.splatcraft.client.keybind.SplatcraftKeyBindings.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftDevelopmentKeyBindings {

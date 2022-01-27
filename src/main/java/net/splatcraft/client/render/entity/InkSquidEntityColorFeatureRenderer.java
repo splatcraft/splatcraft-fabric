@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3f;
 import net.splatcraft.client.model.entity.InkSquidEntityModel;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.client.util.ClientUtil.getVectorColor;
+import static net.splatcraft.client.util.ClientUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class InkSquidEntityColorFeatureRenderer<T extends LivingEntity> extends FeatureRenderer<T, InkSquidEntityModel<T>> {

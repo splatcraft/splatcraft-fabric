@@ -27,6 +27,6 @@ public class SplatcraftEntityModelLayers {
     }
 
     private static EntityModelLayer registerMain(String id) {
-        return EntityModelLayersInvoker.invoke_register(new Identifier(Splatcraft.MOD_ID, id).toString(), "main");
+        return EntityModelLayersInvoker.invokeRegister(new Identifier(Splatcraft.MOD_ID, id).toString(), "main");
     }
 }

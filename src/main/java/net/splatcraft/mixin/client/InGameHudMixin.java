@@ -6,7 +6,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -24,8 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Function;
 
-import static net.splatcraft.client.util.ClientUtil.texture;
-import static net.splatcraft.util.SplatcraftConstants.MAX_INK_OVERLAYS;
+import static net.splatcraft.client.util.ClientUtil.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)

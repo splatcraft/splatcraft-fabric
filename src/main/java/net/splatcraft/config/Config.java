@@ -15,7 +15,11 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.config.option.Option;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;

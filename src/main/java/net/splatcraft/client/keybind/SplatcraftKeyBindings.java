@@ -18,10 +18,8 @@ import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import org.lwjgl.glfw.GLFW;
 
-import static net.splatcraft.client.network.NetworkingClient.isSplatcraftPresentOnServer;
-import static net.splatcraft.client.network.NetworkingClient.keyChangeSquidForm;
-import static net.splatcraft.util.SplatcraftConstants.T_NOT_INSTALLED_ON_SERVER_1;
-import static net.splatcraft.util.SplatcraftConstants.T_NOT_INSTALLED_ON_SERVER_2;
+import static net.splatcraft.client.network.NetworkingClient.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 public class SplatcraftKeyBindings {

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.util.SplatcraftConstants.COMMAND_ARGUMENT_INK_COLOR;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 @Mixin(ArgumentTypes.class)
 public class ArgumentTypesMixin {

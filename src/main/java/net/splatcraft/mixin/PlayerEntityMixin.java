@@ -2,7 +2,12 @@ package net.splatcraft.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Flutterer;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -17,10 +22,12 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.*;
+import net.splatcraft.entity.PackedInput;
+import net.splatcraft.entity.SplatcraftAttributes;
 import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.InkableCaster;
 import net.splatcraft.entity.access.InputPlayerEntityAccess;
+import net.splatcraft.entity.access.LivingEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkType;
@@ -39,10 +46,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Optional;
 
-import static net.splatcraft.network.NetworkingCommon.enemyInkSlowness;
-import static net.splatcraft.util.Events.tickInkable;
-import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
-import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_SUBMERGED_DIMENSIONS;
+import static net.splatcraft.network.NetworkingCommon.*;
+import static net.splatcraft.util.Events.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(PlayerEntity.class)
@@ -145,13 +151,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         if (data.isSquid()) ci.cancel();
     }
 
-    // disallow food to heal when in squid form
+    // disallow food to heal
     @Inject(method = "canFoodHeal", at = @At("RETURN"), cancellable = true)
     private void onCanFoodHeal(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             PlayerEntity that = PlayerEntity.class.cast(this);
             PlayerDataComponent data = PlayerDataComponent.get(that);
-            if (data.isSquid()) cir.setReturnValue(false);
+            LivingEntityAccess access = ((LivingEntityAccess) that);
+            if (data.isSquid() || (!access.canFastHeal() && gameRule(this.world, DISABLE_FOOD_HEAL_AFTER_DAMAGE))) cir.setReturnValue(false);
         }
     }
 

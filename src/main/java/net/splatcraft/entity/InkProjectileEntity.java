@@ -1,7 +1,11 @@
 package net.splatcraft.entity;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -25,7 +29,7 @@ import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
 
-import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkProjectileEntity extends ThrownEntity implements Inkable, InkableCaster {

@@ -2,7 +2,11 @@ package net.splatcraft.mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -19,9 +23,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 
-import static net.splatcraft.network.NetworkingCommon.universalInk;
-import static net.splatcraft.world.SplatcraftGameRules.INKWELL_CHANGES_INK_COLOR;
-import static net.splatcraft.world.SplatcraftGameRules.gameRule;
+import static net.splatcraft.network.NetworkingCommon.*;
+import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {

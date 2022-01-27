@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import static net.splatcraft.particle.SplatcraftParticles.inkSplash;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
@@ -160,7 +160,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         if (this.submerged == submerged) return false;
         this.submerged = submerged;
 
-        ((LivingEntityInvoker) this.player).invoke_updatePotionVisibility();
+        ((LivingEntityInvoker) this.player).invokeUpdatePotionVisibility();
         if (this.player.isSpectator()) this.player.setInvisible(true);
 
         this.player.calculateDimensions();

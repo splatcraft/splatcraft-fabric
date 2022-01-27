@@ -15,7 +15,7 @@ import net.splatcraft.Splatcraft;
 import net.splatcraft.item.InkableSpawnEggItem;
 import net.splatcraft.item.SplatcraftItemGroups;
 
-import static net.splatcraft.util.SplatcraftConstants.SQUID_FORM_DIMENSIONS;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class SplatcraftEntities {
     public static final EntityType<InkSquidEntity> INK_SQUID = register(

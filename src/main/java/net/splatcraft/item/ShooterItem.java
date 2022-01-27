@@ -9,14 +9,13 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.InkProjectileEntity;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.weapon.ShooterSettings;
 import net.splatcraft.sound.SplatcraftSoundEvents;
 
-import static net.splatcraft.item.InkTankItem.takeContainedInk;
-import static net.splatcraft.util.SplatcraftConstants.T_LOW_INK;
+import static net.splatcraft.item.InkTankItem.*;
+import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class ShooterItem extends WeaponItem {
     protected final ShooterSettings shooter;

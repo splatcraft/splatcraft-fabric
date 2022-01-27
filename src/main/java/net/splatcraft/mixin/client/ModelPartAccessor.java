@@ -11,6 +11,5 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 @Mixin(ModelPart.class)
 public interface ModelPartAccessor {
-    @Accessor("cuboids")
-    List<ModelPart.Cuboid> getCuboids();
+    @Accessor List<ModelPart.Cuboid> getCuboids();
 }

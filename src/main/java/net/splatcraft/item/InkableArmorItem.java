@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.client.util.ClientUtil.getDecimalColor;
+import static net.splatcraft.client.util.ClientUtil.*;
 
 @SuppressWarnings("ConstantConditions")
 public class InkableArmorItem extends DyeableArmorItem {

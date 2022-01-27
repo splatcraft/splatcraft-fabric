@@ -14,7 +14,7 @@ public class SplatcraftTrackedDataHandlerRegistry {
     public static final TrackedDataHandler<InkType> INK_TYPE = register(new EnumTrackedDataHandler<>(InkType.class));
 
     static {
-        HANDLERS.forEach(TrackedDataHandlerRegistryAccessor.getDataHandlers()::add);
+        HANDLERS.forEach(TrackedDataHandlerRegistryAccessor.getDATA_HANDLERS()::add);
     }
 
     public static <T> TrackedDataHandler<T> register(TrackedDataHandler<T> handler) {
