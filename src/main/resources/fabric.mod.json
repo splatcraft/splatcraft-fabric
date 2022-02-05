@@ -3,14 +3,21 @@
 
   "id": "splatcraft",
   "version": "${version}",
-  "license": "MIT",
 
   "name": "Splatcraft",
   "icon": "assets/splatcraft/icon.png",
   "description": "A Minecraft Splatoon Mod!",
 
+  "license": [
+    "MIT (Code)",
+    "All Rights Reserved (Assets)"
+  ],
   "authors": [
-    "andante."
+    "Daniel Orr (Andante)",
+    "Gaetano Russo (Ninni)"
+  ],
+  "contributors": [ "",
+    "Cibernet (Former Author)"
   ],
 
   "contact": {
@@ -21,20 +28,15 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.splatcraft.Splatcraft"
-    ],
-    "client": [
-      "net.splatcraft.client.SplatcraftClient"
-    ],
+    "main":   [ "net.splatcraft.Splatcraft" ],
+    "client": [ "net.splatcraft.client.SplatcraftClient" ],
 
-    "modmenu": [
-      "net.splatcraft.client.SplatcraftModMenu"
-    ],
-    "cardinal-components-entity": [
-      "net.splatcraft.SplatcraftCardinalComponents"
-    ]
+    "modmenu":  [ "net.splatcraft.client.SplatcraftModMenu" ],
+    "toymaker": [ "net.splatcraft.datagen.SplatcraftToymaker" ],
+
+    "cardinal-components-entity": [ "net.splatcraft.cca.SplatcraftCardinalComponents" ]
   },
+
   "mixins": [
     "splatcraft.mixins.json",
     "datagen.mixins.json"
@@ -45,8 +47,9 @@
     "java": ">=17",
     "minecraft": ">=1.18",
     "fabricloader": ">=0.12",
-
-    "fabric": ">=0.45",
+    "fabric": ">=0.46",
+    "frame": ">=0.4.5",
+    "toymaker": ">=1.2",
     "cardinal-components-base": ">=4.0",
     "cloth-config": ">=6.1"
   },
@@ -56,15 +59,7 @@
   },
 
   "custom": {
-    "cardinal-components": [
-      "splatcraft:player_data"
-    ],
-
-    "modmenu": {
-      "badges": [],
-      "links": {
-        "mod.splatcraft.contact.discord": "https://discord.splatcraft.net"
-      }
-    }
+    "cardinal-components": [ "splatcraft:player_data" ],
+    "modmenu": { "links": { "mod.splatcraft.contact.discord": "https://discord.splatcraft.net" } }
   }
 }

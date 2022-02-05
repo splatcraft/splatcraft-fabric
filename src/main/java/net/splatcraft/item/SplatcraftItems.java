@@ -1,7 +1,5 @@
 package net.splatcraft.item;
 
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPattern;
-import io.github.fablabsmc.fablabs.api.bannerpattern.v1.LoomPatternItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
@@ -9,6 +7,8 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.moddingplayground.frame.api.banner.FrameBannerPattern;
+import net.moddingplayground.frame.api.banner.FrameBannerPatternItem;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.item.weapon.ShooterSettings;
@@ -39,8 +39,8 @@ public class SplatcraftItems {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);
     }
 
-    private static Item register(String id, LoomPattern pattern) {
-        return register(id, new LoomPatternItem(pattern, new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
+    private static Item register(String id, FrameBannerPattern pattern) {
+        return register(id, new FrameBannerPatternItem(pattern, new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
     }
 
     private static Item register(String id, int capacity, InkTankFactory factory) {

@@ -1,5 +1,5 @@
 {
-  "parent": "splatcraft:recipes/root",
+  "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
       "splatcraft:grate_block"

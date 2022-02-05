@@ -2,15 +2,14 @@ package net.splatcraft.datagen;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
+import net.moddingplayground.toymaker.api.generator.model.InheritingModelGen;
+import net.moddingplayground.toymaker.api.generator.model.ModelGen;
+import net.moddingplayground.toymaker.api.generator.model.item.AbstractItemModelGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
-import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
-import net.splatcraft.datagen.impl.generator.model.ModelGen;
-import net.splatcraft.datagen.impl.generator.model.item.AbstractItemModelGenerator;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.item.SplatcraftItems;
 
-@SuppressWarnings("ConstantConditions")
 public class ItemModelGenerator extends AbstractItemModelGenerator {
     public ItemModelGenerator() {
         super(Splatcraft.MOD_ID);

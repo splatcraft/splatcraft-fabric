@@ -1,9 +1,9 @@
 package net.splatcraft.datagen;
 
 import net.minecraft.item.Items;
+import net.moddingplayground.toymaker.api.generator.recipe.AbstractRecipeGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
-import net.splatcraft.datagen.impl.generator.recipe.AbstractRecipeGenerator;
 
 public class RecipeGenerator extends AbstractRecipeGenerator {
     public RecipeGenerator() {

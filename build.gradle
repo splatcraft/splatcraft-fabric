@@ -1,14 +1,12 @@
 //file:noinspection all
 
 plugins {
-  id "fabric-loom" version "0.10-SNAPSHOT"
-  id "maven-publish"
+  id 'fabric-loom' version '0.10-SNAPSHOT'
+  id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+archivesBaseName = "${project.archives_base_name}-${project.minecraft_version}"
 group = project.maven_group
 
 version = System.env.GITHUB_ACTIONS == "true"
@@ -30,6 +28,7 @@ repositories {
     name = "Terraformers Maven"
     url  = "https://maven.terraformersmc.com/releases/"
   }
+
   maven {
     name = "Terraformers Backup Maven"
     url  = "https://maven.terraformersmc.com/releases/"
@@ -41,8 +40,8 @@ repositories {
   }
 
   maven {
-    name = "Andante's Maven"
-    url = "https://raw.githubusercontent.com/andantet/maven/main/"
+    name = "Modding Playground's Maven"
+    url = "https://raw.githubusercontent.com/moddingplayground/maven/main/"
   }
 
   maven {
@@ -57,7 +56,7 @@ repositories {
 
   maven {
     name = "Shedaniel"
-    url  = "https://maven.shedaniel.me"
+    url  = "https://maven.shedaniel.me/"
   }
 
   maven {
@@ -71,26 +70,23 @@ dependencies {
   mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
   modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-  // required
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
   String            cardinalComponents       = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
   String            cardinalComponentsBase   = cardinalComponents.formatted("base")
-  modImplementation cardinalComponentsBase
-  include           cardinalComponentsBase
+  modImplementation cardinalComponentsBase ; include cardinalComponentsBase
   String            cardinalComponentsEntity = cardinalComponents.formatted("entity")
-  modImplementation cardinalComponentsEntity
-  include           cardinalComponentsEntity
+  modImplementation cardinalComponentsEntity ; include cardinalComponentsEntity
 
   String  clothConfig = "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-  modApi  clothConfig
-  include clothConfig
+  modApi  clothConfig ; include clothConfig
 
-  String            bannerPP = "io.github.fablabsmc:bannerpp:${project.bannerpp_version}"
-  modImplementation bannerPP
-  include           bannerPP
+  String frame = "net.moddingplayground.frame:frame-fabric:${project.frame_version}"
+  modImplementation frame ; include frame
 
-  // optional
+  String toymaker = "net.moddingplayground.toymaker:toymaker-fabric:${project.toymaker_version}"
+  modImplementation toymaker ; include toymaker
+
   modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
   modImplementation "maven.modrinth:sodium:${project.sodium_version}"
@@ -105,8 +101,9 @@ loom {
       server()
 
       vmArgs(
-              "-D${project.mod_id}.datagen=true",
-              "-D${project.mod_id}.datagen.path=\"${project.file("src/generated/resources")};${project.file("$buildDir/resources/main")}\""
+              "-Dtoymaker.datagen=true",
+              "-Dtoymaker.datagen.modid=${project.mod_id}",
+              "-Dtoymaker.datagen.path=\"${project.file("src/generated/resources")};${project.file("$buildDir/resources/main")}\""
       )
     }
   }
@@ -114,32 +111,16 @@ loom {
 
 processResources {
   inputs.property "version", project.version
-
-  filesMatching("fabric.mod.json") {
-    expand "version": project.version
-  }
+  filesMatching("fabric.mod.json") { expand "version": project.version }
 }
 
-sourceSets.main.resources {
-  srcDirs += "$projectDir/src/generated/resources"
-}
-
-tasks.withType(JavaCompile).configureEach {
-  it.options.release = 17
-}
+sourceSets.main.resources { srcDirs += "$projectDir/src/generated/resources" }
+tasks.withType(JavaCompile).configureEach { it.options.release = 17 }
+java { withSourcesJar() }
 
 jar {
-  from("LICENSE") {
-    rename { "${it}_${project.archivesBaseName}"}
-  }
+  from("LICENSE") { rename { "${it}_${project.mod_id}" } }
+  from("LICENSE_ASSETS") { rename { "${it}_${project.mod_id}" } }
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-    }
-  }
-
-  repositories {}
-}
+publishing { publications { mavenJava(MavenPublication) { from components.java } } }

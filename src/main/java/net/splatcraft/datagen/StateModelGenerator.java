@@ -3,12 +3,12 @@ package net.splatcraft.datagen;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.util.Identifier;
+import net.moddingplayground.toymaker.api.generator.model.InheritingModelGen;
+import net.moddingplayground.toymaker.api.generator.model.StateGen;
+import net.moddingplayground.toymaker.api.generator.model.StateModelInfo;
+import net.moddingplayground.toymaker.api.generator.model.block.AbstractStateModelGenerator;
+import net.moddingplayground.toymaker.api.generator.model.block.VariantsStateGen;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.datagen.impl.generator.model.InheritingModelGen;
-import net.splatcraft.datagen.impl.generator.model.StateGen;
-import net.splatcraft.datagen.impl.generator.model.StateModelInfo;
-import net.splatcraft.datagen.impl.generator.model.block.AbstractStateModelGenerator;
-import net.splatcraft.datagen.impl.generator.model.block.VariantsStateGen;
 
 import static net.splatcraft.block.SplatcraftBlocks.*;
 

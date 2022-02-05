@@ -1,4 +1,4 @@
-package net.splatcraft;
+package net.splatcraft.cca;
 
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
