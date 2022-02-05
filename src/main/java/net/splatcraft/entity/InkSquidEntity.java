@@ -20,7 +20,6 @@ import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 
-import static net.splatcraft.util.Events.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkSquidEntity extends MobEntity implements Inkable, InkableCaster {

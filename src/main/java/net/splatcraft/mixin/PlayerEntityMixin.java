@@ -47,7 +47,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static net.splatcraft.network.NetworkingCommon.*;
-import static net.splatcraft.util.Events.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 

@@ -9,7 +9,6 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.splatcraft.Splatcraft;
 
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ public abstract class Option<T> {
     public abstract void fromJson(JsonElement json);
 
     protected void invalidConfig(JsonElement json) {
-        Splatcraft.LOGGER.error("Loading default value for config {}: {}", this, json);
+        System.err.printf("Loading default value for config %s: %s%n", this, json);
     }
 
     @Environment(EnvType.CLIENT)

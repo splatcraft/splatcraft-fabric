@@ -14,7 +14,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRenderEven
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.UnclampedModelPredicateProvider;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -40,7 +42,6 @@ import net.splatcraft.item.InkTankItem;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
-import net.splatcraft.util.Events;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,12 +55,21 @@ import static net.splatcraft.item.InkTankItem.*;
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 public class SplatcraftClient implements ClientModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("%s-client".formatted(Splatcraft.MOD_ID));
+    private static SplatcraftClient instance = null;
+
+    protected final Logger logger;
+    protected final Events events;
+
+    public SplatcraftClient() {
+        this.logger = LogManager.getLogger("%s-client".formatted(Splatcraft.MOD_ID));
+        this.events = new Events();
+        instance = this;
+    }
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onInitializeClient() {
-        LOGGER.info("Initializing {}-client", Splatcraft.MOD_NAME);
+        this.logger.info("Initializing {}-client", Splatcraft.MOD_NAME);
 
         Reflection.initialize(
             ClientConfig.class,
@@ -91,7 +101,6 @@ public class SplatcraftClient implements ClientModInitializer {
 
         // armor
         ArmorRenderer.register(InkTankRenderer.INSTANCE::render, SplatcraftItems.INK_TANK);
-        LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.register(Events::allowCapeRender);
 
         // model predicates
         modelPredicate("using",
@@ -142,20 +151,38 @@ public class SplatcraftClient implements ClientModInitializer {
         );
         ClientWorldAccessor.setBLOCK_MARKER_ITEMS(newBlockMarkerItems);
 
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) onInitializeClientDev();
 
-        LOGGER.info("Initialized {}-client", Splatcraft.MOD_NAME);
+        this.logger.info("Initialized {}-client", Splatcraft.MOD_NAME);
     }
 
-    private void initDev() {
-        LOGGER.info("Initializing {}-client-dev", Splatcraft.MOD_NAME);
+    public void onInitializeClientDev() {
+        this.logger.info("Initializing {}-client-dev", Splatcraft.MOD_NAME);
         Reflection.initialize(SplatcraftDevelopmentKeyBindings.class);
-        LOGGER.info("Initialized {}-client-dev", Splatcraft.MOD_NAME);
+        this.logger.info("Initialized {}-client-dev", Splatcraft.MOD_NAME);
     }
 
-    private static void modelPredicate(String id, UnclampedModelPredicateProvider provider, Item... items) {
+    protected static void modelPredicate(String id, UnclampedModelPredicateProvider provider, Item... items) {
         for (Item item : items) {
             FabricModelPredicateProviderRegistry.register(item, new Identifier(Splatcraft.MOD_ID, id), provider);
+        }
+    }
+
+    public Events getEvents() {
+        return this.events;
+    }
+
+    public static SplatcraftClient getInstance() {
+        return instance;
+    }
+
+    public static class Events {
+        protected Events() {
+            LivingEntityFeatureRenderEvents.ALLOW_CAPE_RENDER.register(this::allowCapeRender);
+        }
+
+        public boolean allowCapeRender(AbstractClientPlayerEntity player) {
+            return !ClientConfig.INSTANCE.cancelCapeRenderWithInkTank.getValue() || !(player.getEquippedStack(EquipmentSlot.CHEST).getItem() instanceof InkTankItem);
         }
     }
 }
