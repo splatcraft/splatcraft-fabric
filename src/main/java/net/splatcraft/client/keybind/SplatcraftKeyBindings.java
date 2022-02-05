@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.SplatcraftConfigScreenFactory;
-import net.splatcraft.component.PlayerDataComponent;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,8 +42,7 @@ public class SplatcraftKeyBindings {
                     //---
 
                     if (isSplatcraftPresentOnServer()) {
-                        PlayerDataComponent data = PlayerDataComponent.get(player);
-                        boolean wasSquid = data.isSquid();
+                        boolean wasSquid = ((InkEntityAccess) player).isInSquidForm();
 
                         // squid form
                         boolean nowSquid = wasSquid;

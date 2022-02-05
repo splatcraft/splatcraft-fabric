@@ -11,6 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.PackedInput;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity implements InputPlayerEntityAccess {
+public abstract class ServerPlayerEntityMixin extends PlayerEntity implements InputPlayerEntityAccess, InkEntityAccess {
     private PackedInput packedInput = PackedInput.EMPTY;
 
     private ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
@@ -50,13 +51,16 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
         });
     }
 
-    // disable squid form on death
+    /**
+     * Disables squid form on death.
+     */
     @Inject(method = "onDeath", at = @At("TAIL"))
     private void onOnDeath(DamageSource source, CallbackInfo ci) {
         ServerPlayerEntity that = ServerPlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid()) {
+        if (this.isInSquidForm()) {
+            PlayerDataComponent data = PlayerDataComponent.get(that);
             data.setSquid(false);
+
             this.setInvisible(true);
         }
     }

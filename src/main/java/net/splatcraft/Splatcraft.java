@@ -38,7 +38,6 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.command.InkColorCommand;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.component.SplatcraftComponents;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.entity.access.InkEntityAccess;
@@ -192,8 +191,7 @@ public class Splatcraft implements ModInitializer {
         }
 
         public boolean canInteractWithWorld(PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return !data.isSquid();
+            return !((InkEntityAccess) player).isInSquidForm();
         }
     }
 }

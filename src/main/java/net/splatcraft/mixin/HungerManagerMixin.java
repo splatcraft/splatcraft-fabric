@@ -13,7 +13,9 @@ import static net.splatcraft.world.SplatcraftGameRules.*;
 
 @Mixin(HungerManager.class)
 public class HungerManagerMixin {
-    // cap natural regeneration when on enemy ink
+    /**
+     * Caps natural regeneration when on enemy ink.
+     */
     @Redirect(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;heal(F)V"))
     private void onUpdateHeal(PlayerEntity player, float amount) {
         if (gameRule(player.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(player.getType())) {

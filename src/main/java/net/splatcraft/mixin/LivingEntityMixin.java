@@ -7,11 +7,9 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.client.config.ClientConfig;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.InkableCaster;
 import net.splatcraft.entity.access.LivingEntityAccess;
@@ -113,7 +111,9 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
         this.ticksWithoutDamage = 0;
     }
 
-    // spawn ink squid soul particle on death if inkable
+    /**
+     * Spawns an ink squid soul particle on death if inkable.
+     */
     @Environment(EnvType.CLIENT)
     @Inject(method = "handleStatus", at = @At("HEAD"))
     private void onHandleStatus(byte status, CallbackInfo ci) {
@@ -126,29 +126,23 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
         }
     }
 
-    // ensure that the player is invisible when submerged
+    /**
+     * Ensures that the player is invisible when submerged.
+     */
     @Inject(method = "updatePotionVisibility", at = @At("HEAD"), cancellable = true)
     private void onUpdatePotionVisibility(CallbackInfo ci) {
-        LivingEntity that = LivingEntity.class.cast(this);
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            if (data.isSubmerged()) {
-                this.setInvisible(true);
-                ci.cancel();
-            }
+        if (this.isSubmergedInInk()) {
+            this.setInvisible(true);
+            ci.cancel();
         }
     }
 
-    // prevent fall damage when on own ink
+    /**
+     * Disables fall damage when on own ink.
+     */
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
-    private void onHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        LivingEntity that = LivingEntity.class.cast(this);
-        if (this.isOnOwnInk()) {
-            if (that instanceof PlayerEntity player) {
-                PlayerDataComponent data = PlayerDataComponent.get(player);
-                if (data.isSquid()) cir.setReturnValue(false);
-            } else cir.setReturnValue(false);
-        }
+    private void onHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (this.isOnOwnInk() && this.isInSquidForm()) cir.setReturnValue(false);
     }
 
     @Inject(method = "damage", at = @At("RETURN"))

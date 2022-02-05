@@ -64,6 +64,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     @Override
+    public boolean isInSquidForm() {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        return data.isSquid();
+    }
+
+    @Override
+    public boolean isSubmergedInInk() {
+        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerDataComponent data = PlayerDataComponent.get(that);
+        return data.isSubmerged();
+    }
+
+    @Override
     public InkColor getInkColor() {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
@@ -141,26 +155,29 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return base != nu ? Optional.of(nu) : Optional.empty();
     }
 
-    // cancel exhaustion if squid
+    /**
+     * Cancels exhaustion if in squid form.
+     */
     @Inject(method = "addExhaustion", at = @At("HEAD"), cancellable = true)
     private void onAddExhaustion(float exhaustion, CallbackInfo ci) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid()) ci.cancel();
+        if (this.isInSquidForm()) ci.cancel();
     }
 
-    // disallow food to heal
+    /**
+     * Disables food healing under certain conditions.
+     */
     @Inject(method = "canFoodHeal", at = @At("RETURN"), cancellable = true)
     private void onCanFoodHeal(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             PlayerEntity that = PlayerEntity.class.cast(this);
-            PlayerDataComponent data = PlayerDataComponent.get(that);
             LivingEntityAccess access = ((LivingEntityAccess) that);
-            if (data.isSquid() || (!access.canFastHeal() && gameRule(this.world, DISABLE_FOOD_HEAL_AFTER_DAMAGE))) cir.setReturnValue(false);
+            if (this.isInSquidForm() || (!access.canFastHeal() && gameRule(this.world, DISABLE_FOOD_HEAL_AFTER_DAMAGE))) cir.setReturnValue(false);
         }
     }
 
-    // change attributes for squid form
+    /**
+     * Modifies attributes for squid form.
+     */
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
     private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
@@ -169,7 +186,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         );
     }
 
-    // modify movement speed for squid form
+    /**
+     * Modifies movement speed for squid form.
+     */
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -179,43 +198,42 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         }
     }
 
-    // change pose for squid form
+    /**
+     * Modifies pose for squid form.
+     */
     @Inject(method = "updatePose", at = @At("HEAD"), cancellable = true)
     private void onUpdatePose(CallbackInfo ci) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid() && !this.abilities.flying) {
+        if (this.isInSquidForm() && !this.abilities.flying) {
             this.setPose(EntityPose.SWIMMING);
             ci.cancel();
         }
     }
 
-    // replace dimensions for squid form
+    /**
+     * Modifies dimensions for squid form.
+     */
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid()) {
-            cir.setReturnValue(data.isSubmerged() ? SQUID_FORM_SUBMERGED_DIMENSIONS : SQUID_FORM_DIMENSIONS);
-        }
+        if (this.isInSquidForm()) cir.setReturnValue(this.isSubmergedInInk() ? SQUID_FORM_SUBMERGED_DIMENSIONS : SQUID_FORM_DIMENSIONS);
     }
 
-    // replace eye height for squid form
+    /**
+     * Modifies eye height for squid form.
+     */
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
     private void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
         try {
-            PlayerDataComponent data = PlayerDataComponent.get(that);
-            if (data.isSquid()) cir.setReturnValue(SplatcraftConstants.getEyeHeight(data.isSubmerged()));
+            if (this.isInSquidForm()) cir.setReturnValue(SplatcraftConstants.getEyeHeight(this.isSubmergedInInk()));
         } catch (NullPointerException ignored) {}
     }
 
-    // add extra force to a submerged jump
+    /**
+     * Modifies jump force for submersion.
+     */
     @Inject(method = "jump", at = @At("TAIL"))
     private void onJump(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSubmerged()) {
+        if (this.isSubmergedInInk()) {
             Vec3d velocity = this.getVelocity();
             if (that.forwardSpeed > 0) {
                 float f = this.getYaw() * ((float)Math.PI / 180);
@@ -252,9 +270,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
     private boolean shouldTickEnemyInkSquidForm() {
         if (!gameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        return data.isSquid() && this.isOnEnemyInk();
+        return this.isInSquidForm() && this.isOnEnemyInk();
     }
 
     @Environment(EnvType.CLIENT)
@@ -262,19 +278,21 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return ClientConfig.INSTANCE.optimiseDesync.getValue();
     }
 
-    // prevent attack cooldown when holding a weapon
+    /**
+     * Disables attack cooldown when holding a weapon.
+     */
     @Inject(method = "resetLastAttackedTicks", at = @At("HEAD"), cancellable = true)
     private void onResetLastAttackedTicks(CallbackInfo ci) {
         if (this.getMainHandStack().getItem() instanceof WeaponItem) ci.cancel();
     }
 
-    // override travel with custom logic if climbing ink
+    /**
+     * Modifies travel logic if climbing ink.
+     */
     @SuppressWarnings("deprecation")
     @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
     private void onTravel(Vec3d movementInput, CallbackInfo ci) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid() && this.canClimbInk()) {
+        if (this.isInSquidForm() && this.canClimbInk()) {
             ci.cancel();
 
             double dx = this.getX();

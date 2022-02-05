@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.block.InkableBlock;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
@@ -47,23 +46,11 @@ public abstract class InkEntityMixin implements InkEntityAccess {
 
     @Override
     public boolean isInSquidForm() {
-        Entity that = Entity.class.cast(this);
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return data.isSquid();
-        }
-
         return this instanceof Inkable;
     }
 
     @Override
     public boolean isSubmergedInInk() {
-        Entity that = Entity.class.cast(this);
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return data.isSubmerged();
-        }
-
         return false;
     }
 
@@ -108,13 +95,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Override
     public boolean canSubmergeInInk() {
         Entity that = Entity.class.cast(this);
-
-        if (that instanceof PlayerEntity player) {
-            PlayerDataComponent data = PlayerDataComponent.get(player);
-            return data.isSquid() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
-        }
-
-        return false;
+        return that instanceof PlayerEntity && this.isInSquidForm() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
     }
 
     @Override

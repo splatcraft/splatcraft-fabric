@@ -20,16 +20,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityType.class)
 public class EntityTypeMixin<T extends Entity> {
-    // set ink color of spawned entity to ink color of targeted block
+    /**
+     * Sets the ink color of the spawned entity to the ink color of the targeted block.
+     */
     @Inject(method = "create(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/nbt/NbtCompound;Lnet/minecraft/text/Text;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/SpawnReason;ZZ)Lnet/minecraft/entity/Entity;", at = @At("RETURN"), cancellable = true)
     private void onSpawn(ServerWorld world, @Nullable NbtCompound nbt, @Nullable Text name, @Nullable PlayerEntity player, BlockPos spawnPos, SpawnReason spawnReason, boolean alignPosition, boolean invertY, CallbackInfoReturnable<@Nullable T> cir) {
         Entity ret = cir.getReturnValue();
         if (ret instanceof Inkable entity && player != null) {
             HitResult result = player.raycast(8.0d, 0.0f, false);
             if (result instanceof BlockHitResult hit) {
-                BlockPos hitPos = new BlockPos(hit.getPos());
+                BlockPos hpos = new BlockPos(hit.getPos());
                 Direction side = hit.getSide();
-                BlockPos pos = side != Direction.DOWN && side != Direction.NORTH ? hitPos.offset(side, -1) : hitPos;
+                BlockPos pos = side != Direction.DOWN && side != Direction.NORTH ? hpos.offset(side, -1) : hpos;
                 if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.copyInkableTo(entity);
             }
         }

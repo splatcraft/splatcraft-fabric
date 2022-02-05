@@ -109,7 +109,9 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         return stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock;
     }
 
-    // change ink color of stack if on inkable and configured
+    /**
+     * Changes the ink color of the stack if on an inkable block and configured.
+     */
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR) && this.isOnGround()) {

@@ -21,7 +21,9 @@ import java.util.Random;
 public abstract class ClientWorldMixin {
     @Shadow public abstract void randomBlockDisplayTick(int centerX, int centerY, int centerZ, int radius, Random random, @Nullable Block block, BlockPos.Mutable pos);
 
-    // display stage blocks if the client player is nearby
+    /**
+     * Displays stage blocks if the client player is nearby.
+     */
     @Inject(method = "doRandomBlockDisplayTicks", at = @At("TAIL"))
     private void ondoRandomBlockDisplayTicks(int centerX, int centerY, int centerZ, CallbackInfo ci) {
         Random random = new Random();

@@ -66,13 +66,13 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.player = player;
     }
 
-    public static PlayerDataComponent get(PlayerEntity player) {
-        return SplatcraftComponents.PLAYER_DATA.get(player);
-    }
-
     @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
         return true;
+    }
+
+    public static PlayerDataComponent get(PlayerEntity player) {
+        return SplatcraftComponents.PLAYER_DATA.get(player);
     }
 
     public void sync() {

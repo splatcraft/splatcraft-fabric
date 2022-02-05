@@ -34,7 +34,7 @@
     "modmenu":  [ "net.splatcraft.client.SplatcraftModMenu" ],
     "toymaker": [ "net.splatcraft.datagen.SplatcraftToymaker" ],
 
-    "cardinal-components-entity": [ "net.splatcraft.cca.SplatcraftCardinalComponents" ]
+    "cardinal-components-entity": [ "net.splatcraft.component.SplatcraftCardinalComponents" ]
   },
 
   "mixins": [
