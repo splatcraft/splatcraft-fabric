@@ -3,6 +3,7 @@ package net.splatcraft;
 import com.google.common.reflect.Reflection;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -69,6 +70,7 @@ public class Splatcraft implements ModInitializer {
         AttackBlockCallback.EVENT.register(Events::attackBlock);
         PlayerBlockBreakEvents.BEFORE.register(Events::beforeBlockBreak);
         PlayerBlockBreakEvents.CANCELED.register(Events::onBlockBreakCanceled);
+        EntityElytraEvents.ALLOW.register(Events::allowElytraFlight);
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) initDev();
 

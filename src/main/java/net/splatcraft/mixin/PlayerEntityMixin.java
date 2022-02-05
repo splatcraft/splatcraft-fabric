@@ -56,7 +56,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Shadow @Final private PlayerAbilities abilities;
 
     @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
-    @Shadow public abstract void stopFallFlying();
     @Shadow public abstract PlayerInventory getInventory();
 
     private int enemyInkSquidFormTicks;
@@ -262,17 +261,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Environment(EnvType.CLIENT)
     private static boolean optimiseDesyncSetting() {
         return ClientConfig.INSTANCE.optimiseDesync.getValue();
-    }
-
-    // disable flying in squid form
-    @Inject(method = "checkFallFlying", at = @At("HEAD"), cancellable = true)
-    private void onCheckFallFlying(CallbackInfoReturnable<Boolean> cir) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
-        PlayerDataComponent data = PlayerDataComponent.get(that);
-        if (data.isSquid()) {
-            this.stopFallFlying();
-            cir.setReturnValue(false);
-        }
     }
 
     // prevent attack cooldown when holding a weapon

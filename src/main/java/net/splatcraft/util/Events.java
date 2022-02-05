@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -83,6 +84,10 @@ public final class Events {
 
     public static void onBlockBreakCanceled(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity) {
         if (!world.isClient) world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+    }
+
+    public static boolean allowElytraFlight(LivingEntity entity) {
+        return entity instanceof InkEntityAccess access && !access.isInSquidForm();
     }
 
     public static ActionResult getInteractActionResult(PlayerEntity player) {
