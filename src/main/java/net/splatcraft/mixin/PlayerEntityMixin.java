@@ -45,8 +45,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Random;
 
 import static net.splatcraft.network.NetworkingCommon.*;
+import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
@@ -130,7 +132,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
     @Override
     public boolean canEnterSquidForm() {
-        return !this.hasVehicle();
+        return !this.isCoolingDownSquidForm() && !this.hasVehicle();
     }
 
     @Override
@@ -248,29 +250,44 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     private Vec3d posLastTick;
+
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
-        if (!this.world.isClient) {
-            // leave squid form if on enemy ink and time passed
-            this.enemyInkSquidFormTicks = this.shouldTickEnemyInkSquidForm() ? this.enemyInkSquidFormTicks + 1 : 0;
-            if (this.enemyInkSquidFormTicks > 6) data.setSquid(false);
+        boolean sidedRuns = !this.world.isClient || !optimiseDesyncSetting();
+        Vec3d pos = this.getPos();
+
+        // leave squid form if on enemy ink and time passed
+        this.enemyInkSquidFormTicks = this.shouldTickEnemyInkSquidForm() ? this.enemyInkSquidFormTicks + 1 : 0;
+        if (this.enemyInkSquidFormTicks > 16) this.enemyInkSquidFormTicks = 0;
+
+        if (this.world.isClient) {
+            if (this.isCoolingDownSquidForm()) {
+                Random rand = this.random;
+                Vec3d offset = new Vec3d((rand.nextDouble() - 0.5d) / 4, 0.0d, (rand.nextDouble() - 0.5d) / 4);
+                inkSplash(this.world, this, pos.add(offset), 0.25f);
+            }
         }
 
-        // check for submersion
-        if (!this.world.isClient || !optimiseDesyncSetting()) data.setSubmerged(this.canSubmergeInInk());
+        if (sidedRuns) {
+            // check for submersion
+            data.setSubmerged(this.canSubmergeInInk());
+        }
 
         // tick movement
-        Vec3d pos = this.getPos();
         if (this.posLastTick != null) tickInkable(this, this.posLastTick.subtract(pos));
         this.posLastTick = pos;
     }
 
     private boolean shouldTickEnemyInkSquidForm() {
-        if (!gameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
-        return this.isInSquidForm() && this.isOnEnemyInk();
+        if (!leaveSquidFormOnEnemyInk(this.world)) return false;
+        return (this.isInSquidForm() || this.isCoolingDownSquidForm()) && this.isOnEnemyInk();
+    }
+
+    public boolean isCoolingDownSquidForm() {
+        return this.enemyInkSquidFormTicks > 6;
     }
 
     @Environment(EnvType.CLIENT)

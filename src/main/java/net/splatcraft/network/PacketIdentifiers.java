@@ -26,6 +26,11 @@ public class PacketIdentifiers {
     public static final Identifier S2C_INIT = create("s2c_init"); // S2C
 
     /**
+     * A packet for updating the client's knowledge of {@link SplatcraftGameRules#LEAVE_SQUID_FORM_ON_ENEMY_INK}.
+     */
+    public static final Identifier UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK = create("update_leave_squid_form_on_enemy_ink"); // S2C
+
+    /**
      * A packet for updating the client's knowledge of {@link SplatcraftGameRules#ENEMY_INK_SLOWNESS}.
      */
     public static final Identifier UPDATE_ENEMY_INK_SLOWNESS = create("update_enemy_ink_slowness"); // S2C

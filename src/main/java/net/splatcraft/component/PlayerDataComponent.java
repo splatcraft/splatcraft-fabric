@@ -10,7 +10,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientChunkManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -171,7 +170,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
     }
 
     @Environment(EnvType.CLIENT)
-    private <T extends Entity & Inkable> void setSubmergedClient(boolean submerged) {
+    protected void setSubmergedClient(boolean submerged) {
         if (ClientConfig.INSTANCE.inkSplashParticleOnTravel.getValue()) {
             Vec3d pos = this.player.getPos();
             Random random = this.player.getRandom();

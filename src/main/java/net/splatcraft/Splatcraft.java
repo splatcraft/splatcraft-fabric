@@ -24,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -33,6 +34,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
@@ -52,6 +54,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import static net.splatcraft.network.NetworkingCommon.*;
+import static net.splatcraft.network.PacketIdentifiers.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
 public class Splatcraft implements ModInitializer {
@@ -140,9 +143,14 @@ public class Splatcraft implements ModInitializer {
         }
 
         public void playerInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
-            s2cInit(handler.player);
-            updateEnemyInkSlowness(handler.player, server.getGameRules().get(ENEMY_INK_SLOWNESS));
-            updateUniversalInk(handler.player, server.getGameRules().get(UNIVERSAL_INK));
+            ServerPlayerEntity player = handler.player;
+            GameRules gameRules = server.getGameRules();
+
+            s2cInit(player);
+
+            updateRule(UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK, player, gameRules.get(LEAVE_SQUID_FORM_ON_ENEMY_INK));
+            updateRule(UPDATE_ENEMY_INK_SLOWNESS, player, gameRules.get(ENEMY_INK_SLOWNESS));
+            updateRule(UPDATE_UNIVERSAL_INK, player, gameRules.get(UNIVERSAL_INK));
         }
 
         public void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

@@ -18,6 +18,7 @@ import java.util.function.BiConsumer;
 import static net.minecraft.util.Identifier.*;
 import static net.minecraft.world.GameRules.*;
 import static net.splatcraft.network.NetworkingCommon.*;
+import static net.splatcraft.network.PacketIdentifiers.*;
 
 public class SplatcraftGameRules {
     public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
@@ -28,7 +29,6 @@ public class SplatcraftGameRules {
 
     public static final Key<BooleanRule> INKWELL_CHANGES_INK_COLOR = register("inkwellChangesInkColor", false);
     public static final Key<BooleanRule> INK_TANK_INK_REGENERATION = register("inkTankInkRegeneration", true);
-    public static final Key<BooleanRule> LEAVE_SQUID_FORM_ON_ENEMY_INK = register("leaveSquidFormOnEnemyInk", true);
     public static final Key<BooleanRule> DISABLE_FOOD_HEAL_AFTER_DAMAGE = register("disableFoodHealAfterDamage", true);
 
     public static final Key<BooleanRule> SPLATFEST_BAND_MUST_BE_HELD = register("splatfestBandMustBeHeld", true, (server, rule) -> {
@@ -37,16 +37,16 @@ public class SplatcraftGameRules {
         }
     });
 
+    public static final Key<BooleanRule> LEAVE_SQUID_FORM_ON_ENEMY_INK = register("leaveSquidFormOnEnemyInk", true, (server, rule) -> {
+        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK, player, rule);
+    });
+
     public static final Key<BooleanRule> UNIVERSAL_INK = register("universalInk", false, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            updateUniversalInk(player, rule);
-        }
+        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_UNIVERSAL_INK, player, rule);
     });
 
     public static final Key<BooleanRule> ENEMY_INK_SLOWNESS = register("enemyInkSlowness", true, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            updateEnemyInkSlowness(player, rule);
-        }
+        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_ENEMY_INK_SLOWNESS, player, rule);
     });
 
     public static final Key<BooleanRule> DAMAGE_ON_ENEMY_INK = register("damageOnEnemyInk", true);

@@ -12,10 +12,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.SplatcraftConfigScreenFactory;
 import net.splatcraft.entity.access.InkEntityAccess;
-import net.splatcraft.entity.access.PlayerEntityAccess;
 import org.lwjgl.glfw.GLFW;
 
 import static net.splatcraft.client.network.NetworkingClient.*;
@@ -25,7 +23,7 @@ import static net.splatcraft.util.SplatcraftConstants.*;
 public class SplatcraftKeyBindings {
     public static final String KEY_CATEGORY = "key.categories.%s".formatted(Splatcraft.MOD_ID);
 
-    public static final SinglePressKeyBinding CHANGE_SQUID_FORM = register("change_squid_form", GLFW.GLFW_KEY_Z, SinglePressKeyBinding::new);
+    public static final ChangeSquidFormKeyBinding CHANGE_SQUID_FORM = register("change_squid_form", GLFW.GLFW_KEY_Z, ChangeSquidFormKeyBinding::new);
     public static final KeyBinding OPEN_CONFIG = register("open_config", GLFW.GLFW_KEY_UNKNOWN);
 
     static {
@@ -39,20 +37,11 @@ public class SplatcraftKeyBindings {
                         return;
                     }
 
-                    //---
-
                     if (isSplatcraftPresentOnServer()) {
-                        boolean wasSquid = ((InkEntityAccess) player).isInSquidForm();
-
                         // squid form
-                        boolean nowSquid = wasSquid;
-                        switch (ClientConfig.INSTANCE.changeSquidKeyBehavior.getValue()) {
-                            case TOGGLE -> nowSquid = CHANGE_SQUID_FORM.wasToggled() ? !wasSquid : nowSquid;
-                            case HOLD -> nowSquid = CHANGE_SQUID_FORM.isPressed();
-                        }
-
-                        if (nowSquid) nowSquid = ((PlayerEntityAccess) player).canEnterSquidForm();
-                        if (wasSquid != nowSquid) keyChangeSquidForm(nowSquid);
+                        boolean squid = ((InkEntityAccess) player).isInSquidForm();
+                        boolean nowSquid = CHANGE_SQUID_FORM.getSquidForm(squid);
+                        if (squid != nowSquid) keyChangeSquidForm(nowSquid);
                     } else {
                         if (CHANGE_SQUID_FORM.wasPressed()) {
                             SystemToast.add(
