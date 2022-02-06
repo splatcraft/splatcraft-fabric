@@ -34,7 +34,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
@@ -49,13 +48,12 @@ import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.world.SplatcraftGameRules;
+import net.splatcraft.world.SynchronizedBooleanGameRuleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import static net.splatcraft.network.NetworkingCommon.*;
-import static net.splatcraft.network.PacketIdentifiers.*;
-import static net.splatcraft.world.SplatcraftGameRules.*;
 
 public class Splatcraft implements ModInitializer {
     public static final String MOD_ID   = "splatcraft";
@@ -144,13 +142,8 @@ public class Splatcraft implements ModInitializer {
 
         public void playerInit(ServerPlayNetworkHandler handler, MinecraftServer server) {
             ServerPlayerEntity player = handler.player;
-            GameRules gameRules = server.getGameRules();
-
             s2cInit(player);
-
-            updateRule(UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK, player, gameRules.get(LEAVE_SQUID_FORM_ON_ENEMY_INK));
-            updateRule(UPDATE_ENEMY_INK_SLOWNESS, player, gameRules.get(ENEMY_INK_SLOWNESS));
-            updateRule(UPDATE_UNIVERSAL_INK, player, gameRules.get(UNIVERSAL_INK));
+            SynchronizedBooleanGameRuleRegistry.updateAll(player);
         }
 
         public void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {

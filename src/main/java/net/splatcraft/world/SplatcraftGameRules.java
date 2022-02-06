@@ -17,8 +17,6 @@ import java.util.function.BiConsumer;
 
 import static net.minecraft.util.Identifier.*;
 import static net.minecraft.world.GameRules.*;
-import static net.splatcraft.network.NetworkingCommon.*;
-import static net.splatcraft.network.PacketIdentifiers.*;
 
 public class SplatcraftGameRules {
     public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
@@ -32,22 +30,12 @@ public class SplatcraftGameRules {
     public static final Key<BooleanRule> DISABLE_FOOD_HEAL_AFTER_DAMAGE = register("disableFoodHealAfterDamage", true);
 
     public static final Key<BooleanRule> SPLATFEST_BAND_MUST_BE_HELD = register("splatfestBandMustBeHeld", true, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            ((PlayerEntityAccess) player).updateSplatfestBand();
-        }
+        for (ServerPlayerEntity player : PlayerLookup.all(server)) ((PlayerEntityAccess) player).updateSplatfestBand();
     });
 
-    public static final Key<BooleanRule> LEAVE_SQUID_FORM_ON_ENEMY_INK = register("leaveSquidFormOnEnemyInk", true, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK, player, rule);
-    });
-
-    public static final Key<BooleanRule> UNIVERSAL_INK = register("universalInk", false, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_UNIVERSAL_INK, player, rule);
-    });
-
-    public static final Key<BooleanRule> ENEMY_INK_SLOWNESS = register("enemyInkSlowness", true, (server, rule) -> {
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) updateRule(UPDATE_ENEMY_INK_SLOWNESS, player, rule);
-    });
+    public static final Key<BooleanRule> LEAVE_SQUID_FORM_ON_ENEMY_INK = synced("leaveSquidFormOnEnemyInk", true);
+    public static final Key<BooleanRule> UNIVERSAL_INK = synced("universalInk", false);
+    public static final Key<BooleanRule> ENEMY_INK_SLOWNESS = synced("enemyInkSlowness", true);
 
     public static final Key<BooleanRule> DAMAGE_ON_ENEMY_INK = register("damageOnEnemyInk", true);
     public static final Key<BooleanRule> DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM = register("damageOnEnemyInk/onlyInSquidForm", false);
@@ -60,9 +48,10 @@ public class SplatcraftGameRules {
     public static final Key<BooleanRule> DAMAGE_WHEN_WET_CAN_KILL = register("damageWhenWet/canKill", true);
     public static final Key<BooleanRule> DAMAGE_WHEN_WET_INSTANT_KILL = register("damageWhenWet/instantKill", true);
 
-    public static final Key<BooleanRule> ACCURATE_REGENERATION = register("accurateRegeneration", false);
-    public static final Key<BooleanRule> ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM = register("accurateRegeneration/onlyInSquidForm", false);
-    public static final Key<BooleanRule> ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH = register("accurateRegeneration/scalesToMaxHealth", true);
+    public static final Key<BooleanRule> GAME_HEALTH = register("gameHealth", false);
+    public static final Key<BooleanRule> GAME_HEALTH_ONLY_IN_SQUID_FORM = register("gameHealth/onlyInSquidForm", false);
+    public static final Key<BooleanRule> GAME_HEALTH_SCALES_TO_MAX_HEALTH = register("gameHealth/scalesToMaxHealth", true);
+    public static final Key<BooleanRule> GAME_HEALTH_INVULNERABILITY_TICKS_ON_INK_DAMAGE = register("gameHealth/invulnerabilityTicksOnInkDamage", false);
 
     public static final Key<BooleanRule> REGENERATE_WHEN_SUBMERGED = register("regenerateWhenSubmerged", true);
     public static final Key<BooleanRule> REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH = register("regenerateWhenSubmerged/scalesToMaxHealth", true);
@@ -79,11 +68,18 @@ public class SplatcraftGameRules {
         return register(id, defaultValue, (s, r) -> {});
     }
 
+    private static Key<BooleanRule> synced(String id, boolean defaultValue) {
+        Key<BooleanRule> key = register(id, SynchronizedBooleanGameRuleRegistry.createBooleanRule(defaultValue));
+        SynchronizedBooleanGameRuleRegistry.register(key, defaultValue);
+        return key;
+    }
+
     private static String getId(String id) {
         return Splatcraft.MOD_ID + NAMESPACE_SEPARATOR + id;
     }
 
-    public static boolean gameRule(World world, Key<BooleanRule> rule) {
-        return world.getGameRules().getBoolean(rule);
+    public static boolean gameRule(World world, Key<BooleanRule> key) {
+        return world.getGameRules().getBoolean(key);
     }
+
 }

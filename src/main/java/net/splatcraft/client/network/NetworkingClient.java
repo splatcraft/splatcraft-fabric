@@ -17,17 +17,9 @@ import static net.splatcraft.network.PacketIdentifiers.*;
 public class NetworkingClient {
     private static boolean presentOnServer = false;
 
-    private static boolean leaveSquidFormOnEnemyInk = true;
-    private static boolean universalInk = false;
-    private static boolean enemyInkSlowness = true;
-
     static {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             presentOnServer = false;
-
-            leaveSquidFormOnEnemyInk = true;
-            universalInk = false;
-            enemyInkSlowness = true;
         });
 
         // packet receivers
@@ -38,25 +30,10 @@ public class NetworkingClient {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(S2C_INIT, (client, handler, buf, responseSender) -> presentOnServer = true);
-        ClientPlayNetworking.registerGlobalReceiver(UPDATE_LEAVE_SQUID_FORM_ON_ENEMY_INK, (client, handler, buf, responseSender) -> leaveSquidFormOnEnemyInk = buf.readBoolean());
-        ClientPlayNetworking.registerGlobalReceiver(UPDATE_UNIVERSAL_INK, (client, handler, buf, responseSender) -> universalInk = buf.readBoolean());
-        ClientPlayNetworking.registerGlobalReceiver(UPDATE_ENEMY_INK_SLOWNESS, (client, handler, buf, responseSender) -> enemyInkSlowness = buf.readBoolean());
     }
 
     public static boolean isSplatcraftPresentOnServer() {
         return presentOnServer;
-    }
-
-    public static boolean leaveSquidFormOnEnemyInk() {
-        return leaveSquidFormOnEnemyInk;
-    }
-
-    public static boolean universalInk() {
-        return universalInk;
-    }
-
-    public static boolean enemyInkSlowness() {
-        return enemyInkSlowness;
     }
 
     public static void keyChangeSquidForm(boolean squid) {

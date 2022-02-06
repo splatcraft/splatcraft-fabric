@@ -39,9 +39,11 @@
   "gamerule.splatcraft:damageWhenWet/onlyInSquidForm": "    Only in squid form",
   "gamerule.splatcraft:damageWhenWet/scalesToMaxHealth": "    Scales to max health",
 
-  "gamerule.splatcraft:accurateRegeneration": "Splatoon-accurate health regeneration",
-  "gamerule.splatcraft:accurateRegeneration/onlyInSquidForm": "    Only in squid form",
-  "gamerule.splatcraft:accurateRegeneration/scalesToMaxHealth": "    Scales to max health",
+  "gamerule.splatcraft:gameHealth": "Splatoon-accurate health regeneration",
+  "gamerule.splatcraft:gameHealth/onlyInSquidForm": "    Only in squid form",
+  "gamerule.splatcraft:gameHealth/scalesToMaxHealth": "    Scales to max health",
+  "gamerule.splatcraft:gameHealth/invulnerabilityTicksOnInkDamage": "    Disable invulnerability ticks for entity-inflicted ink damage",
+  "gamerule.splatcraft:gameHealth/invulnerabilityTicksOnInkDamage.description": "If taking damage via ink disables invulnerability ticks",
 
   "gamerule.splatcraft:regenerateWhenSubmerged": "Regenerate health when submerged",
   "gamerule.splatcraft:regenerateWhenSubmerged/scalesToMaxHealth": "    Scales to max health",

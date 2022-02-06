@@ -83,8 +83,8 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
                 if (gameRule(this.world, REGENERATE_WHEN_SUBMERGED) && this.isSubmergedInInk()) {
                     float scale = gameRule(this.world, REGENERATE_WHEN_SUBMERGED_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
                     this.heal((1.0f / 20) * scale);
-                } else if (gameRule(this.world, ACCURATE_REGENERATION) && (isInSquidForm || !(gameRule(this.world, ACCURATE_REGENERATION_ONLY_IN_SQUID_FORM)))) {
-                    float scale = gameRule(this.world, ACCURATE_REGENERATION_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
+                } else if (gameRule(this.world, GAME_HEALTH) && (isInSquidForm || !(gameRule(this.world, GAME_HEALTH_ONLY_IN_SQUID_FORM)))) {
+                    float scale = gameRule(this.world, GAME_HEALTH_SCALES_TO_MAX_HEALTH) ? maxHealth : 20;
                     this.heal((0.125f / 20) * scale);
                 }
             }
@@ -147,6 +147,11 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
 
     @Inject(method = "damage", at = @At("RETURN"))
     private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ()) this.resetTicksWithoutDamage();
+        if (cir.getReturnValueZ()) {
+            this.resetTicksWithoutDamage();
+            if (!gameRule(this.world, GAME_HEALTH_INVULNERABILITY_TICKS_ON_INK_DAMAGE) && source.name.equals(SplatcraftDamageSource.ID_INKED)) {
+                this.timeUntilRegen = 10;
+            }
+        }
     }
 }

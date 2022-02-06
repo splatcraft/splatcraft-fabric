@@ -22,8 +22,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 
-import static net.splatcraft.network.NetworkingCommon.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
+import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
 
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {
@@ -63,7 +63,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     public boolean isOnOwnInk() {
         if (this instanceof Inkable inkable) {
             if (this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable block) {
-                if (universalInk(this.world)) return true;
+                if (syncedGameRule(this.world, UNIVERSAL_INK)) return true;
                 return block.getInkColor().equals(inkable.getInkColor());
             }
         }
@@ -80,7 +80,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
             }
 
             if (this.world.getBlockEntity(pos) instanceof Inkable block) {
-                return !universalInk(this.world) && !block.getInkColor().equals(inkable.getInkColor());
+                return !syncedGameRule(this.world, UNIVERSAL_INK) && !block.getInkColor().equals(inkable.getInkColor());
             }
         }
 
@@ -118,7 +118,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
             double x = this.getX();
             double y = this.getY();
             double z = this.getZ();
-            boolean universalInk = universalInk(this.world);
+            boolean universalInk = syncedGameRule(this.world, UNIVERSAL_INK);
             for (int i = 0; i < 4; i++) {
                 int n = i % 2 == 0 ? 1 : -1;
                 float xo = ( (i < 2) ? 0 : 0.32f) * n;

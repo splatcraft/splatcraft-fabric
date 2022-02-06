@@ -47,10 +47,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
-import static net.splatcraft.network.NetworkingCommon.*;
 import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
+import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess, InkEntityAccess {
@@ -151,7 +151,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         if (this.canSubmergeInInk()) {
             nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
         } else {
-            if (this.isOnEnemyInk() && enemyInkSlowness(this.world)) nu *= 0.475f;
+            if (this.isOnEnemyInk() && syncedGameRule(this.world, ENEMY_INK_SLOWNESS)) nu *= 0.475f;
         }
 
         return base != nu ? Optional.of(nu) : Optional.empty();
@@ -282,7 +282,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     private boolean shouldTickEnemyInkSquidForm() {
-        if (!leaveSquidFormOnEnemyInk(this.world)) return false;
+        if (!syncedGameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
         return (this.isInSquidForm() || this.isCoolingDownSquidForm()) && this.isOnEnemyInk();
     }
 

@@ -42,6 +42,7 @@ import net.splatcraft.item.InkTankItem;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
+import net.splatcraft.world.SynchronizedBooleanGameRuleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,6 +80,8 @@ public class SplatcraftClient implements ClientModInitializer {
             SplatcraftKeyBindings.class,
             NetworkingClient.class
         );
+
+        SynchronizedBooleanGameRuleRegistry.onInitializeClient();
 
         // particles
         ParticleFactoryRegistry pfrInstance = ParticleFactoryRegistry.getInstance();
