@@ -1,6 +1,5 @@
 package net.splatcraft.world;
 
-import java.util.function.BiConsumer;
 import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
@@ -13,6 +12,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.entity.access.PlayerEntityAccess;
+
+import java.util.function.BiConsumer;
 
 import static net.minecraft.util.Identifier.*;
 import static net.minecraft.world.GameRules.*;
