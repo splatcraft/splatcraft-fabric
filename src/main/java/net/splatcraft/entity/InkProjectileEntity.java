@@ -22,19 +22,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.splatcraft.entity.access.InkableCaster;
 import net.splatcraft.entity.damage.SplatcraftDamageSource;
-import net.splatcraft.entity.data.SplatcraftTrackedDataHandlerRegistry;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
+import net.splatcraft.util.TrackedDataUtil;
 
 import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkProjectileEntity extends ThrownEntity implements Inkable, InkableCaster {
-    public static final TrackedData<InkColor> INK_COLOR = DataTracker.registerData(InkProjectileEntity.class, SplatcraftTrackedDataHandlerRegistry.INK_COLOR);
-    public static final TrackedData<InkType> INK_TYPE = DataTracker.registerData(InkProjectileEntity.class, SplatcraftTrackedDataHandlerRegistry.INK_TYPE);
+    public static final TrackedData<String> INK_COLOR = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.STRING);
+    public static final TrackedData<Integer> INK_TYPE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Float> SIZE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
     public static final byte INK_SPLASH_STATUS = 69;
@@ -55,8 +55,8 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
 
     @Override
     protected void initDataTracker() {
-        this.dataTracker.startTracking(INK_COLOR, InkColors.getDefault());
-        this.dataTracker.startTracking(INK_TYPE, InkType.NORMAL);
+        this.dataTracker.startTracking(INK_COLOR, InkColors.getDefault().toString());
+        this.dataTracker.startTracking(INK_TYPE, InkType.NORMAL.ordinal());
         this.dataTracker.startTracking(SIZE, 1.0f);
     }
 
@@ -68,13 +68,13 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
 
     @Override
     public InkColor getInkColor() {
-        return this.dataTracker.get(INK_COLOR);
+        return TrackedDataUtil.inkColor(this.dataTracker, INK_COLOR);
     }
 
     @Override
     public boolean setInkColor(InkColor inkColor) {
         if (this.getInkColor().equals(inkColor)) return false;
-        this.dataTracker.set(INK_COLOR, inkColor);
+        TrackedDataUtil.inkColor(this.dataTracker, INK_COLOR, inkColor);
         return true;
     }
 
@@ -91,13 +91,13 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
 
     @Override
     public InkType getInkType() {
-        return this.dataTracker.get(INK_TYPE);
+        return TrackedDataUtil.inkType(this.dataTracker, INK_TYPE);
     }
 
     @Override
     public boolean setInkType(InkType inkType) {
         if (this.getInkType().equals(inkType)) return false;
-        this.dataTracker.set(INK_TYPE, inkType);
+        TrackedDataUtil.inkType(this.dataTracker, INK_TYPE, inkType);
         return true;
     }
 
