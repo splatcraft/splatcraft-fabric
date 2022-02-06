@@ -204,6 +204,7 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
         nbt.putString(NBT_INK_COLOR, this.getInkColor().toString());
         nbt.putString(NBT_INK_TYPE, this.getInkType().toString());
         nbt.putFloat(NBT_SIZE, this.getSize());
@@ -212,6 +213,7 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
         this.setInkColor(InkColor.fromString(nbt.getString(NBT_INK_COLOR)));
         this.setInkType(InkType.safeValueOf(nbt.getString(NBT_INK_TYPE)));
         this.setSize(nbt.getFloat(NBT_SIZE));
