@@ -1,5 +1,6 @@
 package net.splatcraft.inkcolor;
 
+import com.google.common.base.Suppliers;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -10,18 +11,18 @@ import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.util.Color;
 import net.splatcraft.util.Identifiable;
 
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkColor implements Identifiable {
-    public static final Function<InkColor, String> TO_TRANSLATION_KEY = Util.memoize(inkColor -> {
-        Identifier id = inkColor.getId();
-        return "%s.%s.%s".formatted(SplatcraftRegistries.INK_COLOR.getKey().getValue(), id.getNamespace(), id.getPath());
-    });
-
-    public static final Function<InkColor, Identifier> TO_IDENTIFIER = Util.memoize(SplatcraftRegistries.INK_COLOR::getId);
     public static final Function<String, InkColor> FROM_STRING = Util.memoize(s -> SplatcraftRegistries.INK_COLOR.get(Identifier.tryParse(s)));
+
+    protected final Supplier<Identifier> id = Suppliers.memoize(this::getLatestId);
+    protected final Supplier<String> translationKey = Suppliers.memoize(this::createTranslationKey);
+    protected final Supplier<Text> defaultDisplayText = Suppliers.memoize(() -> this.getDisplayText(Style.EMPTY));
 
     private final Color color;
 
@@ -34,7 +35,10 @@ public class InkColor implements Identifiable {
     }
 
     public Vec3f getVectorColor() {
-        return new Vec3f(this.getRed() / 255.0f, this.getGreen() / 255.0f, this.getBlue() / 255.0f);
+        float r = this.getRed()   / 255.0f;
+        float g = this.getGreen() / 255.0f;
+        float b = this.getBlue()  / 255.0f;
+        return new Vec3f(r, g, b);
     }
 
     public int getDecimalColor() {
@@ -54,7 +58,12 @@ public class InkColor implements Identifiable {
     }
 
     public String getTranslationKey() {
-        return TO_TRANSLATION_KEY.apply(this);
+        return this.translationKey.get();
+    }
+
+    protected String createTranslationKey() {
+        Identifier id = this.getId();
+        return "%s.%s.%s".formatted(SplatcraftRegistries.INK_COLOR.getKey().getValue(), id.getNamespace(), id.getPath());
     }
 
     public Text getDisplayText(Style style) {
@@ -62,7 +71,7 @@ public class InkColor implements Identifiable {
     }
 
     public Text getDisplayText() {
-        return getDisplayText(Style.EMPTY);
+        return this.defaultDisplayText.get();
     }
 
     /**
@@ -72,7 +81,11 @@ public class InkColor implements Identifiable {
      */
     @Override
     public Identifier getId() {
-        return TO_IDENTIFIER.apply(this);
+        return this.id.get();
+    }
+
+    protected Identifier getLatestId() {
+        return SplatcraftRegistries.INK_COLOR.getId(this);
     }
 
     public static InkColor fromId(Identifier id) {
@@ -83,16 +96,24 @@ public class InkColor implements Identifiable {
         return FROM_STRING.apply(id);
     }
 
-    public boolean equals(InkColor inkColor) {
-        return inkColor != null && inkColor.getId().equals(this.getId());
-    }
-
-    public static String toString(InkColor inkColor) {
-        return (inkColor == null ? InkColors.getDefault() : inkColor).toString();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        InkColor inkColor = (InkColor) o;
+        return Objects.equals(getId(), inkColor.getId());
     }
 
     @Override
     public String toString() {
         return this.getId().toString();
+    }
+
+    public static String toString(InkColor inkColor) {
+        return (inkColor == null ? InkColors.getDefault() : inkColor).toString();
     }
 }

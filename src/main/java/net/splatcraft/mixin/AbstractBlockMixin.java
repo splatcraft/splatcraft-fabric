@@ -17,14 +17,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractBlock.class)
 public class AbstractBlockMixin {
-    // remove collision from block if ink passable and entity is squid-like
+    /**
+     * Removes collision from the block if ink passable and the entity is squid-like.
+     */
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     private void onGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext ctx, CallbackInfoReturnable<VoxelShape> cir) {
         if (state.getBlock() instanceof InkPassableBlock) {
-            if (ctx instanceof EntityShapeContext entityCtx) {
-                if (entityCtx.getEntity() instanceof InkEntityAccess access && access.doesInkPassing()) {
-                    cir.setReturnValue(VoxelShapes.empty());
-                }
+            if (ctx instanceof EntityShapeContext ectx && ectx.getEntity() instanceof InkEntityAccess access) {
+                if (access.doesInkPassing()) cir.setReturnValue(VoxelShapes.empty());
             }
         }
     }

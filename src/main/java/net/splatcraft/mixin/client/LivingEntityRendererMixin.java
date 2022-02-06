@@ -31,7 +31,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         super(ctx);
     }
 
-    // render ink squid color feature even when spectator
+    /**
+     * Renders the ink squid color feature even when in spectator.
+     */
     @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSpectator()Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onRender(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, CallbackInfo ci,
                           float limbDistance, float h, float j, float headYaw, float headPitch, float animationProgress, float limbAngle) {

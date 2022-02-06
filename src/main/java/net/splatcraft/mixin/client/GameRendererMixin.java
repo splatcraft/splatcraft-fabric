@@ -6,8 +6,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.enums.HealthInkOverlay;
 import net.splatcraft.client.config.enums.PreventBobView;
-import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.config.option.EnumOption;
+import net.splatcraft.entity.access.InkEntityAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,17 +19,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
     @Shadow @Final private MinecraftClient client;
 
-    // disable bob view if configured
+    /**
+     * Disables view bobbing if configured.
+     */
     @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
     private void onBobView(MatrixStack matrices, float f, CallbackInfo ci) {
-        PlayerDataComponent data = PlayerDataComponent.get(this.client.player);
-        if (data.isSquid()) {
-            EnumOption<PreventBobView> preventBobView = ClientConfig.INSTANCE.preventBobViewWhenSquid;
-            if (preventBobView.is(PreventBobView.ALWAYS) || (preventBobView.is(PreventBobView.SUBMERGED) && data.isSubmerged())) ci.cancel();
+        if (this.client.player != null) {
+            InkEntityAccess access = (InkEntityAccess) this.client.player;
+            if (access.isInSquidForm()) {
+                EnumOption<PreventBobView> opt = ClientConfig.INSTANCE.preventBobViewWhenSquid;
+                if (opt.is(PreventBobView.ALWAYS) || (opt.is(PreventBobView.SUBMERGED) && access.isSubmergedInInk())) ci.cancel();
+            }
         }
     }
 
-    // disable hurt bob when ink health overlay is enabled
+    /**
+     * Disables hurt bob when ink health overlay is enabled.
+     */
     @Inject(method = "bobViewWhenHurt", at = @At("HEAD"), cancellable = true)
     private void onBobViewWhenHurt(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
         if (ClientConfig.INSTANCE.healthInkOverlay.is(HealthInkOverlay.ON)) ci.cancel();

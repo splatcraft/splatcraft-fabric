@@ -3,8 +3,8 @@ package net.splatcraft.datagen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.tag.EntityTypeTags;
 import net.minecraft.util.registry.Registry;
+import net.moddingplayground.toymaker.api.generator.tag.AbstractTagGenerator;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 

@@ -4,9 +4,9 @@ import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.block.Block;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.registry.Registry;
+import net.moddingplayground.toymaker.api.generator.tag.AbstractTagGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
-import net.splatcraft.datagen.impl.generator.tag.AbstractTagGenerator;
 import net.splatcraft.tag.SplatcraftBlockTags;
 
 public class BlockTagGenerator extends AbstractTagGenerator<Block> {

@@ -20,7 +20,9 @@ import static org.apache.commons.lang3.StringUtils.*;
 @Environment(EnvType.CLIENT)
 @Mixin(DebugHud.class)
 public class DebugHudMixin {
-    // add targeted ink color to end of right debug hud (below targeted entity, hopefully)
+    /**
+     * Adds the targeted ink color to the end of the right debug hud, below the targeted entity usually.
+     */
     @Inject(method = "getRightText", at = @At("TAIL"))
     private void onGetRightText(CallbackInfoReturnable<List<String>> cir) {
         InkColor inkColor = getTargetedInkColor();

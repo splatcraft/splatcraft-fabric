@@ -20,7 +20,9 @@ import java.util.Map;
 public class ArmorFeatureRendererMixin {
     @Shadow @Final private static Map<String, Identifier> ARMOR_TEXTURE_CACHE;
 
-    // fix namespacing on armor textures
+    /**
+     * Fixes namespacing on armor textures.
+     */
     @Inject(method = "getArmorTexture", at = @At("HEAD"), cancellable = true)
     private void onGetArmorTexture(ArmorItem item, boolean legs, String overlay, CallbackInfoReturnable<Identifier> cir) {
         String materialName = item.getMaterial().getName();
