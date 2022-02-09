@@ -20,7 +20,8 @@ public abstract class WeaponItem extends Item {
         super(settings);
     }
 
-    public abstract float getMobility();
+    public abstract float getUsageMobility();
+    public abstract Pose getWeaponPose();
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -50,5 +51,9 @@ public abstract class WeaponItem extends Item {
             Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
             stacks.add(stack);
         }
+    }
+
+    public enum Pose {
+        NONE, SHOOTING, DUAL_SHOOTING, ROLLING, BOW_CHARGE, SWINGING
     }
 }

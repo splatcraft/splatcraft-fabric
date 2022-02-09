@@ -11,7 +11,9 @@ import net.moddingplayground.frame.api.banner.FrameBannerPattern;
 import net.moddingplayground.frame.api.banner.FrameBannerPatternItem;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
+import net.splatcraft.item.weapon.InkConsumptionSettings;
 import net.splatcraft.item.weapon.ShooterSettings;
+import net.splatcraft.item.weapon.WeaponWeight;
 
 import static net.splatcraft.item.SplatcraftArmorMaterial.*;
 
@@ -27,7 +29,16 @@ public class SplatcraftItems {
     // weapons
     public static final Item SPLAT_ROLLER = unstackable("splat_roller", RollerItem::new);
 
-    public static final Item SPLATTERSHOT = shooter("splattershot", new ShooterSettings(36, 50, 47, 10.0f, 0.92f, 0.72f, 1.0f));
+    public static final Item SPLATTERSHOT = shooter("splattershot",
+        ShooterSettings.builder()
+                       .weaponWeight(WeaponWeight.MIDDLEWEIGHT)
+                       .usageMobility(0.72f)
+                       .build(InkConsumptionSettings.builder().consumption(0.92f).regenerationCooldown(20).build(), 6, (settings, age) -> {
+                           int e = age - 8;
+                           // 0.5625f per 1/3 of a tick
+                           return Math.max(e > 0 ? 36.0f - ((0.5625f * 3) * e) : 0, 18.0f);
+                       })
+    );
 
     // misc
     public static final Item SPLATFEST_BAND = unstackable("splatfest_band", Item::new);

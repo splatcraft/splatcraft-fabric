@@ -39,6 +39,7 @@
     "client.InGameHudMixin",
     "client.LivingEntityRendererMixin",
     "client.ModelPartAccessor",
+    "client.PlayerEntityModelMixin",
     "client.PlayerEntityRendererMixin",
     "client.compat.SodiumBiomeBlendFixMixin"
   ],

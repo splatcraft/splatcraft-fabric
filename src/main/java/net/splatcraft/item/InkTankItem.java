@@ -23,6 +23,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import net.splatcraft.entity.access.InkEntityAccess;
+import net.splatcraft.entity.access.PlayerEntityAccess;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
@@ -95,7 +96,7 @@ public class InkTankItem extends Item implements Wearable {
                 if (nbt == null || !nbt.contains(NBT_CONTAINED_INK)) setContainedInk(stack, capacity);
             } else {
                 if (gameRule(world, INK_TANK_INK_REGENERATION)) {
-                    if (!(entity instanceof PlayerEntity player) || (!player.isUsingItem() && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
+                    if (!(entity instanceof PlayerEntity player) || (((PlayerEntityAccess) player).getWeaponUseCooldown() == 0 && player.getEquippedStack(EquipmentSlot.CHEST) == stack)) {
                         float nu = Math.min(
                             containedInk + (
                                 ((InkEntityAccess) entity).isSubmergedInInk()

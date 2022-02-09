@@ -20,5 +20,8 @@ public interface PlayerEntityAccess {
      */
     boolean canEnterSquidForm();
 
+    int getWeaponUseCooldown();
+    void setWeaponUseCooldown(int time);
+
     Optional<Float> getMovementSpeedM(float base);
 }

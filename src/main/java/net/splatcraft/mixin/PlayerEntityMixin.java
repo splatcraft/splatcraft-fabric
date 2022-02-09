@@ -60,6 +60,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Shadow public abstract PlayerInventory getInventory();
 
     private int enemyInkSquidFormTicks;
+    private int lastWeaponUseTime = -100;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
@@ -136,13 +137,23 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     @Override
+    public int getWeaponUseCooldown() {
+        return this.lastWeaponUseTime;
+    }
+
+    @Override
+    public void setWeaponUseCooldown(int time) {
+        this.lastWeaponUseTime = time;
+    }
+
+    @Override
     public Optional<Float> getMovementSpeedM(float base) {
         float nu = base;
 
         if (this.isUsingItem()) {
             ItemStack stack = this.getActiveItem();
             if (!stack.isEmpty() && stack.getItem() instanceof WeaponItem weapon) {
-                float mobility = weapon.getMobility();
+                float mobility = weapon.getUsageMobility();
                 nu /= 0.2f; // cancel vanilla use multiplier
                 nu *= mobility;
             }
@@ -275,6 +286,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             // check for submersion
             data.setSubmerged(this.canSubmergeInInk());
         }
+
+        // tick weapons
+        this.setWeaponUseCooldown(Math.max(this.getWeaponUseCooldown() - 1, 0));
 
         // tick movement
         if (this.posLastTick != null) tickInkable(this, this.posLastTick.subtract(pos));

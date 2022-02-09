@@ -6,7 +6,12 @@ public class RollerItem extends WeaponItem {
     }
 
     @Override
-    public float getMobility() {
+    public float getUsageMobility() {
         return 1.08f;
+    }
+
+    @Override
+    public Pose getWeaponPose() {
+        return Pose.ROLLING;
     }
 }
