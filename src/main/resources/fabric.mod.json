@@ -6,7 +6,7 @@
 
   "name": "Splatcraft",
   "icon": "assets/splatcraft/icon.png",
-  "description": "A Minecraft Splatoon Mod!",
+  "description": "A Minecraft mod based on Nintendo’s popular game Splatoon. This mod aims to add items and mechanics based on the game in a cohesive way, such as weapons, squid transformation, Turf War and other features!",
 
   "license": [
     "MIT (Code)",
