@@ -32,6 +32,9 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
 
         this.add(STAGE_BARRIER);
         this.add(STAGE_VOID);
+
+        this.add(EMPTY_INKWELL, this::predefined);
+        this.add(INKWELL, this::predefined);
     }
 
     public StateGen grate(Block block) {
