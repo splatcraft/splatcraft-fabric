@@ -19,6 +19,7 @@ import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
@@ -44,21 +45,25 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Shadow public abstract boolean isInLava();
     @Shadow public abstract boolean isWet();
 
+    @Unique
     @Override
     public boolean isInSquidForm() {
         return this instanceof Inkable;
     }
 
+    @Unique
     @Override
     public boolean isSubmergedInInk() {
         return false;
     }
 
+    @Unique
     @Override
     public boolean isOnInk() {
         return this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable;
     }
 
+    @Unique
     @Override
     public boolean isOnOwnInk() {
         if (this instanceof Inkable inkable) {
@@ -70,6 +75,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
         return false;
     }
 
+    @Unique
     @Override
     public boolean isOnEnemyInk() {
         if (this instanceof Inkable inkable) {
@@ -87,23 +93,27 @@ public abstract class InkEntityMixin implements InkEntityAccess {
         return false;
     }
 
+    @Unique
     @Override
     public boolean doesInkPassing() {
         return this.isInSquidForm() && SplatcraftEntityTypeTags.INK_PASSABLES.contains(this.getType());
     }
 
+    @Unique
     @Override
     public boolean canSubmergeInInk() {
         Entity that = Entity.class.cast(this);
         return that instanceof PlayerEntity && this.isInSquidForm() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
     }
 
+    @Unique
     @Override
     public boolean canClimbInk() {
         return this.getInkClimbingPos().isPresent();
     }
 
     @SuppressWarnings("ConstantConditions")
+    @Unique
     @Override
     public Optional<BlockPos> getInkClimbingPos() {
         Entity that = Entity.class.cast(this);
@@ -139,6 +149,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
         return Optional.empty();
     }
 
+    @Unique
     @Override
     public Vec3d getInkSplashParticlePos() {
         return new Vec3d(

@@ -14,6 +14,7 @@ import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,25 +29,28 @@ import static net.splatcraft.util.SplatcraftConstants.*;
 public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity implements InputPlayerEntityAccess, ClientPlayerEntityAccess {
     @Shadow public Input input;
 
-    private PackedInput storedForwardSpeed = PackedInput.EMPTY;
+    @Unique private PackedInput packedInput = PackedInput.EMPTY;
 
-    private float inkOverlayTick = 0;
-    private Integer inkOverlayColor = null;
+    @Unique private float inkOverlayTick = 0;
+    @Unique private Integer inkOverlayColor = null;
 
     private ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
         super(world, profile);
     }
 
+    @Unique
     @Override
     public PackedInput getPackedInput() {
-        return this.storedForwardSpeed;
+        return this.packedInput;
     }
 
+    @Unique
     @Override
     public float getInkOverlayTick() {
         return this.inkOverlayTick;
     }
 
+    @Unique
     @Override
     public int getInkOverlayColor() {
         return this.inkOverlayColor == null ? 0xFFFFFF : this.inkOverlayColor;
@@ -59,7 +63,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
         // input
         PackedInput input = PackedInput.of(this.input);
-        this.storedForwardSpeed = input;
+        this.packedInput = input;
         clientInput(input);
 
         // ink overlay tick - perform this logic in the player entity as I can't be asked with tickDelta

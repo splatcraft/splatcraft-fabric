@@ -15,23 +15,26 @@ import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.InputPlayerEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements InputPlayerEntityAccess, InkEntityAccess {
-    private PackedInput packedInput = PackedInput.EMPTY;
+    @Unique private PackedInput packedInput = PackedInput.EMPTY;
 
     private ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
     }
 
+    @Unique
     @Override
     public PackedInput getPackedInput() {
         return this.packedInput;
     }
 
+    @Unique
     @Override
     public void setPackedInput(PackedInput input) {
         this.packedInput = input;

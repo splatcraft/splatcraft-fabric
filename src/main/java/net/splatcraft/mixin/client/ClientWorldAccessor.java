@@ -13,13 +13,6 @@ import java.util.Set;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientWorld.class)
 public interface ClientWorldAccessor {
-    @Accessor
-    static Set<Item> getBLOCK_MARKER_ITEMS() {
-        throw new AssertionError();
-    }
-
-    @Mutable @Accessor
-    static void setBLOCK_MARKER_ITEMS(Set<Item> items) {
-        throw new AssertionError();
-    }
+    @Accessor static Set<Item> getBLOCK_MARKER_ITEMS() { throw new AssertionError(); }
+    @Mutable @Accessor static void setBLOCK_MARKER_ITEMS(Set<Item> items) { throw new AssertionError(); }
 }

@@ -17,6 +17,7 @@ import net.splatcraft.entity.damage.SplatcraftDamageSource;
 import net.splatcraft.tag.SplatcraftEntityTypeTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,6 +32,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
     @Shadow public abstract float getHealth();
     @Shadow public abstract void heal(float amount);
 
+    @Unique
     private int ticksWithoutDamage;
 
     private LivingEntityMixin(EntityType<?> type, World world) {
@@ -91,21 +93,25 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
         }
     }
 
+    @Unique
     @Override
     public float getScaleForOnEnemyInk() {
         return gameRule(this.world, DAMAGE_ON_ENEMY_INK_SCALES_TO_MAX_HEALTH) ? this.getMaxHealth() : 20;
     }
 
+    @Unique
     @Override
     public float getMaxHealthForOnEnemyInk() {
         return this.getMaxHealth() - (0.4f * this.getScaleForOnEnemyInk());
     }
 
+    @Unique
     @Override
     public boolean canFastHeal() {
         return this.ticksWithoutDamage > 20;
     }
 
+    @Unique
     @Override
     public void resetTicksWithoutDamage() {
         this.ticksWithoutDamage = 0;

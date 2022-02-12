@@ -40,6 +40,7 @@ import net.splatcraft.util.SplatcraftConstants;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -62,13 +63,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Shadow public abstract void increaseTravelMotionStats(double dx, double dy, double dz);
     @Shadow public abstract PlayerInventory getInventory();
 
-    private int enemyInkSquidFormTicks;
-    private int lastWeaponUseTime = -100;
+    @Unique private int enemyInkSquidFormTicks;
+    @Unique private int lastWeaponUseTime = -100;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
+    @Unique
     @Override
     public boolean isInSquidForm() {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -76,6 +78,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.isSquid();
     }
 
+    @Unique
     @Override
     public boolean isSubmergedInInk() {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -83,6 +86,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.isSubmerged();
     }
 
+    @Unique
     @Override
     public InkColor getInkColor() {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -90,6 +94,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.getInkColor();
     }
 
+    @Unique
     @Override
     public boolean setInkColor(InkColor inkColor) {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -97,6 +102,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.setInkColor(inkColor);
     }
 
+    @Unique
     @Override
     public InkType getInkType() {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -104,22 +110,26 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
     }
 
+    @Unique
     @Override
     public boolean setInkType(InkType inkType) {
         return false;
     }
 
+    @Unique
     @Override
     public Text getTextForCommand() {
         return this.getDisplayName();
     }
 
+    @Unique
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Entity & Inkable> T toInkable() {
         return (T) this;
     }
 
+    @Unique
     @Override
     public boolean checkSplatfestBand() {
         PlayerEntity that = PlayerEntity.class.cast(this);
@@ -140,6 +150,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return data.setHasSplatfestBand(false);
     }
 
+    @Unique
     private boolean checkSplatfestBandTrinkets() {
         Optional<TrinketComponent> trinketso = TrinketsApi.getTrinketComponent(this);
         if (trinketso.isPresent()) {
@@ -149,21 +160,25 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return false;
     }
 
+    @Unique
     @Override
     public boolean canEnterSquidForm() {
         return !this.isCoolingDownSquidForm() && !this.hasVehicle();
     }
 
+    @Unique
     @Override
     public int getWeaponUseCooldown() {
         return this.lastWeaponUseTime;
     }
 
+    @Unique
     @Override
     public void setWeaponUseCooldown(int time) {
         this.lastWeaponUseTime = time;
     }
 
+    @Unique
     @Override
     public Optional<Float> getMovementSpeedM(float base) {
         float nu = base;
@@ -278,7 +293,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         }
     }
 
-    private Vec3d posLastTick;
+    @Unique private Vec3d posLastTick;
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
@@ -313,15 +328,18 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         this.posLastTick = pos;
     }
 
+    @Unique
     private boolean shouldTickEnemyInkSquidForm() {
         if (!syncedGameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
         return (this.isInSquidForm() || this.isCoolingDownSquidForm()) && this.isOnEnemyInk();
     }
 
+    @Unique
     public boolean isCoolingDownSquidForm() {
         return this.enemyInkSquidFormTicks > 6;
     }
 
+    @Unique
     @Environment(EnvType.CLIENT)
     private static boolean optimiseDesyncSetting() {
         return ClientConfig.INSTANCE.optimiseDesync.getValue();

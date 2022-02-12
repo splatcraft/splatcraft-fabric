@@ -22,6 +22,7 @@ import net.splatcraft.util.Color;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -38,7 +39,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Shadow private int scaledHeight;
     @Shadow private int scaledWidth;
 
-    private static final Function<Integer, Identifier> INDEX_TO_INK_TEXTURE = Util.memoize(i -> texture("misc/ink_overlay_" + i));
+    @Unique private static final Function<Integer, Identifier> INDEX_TO_INK_TEXTURE = Util.memoize(i -> texture("misc/ink_overlay_" + i));
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.BEFORE, ordinal = 0))
     private void onRender(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
@@ -68,6 +69,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
         }
     }
 
+    @Unique
     private void renderInkOverlay(int index, float opacity) {
         if (this.client.player == null) return;
 
@@ -95,6 +97,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
+    @Unique
     private void renderInkOverlay(int index) {
         renderInkOverlay(index, 1.0f);
     }

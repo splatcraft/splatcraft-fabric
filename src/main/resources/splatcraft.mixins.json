@@ -19,8 +19,7 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin",
-    "TrackedDataHandlerRegistryAccessor"
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "client.ArmorFeatureRendererMixin",

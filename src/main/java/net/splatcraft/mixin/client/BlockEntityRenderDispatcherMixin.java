@@ -19,14 +19,10 @@ public abstract class BlockEntityRenderDispatcherMixin {
     @Shadow public abstract <E extends BlockEntity> void render(E blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices);
 
     @Shadow
-    private static <T extends BlockEntity> void render(BlockEntityRenderer<T> renderer, T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices) {
-        throw new AssertionError();
-    }
+    private static <T extends BlockEntity> void render(BlockEntityRenderer<T> renderer, T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices) { throw new AssertionError(); }
 
     @Shadow
-    private static void runReported(BlockEntity blockEntity, Runnable runnable) {
-        throw new AssertionError();
-    }
+    private static void runReported(BlockEntity blockEntity, Runnable runnable) { throw new AssertionError(); }
 
     @Inject(method = "render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V", at = @At("HEAD"), cancellable = true)
     private <E extends BlockEntity> void onRender(E blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, CallbackInfo ci) {

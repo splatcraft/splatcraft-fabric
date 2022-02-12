@@ -19,6 +19,7 @@ import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -34,11 +35,13 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         super(type, world);
     }
 
+    @Unique
     @Override
     public InkColor getInkColor() {
         return Inkable.class.cast(this.getStack()).getInkColor();
     }
 
+    @Unique
     @Override
     public boolean setInkColor(InkColor inkColor) {
         ItemStack stack = this.getStack();
@@ -61,16 +64,19 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         return false;
     }
 
+    @Unique
     @Override
     public boolean hasInkColor() {
         return Inkable.class.cast(this.getStack()).hasInkColor();
     }
 
+    @Unique
     @Override
     public InkType getInkType() {
         return Inkable.class.cast(this.getStack()).getInkType();
     }
 
+    @Unique
     @Override
     public boolean setInkType(InkType inkType) {
         ItemStack stack = this.getStack();
@@ -93,16 +99,19 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         return false;
     }
 
+    @Unique
     @Override
     public boolean hasInkType() {
         return Inkable.class.cast(this.getStack()).hasInkType();
     }
 
+    @Unique
     @Override
     public Text getTextForCommand() {
         return this.getDisplayName();
     }
 
+    @Unique
     @Override
     public boolean isInkable() {
         ItemStack stack = this.getStack();
