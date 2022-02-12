@@ -39,19 +39,24 @@ import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
 import net.splatcraft.command.InkColorCommand;
+import net.splatcraft.component.PlayerDataComponent;
 import net.splatcraft.entity.SplatcraftEntities;
 import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.entity.access.PlayerEntityAccess;
+import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.network.NetworkingCommon;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.registry.SplatcraftRegistries;
+import net.splatcraft.tag.InkColorTags;
 import net.splatcraft.world.SplatcraftGameRules;
 import net.splatcraft.world.SynchronizedBooleanGameRuleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Random;
 
 import static net.splatcraft.network.NetworkingCommon.*;
 
@@ -148,7 +153,16 @@ public class Splatcraft implements ModInitializer {
         }
 
         public void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+            PlayerDataComponent data = PlayerDataComponent.get(handler.player);
+
             ((PlayerEntityAccess) handler.player).checkSplatfestBand();
+            if (data.tryInitialize()) {
+                if (!InkColorTags.STARTER_COLORS.values().isEmpty()) {
+                    Random random = handler.player.getRandom();
+                    InkColor inkColor = InkColorTags.STARTER_COLORS.getRandom(random);
+                    data.setInkColor(inkColor);
+                }
+            }
         }
 
         public ActionResult useBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {

@@ -25,6 +25,7 @@ public class SplatcraftConstants {
     public static final String NBT_IS_SQUID = "Squid";
     public static final String NBT_IS_SUBMERGED = "Submerged";
     public static final String NBT_HAS_SPLATFEST_BAND = "HasSplatfestBand";
+    public static final String NBT_INITIALIZED = "Initialized";
     public static final String NBT_CONTAINED_INK = "ContainedInk";
     public static final String NBT_BLOCK_STATE = "BlockState";
     public static final String NBT_BLOCK_ENTITY_TAG = "BlockEntityTag";

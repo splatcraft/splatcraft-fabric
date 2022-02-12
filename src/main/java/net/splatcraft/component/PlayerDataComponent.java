@@ -28,7 +28,6 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.LivingEntityInvoker;
 import net.splatcraft.mixin.client.ClientChunkManagerAccessor;
 import net.splatcraft.mixin.client.ClientChunkManagerClientChunkMapAccessor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Random;
@@ -38,7 +37,7 @@ import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class PlayerDataComponent implements Component, AutoSyncedComponent {
-    @NotNull private final PlayerEntity player;
+    private final PlayerEntity player;
 
     /**
      * Defines a player's ink color.
@@ -60,8 +59,13 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
      */
     private boolean hasSplatfestBand = false;
 
+    /**
+     * Defines whether this component has been loaded at least once before.
+     */
+    private boolean initialized = false;
+
     @SuppressWarnings("unused")
-    public PlayerDataComponent(@NotNull PlayerEntity player) {
+    public PlayerDataComponent(PlayerEntity player) {
         this.player = player;
     }
 
@@ -193,12 +197,27 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         return true;
     }
 
+    protected boolean isInitialized() {
+        return this.initialized;
+    }
+
+    protected boolean setInitialized(boolean initialized) {
+        if (this.initialized == initialized) return false;
+        this.initialized = initialized;
+        this.sync();
+        return true;
+    }
+
+    public boolean tryInitialize() {
+        return this.setInitialized(true);
+    }
+
     @Override
     public void writeToNbt(NbtCompound nbt) {
-        nbt.putString(NBT_INK_COLOR, InkColor.toString(this.inkColor));
-        nbt.putBoolean(NBT_IS_SQUID, this.squid);
-        nbt.putBoolean(NBT_IS_SUBMERGED, this.submerged);
-        nbt.putBoolean(NBT_HAS_SPLATFEST_BAND, this.hasSplatfestBand);
+        nbt.putString(NBT_INK_COLOR, InkColor.toString(this.getInkColor()));
+        nbt.putBoolean(NBT_IS_SQUID, this.isSquid());
+        nbt.putBoolean(NBT_IS_SUBMERGED, this.isSubmerged());
+        nbt.putBoolean(NBT_INITIALIZED, this.isInitialized());
     }
 
     @Override
@@ -207,5 +226,6 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         this.setSquid(nbt.getBoolean(NBT_IS_SQUID));
         this.setSubmerged(nbt.getBoolean(NBT_IS_SUBMERGED));
         this.setHasSplatfestBand(nbt.getBoolean(NBT_HAS_SPLATFEST_BAND));
+        this.setInitialized(nbt.getBoolean(NBT_INITIALIZED));
     }
 }
