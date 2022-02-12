@@ -4,10 +4,10 @@ import com.google.common.collect.HashBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import net.moddingplayground.frame.api.config.Config;
+import net.moddingplayground.frame.api.config.option.BooleanOption;
+import net.moddingplayground.frame.api.config.option.Option;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.config.Config;
-import net.splatcraft.config.option.BooleanOption;
-import net.splatcraft.config.option.Option;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ import static net.splatcraft.util.SplatcraftUtil.*;
 public class ClientCompatConfig extends Config {
     public static final ClientCompatConfig INSTANCE = new ClientCompatConfig(createFile("%1$s/%1$s-client-compat".formatted(Splatcraft.MOD_ID))).load();
 
-    public final BooleanOption sodium_inkBiomeBlendFix = add(
+    public final BooleanOption sodium_inkBiomeBlendFix = this.add(
         new Identifier("sodium", "ink_biome_blend_fix"),
         BooleanOption.of(true)
     );

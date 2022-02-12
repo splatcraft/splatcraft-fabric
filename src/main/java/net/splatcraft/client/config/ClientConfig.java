@@ -4,15 +4,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.util.Identifier;
+import net.moddingplayground.frame.api.config.Config;
+import net.moddingplayground.frame.api.config.option.BooleanOption;
+import net.moddingplayground.frame.api.config.option.ColorOption;
+import net.moddingplayground.frame.api.config.option.EnumOption;
+import net.moddingplayground.frame.api.config.option.IntOption;
+import net.moddingplayground.frame.api.config.option.Option;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.enums.HealthInkOverlay;
 import net.splatcraft.client.config.enums.PreventBobView;
 import net.splatcraft.client.keybind.ChangeSquidFormKeyBehavior;
-import net.splatcraft.config.Config;
-import net.splatcraft.config.option.BooleanOption;
-import net.splatcraft.config.option.ColorOption;
-import net.splatcraft.config.option.EnumOption;
-import net.splatcraft.config.option.IntOption;
 
 import java.io.File;
 
@@ -35,6 +37,10 @@ public class ClientConfig extends Config {
     public final IntOption stageBlockRadius = add("stage_block_radius", IntOption.of(2, 2, 4));
 
     public final BooleanOption optimiseDesync = add("optimise_desync", BooleanOption.of(false));
+
+    private <T, O extends Option<T>> O add(String id, O option) {
+        return this.add(new Identifier(Splatcraft.MOD_ID, id), option);
+    }
 
     private ClientConfig(File file) {
         super(file);
