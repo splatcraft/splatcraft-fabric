@@ -18,10 +18,7 @@ import java.io.File;
 
 @Environment(EnvType.CLIENT)
 public class ClientConfig extends Config {
-    public static final ClientConfig INSTANCE = new ClientConfig(createFile("%1$s/%1$s-client".formatted(Splatcraft.MOD_ID)));
-    static {
-        INSTANCE.load();
-    }
+    public static final ClientConfig INSTANCE = new ClientConfig(createFile("%1$s/%1$s-client".formatted(Splatcraft.MOD_ID))).load();
 
     public final BooleanOption colorLock = add("color_lock", BooleanOption.of(false));
     public final ColorOption colorLockFriendly = add("color_lock_friendly", ColorOption.of(0xDEA801));

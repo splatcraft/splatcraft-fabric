@@ -15,10 +15,7 @@ import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class ClientCompatConfig extends Config {
-    public static final ClientCompatConfig INSTANCE = new ClientCompatConfig(createFile("%1$s/%1$s-client-compat".formatted(Splatcraft.MOD_ID)));
-    static {
-        INSTANCE.load();
-    }
+    public static final ClientCompatConfig INSTANCE = new ClientCompatConfig(createFile("%1$s/%1$s-client-compat".formatted(Splatcraft.MOD_ID))).load();
 
     public final BooleanOption sodium_inkBiomeBlendFix = add(
         new Identifier("sodium", "ink_biome_blend_fix"),

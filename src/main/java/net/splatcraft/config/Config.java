@@ -91,7 +91,8 @@ public class Config {
         } else throw new RuntimeException("Fatal error! Could not find config %s".formatted(this.file));
     }
 
-    public void load() {
+    @SuppressWarnings("unchecked")
+    public <T extends Config> T load() {
         try {
             Files.copy(this.file.toPath(), this.backupFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (NoSuchFileException | FileNotFoundException e) {
@@ -127,6 +128,8 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return (T) this;
     }
 
     public static JsonWriter createJsonWriter(StringWriter stringWriter) {
