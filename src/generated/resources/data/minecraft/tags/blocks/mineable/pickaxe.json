@@ -4,6 +4,7 @@
     "splatcraft:empty_inkwell",
     "splatcraft:inkwell",
     "splatcraft:grate_block",
-    "splatcraft:grate"
+    "splatcraft:grate",
+    "splatcraft:grate_ramp"
   ]
 }

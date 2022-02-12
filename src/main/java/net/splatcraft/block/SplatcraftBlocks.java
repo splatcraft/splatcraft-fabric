@@ -52,6 +52,7 @@ public class SplatcraftBlocks {
     ));
 
     public static final Block GRATE = register("grate", new GrateBlock(FabricBlockSettings.copyOf(GRATE_BLOCK)));
+    public static final Block GRATE_RAMP = register("grate_ramp", new GrateRampBlock(FabricBlockSettings.copyOf(GRATE_BLOCK)));
 
     public static final Block STAGE_BARRIER = register("stage_barrier", new StageBarrierBlock(
         FabricBlockSettings.of(Material.BARRIER)

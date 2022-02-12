@@ -85,8 +85,9 @@ public class Splatcraft implements ModInitializer {
             SplatcraftGameRules.class,
 
             SplatcraftBannerPatterns.class,
-            SplatcraftBlockEntities.class,
             SplatcraftBlocks.class,
+            SplatcraftBlockEntities.class,
+
             SplatcraftItems.class,
             SplatcraftEntities.class,
 

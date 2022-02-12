@@ -6,8 +6,9 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.registry.Registry;
 import net.moddingplayground.toymaker.api.generator.tag.AbstractTagGenerator;
 import net.splatcraft.Splatcraft;
-import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.tag.SplatcraftBlockTags;
+
+import static net.splatcraft.block.SplatcraftBlocks.*;
 
 public class BlockTagGenerator extends AbstractTagGenerator<Block> {
     public BlockTagGenerator() {
@@ -17,25 +18,26 @@ public class BlockTagGenerator extends AbstractTagGenerator<Block> {
     @Override
     public void generate() {
         this.add(FabricMineableTags.SHEARS_MINEABLE,
-            SplatcraftBlocks.CANVAS
+            CANVAS
         );
 
         this.add(BlockTags.PICKAXE_MINEABLE,
-            SplatcraftBlocks.EMPTY_INKWELL,
-            SplatcraftBlocks.INKWELL,
+            EMPTY_INKWELL,
+            INKWELL,
 
-            SplatcraftBlocks.GRATE_BLOCK,
-            SplatcraftBlocks.GRATE
+            GRATE_BLOCK,
+            GRATE,
+            GRATE_RAMP
         );
 
         this.add(SplatcraftBlockTags.INK_COLOR_CHANGERS,
-            SplatcraftBlocks.INKWELL
+            INKWELL
         );
 
         this.add(SplatcraftBlockTags.INK_CLIMBABLE,
-            SplatcraftBlocks.CANVAS,
-            SplatcraftBlocks.INKED_BLOCK,
-            SplatcraftBlocks.GLOWING_INKED_BLOCK
+            CANVAS,
+            INKED_BLOCK,
+            GLOWING_INKED_BLOCK
         );
     }
 }

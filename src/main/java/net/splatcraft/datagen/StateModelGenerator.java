@@ -21,13 +21,14 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
 
     @Override
     public void generate() {
-        this.add(CANVAS, block -> this.simple(name(block), cubeAllTinted(name(block))));
+        this.add(CANVAS, b -> this.simple(name(b), cubeAllTinted(name(b))));
 
-        this.add(INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
-        this.add(GLOWING_INKED_BLOCK, block -> this.simple(name(block), cubeAllTinted(name(block))));
+        this.add(INKED_BLOCK, b -> this.simple(name(b), cubeAllTinted(name(b))));
+        this.add(GLOWING_INKED_BLOCK, b -> this.simple(name(b), cubeAllTinted(name(b))));
 
         this.add(GRATE_BLOCK);
         this.add(GRATE, this::grate);
+        this.add(GRATE_RAMP, b -> this.facingHorizontalPredefined(name(b), 90));
 
         this.add(STAGE_BARRIER);
         this.add(STAGE_VOID);
@@ -43,6 +44,13 @@ public class StateModelGenerator extends AbstractStateModelGenerator {
         }
 
         return gen;
+    }
+
+    public StateGen facingHorizontalPredefined(Identifier name, int offset) {
+        return VariantsStateGen.variants("facing=north", StateModelInfo.create(name).rotate(0, offset))
+                               .variant("facing=east", StateModelInfo.create(name).rotate(0, 90 + offset))
+                               .variant("facing=south", StateModelInfo.create(name).rotate(0, 180 + offset))
+                               .variant("facing=west", StateModelInfo.create(name).rotate(0, 270 + offset));
     }
 
     public InheritingModelGen sidedTrapdoor(Block block, BlockHalf half) {

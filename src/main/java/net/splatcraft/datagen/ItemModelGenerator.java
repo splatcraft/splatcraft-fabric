@@ -24,6 +24,7 @@ public class ItemModelGenerator extends AbstractItemModelGenerator {
 
         this.block(SplatcraftBlocks.GRATE_BLOCK);
         this.add(SplatcraftBlocks.GRATE, (block) -> InheritingModelGen.inherit(name(block, "block/%s_bottom")));
+        this.block(SplatcraftBlocks.GRATE_RAMP);
 
         this.block(SplatcraftBlocks.STAGE_BARRIER);
         this.block(SplatcraftBlocks.STAGE_VOID);

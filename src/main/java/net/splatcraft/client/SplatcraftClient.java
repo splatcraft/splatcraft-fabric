@@ -91,7 +91,7 @@ public class SplatcraftClient implements ClientModInitializer {
         // render layers
         BlockRenderLayerMap brlm = BlockRenderLayerMap.INSTANCE;
         brlm.putBlocks(RenderLayer.getCutout(),
-            SplatcraftBlocks.GRATE_BLOCK, SplatcraftBlocks.GRATE,
+            SplatcraftBlocks.GRATE_BLOCK, SplatcraftBlocks.GRATE, SplatcraftBlocks.GRATE_RAMP,
             SplatcraftBlocks.EMPTY_INKWELL, SplatcraftBlocks.INKWELL
         );
 
