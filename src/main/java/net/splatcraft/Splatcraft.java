@@ -148,7 +148,7 @@ public class Splatcraft implements ModInitializer {
         }
 
         public void playerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-            ((PlayerEntityAccess) handler.player).updateSplatfestBand();
+            ((PlayerEntityAccess) handler.player).checkSplatfestBand();
         }
 
         public ActionResult useBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {

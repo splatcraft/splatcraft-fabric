@@ -89,6 +89,8 @@ dependencies {
 
   modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
+  modImplementation "dev.emi:trinkets:${trinkets_version}"
+
   modImplementation "maven.modrinth:sodium:${project.sodium_version}"
   implementation    "org.joml:joml:${project.joml_version}"
 }

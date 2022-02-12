@@ -13,7 +13,7 @@ public interface PlayerEntityAccess {
      *
      * @return whether or not the method had any effect
      */
-    boolean updateSplatfestBand();
+    boolean checkSplatfestBand();
 
     /**
      * @return whether the player can enter squid form

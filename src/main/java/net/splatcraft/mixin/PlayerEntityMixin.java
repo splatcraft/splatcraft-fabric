@@ -1,5 +1,7 @@
 package net.splatcraft.mixin;
 
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -49,6 +51,7 @@ import java.util.Random;
 
 import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.util.SplatcraftUtil.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
 
@@ -118,17 +121,32 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     }
 
     @Override
-    public boolean updateSplatfestBand() {
+    public boolean checkSplatfestBand() {
         PlayerEntity that = PlayerEntity.class.cast(this);
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         if (gameRule(this.world, SPLATFEST_BAND_MUST_BE_HELD)) {
             for (Hand hand : Hand.values()) {
-                if (this.getStackInHand(hand).isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
+                ItemStack stack = this.getStackInHand(hand);
+                if (stack.isOf(SplatcraftItems.SPLATFEST_BAND)) return data.setHasSplatfestBand(true);
             }
-        } else if (this.getInventory().containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
+        } else {
+            PlayerInventory inventory = this.getInventory();
+            if (inventory.containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
+        }
+
+        if (isModLoaded("trinkets") && checkSplatfestBandTrinkets()) return data.setHasSplatfestBand(true);
 
         return data.setHasSplatfestBand(false);
+    }
+
+    private boolean checkSplatfestBandTrinkets() {
+        Optional<TrinketComponent> trinketso = TrinketsApi.getTrinketComponent(this);
+        if (trinketso.isPresent()) {
+            TrinketComponent trinkets = trinketso.get();
+            return !trinkets.getEquipped(SplatcraftItems.SPLATFEST_BAND).isEmpty();
+        }
+        return false;
     }
 
     @Override

@@ -16,6 +16,7 @@ public class SplatcraftToymaker implements ToymakerEntrypoint {
         RecipeGeneratorStore.register(RecipeGenerator::new);
         StateModelGeneratorStore.register(StateModelGenerator::new);
         TagGeneratorStore.register(BlockTagGenerator::new);
+        TagGeneratorStore.register(ItemTagGenerator::new);
         TagGeneratorStore.register(EntityTagGenerator::new);
         TagGeneratorStore.register(InkColorTagGenerator::new);
     }

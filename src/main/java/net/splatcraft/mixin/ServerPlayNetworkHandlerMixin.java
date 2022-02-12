@@ -16,6 +16,6 @@ public class ServerPlayNetworkHandlerMixin {
 
     @Inject(method = "onUpdateSelectedSlot", at = @At("TAIL"))
     private void onOnUpdateSelectedSlot(UpdateSelectedSlotC2SPacket packet, CallbackInfo ci) {
-        ((PlayerEntityAccess) this.player).updateSplatfestBand();
+        ((PlayerEntityAccess) this.player).checkSplatfestBand();
     }
 }

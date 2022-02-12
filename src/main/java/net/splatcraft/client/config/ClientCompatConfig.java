@@ -8,9 +8,10 @@ import net.splatcraft.Splatcraft;
 import net.splatcraft.config.Config;
 import net.splatcraft.config.option.BooleanOption;
 import net.splatcraft.config.option.Option;
-import net.splatcraft.util.ModLoaded;
 
 import java.io.File;
+
+import static net.splatcraft.util.SplatcraftUtil.*;
 
 @Environment(EnvType.CLIENT)
 public class ClientCompatConfig extends Config {
@@ -31,11 +32,7 @@ public class ClientCompatConfig extends Config {
     @Override
     public HashBiMap<Identifier, Option<?>> getDisplayedOptions() {
         HashBiMap<Identifier, Option<?>> map = HashBiMap.create();
-
-        if (ModLoaded.SODIUM) {
-            map.put(this.map.inverse().get(this.sodium_inkBiomeBlendFix), this.sodium_inkBiomeBlendFix);
-        }
-
+        if (isModLoaded("sodium")) map.put(this.map.inverse().get(this.sodium_inkBiomeBlendFix), this.sodium_inkBiomeBlendFix);
         return map;
     }
 }

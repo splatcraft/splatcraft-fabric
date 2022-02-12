@@ -43,7 +43,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
         screenHandler.addListener(new ScreenHandlerListener() {
             @Override
             public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-                ((PlayerEntityAccess) that).updateSplatfestBand();
+                ((PlayerEntityAccess) that).checkSplatfestBand();
             }
 
             @Override

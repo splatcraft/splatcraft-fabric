@@ -52,7 +52,8 @@
   },
   "suggests": {
     "modmenu": "*",
-    "sodium": "*"
+    "sodium": "*",
+    "trinkets": "*"
   },
 
   "custom": {
