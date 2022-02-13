@@ -3,6 +3,8 @@ package net.splatcraft.mixin.client.compat;
 import me.jellysquid.mods.sodium.client.model.quad.blender.ColorBlender;
 import me.jellysquid.mods.sodium.client.model.quad.blender.LinearColorBlender;
 import me.jellysquid.mods.sodium.client.render.pipeline.ChunkRenderCache;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.splatcraft.client.config.ClientCompatConfig;
 import net.splatcraft.client.model.quad.blender.InkColorBlender;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ChunkRenderCache.class)
 public class SodiumBiomeBlendFixMixin {
     /**
