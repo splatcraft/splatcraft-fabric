@@ -115,7 +115,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Unique
     @Override
     public Optional<BlockPos> getInkClimbingPos() {
-        Entity that = Entity.class.cast(this);
+        Entity that = (Entity) (Object) this;
 
         if (this.isSwimming() || this.hasVehicle() || this.isInLava() || this.isWet()
             || (that instanceof LivingEntity living && living.hasStatusEffect(StatusEffects.LEVITATION))

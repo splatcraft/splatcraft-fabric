@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.splatcraft.world.SplatcraftGameRules.*;
 
-@SuppressWarnings("ConstantConditions")
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEntityAccess {
     @Shadow public abstract ItemStack getStack();
@@ -38,14 +37,15 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     @Unique
     @Override
     public InkColor getInkColor() {
-        return Inkable.class.cast(this.getStack()).getInkColor();
+        return ((Inkable) (Object) this.getStack()).getInkColor();
     }
 
     @Unique
     @Override
     public boolean setInkColor(InkColor inkColor) {
         ItemStack stack = this.getStack();
-        Inkable inkable = Inkable.class.cast(stack);
+        if (stack == null) return false;
+        Inkable inkable = (Inkable) (Object) stack;
 
         if (inkColor.equals(inkable.getInkColor()) && this.hasInkColor()) return false;
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
@@ -67,20 +67,21 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     @Unique
     @Override
     public boolean hasInkColor() {
-        return Inkable.class.cast(this.getStack()).hasInkColor();
+        return ((Inkable) (Object) this.getStack()).hasInkColor();
     }
 
     @Unique
     @Override
     public InkType getInkType() {
-        return Inkable.class.cast(this.getStack()).getInkType();
+        return ((Inkable) (Object) this.getStack()).getInkType();
     }
 
     @Unique
     @Override
     public boolean setInkType(InkType inkType) {
         ItemStack stack = this.getStack();
-        Inkable inkable = Inkable.class.cast(stack);
+        if (stack == null) return false;
+        Inkable inkable = (Inkable) (Object) stack;
 
         if (inkType.equals(inkable.getInkType()) && this.hasInkType()) return false;
         if (stack.getItem() instanceof BlockItem item && item.getBlock() instanceof InkableBlock) {
@@ -102,7 +103,7 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     @Unique
     @Override
     public boolean hasInkType() {
-        return Inkable.class.cast(this.getStack()).hasInkType();
+        return ((Inkable) (Object) this.getStack()).hasInkType();
     }
 
     @Unique

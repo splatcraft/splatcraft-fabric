@@ -74,7 +74,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public boolean isInSquidForm() {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.isSquid();
     }
@@ -82,7 +82,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public boolean isSubmergedInInk() {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.isSubmerged();
     }
@@ -90,7 +90,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public InkColor getInkColor() {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.getInkColor();
     }
@@ -98,7 +98,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public boolean setInkColor(InkColor inkColor) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.setInkColor(inkColor);
     }
@@ -106,7 +106,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public InkType getInkType() {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
         return data.hasSplatfestBand() ? InkType.GLOWING : InkType.NORMAL;
     }
@@ -139,7 +139,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public boolean checkSplatfestBand() {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         if (gameRule(this.world, SPLATFEST_BAND_MUST_BE_HELD)) {
@@ -188,7 +188,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public Optional<Float> getMovementSpeedM(float base) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         float nu = base;
 
         for (Hand hand : Hand.values()) {
@@ -224,7 +224,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Inject(method = "canFoodHeal", at = @At("RETURN"), cancellable = true)
     private void onCanFoodHeal(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
-            PlayerEntity that = PlayerEntity.class.cast(this);
+            PlayerEntity that = (PlayerEntity) (Object) this;
             LivingEntityAccess access = ((LivingEntityAccess) that);
             if (this.isInSquidForm() || (!access.canFastHeal() && gameRule(this.world, DISABLE_FOOD_HEAL_AFTER_DAMAGE))) cir.setReturnValue(false);
         }
@@ -246,7 +246,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
      */
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
     private void onGetMovementSpeed(CallbackInfoReturnable<Float> cir) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         if (!this.abilities.flying) {
             ((PlayerEntityAccess) that).getMovementSpeedM(cir.getReturnValueF())
                                        .ifPresent(cir::setReturnValue);
@@ -287,7 +287,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
      */
     @Inject(method = "jump", at = @At("TAIL"))
     private void onJump(CallbackInfo ci) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         if (this.isSubmergedInInk()) {
             Vec3d velocity = this.getVelocity();
             if (that.forwardSpeed > 0) {
@@ -306,7 +306,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {
-        PlayerEntity that = PlayerEntity.class.cast(this);
+        PlayerEntity that = (PlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         boolean sidedRuns = !this.world.isClient || !optimiseDesyncSetting();

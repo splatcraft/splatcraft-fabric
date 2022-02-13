@@ -19,16 +19,15 @@ public class InkableBlockItem extends BlockItem {
         if (group == SplatcraftItemGroups.INKABLES) {
             for (InkColor inkColor : SplatcraftRegistries.INK_COLOR) {
                 ItemStack stack = new ItemStack(this);
-                Inkable.class.cast(stack).setInkColor(inkColor);
+                ((Inkable) (Object) stack).setInkColor(inkColor);
                 stacks.add(stack);
             }
         } else super.appendStacks(group, stacks);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public String getTranslationKey(ItemStack stack) {
-        InkColor inkColor = Inkable.class.cast(stack).getInkColor();
+        InkColor inkColor = ((Inkable) (Object) stack).getInkColor();
         return "%s.%s".formatted(this.getBlock().getTranslationKey(), inkColor.getId());
     }
 }

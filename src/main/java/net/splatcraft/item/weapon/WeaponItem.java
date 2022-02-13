@@ -18,7 +18,6 @@ import net.splatcraft.item.UsageSpeedProvider;
 import net.splatcraft.item.weapon.settings.WeaponSettings;
 import net.splatcraft.item.weapon.settings.WeaponWeight;
 
-@SuppressWarnings("ConstantConditions")
 public abstract class WeaponItem extends Item implements WeaponSettings.Provider, UsageSpeedProvider {
     public WeaponItem(Settings settings) {
         super(settings);
@@ -44,7 +43,7 @@ public abstract class WeaponItem extends Item implements WeaponSettings.Provider
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (entity instanceof Inkable inkable) Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
+        if (entity instanceof Inkable inkable) ((Inkable) (Object) stack).setInkColor(inkable.getInkColor());
     }
 
     @Override
@@ -67,7 +66,7 @@ public abstract class WeaponItem extends Item implements WeaponSettings.Provider
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack stack = new ItemStack(this);
-            Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
+            ((Inkable) (Object) stack).setInkColor(InkColors.getDefault());
             stacks.add(stack);
         }
     }

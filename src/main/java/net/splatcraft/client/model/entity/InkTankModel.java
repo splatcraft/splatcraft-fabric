@@ -113,7 +113,7 @@ public class InkTankModel<T extends LivingEntity> extends SinglePartEntityModel<
         this.root.rotate(matrices);
         this.ink.rotate(matrices);
 
-        List<ModelPart.Cuboid> cuboids = ModelPartAccessor.class.cast(this.ink).getCuboids();
+        List<ModelPart.Cuboid> cuboids = ((ModelPartAccessor) (Object) this.ink).getCuboids();
         int total = cuboids.size();
 
         ItemStack stack = entity.getEquippedStack(EquipmentSlot.CHEST);

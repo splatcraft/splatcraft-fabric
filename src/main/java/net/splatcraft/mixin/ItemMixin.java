@@ -31,7 +31,7 @@ public abstract class ItemMixin implements ItemConvertible {
         // does not apply to blocks, as their translation key will most likely be changed for ink color
         NbtCompound nbt = stack.getNbt();
         if (nbt != null && nbt.contains(NBT_INK_COLOR)) {
-            Inkable inkable = Inkable.class.cast(stack);
+            Inkable inkable = (Inkable) (Object) stack;
             InkColor inkColor = inkable.getInkColor();
             Text colorText = new TranslatableText(inkColor.getTranslationKey()).setStyle(Style.EMPTY.withColor(inkColor.getDecimalColor()));
             tooltip.add(new TranslatableText(T_INK_COLOR, colorText).formatted(Formatting.GRAY));
@@ -39,7 +39,7 @@ public abstract class ItemMixin implements ItemConvertible {
 
         // add technical ink color to any item
         if (ctx.isAdvanced()) {
-            Inkable inkable = Inkable.class.cast(stack);
+            Inkable inkable = (Inkable) (Object) stack;
             if (inkable.hasInkColor()) {
                 InkColor inkColor = inkable.getInkColor();
                 tooltip.add(new LiteralText(inkColor.toString()).formatted(Formatting.DARK_GRAY));

@@ -67,7 +67,6 @@ public class SplatcraftClient implements ClientModInitializer {
         instance = this;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onInitializeClient() {
         this.logger.info("Initializing {}-client", Splatcraft.MOD_NAME);
@@ -130,7 +129,7 @@ public class SplatcraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.ITEM.register( // inkable items
             (stack, tintIndex) -> {
-                Inkable inkable = Inkable.class.cast(stack);
+                Inkable inkable = (Inkable) (Object) stack;
                 return tintIndex == 0
                     ? stack.getItem() instanceof BlockItem
                         ? inkable.getInkColor().getDecimalColor()

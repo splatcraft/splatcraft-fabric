@@ -82,11 +82,10 @@ public class InkTankItem extends Item implements Wearable {
         return takeContainedInk(stack, capacity * (percentage / 100));
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (!entity.world.isClient && entity instanceof Inkable inkable) {
-            Inkable.class.cast(stack).setInkColor(inkable.getInkColor());
+            ((Inkable) (Object) stack).setInkColor(inkable.getInkColor());
 
             float containedInk = getContainedInk(stack);
             float capacity = this.getCapacity();
@@ -151,7 +150,7 @@ public class InkTankItem extends Item implements Wearable {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack stack = setContainedInk(new ItemStack(this), 0);
-            Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
+            ((Inkable) (Object) stack).setInkColor(InkColors.getDefault());
             stacks.add(stack);
         }
     }

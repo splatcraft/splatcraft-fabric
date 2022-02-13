@@ -10,19 +10,17 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import static net.splatcraft.util.SplatcraftConstants.*;
 
-@SuppressWarnings("ConstantConditions")
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements Inkable {
     @Shadow public abstract Item getItem();
-    @Shadow public abstract @Nullable NbtCompound getSubNbt(String key);
-    @Shadow public abstract @Nullable NbtCompound getNbt();
+    @Shadow public abstract NbtCompound getSubNbt(String key);
+    @Shadow public abstract NbtCompound getNbt();
     @Shadow public abstract NbtCompound getOrCreateSubNbt(String key);
     @Shadow public abstract NbtCompound getOrCreateNbt();
     @Shadow public abstract Text getName();

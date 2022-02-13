@@ -58,7 +58,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasVehicle()Z", shift = At.Shift.BEFORE))
     private void onTick(CallbackInfo ci) {
-        ClientPlayerEntity that = ClientPlayerEntity.class.cast(this);
+        ClientPlayerEntity that = (ClientPlayerEntity) (Object) this;
         PlayerDataComponent data = PlayerDataComponent.get(that);
 
         // input

@@ -42,7 +42,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
 
     @Inject(method = "onScreenHandlerOpened", at = @At("TAIL"))
     private void onOnScreenHandlerOpened(ScreenHandler screenHandler, CallbackInfo ci) {
-        ServerPlayerEntity that = ServerPlayerEntity.class.cast(this);
+        ServerPlayerEntity that = (ServerPlayerEntity) (Object) this;
         screenHandler.addListener(new ScreenHandlerListener() {
             @Override
             public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
@@ -59,7 +59,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements In
      */
     @Inject(method = "onDeath", at = @At("TAIL"))
     private void onOnDeath(DamageSource source, CallbackInfo ci) {
-        ServerPlayerEntity that = ServerPlayerEntity.class.cast(this);
+        ServerPlayerEntity that = (ServerPlayerEntity) (Object) this;
         if (this.isInSquidForm()) {
             PlayerDataComponent data = PlayerDataComponent.get(that);
             data.setSquid(false);

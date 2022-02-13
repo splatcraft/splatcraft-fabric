@@ -26,25 +26,23 @@ public class InkableBlock extends BlockWithEntity {
         return SplatcraftBlockEntities.INKABLE.instantiate(pos, state);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         // immediately set ink color to prevent flashing white on place
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) Inkable.class.cast(stack).copyInkableTo(inkable);
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) ((Inkable) (Object) stack).copyInkableTo(inkable);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
-        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.copyInkableTo(Inkable.class.cast(stack));
+        if (world.getBlockEntity(pos) instanceof Inkable inkable) inkable.copyInkableTo((Inkable) (Object) stack);
         return stack;
     }
 
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         ItemStack stack = new ItemStack(this);
-        Inkable.class.cast(stack).setInkColor(InkColors.getDefault());
+        ((Inkable) (Object) stack).setInkColor(InkColors.getDefault());
         stacks.add(stack);
     }
 }
