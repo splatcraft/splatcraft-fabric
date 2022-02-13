@@ -102,8 +102,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Unique
     @Override
     public boolean canSubmergeInInk() {
-        Entity that = Entity.class.cast(this);
-        return that instanceof PlayerEntity && this.isInSquidForm() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
+        return false;
     }
 
     @Unique

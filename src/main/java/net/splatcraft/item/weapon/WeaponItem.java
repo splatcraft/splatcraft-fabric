@@ -1,4 +1,4 @@
-package net.splatcraft.item;
+package net.splatcraft.item.weapon;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -11,16 +11,35 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.splatcraft.entity.access.InkEntityAccess;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.UsageSpeedProvider;
+import net.splatcraft.item.weapon.settings.WeaponSettings;
+import net.splatcraft.item.weapon.settings.WeaponWeight;
 
 @SuppressWarnings("ConstantConditions")
-public abstract class WeaponItem extends Item {
+public abstract class WeaponItem extends Item implements WeaponSettings.Provider, UsageSpeedProvider {
     public WeaponItem(Settings settings) {
         super(settings);
     }
 
-    public abstract float getUsageMobility();
+    @Override
+    public float getMovementSpeedModifier(Context ctx) {
+        float ret = ctx.base();
+        WeaponSettings settings = this.getWeaponSettings();
+        WeaponWeight weight = settings.getWeight();
+
+        if (ctx.using()) {
+            if (!ctx.duplicate()) ret /= 0.2f;
+            ret *= weight.getUsingMovementSpeed();
+        }
+
+        if (((InkEntityAccess) ctx.player()).isSubmergedInInk()) ret *= weight.getInkSwimSpeed();
+
+        return ret;
+    }
+
     public abstract Pose getWeaponPose();
 
     @Override

@@ -20,7 +20,7 @@ public class SplatcraftConstants {
 
     public static final String NBT_INK_COLOR = "InkColor";
     public static final String NBT_INK_TYPE = "InkType";
-    public static final String NBT_SIZE = "Size";
+    public static final String NBT_SOURCE = "Source";
     public static final String NBT_DROPS_INK = "DropsInk";
     public static final String NBT_IS_SQUID = "Squid";
     public static final String NBT_IS_SUBMERGED = "Submerged";

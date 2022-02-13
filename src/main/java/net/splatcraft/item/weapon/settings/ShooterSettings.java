@@ -1,32 +1,29 @@
-package net.splatcraft.item.weapon;
+package net.splatcraft.item.weapon.settings;
 
 import net.minecraft.item.Item;
-import net.splatcraft.item.ShooterItem;
 
 import static net.splatcraft.util.SplatcraftUtil.*;
 
 public class ShooterSettings extends WeaponSettings {
     protected final InkConsumptionSettings consumption;
+    protected final InkProjectileSettings projectile;
+    protected final DamageCalculator damage;
     protected final float usageMobility;
     protected final int initialDelay;
     protected final int fireInterval;
-    protected final float projectileSize;
-    protected final float projectileSpeed;
-    protected final DamageCalculator damage; // TODO
 
     public ShooterSettings(
-        WeaponWeight weight, InkConsumptionSettings consumption, DamageCalculator damage,
-        float usageMobility, int initialDelay, int fireInterval,
-        float projectileSize, float projectileSpeed
+        WeaponWeight weight, InkConsumptionSettings consumption,
+        InkProjectileSettings projectile, DamageCalculator damage,
+        float usageMobility, int initialDelay, int fireInterval
     ) {
         super(weight);
         this.consumption = consumption;
+        this.projectile = projectile;
         this.damage = damage;
         this.usageMobility = usageMobility;
         this.initialDelay = frameToTick(initialDelay);
         this.fireInterval = frameToTick(fireInterval);
-        this.projectileSize = projectileSize;
-        this.projectileSpeed = projectileSpeed;
     }
 
     public InkConsumptionSettings getConsumption() {
@@ -45,21 +42,17 @@ public class ShooterSettings extends WeaponSettings {
         return this.fireInterval;
     }
 
-    public float getProjectileSize() {
-        return this.projectileSize;
+    public InkProjectileSettings getProjectileSettings() {
+        return this.projectile;
     }
 
-    public float getProjectileSpeed() {
-        return this.projectileSpeed;
-    }
-
-    public DamageCalculator getDamage() {
-        return this.damage;
+    public float getDamage(DamageCalculator.Context ctx) {
+        return scaleGameHealth(this.damage.get(ctx));
     }
 
     @Override
     public String toString() {
-        return "ShooterSettings{" + "consumption=" + consumption + ", usageMobility=" + usageMobility + ", initialDelay=" + initialDelay + ", fireInterval=" + fireInterval + ", projectileSize=" + projectileSize + ", projectileSpeed=" + projectileSpeed + ", damage=" + damage + ", weight=" + weight + '}';
+        return "ShooterSettings{" + "consumption=" + consumption + ", projectile=" + projectile + ", damage=" + damage + ", usageMobility=" + usageMobility + ", initialDelay=" + initialDelay + ", fireInterval=" + fireInterval + ", weight=" + weight + '}';
     }
 
     public static Builder builder() {
@@ -67,20 +60,21 @@ public class ShooterSettings extends WeaponSettings {
     }
 
     public static Builder builder(Item item) {
-        return item instanceof ShooterItem shooter ? new Builder(shooter.getShooterSettings()) : new Builder();
+        return item instanceof Provider provider ? new Builder(provider.getWeaponSettings()) : new Builder();
     }
 
-    @FunctionalInterface
-    public interface DamageCalculator {
-        float get(ShooterSettings settings, int age);
+    @FunctionalInterface public interface DamageCalculator {
+        float get(Context ctx);
+        record Context(ShooterSettings settings, int age) {}
     }
+
+    @FunctionalInterface public interface Provider extends WeaponSettings.Provider { @Override ShooterSettings getWeaponSettings(); }
 
     public static class Builder {
         private WeaponWeight weight = WeaponWeight.LIGHTWEIGHT;
+        private InkProjectileSettings projectile = InkProjectileSettings.builder().build();
         private float usageMobility = 1.0f;
         private int initialDelay = 3;
-        private float projectileSize = 1.0f;
-        private float projectileSpeed = 1.0f;
 
         public Builder() {}
 
@@ -88,20 +82,23 @@ public class ShooterSettings extends WeaponSettings {
             this.weight = builder.weight;
             this.usageMobility = builder.usageMobility;
             this.initialDelay = builder.initialDelay;
-            this.projectileSize = builder.projectileSize;
-            this.projectileSpeed = builder.projectileSpeed;
+            this.projectile = builder.projectile;
         }
 
         public Builder(ShooterSettings settings) {
             this.weight = settings.weight;
             this.usageMobility = settings.usageMobility;
             this.initialDelay = settings.initialDelay;
-            this.projectileSize = settings.projectileSize;
-            this.projectileSpeed = settings.projectileSpeed;
+            this.projectile = settings.projectile;
         }
 
         public Builder weaponWeight(WeaponWeight weight) {
             this.weight = weight;
+            return this;
+        }
+
+        public Builder projectile(InkProjectileSettings settings) {
+            this.projectile = settings;
             return this;
         }
 
@@ -115,18 +112,8 @@ public class ShooterSettings extends WeaponSettings {
             return this;
         }
 
-        public Builder projectileSize(float projectileSize) {
-            this.projectileSize = projectileSize;
-            return this;
-        }
-
-        public Builder projectileSpeed(float projectileSpeed) {
-            this.projectileSpeed = projectileSpeed;
-            return this;
-        }
-
         public ShooterSettings build(InkConsumptionSettings consumption, int fireInterval, DamageCalculator damage) {
-            return new ShooterSettings(weight, consumption, damage, usageMobility, initialDelay, fireInterval, projectileSize, projectileSpeed);
+            return new ShooterSettings(weight, consumption, projectile, damage, usageMobility, initialDelay, fireInterval);
         }
     }
 }

@@ -10,9 +10,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.splatcraft.item.ShooterItem;
-import net.splatcraft.item.WeaponItem;
-import net.splatcraft.item.weapon.ShooterSettings;
+import net.splatcraft.item.weapon.ShooterItem;
+import net.splatcraft.item.weapon.WeaponItem;
+import net.splatcraft.item.weapon.settings.ShooterSettings;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,7 +46,7 @@ public abstract class PlayerEntityModelMixin<T extends LivingEntity> extends Bip
                 switch (weapon.getWeaponPose()) {
                     case SHOOTING -> {
                         if (weapon instanceof ShooterItem shooter) {
-                            ShooterSettings settings = shooter.getShooterSettings();
+                            ShooterSettings settings = shooter.getWeaponSettings();
                             float raise = Math.min(entity.getItemUseTime() / (float) (settings.getInitialDelay() + settings.getFireInterval()), 1.0f);
                             partm.roll = this.head.roll - 0.1f;
                             partm.pitch = this.head.pitch - (raise * ((float) Math.PI / 2F));

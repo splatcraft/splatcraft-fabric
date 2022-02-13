@@ -35,7 +35,8 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
-import net.splatcraft.item.WeaponItem;
+import net.splatcraft.item.UsageSpeedProvider;
+import net.splatcraft.item.weapon.WeaponItem;
 import net.splatcraft.util.SplatcraftConstants;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -122,11 +123,17 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         return this.getDisplayName();
     }
 
-    @Unique
     @SuppressWarnings("unchecked")
+    @Unique
     @Override
     public <T extends Entity & Inkable> T toInkable() {
         return (T) this;
+    }
+
+    @Unique
+    @Override
+    public boolean canSubmergeInInk() {
+        return this.isInSquidForm() && !this.isSpectator() && (this.isOnOwnInk() || this.canClimbInk());
     }
 
     @Unique
@@ -181,18 +188,20 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
     @Unique
     @Override
     public Optional<Float> getMovementSpeedM(float base) {
+        PlayerEntity that = PlayerEntity.class.cast(this);
         float nu = base;
 
-        if (this.isUsingItem()) {
-            ItemStack stack = this.getActiveItem();
-            if (!stack.isEmpty() && stack.getItem() instanceof WeaponItem weapon) {
-                float mobility = weapon.getUsageMobility();
-                nu /= 0.2f; // cancel vanilla use multiplier
-                nu *= mobility;
+        for (Hand hand : Hand.values()) {
+            ItemStack stack = this.getStackInHand(hand);
+            if (stack.getItem() instanceof UsageSpeedProvider provider) {
+                ItemStack other = this.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
+                boolean duplicate = hand == Hand.OFF_HAND && other.isItemEqual(stack);
+                boolean using = this.getActiveItem() == stack;
+                nu = provider.getMovementSpeedModifier(new UsageSpeedProvider.Context(that, hand, stack, other, nu, duplicate, using));
             }
         }
 
-        if (this.canSubmergeInInk()) {
+        if (this.isSubmergedInInk()) {
             nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
         } else {
             if (this.isOnEnemyInk() && syncedGameRule(this.world, ENEMY_INK_SLOWNESS)) nu *= 0.475f;
@@ -225,7 +234,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
      * Modifies attributes for squid form.
      */
     @Inject(method = "createPlayerAttributes", at = @At("RETURN"), cancellable = true)
-    private static void createPlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
+    private static void onCreatePlayerAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> cir) {
         cir.setReturnValue(cir.getReturnValue()
                               .add(SplatcraftAttributes.INK_SWIM_SPEED)
                               .add(SplatcraftAttributes.INK_JUMP_FORCE)
@@ -236,7 +245,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
      * Modifies movement speed for squid form.
      */
     @Inject(method = "getMovementSpeed", at = @At("RETURN"), cancellable = true)
-    private void getMovementSpeed(CallbackInfoReturnable<Float> cir) {
+    private void onGetMovementSpeed(CallbackInfoReturnable<Float> cir) {
         PlayerEntity that = PlayerEntity.class.cast(this);
         if (!this.abilities.flying) {
             ((PlayerEntityAccess) that).getMovementSpeedM(cir.getReturnValueF())

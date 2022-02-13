@@ -11,9 +11,11 @@ import net.moddingplayground.frame.api.banner.FrameBannerPattern;
 import net.moddingplayground.frame.api.banner.FrameBannerPatternItem;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
-import net.splatcraft.item.weapon.InkConsumptionSettings;
-import net.splatcraft.item.weapon.ShooterSettings;
-import net.splatcraft.item.weapon.WeaponWeight;
+import net.splatcraft.item.weapon.RollerItem;
+import net.splatcraft.item.weapon.ShooterItem;
+import net.splatcraft.item.weapon.settings.InkConsumptionSettings;
+import net.splatcraft.item.weapon.settings.ShooterSettings;
+import net.splatcraft.item.weapon.settings.WeaponWeight;
 
 import static net.splatcraft.item.SplatcraftArmorMaterial.*;
 
@@ -33,8 +35,8 @@ public class SplatcraftItems {
         ShooterSettings.builder()
                        .weaponWeight(WeaponWeight.MIDDLEWEIGHT)
                        .usageMobility(0.72f)
-                       .build(InkConsumptionSettings.builder().consumption(0.92f).regenerationCooldown(20).build(), 6, (settings, age) -> {
-                           int e = age - 8;
+                       .build(InkConsumptionSettings.builder().consumption(0.92f).regenerationCooldown(20).build(), 6, ctx -> {
+                           int e = ctx.age() - 8;
                            // 0.5625f per 1/3 of a tick
                            return Math.max(e > 0 ? 36.0f - ((0.5625f * 3) * e) : 0, 18.0f);
                        })

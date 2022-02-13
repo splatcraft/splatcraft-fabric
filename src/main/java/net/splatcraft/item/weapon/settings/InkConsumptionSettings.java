@@ -1,4 +1,4 @@
-package net.splatcraft.item.weapon;
+package net.splatcraft.item.weapon.settings;
 
 import static net.splatcraft.util.SplatcraftUtil.*;
 

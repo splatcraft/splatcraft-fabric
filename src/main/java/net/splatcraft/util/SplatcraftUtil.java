@@ -8,6 +8,8 @@ import java.util.function.Function;
 public class SplatcraftUtil {
     private static final FabricLoader LOADER = FabricLoader.getInstance();
 
+    // frame-tick conversion
+
     public static final int SPLATOON_FPS = 60;
     private static final Function<Integer, Integer> FRAMES_TO_TICK = Util.memoize(SplatcraftUtil::rawFrameToTick);
 
@@ -18,6 +20,21 @@ public class SplatcraftUtil {
     public static int frameToTick(int frames) {
         return FRAMES_TO_TICK.apply(frames);
     }
+
+    // health scaling
+
+    public static final float SPLATOON_MAX_HEALTH = 100;
+    private static final Function<Number, Float> SCALE_GAME_HEALTH = Util.memoize(SplatcraftUtil::rawScaleGameHealth);
+
+    public static Float rawScaleGameHealth(Number health) {
+        return (health.floatValue() / SPLATOON_MAX_HEALTH) * 20;
+    }
+
+    public static float scaleGameHealth(Number health) {
+        return SCALE_GAME_HEALTH.apply(health);
+    }
+
+    // mod loaded checks
 
     private static final Function<String, Boolean> MOD_LOADED = Util.memoize(LOADER::isModLoaded);
 

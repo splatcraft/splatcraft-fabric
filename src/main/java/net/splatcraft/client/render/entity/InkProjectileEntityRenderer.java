@@ -14,6 +14,7 @@ import net.splatcraft.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.client.model.entity.InkProjectileEntityModel;
 import net.splatcraft.entity.InkProjectileEntity;
 import net.splatcraft.inkcolor.InkType;
+import net.splatcraft.item.weapon.settings.InkProjectileSettings;
 
 import static net.splatcraft.client.util.ClientUtil.*;
 
@@ -35,7 +36,9 @@ public class InkProjectileEntityRenderer<T extends InkProjectileEntity> extends 
 
         matrices.push();
 
-        float size = entity.getSize();
+        InkProjectileSettings settings = entity.getProjectileSettings();
+
+        float size = settings.getSize();
         matrices.scale(size, size, size);
 
         Vec3f color = getVectorColor(entity.getInkColor());

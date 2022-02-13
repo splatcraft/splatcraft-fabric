@@ -11,14 +11,17 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.splatcraft.entity.access.InkableCaster;
 import net.splatcraft.entity.damage.SplatcraftDamageSource;
@@ -26,16 +29,20 @@ import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;
 import net.splatcraft.inkcolor.InkType;
 import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.item.SplatcraftItems;
+import net.splatcraft.item.weapon.settings.InkProjectileSettings;
+import net.splatcraft.item.weapon.settings.ShooterSettings;
 import net.splatcraft.tag.SplatcraftBlockTags;
 import net.splatcraft.util.TrackedDataUtil;
 
+import static net.minecraft.entity.EntityStatuses.*;
 import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
 
 public class InkProjectileEntity extends ThrownEntity implements Inkable, InkableCaster {
     public static final TrackedData<String> INK_COLOR = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.STRING);
     public static final TrackedData<Integer> INK_TYPE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    public static final TrackedData<Float> SIZE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.FLOAT);
+    public static final TrackedData<String> SOURCE = DataTracker.registerData(InkProjectileEntity.class, TrackedDataHandlerRegistry.STRING);
 
     public static final byte INK_SPLASH_STATUS = 69;
 
@@ -57,12 +64,12 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
     protected void initDataTracker() {
         this.dataTracker.startTracking(INK_COLOR, InkColors.getDefault().toString());
         this.dataTracker.startTracking(INK_TYPE, InkType.NORMAL.ordinal());
-        this.dataTracker.startTracking(SIZE, 1.0f);
+        this.dataTracker.startTracking(SOURCE, Registry.ITEM.getId(SplatcraftItems.SPLATTERSHOT).toString());
     }
 
     @Override
     public void onTrackedDataSet(TrackedData<?> data) {
-        if (SIZE.equals(data)) this.calculateDimensions();
+        if (SOURCE.equals(data)) this.calculateDimensions();
         super.onTrackedDataSet(data);
     }
 
@@ -101,12 +108,30 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
         return true;
     }
 
-    public float getSize() {
-        return this.dataTracker.get(SIZE);
+    public String getSource() {
+        return this.dataTracker.get(SOURCE);
     }
 
-    public void setSize(float size) {
-        this.dataTracker.set(SIZE, size);
+    public void setSource(String source) {
+        if (!(Registry.ITEM.get(Identifier.tryParse(source)) instanceof ShooterSettings.Provider)) return;
+        this.dataTracker.set(SOURCE, source);
+    }
+
+    public <T extends Item & ShooterSettings.Provider> void setSource(T item) {
+        this.setSource(Registry.ITEM.getId(item).toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Item & ShooterSettings.Provider> T getSourceItem() {
+        return (T) Registry.ITEM.get(Identifier.tryParse(getSource()));
+    }
+
+    public ShooterSettings getShooterSettings() {
+        return this.getSourceItem().getWeaponSettings();
+    }
+
+    public InkProjectileSettings getProjectileSettings() {
+        return this.getShooterSettings().getProjectileSettings();
     }
 
     public boolean dropsInk() {
@@ -145,7 +170,13 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
         if (entity instanceof Inkable inkable) {
             if (!this.getInkColor().equals(inkable.getInkColor())) {
                 Entity owner = this.getOwner();
-                entity.damage(owner instanceof LivingEntity livingEntity ? SplatcraftDamageSource.inked(livingEntity) : SplatcraftDamageSource.INKED_ENVIRONMENT, 1.0f);
+                ShooterSettings settings = this.getShooterSettings();
+                entity.damage(
+                    owner instanceof LivingEntity livingEntity
+                        ? SplatcraftDamageSource.inked(livingEntity)
+                        : SplatcraftDamageSource.INKED_ENVIRONMENT,
+                    settings.getDamage(new ShooterSettings.DamageCalculator.Context(settings, this.age))
+                );
             }
         }
 
@@ -194,12 +225,17 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
     @Override
     public void handleStatus(byte status) {
         super.handleStatus(status);
-        if (status == INK_SPLASH_STATUS || status == 53) inkSplash(this.world, this, this.getPos(), 0.75f);
+        if (status == INK_SPLASH_STATUS || status == DRIP_HONEY) inkSplash(this.world, this, this.getPos(), 0.75f);
     }
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return EntityDimensions.changing(1.0f, 1.0f).scaled(this.getSize() * 1.25f);
+        return EntityDimensions.changing(1.0f, 1.0f).scaled(this.getProjectileSettings().getSize() * 1.25f);
+    }
+
+    @Override
+    public boolean hasNoGravity() {
+        return super.hasNoGravity() || this.age <= this.getProjectileSettings().getGravityDelay();
     }
 
     @Override
@@ -207,7 +243,7 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
         super.writeCustomDataToNbt(nbt);
         nbt.putString(NBT_INK_COLOR, this.getInkColor().toString());
         nbt.putString(NBT_INK_TYPE, this.getInkType().toString());
-        nbt.putFloat(NBT_SIZE, this.getSize());
+        nbt.putString(NBT_SOURCE, this.getSource());
         nbt.putBoolean(NBT_DROPS_INK, this.dropsInk());
     }
 
@@ -216,7 +252,7 @@ public class InkProjectileEntity extends ThrownEntity implements Inkable, Inkabl
         super.readCustomDataFromNbt(nbt);
         this.setInkColor(InkColor.fromString(nbt.getString(NBT_INK_COLOR)));
         this.setInkType(InkType.safeValueOf(nbt.getString(NBT_INK_TYPE)));
-        this.setSize(nbt.getFloat(NBT_SIZE));
+        this.setSource(nbt.getString(NBT_SOURCE));
         this.setDropsInk(nbt.getBoolean(NBT_DROPS_INK));
     }
 }
