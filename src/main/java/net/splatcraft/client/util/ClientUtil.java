@@ -11,7 +11,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
-import net.moddingplayground.frame.api.config.option.ColorOption;
+import net.moddingplayground.frame.api.config.v0.option.ColorOption;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.component.PlayerDataComponent;

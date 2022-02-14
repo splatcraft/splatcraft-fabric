@@ -7,8 +7,8 @@ import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.moddingplayground.frame.api.banner.FrameBannerPattern;
-import net.moddingplayground.frame.api.banner.FrameBannerPatternItem;
+import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPattern;
+import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPatternItem;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.item.weapon.RollerItem;
@@ -53,13 +53,11 @@ public class SplatcraftItems {
     }
 
     private static Item register(String id, FrameBannerPattern pattern) {
-        return register(id, new FrameBannerPatternItem(pattern, new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
+        return unstackable(id, settings -> new FrameBannerPatternItem(pattern, settings));
     }
 
     private static Item register(String id, int capacity, InkTankFactory factory) {
-        return register(id, factory.create(capacity, new FabricItemSettings().equipmentSlot(stack -> EquipmentSlot.CHEST)
-                                                                             .maxCount(1)
-                                                                             .group(SplatcraftItemGroups.ALL)));
+        return unstackable(id, settings -> factory.create(capacity, settings.equipmentSlot(stack -> EquipmentSlot.CHEST)));
     }
 
     private static Item unstackable(String id, ItemFactory<Item> factory) {
@@ -71,7 +69,7 @@ public class SplatcraftItems {
     }
 
     private static Item armor(String id, ArmorMaterial material, EquipmentSlot slot, ArmorFactory factory) {
-        return register(id, factory.create(material, slot, new FabricItemSettings().maxCount(1).group(SplatcraftItemGroups.ALL)));
+        return unstackable(id, settings -> factory.create(material, slot, settings));
     }
 
     @FunctionalInterface

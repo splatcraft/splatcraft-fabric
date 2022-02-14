@@ -3,7 +3,7 @@ package net.splatcraft.datagen;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
-import net.moddingplayground.toymaker.api.generator.recipe.AbstractRecipeGenerator;
+import net.moddingplayground.frame.api.toymaker.v0.generator.recipe.AbstractRecipeGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 

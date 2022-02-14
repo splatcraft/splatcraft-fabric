@@ -1,6 +1,6 @@
 package net.splatcraft.datagen;
 
-import net.moddingplayground.toymaker.api.generator.tag.AbstractTagGenerator;
+import net.moddingplayground.frame.api.toymaker.v0.generator.tag.AbstractTagGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.inkcolor.InkColor;
 import net.splatcraft.inkcolor.InkColors;

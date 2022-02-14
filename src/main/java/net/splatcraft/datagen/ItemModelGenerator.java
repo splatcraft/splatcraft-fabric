@@ -2,9 +2,9 @@ package net.splatcraft.datagen;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
-import net.moddingplayground.toymaker.api.generator.model.InheritingModelGen;
-import net.moddingplayground.toymaker.api.generator.model.ModelGen;
-import net.moddingplayground.toymaker.api.generator.model.item.AbstractItemModelGenerator;
+import net.moddingplayground.frame.api.toymaker.v0.generator.model.InheritingModelGen;
+import net.moddingplayground.frame.api.toymaker.v0.generator.model.ModelGen;
+import net.moddingplayground.frame.api.toymaker.v0.generator.model.item.AbstractItemModelGenerator;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.entity.SplatcraftEntities;

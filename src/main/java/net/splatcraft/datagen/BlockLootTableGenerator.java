@@ -1,7 +1,7 @@
 package net.splatcraft.datagen;
 
 import net.minecraft.loot.LootTable;
-import net.moddingplayground.toymaker.api.generator.loot.AbstractBlockLootTableGenerator;
+import net.moddingplayground.frame.api.toymaker.v0.generator.loot.AbstractBlockLootTableGenerator;
 import net.splatcraft.Splatcraft;
 
 import static net.splatcraft.block.SplatcraftBlocks.*;

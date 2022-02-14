@@ -3,7 +3,7 @@ package net.splatcraft.mixin.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.moddingplayground.frame.api.config.option.EnumOption;
+import net.moddingplayground.frame.api.config.v0.option.EnumOption;
 import net.splatcraft.client.config.ClientConfig;
 import net.splatcraft.client.config.enums.HealthInkOverlay;
 import net.splatcraft.client.config.enums.PreventBobView;

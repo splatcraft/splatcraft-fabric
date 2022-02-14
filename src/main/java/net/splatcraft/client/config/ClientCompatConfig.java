@@ -4,9 +4,9 @@ import com.google.common.collect.HashBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
-import net.moddingplayground.frame.api.config.Config;
-import net.moddingplayground.frame.api.config.option.BooleanOption;
-import net.moddingplayground.frame.api.config.option.Option;
+import net.moddingplayground.frame.api.config.v0.Config;
+import net.moddingplayground.frame.api.config.v0.option.BooleanOption;
+import net.moddingplayground.frame.api.config.v0.option.Option;
 import net.splatcraft.Splatcraft;
 
 import java.io.File;

@@ -15,43 +15,8 @@ version = System.env.GITHUB_ACTIONS == "true"
 
 repositories {
   maven {
-    name = "Quilt Maven"
-    url  = "https://maven.quiltmc.org/repository/release/"
-  }
-
-  maven {
-    name = "Modrinth"
-    url  = "https://api.modrinth.com/maven/"
-  }
-
-  maven {
-    name = "Terraformers Maven"
-    url  = "https://maven.terraformersmc.com/releases/"
-  }
-
-  maven {
-    name = "Terraformers Backup Maven"
-    url  = "https://maven.terraformersmc.com/releases/"
-  }
-
-  maven {
-    name = "Shadew's Maven"
-    url  = "https://maven.shadew.net/"
-  }
-
-  maven {
-    name = "Modding Playground's Maven"
+    name = "Modding Playground"
     url = "https://raw.githubusercontent.com/moddingplayground/maven/main/"
-  }
-
-  maven {
-    name = "Gegy's Maven"
-    url  = "https://maven.gegy.dev/"
-  }
-
-  maven {
-    name = "Ladysnake Mods"
-    url  = "https://ladysnake.jfrog.io/artifactory/mods/"
   }
 
   maven {
@@ -60,8 +25,18 @@ repositories {
   }
 
   maven {
-    name = "Artifactory"
-    url  = "https://server.bbkr.space/artifactory/libs-release/"
+    name = "Ladysnake Mods"
+    url  = "https://ladysnake.jfrog.io/artifactory/mods/"
+  }
+
+  maven {
+    name = "Terraformers Maven"
+    url  = "https://maven.terraformersmc.com/releases/"
+  }
+
+  maven {
+    name = "Modrinth"
+    url  = "https://api.modrinth.com/maven/"
   }
 }
 
@@ -70,7 +45,9 @@ dependencies {
   mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
   modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+  // api
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+  modImplementation "net.moddingplayground.frame:frame-fabric:${project.frame_version}"
 
   String            cardinalComponents       = "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-%s:${project.cardinal_version}"
   String            cardinalComponentsBase   = cardinalComponents.formatted("base")
@@ -78,15 +55,7 @@ dependencies {
   String            cardinalComponentsEntity = cardinalComponents.formatted("entity")
   modImplementation cardinalComponentsEntity ; include cardinalComponentsEntity
 
-  String  clothConfig = "me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}"
-  modApi  clothConfig ; include clothConfig
-
-  String frame = "net.moddingplayground.frame:frame-fabric:${project.frame_version}"
-  modImplementation frame ; include frame
-
-  String toymaker = "net.moddingplayground.toymaker:toymaker-fabric:${project.toymaker_version}"
-  modImplementation toymaker ; include toymaker
-
+  // integration
   modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
   modImplementation "dev.emi:trinkets:${trinkets_version}"

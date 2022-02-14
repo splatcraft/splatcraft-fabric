@@ -45,10 +45,8 @@
     "minecraft": ">=1.18",
     "fabricloader": ">=0.13",
     "fabric": ">=0.46",
-    "frame": ">=0.5",
-    "toymaker": ">=1.2",
-    "cardinal-components-base": ">=4.0",
-    "cloth-config": ">=6.1"
+    "frame": ">=0.7.2",
+    "cardinal-components-base": ">=4.0"
   },
   "suggests": {
     "modmenu": "*",

@@ -7,7 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.TranslatableText;
-import net.moddingplayground.frame.api.config.Config;
+import net.moddingplayground.frame.api.config.v0.Config;
 import net.splatcraft.Splatcraft;
 
 import static net.splatcraft.client.util.ClientUtil.*;

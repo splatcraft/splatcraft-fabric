@@ -2,8 +2,8 @@ package net.splatcraft.block.entity;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.moddingplayground.frame.api.banner.FrameBannerPattern;
-import net.moddingplayground.frame.api.banner.FrameBannerPatterns;
+import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPattern;
+import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPatterns;
 import net.splatcraft.Splatcraft;
 
 public class SplatcraftBannerPatterns {
