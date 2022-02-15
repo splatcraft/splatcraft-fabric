@@ -35,6 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.moddingplayground.frame.api.util.InitializationLogger;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
@@ -52,9 +53,9 @@ import net.splatcraft.registry.SplatcraftRegistries;
 import net.splatcraft.tag.InkColorTags;
 import net.splatcraft.world.SplatcraftGameRules;
 import net.splatcraft.world.SynchronizedBooleanGameRuleRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
@@ -67,12 +68,12 @@ public class Splatcraft implements ModInitializer {
     private static Splatcraft instance = null;
 
     protected final Logger logger;
-    protected final FabricLoader loader;
+    protected final InitializationLogger initializer;
     protected final Events events;
 
     public Splatcraft() {
-        this.logger = LogManager.getLogger(MOD_ID);
-        this.loader = FabricLoader.getInstance();
+        this.logger = LoggerFactory.getLogger(MOD_ID);
+        this.initializer = new InitializationLogger(this.logger, MOD_NAME);
         this.events = new Events();
         instance = this;
     }
@@ -80,7 +81,7 @@ public class Splatcraft implements ModInitializer {
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public void onInitialize() {
-        this.logger.info("Initializing {}", MOD_NAME);
+        this.initializer.start();
 
         Reflection.initialize(
             SplatcraftRegistries.class,
@@ -99,13 +100,15 @@ public class Splatcraft implements ModInitializer {
             NetworkingCommon.class
         );
 
-        if (this.loader.isDevelopmentEnvironment()) this.onInitializeDev();
+        FabricLoader loader = FabricLoader.getInstance();
+        if (loader.isDevelopmentEnvironment()) this.onInitializeDev();
 
-        this.logger.info("Initialized {}", MOD_NAME);
+        this.initializer.finish();
     }
 
     public void onInitializeDev() {
-        this.logger.info("Initializing {}-dev", Splatcraft.MOD_NAME);
+        InitializationLogger logger = new InitializationLogger(this.logger, Splatcraft.MOD_NAME + "-dev");
+        logger.start();
 
         for (Registry<?> registry : Registry.REGISTRIES) {
             Identifier registryId = registry.getKey().getValue();
@@ -114,7 +117,11 @@ public class Splatcraft implements ModInitializer {
             }
         }
 
-        this.logger.info("Initialized {}-dev", Splatcraft.MOD_NAME);
+        logger.finish();
+    }
+
+    public Logger getLogger() {
+        return this.logger;
     }
 
     public Events getEvents() {

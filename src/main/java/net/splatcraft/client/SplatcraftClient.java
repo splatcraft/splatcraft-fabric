@@ -20,6 +20,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
+import net.moddingplayground.frame.api.util.InitializationLogger;
 import net.splatcraft.Splatcraft;
 import net.splatcraft.block.SplatcraftBlocks;
 import net.splatcraft.block.entity.SplatcraftBlockEntities;
@@ -43,8 +44,6 @@ import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.mixin.client.ClientWorldAccessor;
 import net.splatcraft.particle.SplatcraftParticles;
 import net.splatcraft.world.SynchronizedBooleanGameRuleRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -58,18 +57,18 @@ import static net.splatcraft.item.InkTankItem.*;
 public class SplatcraftClient implements ClientModInitializer {
     private static SplatcraftClient instance = null;
 
-    protected final Logger logger;
+    protected final InitializationLogger initializer;
     protected final Events events;
 
     public SplatcraftClient() {
-        this.logger = LogManager.getLogger("%s-client".formatted(Splatcraft.MOD_ID));
+        this.initializer = new InitializationLogger(Splatcraft.getInstance().getLogger(), Splatcraft.MOD_NAME, EnvType.CLIENT);
         this.events = new Events();
         instance = this;
     }
 
     @Override
     public void onInitializeClient() {
-        this.logger.info("Initializing {}-client", Splatcraft.MOD_NAME);
+        this.initializer.start();
 
         Reflection.initialize(
             ClientConfig.class,
@@ -155,13 +154,14 @@ public class SplatcraftClient implements ClientModInitializer {
 
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) onInitializeClientDev();
 
-        this.logger.info("Initialized {}-client", Splatcraft.MOD_NAME);
+        this.initializer.finish();
     }
 
     public void onInitializeClientDev() {
-        this.logger.info("Initializing {}-client-dev", Splatcraft.MOD_NAME);
+        InitializationLogger logger = new InitializationLogger(Splatcraft.getInstance().getLogger(), Splatcraft.MOD_NAME + "-dev", EnvType.CLIENT);
+        logger.start();
         Reflection.initialize(SplatcraftDevelopmentKeyBindings.class);
-        this.logger.info("Initialized {}-client-dev", Splatcraft.MOD_NAME);
+        logger.finish();
     }
 
     protected static void modelPredicate(String id, UnclampedModelPredicateProvider provider, Item... items) {
