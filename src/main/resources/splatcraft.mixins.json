@@ -30,8 +30,6 @@
     "client.ClientWorldAccessor",
     "client.ClientWorldMixin",
     "client.DebugHudMixin",
-    "client.EntityModelLayersInvoker",
-    "client.EntityModelLayersMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GameRendererMixin",
     "client.HeldItemRendererMixin",
