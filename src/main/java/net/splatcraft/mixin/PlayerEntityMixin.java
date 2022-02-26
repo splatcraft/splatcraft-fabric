@@ -1,7 +1,5 @@
 package net.splatcraft.mixin;
 
-import dev.emi.trinkets.api.TrinketComponent;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -37,6 +35,7 @@ import net.splatcraft.inkcolor.Inkable;
 import net.splatcraft.item.SplatcraftItems;
 import net.splatcraft.item.UsageSpeedProvider;
 import net.splatcraft.item.weapon.WeaponItem;
+import net.splatcraft.util.IntegrationUtil;
 import net.splatcraft.util.SplatcraftConstants;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,7 +52,6 @@ import java.util.Random;
 
 import static net.splatcraft.particle.SplatcraftParticles.*;
 import static net.splatcraft.util.SplatcraftConstants.*;
-import static net.splatcraft.util.SplatcraftUtil.*;
 import static net.splatcraft.world.SplatcraftGameRules.*;
 import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
 
@@ -152,19 +150,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
             if (inventory.containsAny(Collections.singleton(SplatcraftItems.SPLATFEST_BAND))) return data.setHasSplatfestBand(true);
         }
 
-        if (isModLoaded("trinkets") && checkSplatfestBandTrinkets()) return data.setHasSplatfestBand(true);
+        if (IntegrationUtil.Trinkets.checkSplatfestBand(that)) return data.setHasSplatfestBand(true);
 
         return data.setHasSplatfestBand(false);
-    }
-
-    @Unique
-    private boolean checkSplatfestBandTrinkets() {
-        Optional<TrinketComponent> trinketso = TrinketsApi.getTrinketComponent(this);
-        if (trinketso.isPresent()) {
-            TrinketComponent trinkets = trinketso.get();
-            return !trinkets.getEquipped(SplatcraftItems.SPLATFEST_BAND).isEmpty();
-        }
-        return false;
     }
 
     @Unique

@@ -5,8 +5,10 @@ import net.minecraft.util.Util;
 
 import java.util.function.Function;
 
-public class SplatcraftUtil {
+public final class SplatcraftUtil {
     private static final FabricLoader LOADER = FabricLoader.getInstance();
+
+    private SplatcraftUtil() {}
 
     // frame-tick conversion
 

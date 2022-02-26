@@ -217,6 +217,7 @@ public class PlayerDataComponent implements Component, AutoSyncedComponent {
         nbt.putString(NBT_INK_COLOR, InkColor.toString(this.getInkColor()));
         nbt.putBoolean(NBT_IS_SQUID, this.isSquid());
         nbt.putBoolean(NBT_IS_SUBMERGED, this.isSubmerged());
+        nbt.putBoolean(NBT_HAS_SPLATFEST_BAND, this.hasSplatfestBand());
         nbt.putBoolean(NBT_INITIALIZED, this.isInitialized());
     }
 
