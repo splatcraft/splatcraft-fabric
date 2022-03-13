@@ -11,8 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
-import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.api.inkcolor.InkColor;
+import net.splatcraft.api.inkcolor.Inkable;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
 
 @Mixin(Item.class)
 public abstract class ItemMixin implements ItemConvertible {

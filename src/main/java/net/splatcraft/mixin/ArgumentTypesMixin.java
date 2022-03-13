@@ -3,14 +3,14 @@ package net.splatcraft.mixin;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.util.Identifier;
-import net.splatcraft.Splatcraft;
-import net.splatcraft.command.argument.InkColorArgumentType;
+import net.splatcraft.api.Splatcraft;
+import net.splatcraft.impl.command.argument.InkColorArgumentType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
 
 @Mixin(ArgumentTypes.class)
 public class ArgumentTypesMixin {

@@ -14,11 +14,11 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import net.splatcraft.Splatcraft;
-import net.splatcraft.client.config.ClientConfig;
-import net.splatcraft.client.config.enums.HealthInkOverlay;
-import net.splatcraft.client.entity.ClientPlayerEntityAccess;
-import net.splatcraft.util.Color;
+import net.splatcraft.api.Splatcraft;
+import net.splatcraft.api.util.Color;
+import net.splatcraft.impl.client.config.ClientConfig;
+import net.splatcraft.impl.client.config.enums.HealthInkOverlay;
+import net.splatcraft.impl.client.entity.ClientPlayerEntityAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Function;
 
-import static net.splatcraft.client.util.ClientUtil.*;
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.api.client.util.ClientUtil.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)

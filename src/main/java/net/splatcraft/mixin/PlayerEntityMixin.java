@@ -20,23 +20,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.splatcraft.client.config.ClientConfig;
-import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.PackedInput;
-import net.splatcraft.entity.SplatcraftAttributes;
-import net.splatcraft.entity.access.InkEntityAccess;
-import net.splatcraft.entity.access.InkableCaster;
-import net.splatcraft.entity.access.InputPlayerEntityAccess;
-import net.splatcraft.entity.access.LivingEntityAccess;
-import net.splatcraft.entity.access.PlayerEntityAccess;
-import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.InkType;
-import net.splatcraft.inkcolor.Inkable;
-import net.splatcraft.item.SplatcraftItems;
-import net.splatcraft.item.UsageSpeedProvider;
-import net.splatcraft.item.weapon.WeaponItem;
-import net.splatcraft.util.IntegrationUtil;
-import net.splatcraft.util.SplatcraftConstants;
+import net.splatcraft.api.component.PlayerDataComponent;
+import net.splatcraft.api.entity.SplatcraftAttributes;
+import net.splatcraft.api.inkcolor.InkColor;
+import net.splatcraft.api.inkcolor.InkType;
+import net.splatcraft.api.inkcolor.Inkable;
+import net.splatcraft.api.item.SplatcraftItems;
+import net.splatcraft.api.item.UsageSpeedProvider;
+import net.splatcraft.api.item.weapon.WeaponItem;
+import net.splatcraft.api.util.SplatcraftConstants;
+import net.splatcraft.impl.client.config.ClientConfig;
+import net.splatcraft.impl.entity.PackedInput;
+import net.splatcraft.impl.entity.access.InkEntityAccess;
+import net.splatcraft.impl.entity.access.InkableCaster;
+import net.splatcraft.impl.entity.access.InputPlayerEntityAccess;
+import net.splatcraft.impl.entity.access.LivingEntityAccess;
+import net.splatcraft.impl.entity.access.PlayerEntityAccess;
+import net.splatcraft.impl.util.IntegrationUtil;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,10 +50,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Random;
 
-import static net.splatcraft.particle.SplatcraftParticles.*;
-import static net.splatcraft.util.SplatcraftConstants.*;
-import static net.splatcraft.world.SplatcraftGameRules.*;
-import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
+import static net.moddingplayground.frame.api.gamerules.v0.SynchronizedBooleanGameRuleRegistry.*;
+import static net.splatcraft.api.particle.SplatcraftParticleType.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
+import static net.splatcraft.api.world.SplatcraftGameRules.*;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements Inkable, InkableCaster, PlayerEntityAccess, InkEntityAccess {
@@ -192,7 +192,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
         if (this.isSubmergedInInk()) {
             nu *= (this.getAttributeValue(SplatcraftAttributes.INK_SWIM_SPEED) * 10) / (this.isSneaking() ? 1.5f : 1);
         } else {
-            if (this.isOnEnemyInk() && syncedGameRule(this.world, ENEMY_INK_SLOWNESS)) nu *= 0.475f;
+            if (this.isOnEnemyInk() && INSTANCE.get(this.world, ENEMY_INK_SLOWNESS)) nu *= 0.475f;
         }
 
         return base != nu ? Optional.of(nu) : Optional.empty();
@@ -327,7 +327,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements Inkable,
 
     @Unique
     private boolean shouldTickEnemyInkSquidForm() {
-        if (!syncedGameRule(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
+        if (!INSTANCE.get(this.world, LEAVE_SQUID_FORM_ON_ENEMY_INK)) return false;
         return (this.isInSquidForm() || this.isCoolingDownSquidForm()) && this.isOnEnemyInk();
     }
 

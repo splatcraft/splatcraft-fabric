@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.util.Identifier;
-import net.splatcraft.Splatcraft;
+import net.splatcraft.api.Splatcraft;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

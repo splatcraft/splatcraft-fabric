@@ -2,7 +2,7 @@ package net.splatcraft.mixin;
 
 import net.minecraft.block.HoneyBlock;
 import net.minecraft.entity.Entity;
-import net.splatcraft.entity.InkProjectileEntity;
+import net.splatcraft.api.entity.InkProjectileEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

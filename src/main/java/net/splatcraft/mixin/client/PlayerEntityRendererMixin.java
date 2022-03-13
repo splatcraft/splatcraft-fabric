@@ -6,15 +6,15 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.splatcraft.client.render.entity.InkSquidEntityModelRenderer;
-import net.splatcraft.entity.access.InkEntityAccess;
+import net.splatcraft.api.client.render.entity.InkSquidEntityModelRenderer;
+import net.splatcraft.impl.entity.access.InkEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.client.util.ClientUtil.*;
+import static net.splatcraft.api.client.util.ClientUtil.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntityRenderer.class)

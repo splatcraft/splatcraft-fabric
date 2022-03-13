@@ -12,19 +12,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.splatcraft.block.InkableBlock;
-import net.splatcraft.entity.access.InkEntityAccess;
-import net.splatcraft.inkcolor.Inkable;
-import net.splatcraft.tag.SplatcraftBlockTags;
-import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.api.block.InkableBlock;
+import net.splatcraft.api.inkcolor.Inkable;
+import net.splatcraft.api.tag.SplatcraftBlockTags;
+import net.splatcraft.api.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.impl.entity.access.InkEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
-import static net.splatcraft.world.SplatcraftGameRules.*;
-import static net.splatcraft.world.SynchronizedBooleanGameRuleRegistry.*;
+import static net.moddingplayground.frame.api.gamerules.v0.SynchronizedBooleanGameRuleRegistry.*;
+import static net.splatcraft.api.world.SplatcraftGameRules.*;
 
 @Mixin(Entity.class)
 public abstract class InkEntityMixin implements InkEntityAccess {
@@ -32,7 +32,6 @@ public abstract class InkEntityMixin implements InkEntityAccess {
 
     @Shadow public abstract BlockPos getLandingPos();
     @Shadow public abstract boolean hasVehicle();
-    @Shadow public abstract boolean isSpectator();
     @Shadow public abstract EntityType<?> getType();
     @Shadow public abstract double getX();
     @Shadow public abstract double getY();
@@ -68,7 +67,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     public boolean isOnOwnInk() {
         if (this instanceof Inkable inkable) {
             if (this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable block) {
-                if (syncedGameRule(this.world, UNIVERSAL_INK)) return true;
+                if (INSTANCE.get(this.world, UNIVERSAL_INK)) return true;
                 return block.getInkColor().equals(inkable.getInkColor());
             }
         }
@@ -82,11 +81,11 @@ public abstract class InkEntityMixin implements InkEntityAccess {
             BlockPos pos = this.getLandingPos();
             if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR)) {
                 BlockState state = this.world.getBlockState(pos);
-                if (SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(state.getBlock())) return false;
+                if (state.isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) return false;
             }
 
             if (this.world.getBlockEntity(pos) instanceof Inkable block) {
-                return !syncedGameRule(this.world, UNIVERSAL_INK) && !block.getInkColor().equals(inkable.getInkColor());
+                return !INSTANCE.get(this.world, UNIVERSAL_INK) && !block.getInkColor().equals(inkable.getInkColor());
             }
         }
 
@@ -96,7 +95,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
     @Unique
     @Override
     public boolean doesInkPassing() {
-        return this.isInSquidForm() && SplatcraftEntityTypeTags.INK_PASSABLES.contains(this.getType());
+        return this.isInSquidForm() && this.getType().isIn(SplatcraftEntityTypeTags.INK_PASSABLES);
     }
 
     @Unique
@@ -127,7 +126,7 @@ public abstract class InkEntityMixin implements InkEntityAccess {
             double x = this.getX();
             double y = this.getY();
             double z = this.getZ();
-            boolean universalInk = syncedGameRule(this.world, UNIVERSAL_INK);
+            boolean universalInk = INSTANCE.get(this.world, UNIVERSAL_INK);
             for (int i = 0; i < 4; i++) {
                 int n = i % 2 == 0 ? 1 : -1;
                 float xo = ( (i < 2) ? 0 : 0.32f) * n;
@@ -135,8 +134,9 @@ public abstract class InkEntityMixin implements InkEntityAccess {
 
                 pos.set(x - xo, y, z - zo);
                 if (!pos.equals(this.getBlockPos())) {
-                    Block block = this.world.getBlockState(pos).getBlock();
-                    if (block instanceof InkableBlock && SplatcraftBlockTags.INK_CLIMBABLE.contains(block)) {
+                    BlockState state = this.world.getBlockState(pos);
+                    Block block = state.getBlock();
+                    if (block instanceof InkableBlock && state.isIn(SplatcraftBlockTags.INK_CLIMBABLE)) {
                         if (this.world.getBlockEntity(pos) instanceof Inkable inkableBlock) {
                             if (universalInk || inkable.getInkColor().equals(inkableBlock.getInkColor())) return Optional.of(pos);
                         }

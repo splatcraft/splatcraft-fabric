@@ -6,15 +6,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.InkColors;
-import net.splatcraft.inkcolor.InkType;
-import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.api.inkcolor.InkColor;
+import net.splatcraft.api.inkcolor.InkColors;
+import net.splatcraft.api.inkcolor.InkType;
+import net.splatcraft.api.inkcolor.Inkable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements Inkable {

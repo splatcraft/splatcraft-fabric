@@ -11,12 +11,12 @@ import net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
-import net.splatcraft.block.InkableBlock;
-import net.splatcraft.entity.access.ItemEntityAccess;
-import net.splatcraft.inkcolor.InkColor;
-import net.splatcraft.inkcolor.InkType;
-import net.splatcraft.inkcolor.Inkable;
-import net.splatcraft.tag.SplatcraftBlockTags;
+import net.splatcraft.api.block.InkableBlock;
+import net.splatcraft.api.inkcolor.InkColor;
+import net.splatcraft.api.inkcolor.InkType;
+import net.splatcraft.api.inkcolor.Inkable;
+import net.splatcraft.api.tag.SplatcraftBlockTags;
+import net.splatcraft.impl.entity.access.ItemEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.world.SplatcraftGameRules.*;
+import static net.splatcraft.api.world.SplatcraftGameRules.*;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEntityAccess {
@@ -127,7 +127,7 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
         if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR) && this.isOnGround()) {
             if (this.isInkable()) {
                 BlockEntity blockEntity = this.world.getBlockEntity(this.getLandingPos());
-                if (blockEntity != null && SplatcraftBlockTags.INK_COLOR_CHANGERS.contains(blockEntity.getCachedState().getBlock())) {
+                if (blockEntity != null && blockEntity.getCachedState().isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) {
                     if (blockEntity instanceof Inkable inkable) this.setInkColor(inkable.getInkColor());
                 }
             }

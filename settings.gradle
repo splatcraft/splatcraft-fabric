@@ -9,4 +9,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "splatcraft-fabric"
+rootProject.name = 'splatcraft-fabric'

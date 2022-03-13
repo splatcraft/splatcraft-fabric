@@ -9,12 +9,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.splatcraft.client.config.ClientConfig;
-import net.splatcraft.entity.access.InkEntityAccess;
-import net.splatcraft.entity.access.InkableCaster;
-import net.splatcraft.entity.access.LivingEntityAccess;
-import net.splatcraft.entity.damage.SplatcraftDamageSource;
-import net.splatcraft.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.api.entity.damage.SplatcraftDamageSource;
+import net.splatcraft.api.tag.SplatcraftEntityTypeTags;
+import net.splatcraft.impl.client.config.ClientConfig;
+import net.splatcraft.impl.entity.access.InkEntityAccess;
+import net.splatcraft.impl.entity.access.InkableCaster;
+import net.splatcraft.impl.entity.access.LivingEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.splatcraft.particle.SplatcraftParticles.*;
-import static net.splatcraft.world.SplatcraftGameRules.*;
+import static net.splatcraft.api.particle.SplatcraftParticleType.*;
+import static net.splatcraft.api.world.SplatcraftGameRules.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements InkEntityAccess, LivingEntityAccess {
@@ -48,7 +48,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             // damage entity if on enemy ink
             if (this.isOnEnemyInk()) {
                 this.resetTicksWithoutDamage(); // disallow increased health regeneration
-                if (gameRule(this.world, DAMAGE_ON_ENEMY_INK) && SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK.contains(type)) {
+                if (gameRule(this.world, DAMAGE_ON_ENEMY_INK) && type.isIn(SplatcraftEntityTypeTags.HURT_BY_ENEMY_INK)) {
                     if (isInSquidForm || !gameRule(this.world, DAMAGE_ON_ENEMY_INK_ONLY_IN_SQUID_FORM)) {
                         boolean canKill = gameRule(this.world, DAMAGE_ON_ENEMY_INK_CAN_KILL);
                         float health = this.getHealth();
@@ -63,7 +63,7 @@ public abstract class LivingEntityMixin extends Entity implements InkEntityAcces
             }
 
             // damage entity if is wet
-            if (gameRule(this.world, DAMAGE_WHEN_WET) && SplatcraftEntityTypeTags.HURT_BY_WATER.contains(type)) {
+            if (gameRule(this.world, DAMAGE_WHEN_WET) && type.isIn(SplatcraftEntityTypeTags.HURT_BY_WATER)) {
                 if (this.isWet() && (isInSquidForm || !gameRule(this.world, DAMAGE_WHEN_WET_ONLY_IN_SQUID_FORM))) {
                     boolean canKill = gameRule(this.world, DAMAGE_WHEN_WET_CAN_KILL);
                     if (gameRule(this.world, DAMAGE_WHEN_WET_INSTANT_KILL) && canKill) {

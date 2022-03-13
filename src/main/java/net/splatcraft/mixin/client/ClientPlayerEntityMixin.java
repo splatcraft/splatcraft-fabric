@@ -7,11 +7,11 @@ import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.splatcraft.client.entity.ClientPlayerEntityAccess;
-import net.splatcraft.component.PlayerDataComponent;
-import net.splatcraft.entity.PackedInput;
-import net.splatcraft.entity.access.InputPlayerEntityAccess;
-import net.splatcraft.inkcolor.Inkable;
+import net.splatcraft.api.component.PlayerDataComponent;
+import net.splatcraft.api.inkcolor.Inkable;
+import net.splatcraft.impl.client.entity.ClientPlayerEntityAccess;
+import net.splatcraft.impl.entity.PackedInput;
+import net.splatcraft.impl.entity.access.InputPlayerEntityAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,10 +19,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.splatcraft.client.network.NetworkingClient.*;
-import static net.splatcraft.client.util.ClientUtil.*;
-import static net.splatcraft.util.Color.*;
-import static net.splatcraft.util.SplatcraftConstants.*;
+import static net.splatcraft.api.client.util.ClientUtil.*;
+import static net.splatcraft.api.util.Color.*;
+import static net.splatcraft.api.util.SplatcraftConstants.*;
+import static net.splatcraft.impl.client.network.NetworkingClient.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
