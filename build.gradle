@@ -1,17 +1,30 @@
-//file:noinspection all
+buildscript { dependencies { classpath 'org.kohsuke:github-api:1.301' } }
 
 plugins {
-  id 'fabric-loom' version '0.10-SNAPSHOT'
+  id 'java-library'
+  id 'idea'
+  id 'eclipse'
+
+  id 'fabric-loom' version '0.11-SNAPSHOT'
   id 'maven-publish'
+
+  id 'com.modrinth.minotaur' version '2.0.2'
+  id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
+/* Setup */
+
+def ENV = System.getenv()
+
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
-archivesBaseName = "${project.archives_base_name}-${project.minecraft_version}"
+tasks.withType(JavaCompile).configureEach { it.options.release = 17 }
+
+String ver = "${project.version_id}+${project.github_branch}"
+version = ENV.GITHUB_ACTIONS ? "${ver}.build.${ENV.GITHUB_RUN_NUMBER}" : ver
+
 group = project.maven_group
 
-version = System.env.GITHUB_ACTIONS == "true"
-        ? "${project.mod_version}+build.${System.env.GITHUB_RUN_NUMBER}"
-        : project.mod_version
+/* Dependencies */
 
 repositories {
   maven {
@@ -23,15 +36,14 @@ repositories {
     name = 'Shedaniel'
     url  = 'https://maven.shedaniel.me/'
   }
+  maven {
+    name = 'Terraformers'
+    url  = 'https://maven.terraformersmc.com/releases/'
+  }
 
   maven {
     name = 'Ladysnake Mods'
     url  = 'https://ladysnake.jfrog.io/artifactory/mods/'
-  }
-
-  maven {
-    name = 'Terraformers Maven'
-    url  = 'https://maven.terraformersmc.com/releases/'
   }
 
   maven {
@@ -41,57 +53,136 @@ repositories {
 }
 
 dependencies {
-  minecraft "com.mojang:minecraft:${project.minecraft_version}"
-  mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
-  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+  minecraft "com.mojang:minecraft:${project.ver_minecraft}"
+  mappings "net.fabricmc:yarn:${project.ver_minecraft}+build.${project.ver_yarn}:v2"
+  modImplementation "net.fabricmc:fabric-loader:${project.ver_loader}"
 
   // api
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-  modImplementation "net.moddingplayground.frame:frame-fabric:${project.frame_version}"
-
-  String            cardinalComponents       = "dev.onyxstudios.cardinal-components-api:cardinal-components-%s:${project.cardinal_version}"
-  String            cardinalComponentsBase   = cardinalComponents.formatted("base")
-  modImplementation cardinalComponentsBase ; include cardinalComponentsBase
-  String            cardinalComponentsEntity = cardinalComponents.formatted("entity")
-  modImplementation cardinalComponentsEntity ; include cardinalComponentsEntity
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.ver_fabric}"
+  modImplementation "net.moddingplayground.frame:frame-fabric:${project.ver_frame}"
+  modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-api:${project.ver_cardinal}"
 
   // integration
-  modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+  modImplementation "dev.emi:trinkets:${ver_trinkets}"
 
-  modImplementation "dev.emi:trinkets:${trinkets_version}"
+  modImplementation "maven.modrinth:sodium:${project.ver_sodium}"
+  implementation    "org.joml:joml:${project.ver_joml}"
 
-  modImplementation "maven.modrinth:sodium:${project.sodium_version}"
-  implementation    "org.joml:joml:${project.joml_version}"
+  modImplementation "com.terraformersmc:modmenu:${project.ver_mod_menu}"
 }
 
+/* Miscellaneous */
+
+loom { accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener") }
+
+/* Data Generation */
+
+def dataOutput = 'src/generated/resources'
+
 loom {
-  accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+  runtimeOnlyLog4j = true
 
   runs {
     data {
       server()
-
       vmArgs(
               "-Dtoymaker.datagen=true",
               "-Dtoymaker.datagen.modid=${project.mod_id}",
-              "-Dtoymaker.datagen.path=\"${project.file("src/generated/resources")};${project.file("$buildDir/resources/main")}\""
+              "-Dtoymaker.datagen.path=\"${project.file(dataOutput)};${project.file("$buildDir/resources/main")}\""
       )
     }
   }
 }
 
+sourceSets.main.resources { srcDirs += dataOutput }
+
+/* Resource Processing */
+
+
+import com.modrinth.minotaur.dependencies.*
+import groovy.json.*
+import org.kohsuke.github.*
+
 processResources {
-  inputs.property "version", project.version
-  filesMatching("fabric.mod.json") { expand "version": project.version }
+  // populate fabric.mod.json with defined version property
+  inputs.property 'version', version
+  filesMatching('fabric.mod.json') { expand 'version': version }
+
+  doLast {
+    // minify json files
+    def start = System.currentTimeMillis()
+    def minif = 0
+    def bytes = 0
+    fileTree(dir: outputs.files.asPath, include: '**/*.json').each {
+      File file = it
+      minif++
+      def oldLength = file.length()
+      file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+      bytes += oldLength - file.length()
+    }
+    println('Minified ' + minif + ' json files. Saved ' + bytes + ' bytes. Took ' + (System.currentTimeMillis() - start) + 'ms.')
+  }
 }
 
-sourceSets.main.resources { srcDirs += "$projectDir/src/generated/resources" }
-tasks.withType(JavaCompile).configureEach { it.options.release = 17 }
-java { withSourcesJar() }
+// add/remove files in jar
+jar { from('README.md', 'LICENSE', 'LICENSE_ASSETS') exclude('.cache') }
 
-jar {
-  from("LICENSE") { rename { "${it}_${project.mod_id}" } }
-  from("LICENSE_ASSETS") { rename { "${it}_${project.mod_id}" } }
-}
+/* Publishing */
 
 publishing { publications { mavenJava(MavenPublication) { from components.java } } }
+
+/* Releasing */
+
+def VER_NAME = "[$project.github_branch] $project.mod_name $project.version_id"
+def CHANGELOG = new File("./gradle", "CHANGELOG.md").text
+
+task github(dependsOn: build) {
+  onlyIf { ENV.GITHUB_TOKEN }
+  doLast {
+    def github = GitHub.connectUsingOAuth(ENV.GITHUB_TOKEN)
+    def repository = github.getRepository(project.github_repository)
+
+    def builder = new GHReleaseBuilder(repository, version)
+    builder.name(VER_NAME)
+    builder.body(CHANGELOG)
+    builder.commitish(project.github_branch)
+    builder.prerelease(project.release_type == 'beta')
+    builder.create().uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+  }
+}
+
+if (ENV.MODRINTH_TOKEN) modrinth {
+  token = ENV.MODRINTH_TOKEN
+  projectId = project.modrinth_id
+  versionNumber = version
+  versionName = VER_NAME
+  versionType = project.release_type
+  changelog = CHANGELOG
+  uploadFile = remapJar
+  gameVersions = [ project.ver_minecraft ]
+  dependencies = [ new ModDependency("P7dR8mSH", DependencyType.REQUIRED) ]
+}
+
+if (ENV.CURSEFORGE_API_KEY) curseforge {
+  apiKey = ENV.CURSEFORGE_API_KEY
+
+  project {
+    id = project.curseforge_id
+    addGameVersion project.curseforge_version
+    addGameVersion 'Fabric'
+
+    changelog = CHANGELOG
+    releaseType = project.release_type
+
+    mainArtifact(remapJar) {
+      displayName = VER_NAME
+      relations { requiredLibrary 'fabric-api' }
+    }
+
+    afterEvaluate { uploadTask.dependsOn(remapJar) }
+  }
+
+  options { forgeGradleIntegration = false }
+}
+
+task releaseVersion(dependsOn: [ build, 'github', 'modrinth', 'curseforge' ])
