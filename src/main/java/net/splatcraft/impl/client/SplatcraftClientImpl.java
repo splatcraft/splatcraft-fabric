@@ -1,8 +1,6 @@
 package net.splatcraft.impl.client;
 
 import com.google.common.reflect.Reflection;
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,12 +15,11 @@ import net.splatcraft.api.client.model.SplatcraftEntityModelLayers;
 import net.splatcraft.api.item.InkTankItem;
 import net.splatcraft.impl.client.config.ClientCompatConfig;
 import net.splatcraft.impl.client.config.ClientConfig;
-import net.splatcraft.impl.client.config.SplatcraftConfigScreenFactory;
 import net.splatcraft.impl.client.keybind.SplatcraftDevelopmentKeyBindings;
 
 @SuppressWarnings("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
-public final class SplatcraftClientImpl implements Splatcraft, ClientModInitializer, ModMenuApi {
+public final class SplatcraftClientImpl implements Splatcraft, ClientModInitializer {
     private final InitializationLogger initializer;
 
     public SplatcraftClientImpl() {
@@ -53,11 +50,6 @@ public final class SplatcraftClientImpl implements Splatcraft, ClientModInitiali
         logger.start();
         Reflection.initialize(SplatcraftDevelopmentKeyBindings.class);
         logger.finish();
-    }
-
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return p -> new SplatcraftConfigScreenFactory(p).create();
     }
 
     public static class Events {
