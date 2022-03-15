@@ -57,8 +57,8 @@
     "minecraft": ">=1.18.2",
     "fabricloader": ">=0.13",
     "fabric": ">=0.48",
-    "frame": ">=0.15",
-    "cardinal-components-base": ">=4.1"
+    "frame": ">=0.15.2",
+    "cardinal-components": ">=4.1"
   },
   "suggests": {
     "modmenu": "*",
