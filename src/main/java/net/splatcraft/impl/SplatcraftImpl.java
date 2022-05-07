@@ -50,6 +50,7 @@ import net.splatcraft.api.inkcolor.InkColors;
 import net.splatcraft.api.item.SplatcraftItems;
 import net.splatcraft.api.particle.SplatcraftParticleType;
 import net.splatcraft.api.registry.SplatcraftRegistries;
+import net.splatcraft.api.sound.SplatcraftSoundEvents;
 import net.splatcraft.api.tag.InkColorTags;
 import net.splatcraft.api.world.SplatcraftGameRules;
 import net.splatcraft.impl.command.InkColorCommand;
@@ -78,6 +79,7 @@ public final class SplatcraftImpl implements Splatcraft, ModInitializer, EntityC
             SplatcraftRegistries.class,
             InkColors.class,
 
+            SplatcraftSoundEvents.class,
             SplatcraftParticleType.class,
             SplatcraftGameRules.class,
 
