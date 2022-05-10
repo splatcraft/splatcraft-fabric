@@ -12,6 +12,14 @@ plugins {
   id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
+
+import com.modrinth.minotaur.dependencies.DependencyType
+import com.modrinth.minotaur.dependencies.ModDependency
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
 /* Setup */
 
 def ENV = System.getenv()
@@ -99,10 +107,6 @@ sourceSets.main.resources { srcDirs += dataOutput }
 
 /* Resource Processing */
 
-
-import com.modrinth.minotaur.dependencies.DependencyType
-import com.modrinth.minotaur.dependencies.ModDependency
-
 processResources {
   // populate fabric.mod.json with defined version property
   inputs.property 'version', version
@@ -150,10 +154,6 @@ task github(dependsOn: build) {
     builder.create().uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
   }
 }
-
-
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
 
 if (ENV.MODRINTH_TOKEN) modrinth {
   token = ENV.MODRINTH_TOKEN
