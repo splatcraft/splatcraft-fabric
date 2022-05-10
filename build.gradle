@@ -102,7 +102,6 @@ sourceSets.main.resources { srcDirs += dataOutput }
 
 import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
-import groovy.json.JsonSlurper
 
 processResources {
   // populate fabric.mod.json with defined version property
