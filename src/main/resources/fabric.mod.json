@@ -44,8 +44,8 @@
     ],
 
     "cardinal-components-entity": [ "net.splatcraft.impl.SplatcraftImpl" ],
-    "toymaker": [ "net.splatcraft.impl.data.SplatcraftToymaker" ],
 
+    "toymaker": [ "net.splatcraft.impl.data.SplatcraftToymaker" ],
     "modmenu":  [ "net.splatcraft.impl.client.SplatcraftModMenuImpl" ]
   },
 
@@ -56,8 +56,8 @@
     "java": ">=17",
     "minecraft": ">=1.18.2",
     "fabricloader": ">=0.13",
-    "fabric": ">=0.48",
-    "frame": ">=0.16.1",
+    "fabric": ">=0.51",
+    "frame": ">=0.17",
     "cardinal-components": ">=4.1"
   },
   "suggests": {

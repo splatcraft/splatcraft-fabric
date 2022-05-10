@@ -9,5 +9,5 @@ import org.slf4j.LoggerFactory;
 public interface Splatcraft {
     String MOD_ID   = "splatcraft";
     String MOD_NAME = "Splatcraft";
-    Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    Logger LOGGER   = LoggerFactory.getLogger(MOD_ID);
 }
