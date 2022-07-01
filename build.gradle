@@ -101,10 +101,7 @@ sourceSets { main { resources { srcDirs += dataOutput } } }
 
 /* Resource Processing */
 
-
-import com.modrinth.minotaur.dependencies.DependencyType
-import com.modrinth.minotaur.dependencies.ModDependency
-
+import groovy.json.*
 processResources {
   // populate fabric.mod.json with defined version property
   inputs.property 'version', version
@@ -138,6 +135,7 @@ publishing { publications { mavenJava(MavenPublication) { from components.java }
 def VER_NAME = "[$project.major_version] $project.mod_name $project.version_id"
 def CHANGELOG = new File("./gradle", "CHANGELOG.md").text
 
+import org.kohsuke.github.*
 task github(dependsOn: build) {
   onlyIf { ENV.GITHUB_TOKEN }
   doLast {
@@ -153,10 +151,7 @@ task github(dependsOn: build) {
   }
 }
 
-
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
-
+import com.modrinth.minotaur.dependencies.*
 if (ENV.MODRINTH_TOKEN) modrinth {
   token = ENV.MODRINTH_TOKEN
   projectId = project.modrinth_id
