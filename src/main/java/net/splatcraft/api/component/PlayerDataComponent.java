@@ -16,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.chunk.WorldChunk;
 import net.splatcraft.api.block.InkPassableBlock;
@@ -30,7 +31,6 @@ import net.splatcraft.mixin.client.ClientChunkManagerAccessor;
 import net.splatcraft.mixin.client.ClientChunkManagerClientChunkMapAccessor;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import static net.splatcraft.api.particle.SplatcraftParticleType.*;

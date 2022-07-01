@@ -2,7 +2,7 @@
   "parent": "minecraft:block/thin_block",
   "ambientocclusion": false,
   "textures": {
-    "grate": "splatcraft:block/grate",
+    "grate": "splatcraft:block/grate_block",
     "side": "splatcraft:block/grate_side",
     "bar": "splatcraft:block/barrier_bar",
     "particle": "#grate"

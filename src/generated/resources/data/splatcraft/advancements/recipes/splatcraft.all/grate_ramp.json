@@ -1,13 +1,7 @@
 {
-  "parent": "splatcraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "splatcraft:grate_ramp"
-    ]
-  },
+  "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item": {
-      "trigger": "minecraft:inventory_changed",
+    "has_planks": {
       "conditions": {
         "items": [
           {
@@ -16,19 +10,25 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     },
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "splatcraft:grate_ramp"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_item",
+      "has_planks",
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "splatcraft:grate_ramp"
+    ]
+  }
 }

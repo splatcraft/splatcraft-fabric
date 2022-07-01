@@ -10,7 +10,6 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.splatcraft.api.Splatcraft;
@@ -56,7 +55,7 @@ public class InkableBlockEntity extends BlockEntity implements Inkable {
 
     @Override
     public Text getTextForCommand() {
-        return new TranslatableText(
+        return Text.translatable(
             T_BLOCK_ENTITY_DESCRIPTION.formatted(Splatcraft.MOD_ID),
             this.getClass().getSimpleName(),
             this.world instanceof ServerWorld world

@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.splatcraft.api.block.SplatcraftBlocks;
 import net.splatcraft.impl.client.config.ClientConfig;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientWorld.class)
@@ -26,7 +26,7 @@ public abstract class ClientWorldMixin {
      */
     @Inject(method = "doRandomBlockDisplayTicks", at = @At("TAIL"))
     private void ondoRandomBlockDisplayTicks(int centerX, int centerY, int centerZ, CallbackInfo ci) {
-        Random random = new Random();
+        Random random = Random.create();
         int radius = ClientConfig.INSTANCE.stageBlockRadius.getValue();
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (int i = 0; i < 5; i++) {

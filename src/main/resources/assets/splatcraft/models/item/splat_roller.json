@@ -5,12 +5,7 @@
     "color": "minecraft:misc/white"
   },
   "overrides": [
-    {
-      "predicate": {
-        "splatcraft:using": 1
-      },
-      "model": "splatcraft:item/splat_roller_using"
-    }
+    { "predicate": { "splatcraft:using": 1 }, "model": "splatcraft:item/splat_roller_using" }
   ],
   "elements": [
     {

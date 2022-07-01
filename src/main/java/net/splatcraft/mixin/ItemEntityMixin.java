@@ -126,7 +126,7 @@ public abstract class ItemEntityMixin extends Entity implements Inkable, ItemEnt
     private void onTick(CallbackInfo ci) {
         if (gameRule(this.world, INKWELL_CHANGES_INK_COLOR) && this.isOnGround()) {
             if (this.isInkable()) {
-                BlockEntity blockEntity = this.world.getBlockEntity(this.getLandingPos());
+                BlockEntity blockEntity = this.world.getBlockEntity(this.getSteppingPos());
                 if (blockEntity != null && blockEntity.getCachedState().isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) {
                     if (blockEntity instanceof Inkable inkable) this.setInkColor(inkable.getInkColor());
                 }

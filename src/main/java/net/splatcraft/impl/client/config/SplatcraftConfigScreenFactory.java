@@ -6,7 +6,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.moddingplayground.frame.api.config.v0.Config;
 import net.splatcraft.api.Splatcraft;
 
@@ -42,11 +42,11 @@ public class SplatcraftConfigScreenFactory {
         return configBuilder.build();
     }
 
-    public TranslatableText txt(String label) {
-        return new TranslatableText("config.%s.%s".formatted(Splatcraft.MOD_ID, label));
+    public Text txt(String label) {
+        return Text.translatable("config.%s.%s".formatted(Splatcraft.MOD_ID, label));
     }
 
-    public TranslatableText catTxt(String category) {
+    public Text catTxt(String category) {
         return txt("category.%s".formatted(category));
     }
 }

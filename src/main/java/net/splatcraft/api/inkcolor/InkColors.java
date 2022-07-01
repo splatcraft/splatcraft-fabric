@@ -3,13 +3,12 @@ package net.splatcraft.api.inkcolor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.splatcraft.api.Splatcraft;
 import net.splatcraft.api.registry.SplatcraftRegistries;
 import net.splatcraft.api.util.Color;
-
-import java.util.Random;
 
 import static net.splatcraft.api.util.SplatcraftConstants.*;
 
@@ -374,6 +373,6 @@ public interface InkColors {
     }
 
     static InkColor random() {
-        return random(new Random());
+        return random(Random.create());
     }
 }

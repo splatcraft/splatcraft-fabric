@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "#  ",
-    "## ",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "splatcraft:grate_block"
     }
   },
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
   "result": {
-    "item": "splatcraft:grate_ramp",
-    "count": 4
+    "count": 4,
+    "item": "splatcraft:grate_ramp"
   }
 }

@@ -1,0 +1,27 @@
+{
+  "gamerule.splatcraft:inkwellChangesInkColour": "Inkwell changes ink colour",
+  "gamerule.splatcraft:inkwellChangesInkColour.description": "If inkwells change the ink colour of entities on top of one.",
+  "gamerule.splatcraft:universalInk.description": "You can submerge in any ink colour, regardless of your ink colour.",
+
+  "config.splatcraft.color_lock": "Colour Lock",
+  "config.splatcraft.color_lock.tooltip": "When enabled, ink colours are\nreplaced with just a friendly\nor hostile colour.\nUseful for colour-blind users.",
+  "config.splatcraft.color_lock_friendly": "    Friendly Colour",
+  "config.splatcraft.color_lock_hostile": "    Hostile Colour",
+
+  "command.splatcraft.argument.ink_color.notFound": "Unknown ink colour '%s'",
+  "command.splatcraft.argument.ink_color.tagDisallowed": "Tags aren't allowed here, only actual ink colours",
+  "command.splatcraft:inkcolor.get": "The ink colour of %s is %s",
+  "command.splatcraft:inkcolor.single.success": "Changed the ink colour of %s to %s",
+  "command.splatcraft:inkcolor.multiple.success": "Changed the ink colour of %s inkables to %s",
+
+  "text.splatcraft.ink_color": "Ink Colour: %s",
+
+  "splatcraft:ink_color.splatoon.color_lock/golden_yellow": "Colour Lock Golden Yellow",
+  "splatcraft:ink_color.splatoon.color_lock/eelectric_blue": "Colour Lock Eelectric Blue",
+
+  "block.splatcraft.canvas.splatoon:color_lock/golden_yellow": "Colour Lock Golden Yellow Canvas",
+  "block.splatcraft.canvas.splatoon:color_lock/eelectric_blue": "Colour Lock Eelectric Blue Canvas",
+
+  "block.splatcraft.inkwell.splatoon:color_lock/golden_yellow": "Colour Lock Golden Yellow Inkwell",
+  "block.splatcraft.inkwell.splatoon:color_lock/eelectric_blue": "Colour Lock Eelectric Blue Inkwell"
+}

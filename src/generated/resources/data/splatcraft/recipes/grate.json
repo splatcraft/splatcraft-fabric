@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "##",
-    "##"
-  ],
   "key": {
     "#": {
       "item": "splatcraft:grate_block"
     }
   },
+  "pattern": [
+    "##",
+    "##"
+  ],
   "result": {
-    "item": "splatcraft:grate",
-    "count": 16
+    "count": 16,
+    "item": "splatcraft:grate"
   }
 }

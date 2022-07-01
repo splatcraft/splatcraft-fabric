@@ -8,7 +8,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.tag.TagKey;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.splatcraft.api.inkcolor.InkColor;
@@ -20,8 +20,8 @@ import java.util.function.BiFunction;
 import static net.splatcraft.api.util.SplatcraftConstants.*;
 
 public class InkColorStringReader {
-    public static final SimpleCommandExceptionType TAG_DISALLOWED_EXCEPTION = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED));
-    public static final DynamicCommandExceptionType ID_INVALID_EXCEPTION = new DynamicCommandExceptionType(id -> new TranslatableText(T_COMMAND_ERROR_INK_COLOR_NOT_FOUND, id));
+    public static final SimpleCommandExceptionType TAG_DISALLOWED_EXCEPTION = new SimpleCommandExceptionType(Text.translatable(T_COMMAND_ERROR_INK_COLOR_TAG_DISALLOWED));
+    public static final DynamicCommandExceptionType ID_INVALID_EXCEPTION = new DynamicCommandExceptionType(id -> Text.translatable(T_COMMAND_ERROR_INK_COLOR_NOT_FOUND, id));
     public static final char HASH_SIGN = '#';
 
     private final StringReader reader;

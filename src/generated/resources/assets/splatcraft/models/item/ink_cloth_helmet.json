@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "splatcraft:item/ink_cloth_helmet"
+    "layer0": "splatcraft:item/ink_cloth_helmet",
+    "layer1": "splatcraft:item/ink_cloth_helmet_overlay"
   }
 }

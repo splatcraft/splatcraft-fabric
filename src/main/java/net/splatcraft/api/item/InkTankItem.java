@@ -16,7 +16,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -143,7 +142,7 @@ public class InkTankItem extends Item implements Wearable {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext ctx) {
         super.appendTooltip(stack, world, tooltip, ctx);
-        tooltip.add(new TranslatableText(T_CONTAINED_INK, (int) getContainedInk(stack), (int) this.getCapacity()).formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable(T_CONTAINED_INK, (int) getContainedInk(stack), (int) this.getCapacity()).formatted(Formatting.GRAY));
     }
 
     @Override

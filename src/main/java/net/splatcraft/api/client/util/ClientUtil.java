@@ -3,6 +3,7 @@ package net.splatcraft.api.client.util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -102,9 +103,12 @@ public class ClientUtil {
 
     public static EntityRendererFactory.Context entityRendererFactoryContext() {
         MinecraftClient client = MinecraftClient.getInstance();
+        EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderDispatcher();
         return new EntityRendererFactory.Context(
-            client.getEntityRenderDispatcher(),
+            entityRenderDispatcher,
             client.getItemRenderer(),
+            client.getBlockRenderManager(),
+            entityRenderDispatcher.getHeldItemRenderer(),
             client.getResourceManager(),
             client.getEntityModelLoader(),
             client.textRenderer

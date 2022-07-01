@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "splatcraft:item/ink_cloth_leggings"
+    "layer0": "splatcraft:item/ink_cloth_leggings",
+    "layer1": "splatcraft:item/ink_cloth_leggings_overlay"
   }
 }

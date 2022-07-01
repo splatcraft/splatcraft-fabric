@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -80,7 +80,7 @@ public class ShooterItem extends WeaponItem implements ShooterSettings.Provider,
                 world.spawnEntity(entity);
                 world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SplatcraftSoundEvents.ITEM_SHOOTER_SHOOT, SoundCategory.PLAYERS, 1.0f, world.random.nextFloat() / 5);
             } else {
-                player.sendMessage(new TranslatableText(T_LOW_INK).formatted(Formatting.RED), true);
+                player.sendMessage(Text.translatable(T_LOW_INK).formatted(Formatting.RED), true);
             }
         }
     }

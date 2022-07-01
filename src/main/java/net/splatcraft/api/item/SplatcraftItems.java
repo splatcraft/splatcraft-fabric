@@ -1,21 +1,22 @@
 package net.splatcraft.api.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
+import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Item;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPattern;
-import net.moddingplayground.frame.api.bannerpatterns.v0.FrameBannerPatternItem;
 import net.splatcraft.api.Splatcraft;
-import net.splatcraft.api.block.entity.SplatcraftBannerPatterns;
 import net.splatcraft.api.item.weapon.RollerItem;
 import net.splatcraft.api.item.weapon.ShooterItem;
 import net.splatcraft.api.item.weapon.settings.InkConsumptionSettings;
 import net.splatcraft.api.item.weapon.settings.ShooterSettings;
 import net.splatcraft.api.item.weapon.settings.WeaponWeight;
+import net.splatcraft.api.tag.SplatcraftBannerPatternTags;
 
 import static net.splatcraft.api.item.SplatcraftArmorMaterial.*;
 
@@ -48,15 +49,15 @@ public interface SplatcraftItems {
 
     Item SPLATFEST_BAND = unstackable("splatfest_band", Item::new);
 
-    Item INK_SQUID_BANNER_PATTERN = register("inkling_banner_pattern", SplatcraftBannerPatterns.INKLING);
-    Item OCTOLING_BANNER_PATTERN = register("octoling_banner_pattern", SplatcraftBannerPatterns.OCTOLING);
+    Item INK_SQUID_BANNER_PATTERN = register("inkling_banner_pattern", SplatcraftBannerPatternTags.INKLING_PATTERN_ITEM);
+    Item OCTOLING_BANNER_PATTERN = register("octoling_banner_pattern", SplatcraftBannerPatternTags.OCTOLING_PATTERN_ITEM);
 
     private static Item register(String id, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(Splatcraft.MOD_ID, id), item);
     }
 
-    private static Item register(String id, FrameBannerPattern pattern) {
-        return unstackable(id, settings -> new FrameBannerPatternItem(pattern, settings));
+    private static Item register(String id, TagKey<BannerPattern> tag) {
+        return unstackable(id, settings -> new BannerPatternItem(tag, settings));
     }
 
     private static Item register(String id, int capacity, InkTankFactory factory) {

@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import net.minecraft.tag.TagKey;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Vec3f;
@@ -71,7 +70,7 @@ public class InkColor implements Identifiable {
     }
 
     public Text getDisplayText(Style style) {
-        return new TranslatableText(T_INK_COLOR_TEXT_DISPLAY, new TranslatableText(this.getTranslationKey())).setStyle(style.withColor(this.getDecimalColor()));
+        return Text.translatable(T_INK_COLOR_TEXT_DISPLAY, Text.translatable(this.getTranslationKey())).setStyle(style.withColor(this.getDecimalColor()));
     }
 
     public Text getDisplayText() {

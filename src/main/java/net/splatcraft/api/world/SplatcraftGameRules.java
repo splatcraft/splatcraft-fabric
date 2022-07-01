@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -21,7 +21,7 @@ import static net.minecraft.world.GameRules.*;
 public interface SplatcraftGameRules {
     CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(
         new Identifier(Splatcraft.MOD_ID, "category"),
-        new TranslatableText("gamerule.%s.category".formatted(Splatcraft.MOD_ID))
+        Text.translatable("gamerule.%s.category".formatted(Splatcraft.MOD_ID))
             .formatted(Formatting.YELLOW, Formatting.BOLD)
     );
 

@@ -18,11 +18,11 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.splatcraft.api.block.entity.InkedBlockEntity;
 
 import java.util.List;
-import java.util.Random;
 
 import static net.splatcraft.api.client.util.ClientUtil.*;
 
@@ -52,7 +52,7 @@ public class InkedBlockEntityRenderer<T extends BlockEntity> implements BlockEnt
     }
 
     protected void renderModel(InkedBlockEntity blockEntity, MatrixStack.Entry matrix, VertexConsumer buffer, BlockState state, BakedModel model, float red, float green, float blue, int light, int overlay) {
-        Random random = new Random();
+        Random random = Random.create(42L);
 
         for (Direction direction : Direction.values()) {
             MinecraftClient client = MinecraftClient.getInstance();

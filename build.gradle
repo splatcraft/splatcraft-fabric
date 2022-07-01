@@ -1,24 +1,16 @@
-buildscript { dependencies { classpath 'org.kohsuke:github-api:1.303' } }
+buildscript { dependencies { classpath 'org.kohsuke:github-api:1.301' } }
 
 plugins {
   id 'java-library'
   id 'idea'
   id 'eclipse'
 
-  id 'fabric-loom' version '0.11-SNAPSHOT'
+  id 'fabric-loom' version '0.12-SNAPSHOT'
   id 'maven-publish'
 
-  id 'com.modrinth.minotaur' version '2.1.1'
+  id 'com.modrinth.minotaur' version '2.+'
   id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
-
-
-import com.modrinth.minotaur.dependencies.DependencyType
-import com.modrinth.minotaur.dependencies.ModDependency
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
 
 /* Setup */
 
@@ -80,32 +72,38 @@ dependencies {
   modImplementation "com.terraformersmc:modmenu:${project.ver_mod_menu}"
 }
 
-/* Miscellaneous */
+/* Loom */
 
-loom { accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener") }
+loom {
+  runtimeOnlyLog4j = true
+  accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
+}
 
 /* Data Generation */
 
 def dataOutput = 'src/generated/resources'
 
 loom {
-  runtimeOnlyLog4j = true
-
   runs {
-    data {
+    datagen {
       server()
-      vmArgs(
-              "-Dtoymaker.datagen=true",
-              "-Dtoymaker.datagen.modid=${project.mod_id}",
-              "-Dtoymaker.datagen.path=\"${project.file(dataOutput)};${project.file("$buildDir/resources/main")}\""
-      )
+
+      name "Data Generation"
+      vmArg "-Dfabric-api.datagen"
+      vmArg "-Dfabric-api.datagen.output-dir=${file(dataOutput)}"
+
+      runDir "build/datagen"
     }
   }
 }
 
-sourceSets.main.resources { srcDirs += dataOutput }
+sourceSets { main { resources { srcDirs += dataOutput } } }
 
 /* Resource Processing */
+
+
+import com.modrinth.minotaur.dependencies.DependencyType
+import com.modrinth.minotaur.dependencies.ModDependency
 
 processResources {
   // populate fabric.mod.json with defined version property
@@ -124,7 +122,7 @@ processResources {
       file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
       bytes += oldLength - file.length()
     }
-    println("'Minified $minif json files. Saved $bytes bytes. Took ${System.currentTimeMillis() - start} ms.'")
+    println("Minified $minif json files. Saved $bytes bytes. Took ${System.currentTimeMillis() - start} ms.")
   }
 }
 
@@ -150,10 +148,14 @@ task github(dependsOn: build) {
     builder.name(VER_NAME)
     builder.body(CHANGELOG)
     builder.commitish(project.github_branch)
-    builder.prerelease(project.release_type == 'beta')
+    builder.prerelease(project.release_type != 'release')
     builder.create().uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
   }
 }
+
+
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 
 if (ENV.MODRINTH_TOKEN) modrinth {
   token = ENV.MODRINTH_TOKEN
@@ -165,9 +167,11 @@ if (ENV.MODRINTH_TOKEN) modrinth {
   uploadFile = remapJar
   gameVersions = [ project.ver_minecraft ]
   dependencies = [
-          new ModDependency("P7dR8mSH", DependencyType.REQUIRED), // Fabric API
-          new ModDependency("dY183GiL", DependencyType.REQUIRED), // Frame
-          new ModDependency("K01OU20C", DependencyType.REQUIRED)  // Cardinal Components API
+          new ModDependency("fabric-api", DependencyType.REQUIRED),
+          new ModDependency("frame-api", DependencyType.REQUIRED),
+          new ModDependency("cardinal-components-api", DependencyType.REQUIRED),
+
+          new ModDependency("trinkets", DependencyType.OPTIONAL)
   ]
 }
 
@@ -185,9 +189,11 @@ if (ENV.CURSEFORGE_API_KEY) curseforge {
     mainArtifact(remapJar) {
       displayName = VER_NAME
       relations {
-        requiredLibrary 'fabric-api'
-        requiredLibrary 'frame-api'
-        requiredLibrary 'cardinal-components'
+        requiredDependency 'fabric-api'
+        requiredDependency 'frame-api'
+        requiredDependency 'cardinal-components'
+
+        optionalDependency 'trinkets'
       }
     }
 

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.splatcraft.api.client.keybind.SinglePressKeyBinding;
 import net.splatcraft.impl.client.config.ClientCompatConfig;
 import net.splatcraft.impl.client.config.ClientConfig;
@@ -32,8 +32,8 @@ public class SplatcraftDevelopmentKeyBindings {
         });
     }
 
-    private static TranslatableText reloadConfigText(KeyBinding keyBinding) {
+    private static Text reloadConfigText(KeyBinding keyBinding) {
         String key = keyBinding.getTranslationKey();
-        return new TranslatableText(T_RELOADED_CONFIG, key.substring(key.lastIndexOf("_") + 1));
+        return Text.translatable(T_RELOADED_CONFIG, key.substring(key.lastIndexOf("_") + 1));
     }
 }

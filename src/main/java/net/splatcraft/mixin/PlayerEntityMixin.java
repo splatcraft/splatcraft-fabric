@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.splatcraft.api.component.PlayerDataComponent;
 import net.splatcraft.api.entity.SplatcraftAttributes;
@@ -48,7 +49,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Random;
 
 import static net.moddingplayground.frame.api.gamerules.v0.SynchronizedBooleanGameRuleRegistry.*;
 import static net.splatcraft.api.particle.SplatcraftParticleType.*;

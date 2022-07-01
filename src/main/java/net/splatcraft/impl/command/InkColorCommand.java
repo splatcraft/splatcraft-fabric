@@ -8,7 +8,6 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.splatcraft.api.inkcolor.InkColor;
@@ -53,7 +52,7 @@ public class InkColorCommand {
         if (entity instanceof Inkable inkable) {
             InkColor inkColor = inkable.getInkColor();
             Text text = inkColor.getDisplayText();
-            ctx.getSource().sendFeedback(new TranslatableText(T_COMMAND_INK_COLOR_GET, inkable.getTextForCommand(), text), true);
+            ctx.getSource().sendFeedback(Text.translatable(T_COMMAND_INK_COLOR_GET, inkable.getTextForCommand(), text), true);
             return SplatcraftRegistries.INK_COLOR.getRawId(inkColor);
         }
 
@@ -110,9 +109,9 @@ public class InkColorCommand {
         Text text = inkColor.getDisplayText();
         if (affected == 1) {
             Inkable inkable = affectedInkables.get(0);
-            ctx.getSource().sendFeedback(new TranslatableText(T_COMMAND_INK_COLOR_SUCCESS_SINGLE, inkable.getTextForCommand(), text), true);
+            ctx.getSource().sendFeedback(Text.translatable(T_COMMAND_INK_COLOR_SUCCESS_SINGLE, inkable.getTextForCommand(), text), true);
         } else {
-            ctx.getSource().sendFeedback(new TranslatableText(T_COMMAND_INK_COLOR_SUCCESS_MULTIPLE, affected, text), true);
+            ctx.getSource().sendFeedback(Text.translatable(T_COMMAND_INK_COLOR_SUCCESS_MULTIPLE, affected, text), true);
         }
 
         return affected;

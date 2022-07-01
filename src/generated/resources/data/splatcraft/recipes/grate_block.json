@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "###",
-    "# #",
-    "###"
-  ],
   "key": {
     "#": {
       "item": "minecraft:iron_bars"
     }
   },
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
   "result": {
-    "item": "splatcraft:grate_block",
-    "count": 8
+    "count": 8,
+    "item": "splatcraft:grate_block"
   }
 }

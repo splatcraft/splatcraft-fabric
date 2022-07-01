@@ -7,6 +7,7 @@ import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.splatcraft.api.component.PlayerDataComponent;
 import net.splatcraft.api.inkcolor.Inkable;
 import net.splatcraft.impl.client.entity.ClientPlayerEntityAccess;
@@ -34,8 +35,8 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     @Unique private float inkOverlayTick = 0;
     @Unique private Integer inkOverlayColor = null;
 
-    private ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
-        super(world, profile);
+    private ClientPlayerEntityMixin(ClientWorld world, GameProfile profile, PlayerPublicKey publicKey) {
+        super(world, profile, publicKey);
     }
 
     @Unique
@@ -84,7 +85,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         if (inkOverlayColor == null || !(this.inkOverlayTick > 0)) {
             this.inkOverlayColor = getDecimalColor(data.getInkColor());
         } else {
-            if (this.world.getBlockEntity(this.getLandingPos()) instanceof Inkable inkable) {
+            if (this.world.getBlockEntity(this.getSteppingPos()) instanceof Inkable inkable) {
                 this.inkOverlayColor = interpolate(0.1f, this.inkOverlayColor, getDecimalColor(inkable.getInkColor()));
             }
         }

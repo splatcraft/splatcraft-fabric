@@ -10,7 +10,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.splatcraft.api.Splatcraft;
 import net.splatcraft.api.client.keybind.SplatcraftKeyBindings;
@@ -44,8 +44,8 @@ public final class SplatcraftKeyBindingsClientImpl implements SplatcraftKeyBindi
                         if (CHANGE_SQUID_FORM.wasPressed()) {
                             SystemToast.add(
                                 client.getToastManager(), SystemToast.Type.TUTORIAL_HINT,
-                                new TranslatableText(T_NOT_INSTALLED_ON_SERVER_1),
-                                new TranslatableText(T_NOT_INSTALLED_ON_SERVER_2).setStyle(Style.EMPTY.withColor(0xFCFC00))
+                                Text.translatable(T_NOT_INSTALLED_ON_SERVER_1),
+                                Text.translatable(T_NOT_INSTALLED_ON_SERVER_2).setStyle(Style.EMPTY.withColor(0xFCFC00))
                             );
                         }
                     }

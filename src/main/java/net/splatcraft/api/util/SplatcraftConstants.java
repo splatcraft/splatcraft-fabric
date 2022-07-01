@@ -3,7 +3,7 @@ package net.splatcraft.api.util;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.entity.EntityDimensions;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.splatcraft.api.Splatcraft;
@@ -64,7 +64,7 @@ public interface SplatcraftConstants {
     private static String cmdArg      (String s) { return cmd   ( "%s.argument.%s" .formatted(Splatcraft.MOD_ID, s)); }
     private static String cmdInkColor (String s) { return cmdArg( "ink_color.%s"   .formatted(s));                    }
 
-    DynamicCommandExceptionType EXCEPTION_INK_COLOR_NOT_FOUND = new DynamicCommandExceptionType(c -> new TranslatableText(T_COMMAND_ERROR_INK_COLOR_NOT_FOUND, c));
-    SimpleCommandExceptionType EXCEPTION_NO_ENTITIES_AFFECTED = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_NO_ENTITIES_AFFECTED));
-    SimpleCommandExceptionType EXCEPTION_NO_INKABLES_AFFECTED = new SimpleCommandExceptionType(new TranslatableText(T_COMMAND_ERROR_NO_INKABLES_AFFECTED));
+    DynamicCommandExceptionType EXCEPTION_INK_COLOR_NOT_FOUND = new DynamicCommandExceptionType(c -> Text.translatable(T_COMMAND_ERROR_INK_COLOR_NOT_FOUND, c));
+    SimpleCommandExceptionType EXCEPTION_NO_ENTITIES_AFFECTED = new SimpleCommandExceptionType(Text.translatable(T_COMMAND_ERROR_NO_ENTITIES_AFFECTED));
+    SimpleCommandExceptionType EXCEPTION_NO_INKABLES_AFFECTED = new SimpleCommandExceptionType(Text.translatable(T_COMMAND_ERROR_NO_INKABLES_AFFECTED));
 }

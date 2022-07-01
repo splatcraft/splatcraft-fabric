@@ -41,7 +41,7 @@ public interface Inkable {
             clientTickInkable(entity, movementInput);
         } else {
             if (entity.isOnGround() && gameRule(entity.world, INKWELL_CHANGES_INK_COLOR)) {
-                BlockEntity blockEntity = entity.world.getBlockEntity(entity.getLandingPos());
+                BlockEntity blockEntity = entity.world.getBlockEntity(entity.getSteppingPos());
                 if (blockEntity != null && blockEntity.getCachedState().isIn(SplatcraftBlockTags.INK_COLOR_CHANGERS)) {
                     if (blockEntity instanceof Inkable inkable && ((InkEntityAccess) entity).isInSquidForm()) entity.setInkColor(inkable.getInkColor());
                 }
