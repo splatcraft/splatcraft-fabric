@@ -41,6 +41,5 @@ public class EntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProvid
             ITEM,
             INK_SQUID
         ).addTag(EntityTypeTags.IMPACT_PROJECTILES);
-
     }
 }

@@ -81,7 +81,7 @@ loom {
 
 /* Data Generation */
 
-def dataOutput = 'src/generated/resources'
+def dataOutput = 'src/main/generated'
 
 loom {
   runs {
@@ -128,7 +128,18 @@ jar { from('README.md', 'LICENSE', 'LICENSE_ASSETS') exclude('.cache') }
 
 /* Publishing */
 
-publishing { publications { mavenJava(MavenPublication) { from components.java } } }
+java { withSourcesJar() }
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact(remapJar) { builtBy remapJar }
+      artifact(sourcesJar) { builtBy remapSourcesJar }
+    }
+  }
+}
+
+loom { disableDeprecatedPomGeneration(publishing.publications.mavenJava) }
 
 /* Releasing */
 
