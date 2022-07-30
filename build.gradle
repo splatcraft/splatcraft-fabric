@@ -24,7 +24,7 @@ version = ENV.GITHUB_ACTIONS ? "${ver}.build.${ENV.GITHUB_RUN_NUMBER}" : ver
 
 group = project.maven_group
 
-/* Dependencies */
+/* Repositories */
 
 repositories {
   maven {
@@ -51,7 +51,43 @@ repositories {
     name = 'Modrinth'
     url  = 'https://api.modrinth.com/maven/'
   }
+
+  maven {
+    name = 'Jitpack'
+    url  = 'https://jitpack.io/'
+  }
 }
+
+/* Test Mod */
+
+sourceSets {
+  testmod {
+    compileClasspath += main.compileClasspath
+    runtimeClasspath += main.runtimeClasspath
+  }
+}
+
+loom {
+  runs {
+    testmodClient {
+      client()
+      name = 'Testmod Client'
+      source sourceSets.testmod
+    }
+
+    testmodServer {
+      server()
+      name = 'Testmod Server'
+      source sourceSets.testmod
+    }
+  }
+}
+
+dependencies {
+  testmodImplementation(sourceSets.main.output)
+}
+
+/* Dependencies */
 
 dependencies {
   minecraft "com.mojang:minecraft:${project.ver_minecraft}"
@@ -61,7 +97,10 @@ dependencies {
   // api
   modImplementation "net.fabricmc.fabric-api:fabric-api:${project.ver_fabric}"
   modImplementation "net.moddingplayground.frame:frame-fabric:${project.ver_frame}"
-  modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-api:${project.ver_cardinal}"
+
+  include(
+          modImplementation ("dev.onyxstudios.cardinal-components-api:cardinal-components-api:${project.ver_cardinal}")
+  )
 
   // integration
   modImplementation "dev.emi:trinkets:${ver_trinkets}"
@@ -145,6 +184,7 @@ loom { disableDeprecatedPomGeneration(publishing.publications.mavenJava) }
 
 def VER_NAME = "[$project.major_version] $project.mod_name $project.version_id"
 def CHANGELOG = new File("./gradle", "CHANGELOG.md").text
+def SUPPORTED_VERSIONS = Arrays.asList(project.supported_versions.split(','))
 
 import org.kohsuke.github.*
 task github(dependsOn: build) {
@@ -171,7 +211,7 @@ if (ENV.MODRINTH_TOKEN) modrinth {
   versionType = project.release_type
   changelog = CHANGELOG
   uploadFile = remapJar
-  gameVersions = [ project.ver_minecraft ]
+  gameVersions = SUPPORTED_VERSIONS
   dependencies = [
           new ModDependency("fabric-api", DependencyType.REQUIRED),
           new ModDependency("frame-api", DependencyType.REQUIRED),
@@ -186,8 +226,9 @@ if (ENV.CURSEFORGE_API_KEY) curseforge {
 
   project {
     id = project.curseforge_id
-    addGameVersion project.curseforge_version
     addGameVersion 'Fabric'
+
+    for (final def cf_ver in SUPPORTED_VERSIONS) addGameVersion cf_ver
 
     changelog = CHANGELOG
     releaseType = project.release_type

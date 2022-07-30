@@ -1,8 +1,15 @@
 package net.splatcraft.api.util;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.math.Vec3f;
 
 public class Color {
+    public static final Codec<Color> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(Codec.INT.fieldOf("value").forGetter(Color::getColor))
+                            .apply(instance, Color::new)
+    );
+
     private final int color;
 
     private Color(int color) {
@@ -24,8 +31,8 @@ public class Color {
     public static Color ofRGB(int r, int g, int b) {
         return new Color(
             ((r & 0xFF) << 16) |
-            ((g & 0xFF) << 8 ) |
-            ((b & 0xFF)      )
+                ((g & 0xFF) << 8 ) |
+                ((b & 0xFF)      )
         );
     }
 

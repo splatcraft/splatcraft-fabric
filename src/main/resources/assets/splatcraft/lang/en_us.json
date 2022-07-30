@@ -80,7 +80,7 @@
   "config.sodium.ink_biome_blend_fix": "[Sodium] Ink Biome Blend Fix",
   "config.sodium.ink_biome_blend_fix.tooltip": "Disables smooth biome blending\nfrom Sodium to fix odd ink\nblending between blocks.",
 
-  "command.splatcraft.argument.ink_color.notFound": "Unknown ink color '%s'",
+  "splatcraft.inkColor.notFound": "Unknown ink color '%s'",
   "command.splatcraft.argument.ink_color.tagDisallowed": "Tags aren't allowed here, only actual ink colors",
   "command.splatcraft.argument.entity.notAffected": "No entities were affected",
   "command.splatcraft.argument.inkable.notAffected": "No inkables were affected",

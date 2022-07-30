@@ -28,23 +28,16 @@
 
   "environment": "*",
   "entrypoints": {
-    "main":   [
-      "net.splatcraft.impl.SplatcraftImpl",
-      "net.splatcraft.impl.network.NetworkingCommon"
+    "main": [
+      "net.splatcraft.impl.SplatcraftImpl"
     ],
     "client": [
-      "net.splatcraft.impl.client.SplatcraftClientImpl",
-      "net.splatcraft.impl.client.block.SplatcraftBlocksClientImpl",
-      "net.splatcraft.impl.client.block.entity.SplatcraftBlockEntityTypeClientImpl",
-      "net.splatcraft.impl.client.entity.SplatcraftEntityTypeClientImpl",
-      "net.splatcraft.impl.client.item.SplatcraftItemsClientImpl",
-      "net.splatcraft.impl.client.keybind.SplatcraftKeyBindingsClientImpl",
-      "net.splatcraft.impl.client.network.NetworkingClient",
-      "net.splatcraft.impl.client.particle.SplatcraftParticleTypeClientImpl"
+      "net.splatcraft.impl.client.SplatcraftClientImpl"
     ],
 
-    "cardinal-components-entity": [ "net.splatcraft.impl.SplatcraftImpl" ],
-    "modmenu":  [ "net.splatcraft.impl.client.SplatcraftModMenuImpl" ],
+    "frame-registries:end_dynamic_registry_setup": [ "net.splatcraft.impl.registry.SplatcraftRegistryImpl" ],
+
+    "modmenu": [ "net.splatcraft.impl.client.integration.SplatcraftModMenuImpl" ],
 
     "fabric-datagen": [ "net.splatcraft.impl.data.SplatcraftDataGeneratorImpl" ]
   },
@@ -52,22 +45,23 @@
   "mixins": [ "splatcraft.mixins.json" ],
   "accessWidener": "splatcraft.accesswidener",
 
+  "custom": {
+    "cardinal-components": [
+    ],
+    "modmenu": { "links": { "mod.splatcraft.contact.discord": "https://discord.splatcraft.net" } }
+  },
+
   "depends": {
     "java": ">=17",
     "minecraft": ">=1.19",
     "fabricloader": ">=0.14",
     "fabric": ">=0.57",
-    "frame": ">=0.20",
-    "cardinal-components": ">=5.0.0-beta"
+    "frame": ">=0.26",
+    "cardinal-components": ">=5.0"
   },
   "suggests": {
     "modmenu": "*",
     "sodium": "*",
     "trinkets": "*"
-  },
-
-  "custom": {
-    "cardinal-components": [ "splatcraft:player_data" ],
-    "modmenu": { "links": { "mod.splatcraft.contact.discord": "https://discord.splatcraft.net" } }
   }
 }

@@ -2,11 +2,11 @@
   "required": true,
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_17",
-  "package": "net.splatcraft.mixin",
+  "package": "net.splatcraft.test.mixin",
   "mixins": [
-    "command.ArgumentTypesMixin"
   ],
   "client": [
+    "client.SplashOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "splatcraft-test",
+  "name": "Splatcraft Test Mod",
+  "version": "1.0",
+  "environment": "*",
+  "custom": { "modmenu": { "parent": "splatcraft" } },
+  "depends": { "splatcraft": "*" },
+  "entrypoints": {
+    "main": [ "net.splatcraft.test.SplatcraftTestImpl" ],
+    "client": [ "net.splatcraft.test.client.SplatcraftTestClientImpl" ]
+  },
+  "mixins": [ "splatcraft-test.mixins.json" ]
+}
